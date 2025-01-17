@@ -1,4 +1,4 @@
-from manager import ConversationManager
+from src.core.manager import ConversationManager
 
 class BaseAgent:
     def __init__(self, config: dict):
