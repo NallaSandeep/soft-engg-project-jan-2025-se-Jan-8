@@ -9,7 +9,7 @@ class ConversationManager:
         self.conversation_history = deque(maxlen=10)
         self.context_window = 4000
         self.request_timestamps = deque(maxlen=100)
-        self.rate_limit = 60
+        self.rate_limit = 10
         self.artifacts_path = "artifacts/"
         self.conversation_id = datetime.now().strftime("%Y%m%d_%H%M%S")
         

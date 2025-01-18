@@ -1,4 +1,4 @@
-from typing import Dict, List, Union, Callable
+from typing import Dict, List, Callable
 from langgraph.graph import StateGraph, END
 from dataclasses import dataclass
 from langgraph.prebuilt.tool_executor import ToolExecutor

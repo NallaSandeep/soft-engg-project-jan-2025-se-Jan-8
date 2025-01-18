@@ -35,6 +35,7 @@ ENV/
 # Project specific
 data/vector_store/
 data/artifacts/
+data/documents/
 *.pkl
 vector_store.pkl
 conversation_*.json
