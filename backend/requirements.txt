@@ -1,3 +1,6 @@
 flask[async]
 flask
 flask-pymongo
+python-dotenv 
+flask-limiter
+google-generativeai
