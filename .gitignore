@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Build files
+build/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+.DS_Store
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.log
+
+# Database
+instance/
+*.db 
