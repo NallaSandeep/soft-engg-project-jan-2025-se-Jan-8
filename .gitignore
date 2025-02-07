@@ -1,69 +1,44 @@
-# Dependencies
-node_modules/
-venv/
-__pycache__/
+# Environment variables
 .env
 .env.local
-.env.development
-.env.test
-.env.production
+.env.*.local
 
-# Build files
-build/
-dist/
-
-# IDE
-.vscode/
-.idea/
-
-# Misc
-.DS_Store
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.log
-
-# Database
-instance/
-*.db 
-
-# Virtual Environment - Comprehensive Rules
-# Base venv names
-.venv/
-venv/
-env/
-ENV/
-
-# Backend specific venv locations
-backend/.venv/
-backend/venv/
-backend/env/
-backend/ENV/
-
-# Virtual environment contents (wherever they are)
-**/Lib/
-**/Scripts/
-**/Include/
-**/pyvenv.cfg
-**/pip-selfcheck.json
-
-# Python cache
-**/__pycache__/
+# Python
+__pycache__/
 *.py[cod]
 *$py.class
+.Python
+.venv/
+venv/
+ENV/
 
-# React/Node
-**/node_modules/
-**/.pnp
-**/.pnp.js
-**/coverage/
-**/build/
-**/dist/
-**/.env.local
-**/.env.development.local
-**/.env.test.local
-**/.env.production.local
-**/npm-debug.log*
-**/yarn-debug.log*
-**/yarn-error.log*
+# Flask
+instance/
+.webassets-cache
+
+# Node
+node_modules/
+/frontend/build
+.npm
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Database
+*.db
+*.sqlite3 
