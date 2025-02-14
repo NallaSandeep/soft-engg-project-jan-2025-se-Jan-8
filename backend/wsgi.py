@@ -34,4 +34,4 @@ if not app.debug:
 
 if __name__ == '__main__':
     # Development server configuration
-    app.run(host='0.0.0.0', port=5100, debug=True) 
+    app.run(host='0.0.0.0', port=5000, debug=True) # as mentioned in the readme port is 5000

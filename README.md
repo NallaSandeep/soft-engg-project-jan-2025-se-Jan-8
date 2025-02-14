@@ -145,5 +145,5 @@ npm test
 After initializing the database, you can log in with these sample accounts:
 
 - Admin: admin@studyhub.com / admin123
-- Student: student@studyhub.com / student123
+- Student: student1@studyhub.com / student123
 - TA: ta@studyhub.com / ta123 (interface not ready yet)
