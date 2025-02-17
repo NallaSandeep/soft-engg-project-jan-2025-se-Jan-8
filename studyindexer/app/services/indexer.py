@@ -117,33 +117,40 @@ class DocumentIndexer:
         if getattr(self, '_initialized', False):
             return
             
-        self.ml_enabled = check_ml_dependencies()
+        # Initialize ML components first
+        try:
+            from sentence_transformers import SentenceTransformer
+            logger.info("Initializing ML components...")
+            self.embedder = SentenceTransformer(
+                settings.EMBEDDING_MODEL,
+                device=settings.EMBEDDING_DEVICE
+            )
+            
+            # Initialize text splitter
+            self.text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=settings.MAX_CHUNK_SIZE,
+                chunk_overlap=settings.CHUNK_OVERLAP
+            )
+            
+            self.ml_enabled = True
+            logger.info("ML components initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize ML components: {str(e)}")
+            self.ml_enabled = False
         
-        if self.ml_enabled:
-            try:
-                from sentence_transformers import SentenceTransformer
-                logger.info("Initializing ML components...")
-                self.embedder = SentenceTransformer(
-                    settings.EMBEDDING_MODEL,
-                    device=settings.EMBEDDING_DEVICE
-                )
-                
-                # Initialize text splitter
-                self.text_splitter = RecursiveCharacterTextSplitter(
-                    chunk_size=settings.MAX_CHUNK_SIZE,
-                    chunk_overlap=settings.CHUNK_OVERLAP
-                )
-                
-                # Initialize ChromaDB service
-                self.chroma = ChromaService()
-                
-                # Ensure general collection exists
-                self._ensure_general_collection()
-                
-                logger.info("ML components initialized successfully")
-            except Exception as e:
-                logger.error(f"Failed to initialize ML components: {str(e)}")
-                self.ml_enabled = False
+        # Initialize ChromaDB separately
+        try:
+            # Initialize ChromaDB service
+            self.chroma = ChromaService()
+            
+            # Ensure general collection exists
+            self._ensure_general_collection()
+            
+            self.chroma_enabled = True
+            logger.info("ChromaDB initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize ChromaDB: {str(e)}")
+            self.chroma_enabled = False
         
         # Ensure directories exist
         os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
@@ -285,6 +292,13 @@ class DocumentIndexer:
                 message="ML processing is not available. Please install ML dependencies.",
                 code="ML_NOT_AVAILABLE"
             )
+            
+        if not self.chroma_enabled:
+            raise StudyIndexerError(
+                message="ChromaDB is not available. Please check ChromaDB connection.",
+                code="CHROMA_NOT_AVAILABLE"
+            )
+            
         try:
             # Get document status
             status = self.get_document_status(document_id)
