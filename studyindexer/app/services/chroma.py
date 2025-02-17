@@ -31,26 +31,13 @@ class ChromaService:
             return
             
         try:
-            # Initialize client with consistent settings
-            if ChromaService._client is None:
-                # Ensure directory exists
-                os.makedirs(settings.CHROMA_PERSIST_DIR, exist_ok=True)
-                
-                ChromaService._client = chromadb.PersistentClient(
-                    path=settings.CHROMA_PERSIST_DIR,
-                    settings=ChromaSettings(
-                        allow_reset=True,
-                        anonymized_telemetry=False,
-                        is_persistent=True
-                    )
-                )
-            
-            self.client = ChromaService._client
-            self._initialized = True
-            logger.info(
-                "ChromaDB client initialized [persist_dir=%s]",
-                settings.CHROMA_PERSIST_DIR
+            logger.info("Initializing ChromaDB client with HTTP connection")
+            self.client = chromadb.HttpClient(
+                host='studyhub-chromadb',
+                port=8000
             )
+            logger.info("ChromaDB client initialized successfully")
+            self._initialized = True
         except Exception as e:
             logger.error("Failed to initialize ChromaDB client: %s", str(e))
             raise StudyIndexerError(
@@ -70,16 +57,17 @@ class ChromaService:
                 "description": f"Collection for {name}",
                 "created_by": "StudyIndexer",
                 "version": settings.VERSION,
-                "hnsw:space": "cosine",  # Specify distance metric
-                "hnsw:construction_ef": 100,  # Index construction parameter
-                "hnsw:search_ef": 50  # Search accuracy parameter
+                "distance_function": "cosine"  # v1 API uses this instead of hnsw:space
             }
             if metadata:
                 default_metadata.update(metadata)
             
             # Try to get existing collection
             try:
-                collection = self.client.get_collection(name=name)
+                collection = self.client.get_collection(
+                    name=name,
+                    embedding_function=None  # Let server handle embeddings
+                )
                 logger.info(f"Retrieved existing collection: {name}")
                 return collection
             except ValueError:
