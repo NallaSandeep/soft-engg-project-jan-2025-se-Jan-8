@@ -1,0 +1,16 @@
+# API Framework
+fastapi>=0.109.0
+uvicorn>=0.27.0
+python-multipart>=0.0.6
+python-jose[cryptography]>=3.3.0
+
+# Core Dependencies
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+python-dotenv>=1.0.0
+aiofiles>=23.2.1
+
+# Service Dependencies
+redis>=5.0.1
+chromadb>=0.4.22
+celery>=5.3.6 

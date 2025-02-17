@@ -1,0 +1,7 @@
+# docker-compose.yml
+celery-worker:
+  build:
+    context: ..
+    dockerfile: docker/studyindexer/celery/Dockerfile
+  container_name: studyhub-celery
+  command: sh -c "celery -A app.core.celery_app worker --loglevel=info --concurrency=4 --max-tasks-per-child=100 -Q default,indexing,maintenance -n worker@%h" 

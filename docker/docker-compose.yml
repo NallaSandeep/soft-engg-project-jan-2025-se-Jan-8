@@ -1,0 +1,157 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # Base Infrastructure Services (Start First)
+  redis:
+    image: redis:7-alpine
+    container_name: studyhub-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - studyhub-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: studyhub-chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma-data:/chroma/data
+    networks:
+      - studyhub-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Worker Service (Depends on Infrastructure)
+  celery-worker:
+    build:
+      context: ..
+      dockerfile: docker/studyindexer/celery/Dockerfile
+    container_name: studyhub-celery
+    entrypoint: []
+    command: python -m celery -A app.core.celery_app worker --loglevel=info --concurrency=4 --max-tasks-per-child=100 -Q default,indexing,maintenance -n worker@%h
+    volumes:
+      - ../studyindexer:/app:ro
+      - studyindexer-data:/app/data
+      - studyindexer-logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PYTHONPATH=/app
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+    networks:
+      - studyhub-network
+    healthcheck:
+      test: ["CMD", "celery", "-A", "app.core.celery_app", "inspect", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Main Search Service (Depends on Worker and Infrastructure)
+  studyindexer:
+    build: 
+      context: ..
+      dockerfile: docker/studyindexer/Dockerfile
+    container_name: studyhub-indexer
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../studyindexer:/app
+      - studyindexer-data:/app/data
+      - studyindexer-logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+      celery-worker:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+    networks:
+      - studyhub-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Independent Application Services
+  backend:
+    build: 
+      context: ..
+      dockerfile: docker/backend/Dockerfile
+    container_name: studyhub-backend
+    entrypoint: []
+    command: sh -c "cd /app && python scripts/init_db.py && gunicorn --bind 0.0.0.0:5000 --workers 4 --threads 2 wsgi:app"
+    ports:
+      - "5000:5000"
+    volumes:
+      - ../studyhub/backend:/app
+      - ../studyhub/backend/instance:/app/instance
+      - ../studyhub/backend/logs:/app/logs
+    environment:
+      - FLASK_ENV=development
+      - INDEXER_URL=http://studyindexer:8000
+      - DATABASE_URL=sqlite:///studyhub.db
+      - PYTHONPATH=/app
+    networks:
+      - studyhub-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build: 
+      context: ..
+      dockerfile: docker/frontend/Dockerfile
+    container_name: studyhub-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../studyhub/frontend:/app
+      - /app/node_modules
+      - frontend-logs:/app/logs
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000/api/v1
+      - REACT_APP_INDEXER_URL=http://localhost:8000
+      - WDS_SOCKET_PORT=0
+    networks:
+      - studyhub-network
+
+volumes:
+  redis-data:
+  chroma-data:
+  studyindexer-data:
+  studyindexer-logs:
+  backend-data:
+  backend-logs:
+  frontend-logs:
+
+networks:
+  studyhub-network:
+    driver: bridge
