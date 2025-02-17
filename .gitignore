@@ -32,17 +32,10 @@ htmlcov/
 .DS_Store
 
 # Project specific
-uploads/
-backup_*/
 *.log
 logs/
 tmp/
 instance/
-data/
-**/data/
-**/instance/
-**/uploads/
-**/logs/
 celerybeat-schedule
 **/celerybeat-schedule
 
@@ -76,17 +69,8 @@ yarn-error.log*
 **/instance/*.sqlite
 **/instance/*.sqlite3
 
-# ML Models and large files
-*.pkl
-*.h5
-*.model
-*.bin
-models/
-**/models/
+# Cache and temp
 **/.cache/
-**/cache/
-
-# Temporary files
 *.tmp
 *.temp
 .*.swp
