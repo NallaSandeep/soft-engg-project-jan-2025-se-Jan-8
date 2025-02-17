@@ -171,8 +171,9 @@ class DocumentIndexer:
             self.chroma.get_or_create_collection("general", general_metadata)
             logger.info("General collection initialized")
         except Exception as e:
-            logger.error(f"Failed to initialize general collection: {str(e)}")
-            raise StudyIndexerError("Failed to initialize general collection")
+            logger.error("Failed to initialize general collection: %s", str(e))
+            self.chroma_enabled = False
+            raise StudyIndexerError("Failed to initialize ChromaDB: Failed to initialize general collection")
     
     def prepare_document(
         self,

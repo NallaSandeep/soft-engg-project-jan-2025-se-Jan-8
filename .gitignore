@@ -38,6 +38,13 @@ tmp/
 instance/
 celerybeat-schedule
 **/celerybeat-schedule
+backup_20250215/
+studyindexer/data/
+**/data/chroma/
+**/data/uploads/
+**/data/processed/
+**/data/temp/
+test_chroma.py
 
 # Docker
 .docker/

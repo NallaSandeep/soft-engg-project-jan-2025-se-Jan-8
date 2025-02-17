@@ -45,6 +45,7 @@ services:
       - ../studyindexer:/app:ro
       - studyindexer-data:/app/data
       - studyindexer-logs:/app/logs
+      - chroma-data:/app/data/chroma
     depends_on:
       redis:
         condition: service_healthy
@@ -58,6 +59,7 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - CHROMA_HOST=chromadb
       - CHROMA_PORT=8000
+      - CHROMA_PERSIST_DIR=/app/data/chroma
     networks:
       - studyhub-network
     healthcheck:
