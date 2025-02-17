@@ -2,7 +2,7 @@
     "name": "StudyHub Development",
     "dockerComposeFile": "../docker/docker-compose.yml",
     "service": "backend",
-    "workspaceFolder": "/workspace",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     
     // Features to add to the dev container. More info: https://containers.dev/features.
     "features": {
@@ -26,8 +26,17 @@
     "forwardPorts": [3000, 5000, 8000, 8001, 6379],
 
     // Use 'postCreateCommand' to run commands after the container is created.
-    "postCreateCommand": "pip install -r studyhub/backend/requirements.txt && pip install -r studyindexer/requirements.txt",
+    "postCreateCommand": "pip install -r studyhub/backend/requirements.txt",
 
     // Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-    "remoteUser": "vscode"
+    "remoteUser": "root",
+
+    // Mount workspace folder
+    "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind",
+
+    // Environment variables
+    "remoteEnv": {
+        "PYTHONPATH": "/workspaces/${localWorkspaceFolderBasename}",
+        "REGISTRY_URL": "localhost:5000"
+    }
 } 

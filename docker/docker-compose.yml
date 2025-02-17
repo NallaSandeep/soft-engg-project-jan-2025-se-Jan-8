@@ -35,7 +35,7 @@ services:
 
   # Worker Service (Depends on Infrastructure)
   celery-worker:
-    image: ${REGISTRY_URL}/studyhub-celery:latest
+    image: studyhub-celery:latest
     build:
       context: ..
       dockerfile: docker/studyindexer/celery/Dockerfile
@@ -71,7 +71,7 @@ services:
 
   # Main Search Service (Depends on Worker and Infrastructure)
   studyindexer:
-    image: ${REGISTRY_URL}/studyhub-indexer:latest
+    image: studyhub-indexer:latest
     build: 
       context: ..
       dockerfile: docker/studyindexer/Dockerfile
@@ -104,7 +104,7 @@ services:
 
   # Independent Application Services
   backend:
-    image: ${REGISTRY_URL}/studyhub-backend:latest
+    image: studyhub-backend:latest
     build: 
       context: ..
       dockerfile: docker/backend/Dockerfile
@@ -134,7 +134,7 @@ services:
         condition: service_healthy
 
   frontend:
-    image: ${REGISTRY_URL}/studyhub-frontend:latest
+    image: studyhub-frontend:latest
     build: 
       context: ..
       dockerfile: docker/frontend/Dockerfile
