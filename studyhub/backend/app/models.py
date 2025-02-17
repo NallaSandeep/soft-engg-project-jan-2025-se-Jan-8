@@ -1,3 +1,4 @@
+''' please ignore '''
 class Assignment(db.Model):
     """Assignment model"""
     __tablename__ = 'assignments'
