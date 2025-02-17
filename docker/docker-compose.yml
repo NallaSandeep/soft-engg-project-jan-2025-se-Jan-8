@@ -97,7 +97,7 @@ services:
     networks:
       - studyhub-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -125,10 +125,13 @@ services:
     networks:
       - studyhub-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
       interval: 10s
       timeout: 5s
       retries: 3
+    depends_on:
+      studyindexer:
+        condition: service_healthy
 
   frontend:
     image: ${REGISTRY_URL}/studyhub-frontend:latest
@@ -148,6 +151,9 @@ services:
       - WDS_SOCKET_PORT=0
     networks:
       - studyhub-network
+    depends_on:
+      backend:
+        condition: service_healthy
 
 volumes:
   redis-data:
