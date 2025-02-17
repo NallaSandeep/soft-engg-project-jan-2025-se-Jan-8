@@ -1,0 +1,33 @@
+{
+    "name": "StudyHub Development",
+    "dockerComposeFile": "../docker/docker-compose.yml",
+    "service": "backend",
+    "workspaceFolder": "/workspace",
+    
+    // Features to add to the dev container. More info: https://containers.dev/features.
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+
+    // Configure tool-specific properties.
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                "ms-python.python",
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode"
+            ]
+        }
+    },
+
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    "forwardPorts": [3000, 5000, 8000, 8001, 6379],
+
+    // Use 'postCreateCommand' to run commands after the container is created.
+    "postCreateCommand": "pip install -r studyhub/backend/requirements.txt && pip install -r studyindexer/requirements.txt",
+
+    // Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+    "remoteUser": "vscode"
+} 
