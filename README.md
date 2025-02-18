@@ -18,7 +18,7 @@ git checkout <your-branch-name>
 ```
 2️⃣ Navigate to the frontend_design Folder
 ```sh
-cd frontend_design
+cd final
 ```
 3️⃣ Install Dependencies
 Ensure you have Node.js (>=14.0) installed, then run:
