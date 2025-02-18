@@ -12,9 +12,9 @@ Follow these steps to set up and run the frontend:
 
 ### 1️⃣ Clone the Repository & Switch to the Branch  
 ```sh
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
-git checkout <your-branch-name>
+git clone https://github.com/NallaSandeep/soft-engg-project-jan-2025-se-Jan-8.git
+cd soft-engg-project-jan-2025-se-Jan-8
+git checkout frontend_design
 ```
 2️⃣ Navigate to the frontend_design Folder
 ```sh
