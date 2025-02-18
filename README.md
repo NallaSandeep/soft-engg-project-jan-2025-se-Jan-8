@@ -32,12 +32,14 @@ npm start
 This will start the app on http://localhost:3000/.
 
 
-⚡ Next Steps:
+⚡ Login Credentials:
 ```
-Integrate with the backend APIs once available.
-Enhance UI components for better accessibility and responsiveness.
-Optimize performance for faster load times.
+Email: admin@studyhub.com, password: admin123
+Email: student@studyhub.com, password: student123
+Email: ta@studyhub.com, password: ta123
 ```
+> **Note:** Since this is a frontend-only project, authentication is simulated using mock data.
+
 🛠️ Tech Stack
 Frontend: React, JavaScript
 Styling: Bootstrap 
