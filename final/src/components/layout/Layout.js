@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import Chat from '../Chat';
 
@@ -19,9 +20,10 @@ const Layout = () => {
     }, [navigate]);
 
     return (
-        <div className="min-h-screen bg-dark text-white">
-            <Navbar />
-            <main className="flex-1 container py-4">
+        <div className="min-h-screen bg-zinc-100 dark:bg-zinc-900">
+            {/* <Sidebar user={user}/> */}
+            <Navbar user={user}/>
+            <main className="flex-1 container bg-zinc-100 dark:bg-zinc-900 py-4">
                 <Outlet />
             </main>
             <Chat />

@@ -7,7 +7,7 @@ const MainLayout = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-zinc-100 dark:bg-zinc-900">
             <Navbar />
             <div className="flex">
                 <Sidebar />

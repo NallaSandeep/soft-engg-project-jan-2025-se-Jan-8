@@ -40,45 +40,45 @@ export const useTheme = () => {
 
 // Theme constants
 export const themeConfig = {
-  colors: {
-    light: {
-      primary: '#ffffff',
-      secondary: '#f3f4f6',
-      accent: '#e5e7eb',
-      text: {
-        primary: '#1a1a1a',
-        secondary: '#4b5563'
-      }
-    },
-    dark: {
-      primary: '#1a1a1a',
-      secondary: '#2d2d2d',
-      accent: '#3b3b3b',
-      text: {
-        primary: '#ffffff',
-        secondary: '#a0a0a0'
-      }
-    },
-    brand: {
-      primary: '#3b82f6',
-      secondary: '#60a5fa',
-      success: '#22c55e',
-      warning: '#f59e0b',
-      error: '#ef4444'
-    }
-  },
-  spacing: {
-    sidebar: '280px',
-    chat: '320px'
-  },
-  transition: {
-    default: 'all 0.3s ease',
-    fast: 'all 0.15s ease',
-    slow: 'all 0.5s ease'
-  },
-  shadow: {
-    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-  }
+  // colors: {
+  //   light: {
+  //     primary: '#ffffff',
+  //     secondary: '#f3f4f6',
+  //     accent: '#e5e7eb',
+  //     text: {
+  //       primary: '#1a1a1a',
+  //       secondary: '#4b5563'
+  //     }
+  //   },
+  //   dark: {
+  //     primary: '#1a1a1a',
+  //     secondary: '#2d2d2d',
+  //     accent: '#3b3b3b',
+  //     text: {
+  //       primary: '#ffffff',
+  //       secondary: '#a0a0a0'
+  //     }
+  //   },
+  //   brand: {
+  //     primary: '#3b82f6',
+  //     secondary: '#60a5fa',
+  //     success: '#22c55e',
+  //     warning: '#f59e0b',
+  //     error: '#ef4444'
+  //   }
+  // },
+  // spacing: {
+  //   sidebar: '280px',
+  //   chat: '320px'
+  // },
+  // transition: {
+  //   default: 'all 0.3s ease',
+  //   fast: 'all 0.15s ease',
+  //   slow: 'all 0.5s ease'
+  // },
+  // shadow: {
+  //   sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+  //   md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+  //   lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+  // }
 }; 

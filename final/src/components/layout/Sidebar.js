@@ -1,14 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useTheme } from '../../contexts/ThemeContext';
 import kbService from '../../services/kbService';
-import { PlusIcon, BookOpenIcon } from '@heroicons/react/outline';
+import { 
+    AcademicCapIcon,
+    PlusIcon,
+    BookOpenIcon,
+    XMarkIcon,
+    Bars3Icon,
+    HomeIcon,
+    UserGroupIcon,
+    BookmarkIcon,
+    ClipboardDocumentListIcon
+} from '@heroicons/react/24/outline';
 import CreateKnowledgeBase from '../personal/CreateKnowledgeBase';
 
 const Sidebar = () => {
     const { user } = useAuth();
+    const { isDark } = useTheme();
     const [knowledgeBases, setKnowledgeBases] = useState([]);
     const [showCreateKB, setShowCreateKB] = useState(false);
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -30,28 +43,27 @@ const Sidebar = () => {
             switch (user?.role) {
                 case 'admin':
                     return [
-                        { to: '/admin/dashboard', text: 'Dashboard' },
-                        { to: '/admin/users', text: 'Users' },
-                        { to: '/admin/courses', text: 'Courses' }
+                        { to: '/admin/dashboard', text: 'Dashboard', icon: HomeIcon },
+                        { to: '/admin/users', text: 'Users', icon: UserGroupIcon },
+                        { to: '/admin/courses', text: 'Courses', icon: BookmarkIcon }
                     ];
                 case 'ta':
                     return [
-                        { to: '/ta/dashboard', text: 'Dashboard' },
-                        { to: '/ta/courses', text: 'My Courses' },
-                        { to: '/ta/grading', text: 'Grade Assignments' }
+                        { to: '/ta/dashboard', text: 'Dashboard', icon: HomeIcon },
+                        { to: '/ta/courses', text: 'My Courses', icon: BookmarkIcon },
+                        { to: '/ta/grading', text: 'Grade Assignments', icon: ClipboardDocumentListIcon }
                     ];
                 case 'student':
                     return [
-                        { to: '/student/dashboard', text: 'Dashboard' },
-                        { to: '/student/courses', text: 'My Courses' },
-                        { to: '/student/assignments', text: 'Assignments' }
+                        { to: '/student/dashboard', text: 'Dashboard', icon: HomeIcon },
+                        { to: '/student/courses', text: 'My Courses', icon: BookmarkIcon },
+                        { to: '/student/assignments', text: 'Assignments', icon: ClipboardDocumentListIcon }
                     ];
                 default:
                     return [];
             }
         })();
 
-        // Add Knowledge Base links
         const kbLinks = [
             {
                 to: '/knowledge-base',
@@ -80,60 +92,123 @@ const Sidebar = () => {
 
     const handleCreateKBSuccess = () => {
         loadKnowledgeBases();
+        setShowCreateKB(false);
     };
 
     return (
-        <aside className="w-64 bg-white shadow-lg min-h-screen">
-            <div className="p-4">
-                <nav className="space-y-6">
-                    {Object.entries(groupedLinks).map(([group, links]) => (
-                        <div key={group}>
-                            {group !== 'Main' && (
-                                <div className="flex items-center justify-between px-4 mb-2">
-                                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        {group}
+        <>
+            {/* Mobile Menu Button */}
+            <button
+                onClick={() => setIsMobileOpen(true)}
+                className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white dark:bg-zinc-800"
+            >
+                <Bars3Icon className="h-6 w-6 text-zinc-900 dark:text-white" />
+            </button>
+
+            {/* Sidebar */}
+            <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-white dark:bg-zinc-900
+                            transform transition-transform duration-200 ease-in-out 
+                            ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
+                            border-r border-zinc-200 dark:border-zinc-800`}>
+                <div className="h-full flex flex-col">
+                    {/* Logo Section */}
+                    <div className="p-6 border-b border-zinc-200 dark:border-zinc-800">
+                        <div className="flex items-center space-x-3">
+                            <AcademicCapIcon className="h-8 w-8 text-zinc-900 dark:text-white" />
+                            <span className="text-lg font-semibold text-zinc-900 dark:text-white">
+                                StudyHub
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Navigation */}
+                    <nav className="flex-1 p-4 space-y-8 overflow-y-auto">
+                        {/* Main Links */}
+                        <div className="space-y-1">
+                            {groupedLinks['Main']?.map((link) => (
+                                <NavLink
+                                    key={link.to}
+                                    to={link.to}
+                                    onClick={() => setIsMobileOpen(false)}
+                                    className={({ isActive }) =>
+                                        `flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 
+                                        ${isActive 
+                                            ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
+                                            : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                                        }`
+                                    }
+                                >
+                                    {link.icon && (
+                                        <link.icon className="h-5 w-5 mr-3" />
+                                    )}
+                                    {link.text}
+                                </NavLink>
+                            ))}
+                        </div>
+
+                        {/* Knowledge Base Section */}
+                        {groupedLinks['Knowledge Bases'] && (
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between px-4">
+                                    <h3 className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                                        Knowledge Bases
                                     </h3>
                                     <button
                                         onClick={() => setShowCreateKB(true)}
-                                        className="text-gray-400 hover:text-gray-500"
-                                        title="Create Knowledge Base"
+                                        className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors"
                                     >
-                                        <PlusIcon className="h-4 w-4" />
+                                        <PlusIcon className="h-4 w-4 text-zinc-500 dark:text-zinc-400" />
                                     </button>
                                 </div>
-                            )}
-                            <div className="mt-2 space-y-1">
-                                {links.map((link) => (
-                                    <NavLink
-                                        key={link.to}
-                                        to={link.to}
-                                        className={({ isActive }) =>
-                                            `flex items-center px-4 py-2 rounded-lg transition-colors ${
-                                                isActive
-                                                    ? 'bg-blue-50 text-blue-700'
-                                                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                                            }`
-                                        }
-                                    >
-                                        {link.icon && (
-                                            <link.icon className="h-5 w-5 mr-2" />
-                                        )}
-                                        {link.text}
-                                    </NavLink>
-                                ))}
+                                <div className="space-y-1">
+                                    {groupedLinks['Knowledge Bases'].map((link) => (
+                                        <NavLink
+                                            key={link.to}
+                                            to={link.to}
+                                            onClick={() => setIsMobileOpen(false)}
+                                            className={({ isActive }) =>
+                                                `flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors
+                                                ${isActive 
+                                                    ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
+                                                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                                                }`
+                                            }
+                                        >
+                                            {link.icon && (
+                                                <link.icon className="h-5 w-5 mr-3" />
+                                            )}
+                                            <span className="truncate">{link.text}</span>
+                                        </NavLink>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </nav>
-            </div>
+                        )}
+                    </nav>
+                </div>
+            </aside>
+
+            {/* Mobile Backdrop */}
+            {isMobileOpen && (
+                <div 
+                    className="fixed inset-0 bg-zinc-900/20 md:hidden z-30"
+                    onClick={() => setIsMobileOpen(false)}
+                >
+                    <button
+                        onClick={() => setIsMobileOpen(false)}
+                        className="absolute top-4 left-[19rem] p-2 rounded-lg bg-white dark:bg-zinc-800"
+                    >
+                        <XMarkIcon className="h-5 w-5 text-zinc-900 dark:text-white" />
+                    </button>
+                </div>
+            )}
 
             <CreateKnowledgeBase
                 isOpen={showCreateKB}
                 onClose={() => setShowCreateKB(false)}
                 onSuccess={handleCreateKBSuccess}
             />
-        </aside>
+        </>
     );
 };
 
-export default Sidebar; 
+export default Sidebar;

@@ -6,41 +6,51 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        'mono': ['Inconsolata', 'monospace'],
+      },
       colors: {
-        // Light theme
+        // Light theme colors
         light: {
           primary: '#ffffff',
-          secondary: '#f3f4f6',
-          accent: '#e5e7eb',
+          secondary: '#fafafa',
+          accent: '#f5f5f5',
           text: {
             primary: '#1a1a1a',
-            secondary: '#4b5563'
+            secondary: '#4b5563',
+            tertiary: '#6b7280'
           }
         },
-        // Dark theme
+        // Dark theme colors
         dark: {
-          primary: '#1a1a1a',
-          secondary: '#2d2d2d',
-          accent: '#3b3b3b',
+          primary: '#121212',
+          secondary: '#1e1e1e',
+          accent: '#2d2d2d',
           text: {
             primary: '#ffffff',
-            secondary: '#a0a0a0'
+            secondary: '#e5e5e5',
+            tertiary: '#a3a3a3'
           }
         },
         // Brand colors
         brand: {
-          primary: '#3b82f6',
-          secondary: '#60a5fa',
-          success: '#22c55e',
-          warning: '#f59e0b',
-          error: '#ef4444'
+          primary: '#2563eb',
+          secondary: '#3b82f6',
+          success: '#16a34a',
+          warning: '#d97706',
+          error: '#dc2626',
+          info: '#0284c7',
+          // Hover states
+          'primary-hover': '#1d4ed8',
+          'secondary-hover': '#2563eb',
+          'success-hover': '#15803d',
+          'warning-hover': '#b45309',
+          'error-hover': '#b91c1c',
+          'info-hover': '#0369a1'
         }
       },
-      spacing: {
-        'sidebar': '280px',
-        'chat': '320px'
-      }
     },
   },
-  plugins: [],
-} 
+  plugins: [
+  ],
+}
