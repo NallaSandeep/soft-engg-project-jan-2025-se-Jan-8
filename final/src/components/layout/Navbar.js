@@ -1,46 +1,119 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import ThemeToggle from '../themeToggle/ThemeToggle';
+import { 
+    UserCircleIcon,
+    AcademicCapIcon,
+    BookOpenIcon,
+    ClipboardDocumentListIcon,
+    ChartBarIcon,
+    UsersIcon,
+    Cog6ToothIcon
+} from '@heroicons/react/24/outline';
 
 const Navbar = () => {
-    const user = {
-        role: 'student',
-        first_name: 'John',
-        last_name: 'Doe'
-    };
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
     
+    useEffect(() => {
+        const storedUser = sessionStorage.getItem('userRole');
+        console.log(storedUser);
+        if (storedUser) {
+            setUser(storedUser);
+        } else {
+            navigate('/login');
+        }
+    }, [navigate]);
+
     const logout = () => {
-        localStorage.removeItem('user');
         sessionStorage.removeItem('user');
         navigate('/login');
     };
 
     const getNavLinks = () => {
-        switch (user.role) {
+        if (!user) return [];
+
+        switch (user) {
             case 'admin':
                 return [
-                    { to: '/admin/dashboard', text: 'Dashboard' },
-                    { to: '/admin/users', text: 'Users' },
-                    { to: '/admin/courses', text: 'Courses' }
+                    { 
+                        to: '/admin/dashboard', 
+                        text: 'Dashboard',
+                        icon: ChartBarIcon 
+                    },
+                    { 
+                        to: '/admin/users', 
+                        text: 'Users',
+                        icon: UsersIcon 
+                    },
+                    { 
+                        to: '/admin/courses', 
+                        text: 'Courses',
+                        icon: BookOpenIcon 
+                    },
+                    { 
+                        to: '/admin/settings', 
+                        text: 'Settings',
+                        icon: Cog6ToothIcon 
+                    }
                 ];
             case 'ta':
                 return [
-                    { to: '/ta/dashboard', text: 'Dashboard' },
-                    { to: '/ta/courses', text: 'My Courses' },
-                    { to: '/ta/grading', text: 'Grade Assignments' }
+                    { 
+                        to: '/ta/dashboard', 
+                        text: 'Dashboard',
+                        icon: ChartBarIcon 
+                    },
+                    { 
+                        to: '/ta/courses', 
+                        text: 'My Courses',
+                        icon: BookOpenIcon 
+                    },
+                    { 
+                        to: '/ta/assignments', 
+                        text: 'Grade Assignments',
+                        icon: ClipboardDocumentListIcon 
+                    }
                 ];
             case 'student':
                 return [
-                    { to: '/student/dashboard', text: 'Dashboard' },
-                    { to: '/student/courses', text: 'My Courses' },
-                    { to: '/student/assignments', text: 'Assignments' },
-                    { to: '/knowledge-base', text: 'Knowledge Base' }
+                    { 
+                        to: '/student/dashboard', 
+                        text: 'Dashboard',
+                        icon: ChartBarIcon 
+                    },
+                    { 
+                        to: '/student/courses', 
+                        text: 'My Courses',
+                        icon: BookOpenIcon 
+                    },
+                    { 
+                        to: '/student/assignments', 
+                        text: 'Assignments',
+                        icon: ClipboardDocumentListIcon 
+                    }
                 ];
             default:
                 return [];
         }
     };
+
+    const getRoleLabel = () => {
+        switch (user?.role) {
+            case 'admin':
+                return 'Administrator';
+            case 'ta':
+                return 'Teaching Assistant';
+            case 'student':
+                return 'Student';
+            default:
+                return '';
+        }
+    };
+
+    if (!user) {
+        return <div className="h-16 bg-zinc-100 dark:bg-zinc-900"></div>;
+    }
 
     return (
         <nav className="sticky top-0 z-20 bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
@@ -48,8 +121,10 @@ const Navbar = () => {
                 <div className="flex justify-between h-16 items-center">
                     {/* Logo */}
                     <div className="flex items-center space-x-8">
-                        <Link to={"/"+user.role+"/dashboard"} className="text-xl font-bold text-zinc-900 dark:text-white no-underline">
-                            StudyHub
+                        <Link to={`/${user.role}/dashboard`} 
+                              className="flex items-center space-x-2 text-xl font-bold text-zinc-900 dark:text-white no-underline">
+                            <AcademicCapIcon className="h-8 w-8" />
+                            <span>StudyHub</span>
                         </Link>
 
                         {/* Desktop Navigation */}
@@ -59,7 +134,8 @@ const Navbar = () => {
                                     key={link.to}
                                     to={link.to}
                                     className={({ isActive }) =>
-                                        `px-1 py-2 text-sm font-medium transition-all duration-200 relative
+                                        `flex items-center space-x-2 px-1 py-2 text-sm font-medium 
+                                        transition-all duration-200 relative
                                         ${isActive 
                                             ? 'text-zinc-900 dark:text-white' 
                                             : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
@@ -68,10 +144,12 @@ const Navbar = () => {
                                         after:w-full after:bg-zinc-900 after:dark:bg-white 
                                         after:transform after:origin-bottom-left
                                         after:transition-transform after:duration-200
-                                        ${isActive ? 'after:scale-x-100' : 'after:scale-x-0 hover:after:scale-x-100'} no-underline`
+                                        ${isActive ? 'after:scale-x-100' : 'after:scale-x-0 hover:after:scale-x-100'} 
+                                        no-underline`
                                     }
                                 >
-                                    {link.text}
+                                    <link.icon className="h-4 w-4" />
+                                    <span>{link.text}</span>
                                 </NavLink>
                             ))}
                         </div>
@@ -79,9 +157,14 @@ const Navbar = () => {
 
                     {/* User Info & Actions */}
                     <div className="flex items-center space-x-6">
-                        <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                            {user.role === 'student' ? 'Welcome, Student' : `Welcome, ${user.first_name} ${user.last_name}`}
-                        </span>
+                        <div className="flex flex-col items-end">
+                            <span className="text-sm font-medium text-zinc-900 dark:text-white">
+                               Welcome back, {user?.first_name || user?.username || 'User'} 
+                            </span>
+                            <span className="text-xs text-zinc-600 dark:text-zinc-400">
+                                {getRoleLabel()}
+                            </span>
+                        </div>
                         <ThemeToggle />
                         <button
                             onClick={logout}
@@ -98,20 +181,22 @@ const Navbar = () => {
 
             {/* Mobile Navigation */}
             <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800">
-                <div className="px-2 py-3">
+                <div className="px-2 py-3 space-y-1">
                     {getNavLinks().map((link) => (
                         <NavLink
                             key={link.to}
                             to={link.to}
                             className={({ isActive }) =>
-                                `block px-3 py-2 text-base font-medium transition-all duration-200
+                                `flex items-center space-x-3 px-3 py-2 text-base font-medium 
+                                transition-all duration-200
                                 ${isActive 
-                                    ? 'text-zinc-900 dark:text-white border-l-2 border-zinc-900 dark:border-white pl-4' 
+                                    ? 'text-zinc-900 dark:text-white bg-zinc-200 dark:bg-zinc-800 rounded-lg' 
                                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
                                 }`
                             }
                         >
-                            {link.text}
+                            <link.icon className="h-5 w-5" />
+                            <span>{link.text}</span>
                         </NavLink>
                     ))}
                 </div>

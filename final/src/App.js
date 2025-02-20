@@ -27,6 +27,21 @@ import KnowledgeBaseLanding from './components/personal/KnowledgeBaseLanding';
 // Admin Routes
 import adminRoutes from './routes/AdminRoutes';
 
+// TA Routes
+import TADashboard from './components/ta/Dashboard';
+import TAAssignments from './components/ta/AssignmentGrading';
+import TACourses from './components/ta/Courses';
+
+const taRoutes = [
+    {
+        path: '/ta',
+        children: [
+            { path: 'dashboard', element: <TADashboard /> },
+            { path: 'assignments', element: <TAAssignments /> },
+            { path: 'courses', element: <TACourses/> },
+        ]
+    }
+];
 
 const App = () => {
     const renderRoutes = (routes) => {
@@ -70,6 +85,9 @@ const App = () => {
                                         <Route path="assignments" element={<AssignmentList />} />
                                     </Route>
 
+                                    {/* TA Routes */}
+                                    {renderRoutes(taRoutes)}
+
                                     {/* Course and Assignment Routes */}
                                     <Route path="/courses/:courseId" element={<CourseView />} />
                                     <Route path="/courses/:courseId/lectures/:lectureId" element={<LectureView />} />
@@ -95,4 +113,4 @@ const App = () => {
     );
 };
 
-export default App; 
+export default App;

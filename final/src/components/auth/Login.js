@@ -67,7 +67,13 @@ const Login = () => {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         disabled={loading}
-                                        className="w-full px-3 py-2.5 bg-zinc-100 dark:bg-zinc-800 border-1 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-zinc-100 rounded-md focus:ring-zinc-300 dark:focus:ring-zinc-400 focus:border-transparent transition-all duration-200"
+                                        className="w-full px-3 py-2.5 bg-zinc-100 dark:bg-zinc-800 
+                                        border border-zinc-300 dark:border-zinc-600 text-sm
+                                        text-zinc-900 dark:text-zinc-100 rounded-md 
+                                        focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500
+                                        focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-500
+                                        disabled:opacity-50 disabled:cursor-not-allowed
+                                        transition-all duration-200 font-medium"
                                         placeholder="Enter your email"
                                         required
                                     />
@@ -81,8 +87,14 @@ const Login = () => {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         disabled={loading}
-                                        className="w-full px-3 py-2.5 bg-zinc-100 dark:bg-zinc-800 border-1 border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-zinc-100 rounded-md focus:ring-zinc-300 dark:focus:ring-zinc-600 focus:border-transparent transition-all duration-200"
-                                        placeholder="••••••••"
+                                        className="w-full px-3 py-2.5 bg-zinc-100 dark:bg-zinc-800 
+                                        border border-zinc-300 dark:border-zinc-600 text-sm
+                                        text-zinc-900 dark:text-zinc-100 rounded-md 
+                                        focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500
+                                        focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-500
+                                        disabled:opacity-50 disabled:cursor-not-allowed
+                                            transition-all duration-200"
+                                        placeholder="• • • • • • • •"
                                         required
                                     />
                                 </div>
@@ -91,9 +103,9 @@ const Login = () => {
                             <div className="flex items-center justify-between">
                                 <label className="flex items-center">
                                     <input type="checkbox" className="w-4 h-4 rounded border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 dark:focus:ring-zinc-100 bg-white dark:bg-zinc-900"/>
-                                    <span className="ml-2 text-sm text-zinc-600 dark:text-zinc-400">Remember me</span>
+                                    <span className="ml-2 text-sm text-zinc-600 dark:text-zinc-400 text-xs ">Remember me</span>
                                 </label>
-                                <a href="/forgot-password" className="text-sm text-zinc-900 dark:text-zinc-100 hover:text-zinc-700 dark:hover:text-zinc-300">
+                                <a href="/forgot-password" className="text-xs text-zinc-900 dark:text-zinc-100 hover:text-zinc-700 dark:hover:text-zinc-300">
                                     Forgot password?
                                 </a>
                             </div>

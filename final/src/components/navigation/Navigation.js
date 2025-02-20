@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 const Navigation = () => {
     const { user } = useAuth();
+    console.log(user);
 
     const adminLinks = [
         { to: '/admin/users', text: 'Users', icon: 'users' },
@@ -13,6 +14,7 @@ const Navigation = () => {
     ];
 
     const taLinks = [
+        { to: '/ta/dashboard', text: 'Dashboard', icon: 'home' },
         { to: '/ta/courses', text: 'My Courses', icon: 'book' },
         { to: '/ta/assignments', text: 'Assignments', icon: 'clipboard' },
         { to: '/ta/grades', text: 'Grading', icon: 'check-square' }

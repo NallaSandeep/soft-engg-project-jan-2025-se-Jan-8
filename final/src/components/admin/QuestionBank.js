@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { questionBankApi } from '../../services/apiService';
-import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
+import { 
+    PencilIcon, 
+    TrashIcon,
+    EyeIcon,
+    PlusIcon,
+    AdjustmentsHorizontalIcon,
+    MagnifyingGlassIcon,
+    QuestionMarkCircleIcon
+} from '@heroicons/react/24/outline';
 
 const QuestionBank = () => {
     const navigate = useNavigate();
@@ -16,6 +24,7 @@ const QuestionBank = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 10;
+
 
     useEffect(() => {
         fetchQuestions();

@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import { PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
+import { 
+    PencilIcon, 
+    TrashIcon, 
+    EyeIcon,
+    PlusIcon,
+    ClipboardDocumentListIcon
+} from '@heroicons/react/24/outline';
+
 
 const mockAssignments = [
     {
@@ -57,72 +64,135 @@ const AssignmentsList = () => {
     };
 
     return (
-        <div className="p-6 bg-gray-900 text-yellow-400 min-h-screen">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-yellow-400">Assignments</h1>
-                <button
-                    onClick={() => navigate('/admin/assignments/new')}
-                    className="bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-yellow-600 transition duration-200"
-                >
-                    + Create Assignment
-                </button>
-            </div>
+        <div className="min-h-screen bg-zinc-100 dark:bg-zinc-900">
+            <div className="max-w-7xl mx-auto space-y-8 p-6">
+                {/* Header */}
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
+                            Assignments
+                        </h1>
+                        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+                            Manage course assignments
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => navigate('/admin/assignments/new')}
+                        className="flex items-center space-x-2 px-4 py-2 rounded-lg
+                                 bg-zinc-800 dark:bg-white
+                                 text-white dark:text-zinc-900
+                                 hover:bg-zinc-700 dark:hover:bg-zinc-100
+                                 transition-colors duration-200"
+                    >
+                        <PlusIcon className="h-5 w-5" />
+                        <span>Create Assignment</span>
+                    </button>
+                </div>
 
-            <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-700">
-                    <thead className="bg-gray-700 text-yellow-400">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Course</th>
-                            <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Week</th>
-                            <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Title</th>
-                            <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Type</th>
-                            <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Due Date</th>
-                            <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Points</th>
-                            <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-gray-800 divide-y divide-gray-700 text-yellow-300">
-                        {assignments.map((assignment) => (
-                            <tr
-                                key={assignment.id}
-                                onClick={() => handleRowClick(assignment.id)}
-                                className="hover:bg-gray-700 transition duration-200 cursor-pointer"
-                            >
-                                <td className="px-6 py-4 text-sm">{assignment.course.name}</td>
-                                <td className="px-6 py-4 text-sm">Week {assignment.week.number}</td>
-                                <td className="px-6 py-4 text-sm">{assignment.title}</td>
-                                <td className="px-6 py-4">
-                                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                                        assignment.type === 'practice' ? 'bg-green-600 text-green-100' : 'bg-blue-600 text-blue-100'
-                                    }`}>
-                                        {assignment.type === 'practice' ? 'Practice' : 'Graded'}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 text-sm">{format(new Date(assignment.due_date), 'MMM d, yyyy')}</td>
-                                <td className="px-6 py-4 text-sm">{assignment.points_possible} pts</td>
-                                <td className="px-6 py-4">
-                                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                                        assignment.is_published ? 'bg-green-600 text-green-100' : 'bg-yellow-600 text-yellow-100'
-                                    }`}>
-                                        {assignment.is_published ? 'Published' : 'Draft'}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 text-sm space-x-3 flex">
-                                    <button onClick={(e) => handleRowClick(assignment.id)} className="text-yellow-400 hover:text-yellow-300 transition duration-150">
-                                        <EyeIcon className="h-5 w-5" />
-                                    </button>
-                                    <button onClick={(e) => handleEdit(e, assignment.id)} className="text-blue-400 hover:text-blue-300 transition duration-150">
-                                        <PencilIcon className="h-5 w-5" />
-                                    </button>
-                                    <button onClick={(e) => handleDeleteRow(e, assignment.id)} className="text-red-400 hover:text-red-300 transition duration-150">
-                                        <TrashIcon className="h-5 w-5" />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                {/* Assignments Table */}
+                <div className="bg-white/60 dark:bg-zinc-800/40 backdrop-blur-sm rounded-xl 
+                              shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] 
+                              dark:shadow-[0_2px_8px_-3px_rgba(0,0,0,0.2)]">
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead>
+                                <tr className="border-b border-zinc-200 dark:border-zinc-700">
+                                    <th className="text-left p-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">Course</th>
+                                    <th className="text-left p-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">Week</th>
+                                    <th className="text-left p-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">Title</th>
+                                    <th className="text-left p-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">Type</th>
+                                    <th className="text-left p-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">Due Date</th>
+                                    <th className="text-left p-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">Points</th>
+                                    <th className="text-left p-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">Status</th>
+                                    <th className="text-right p-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {assignments.map((assignment) => (
+                                    <tr
+                                        key={assignment.id}
+                                        onClick={() => handleRowClick(assignment.id)}
+                                        className="border-b border-zinc-200 dark:border-zinc-700 last:border-0
+                                                 hover:bg-zinc-50 dark:hover:bg-zinc-800/50
+                                                 transition-colors duration-200 cursor-pointer"
+                                    >
+                                        <td className="p-4">
+                                            <div className="flex items-center space-x-3">
+                                                <ClipboardDocumentListIcon className="h-5 w-5 text-zinc-400 dark:text-zinc-500" />
+                                                <span className="font-medium text-zinc-900 dark:text-white">
+                                                    {assignment.course.code}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="p-4 text-zinc-600 dark:text-zinc-400">
+                                            Week {assignment.week.number}
+                                        </td>
+                                        <td className="p-4 text-zinc-600 dark:text-zinc-400">
+                                            {assignment.title}
+                                        </td>
+                                        <td className="p-4">
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                                ${assignment.type === 'practice'
+                                                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100'
+                                                    : 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'
+                                                }`}
+                                            >
+                                                {assignment.type.charAt(0).toUpperCase() + assignment.type.slice(1)}
+                                            </span>
+                                        </td>
+                                        <td className="p-4 text-zinc-600 dark:text-zinc-400">
+                                            {format(new Date(assignment.due_date), 'MMM d, yyyy')}
+                                        </td>
+                                        <td className="p-4 text-zinc-600 dark:text-zinc-400">
+                                            {assignment.points_possible} pts
+                                        </td>
+                                        <td className="p-4">
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                                ${assignment.is_published
+                                                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100'
+                                                    : 'bg-amber-100 text-amber-800 dark:bg-amber-800 dark:text-amber-100'
+                                                }`}
+                                            >
+                                                {assignment.is_published ? 'Published' : 'Draft'}
+                                            </span>
+                                        </td>
+                                        <td className="p-4">
+                                            <div className="flex justify-end space-x-2">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleRowClick(assignment.id);
+                                                    }}
+                                                    className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700
+                                                             text-zinc-600 dark:text-zinc-400
+                                                             transition-colors duration-200"
+                                                >
+                                                    <EyeIcon className="h-5 w-5" />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => handleEdit(e, assignment.id)}
+                                                    className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700
+                                                             text-zinc-600 dark:text-zinc-400
+                                                             transition-colors duration-200"
+                                                >
+                                                    <PencilIcon className="h-5 w-5" />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => handleDeleteRow(e, assignment.id)}
+                                                    className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20
+                                                             text-red-600 dark:text-red-400
+                                                             transition-colors duration-200"
+                                                >
+                                                    <TrashIcon className="h-5 w-5" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     );
