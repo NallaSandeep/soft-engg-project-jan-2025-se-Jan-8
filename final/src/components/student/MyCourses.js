@@ -76,7 +76,7 @@ const MyCourses = () => {
                             </div>
                             <span className={`text-xs px-2 py-1 rounded-full transition-colors
                                 ${course.is_active 
-                                    ? 'bg-zinc-900/90 text-white dark:bg-white/90 dark:text-zinc-900' 
+                                    ? 'bg-zinc-900/90 text-zinc-100 dark:bg-white/90 dark:text-zinc-900' 
                                     : 'bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300'
                                 }`}>
                                 {course.is_active ? 'Active' : 'Completed'}

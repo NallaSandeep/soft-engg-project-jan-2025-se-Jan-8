@@ -72,94 +72,169 @@ const LectureView = () => {
         return match ? match[1] : null;
     };
 
-    if (!lecture) return <div className="text-center text-light mt-5">Lecture not found</div>;
+    if (!lecture) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen bg-zinc-50 dark:bg-zinc-900">
+                <div className="text-zinc-900 dark:text-white mb-4">Lecture not found</div>
+                <button
+                    onClick={() => navigate('/courses')}
+                    className="px-4 py-2 text-sm font-medium rounded-lg
+                             bg-zinc-900 dark:bg-white 
+                             text-white dark:text-zinc-900
+                             hover:bg-zinc-800 dark:hover:bg-zinc-100
+                             transition-colors duration-200"
+                >
+                    Return to Course
+                </button>
+            </div>
+        );
+    }
 
     const videoId = getYouTubeVideoId(lecture.youtube_url);
-
     return (
-        <div className="d-flex vh-100 bg-dark text-light">
+        <div className="flex h-screen bg-zinc-50 dark:bg-zinc-900">
             {/* Sidebar */}
-            <div className="bg-black p-3 text-warning" style={{ width: "250px", overflowY: "auto" }}>
-                <h4 className="mb-3">Course Content</h4>
-                <button
-                    className="btn btn-outline-warning w-100 text-start mb-2"
-                    onClick={() => navigate('/courses')}
-                >
-                    ← Back to Course
-                </button>
-                <div className="mt-2">
+            <div className="w-72 bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm overflow-y-auto">
+                <div className="p-6">
+                    <button
+                        onClick={() => navigate('/courses')}
+                        className="text-sm font-medium text-zinc-900 dark:text-white
+                                 hover:text-zinc-600 dark:hover:text-zinc-400
+                                 transition-colors flex items-center gap-2"
+                    >
+                        ← Back to Course
+                    </button>
+                </div>
+                <nav className="p-4 space-y-2">
                     {Object.keys(lectureData).map(id => (
                         <button
                             key={id}
                             onClick={() => navigate(`/courses/1/lectures/${id}`)}
-                            className={`btn w-100 text-start mb-2 ${id === lectureId ? 'btn-warning' : 'btn-outline-warning'}`}
+                            className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium 
+                                      transition-colors ${id === lectureId 
+                                ? 'bg-zinc-900 text-zinc-100 dark:bg-white dark:text-zinc-900'
+                                : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700/50'
+                            }`}
                         >
                             {lectureData[id].title}
                         </button>
                     ))}
-                </div>
+                </nav>
             </div>
 
             {/* Main Content */}
-            <div className="flex-grow-1 p-4 overflow-auto">
-                {/* Video Section */}
-                <h2 className="text-warning">{lecture.title}</h2>
-                <div className="ratio ratio-16x9 my-3">
-                    <iframe
-                        src={`https://www.youtube.com/embed/${videoId}`}
-                        title={lecture.title}
-                        allowFullScreen
-                        className="rounded"
-                    ></iframe>
-                </div>
-
-                {/* Transcript Section */}
-                <div className="card bg-secondary text-light">
-                    <div className="card-header d-flex justify-content-between">
-                        <span>Lecture Transcript</span>
-                        <button
-                            onClick={() => setShowTranscript(!showTranscript)}
-                            className="btn btn-sm btn-warning"
-                        >
-                            {showTranscript ? 'Hide' : 'Show'}
-                        </button>
-                    </div>
-                    {showTranscript && (
-                        <div className="card-body" style={{ whiteSpace: "pre-wrap" }}>
-                            {lecture.transcript}
-                        </div>
-                    )}
-                </div>
-
-                {/* Notes Section */}
-                <div className="card bg-secondary text-light mt-4">
-                    <div className="card-header d-flex justify-content-between">
-                        <span>Your Notes</span>
-                        <div>
-                            {!isEditingNotes ? (
-                                <button onClick={startEditingNotes} className="btn btn-sm btn-warning">Edit</button>
-                            ) : (
-                                <>
-                                    <button onClick={saveNotes} className="btn btn-sm btn-success me-2">Save</button>
-                                    <button onClick={cancelEditingNotes} className="btn btn-sm btn-danger">Cancel</button>
-                                </>
-                            )}
+            <div className="flex-1 overflow-y-auto p-6 bg-zinc-100 dark:bg-zinc-900">
+                <div className="max-w-4xl mx-auto space-y-6">
+                    {/* Video Section */}
+                    <div className="relative mb-6">
+                        <div className="relative z-10">
+                            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">
+                                {lecture.title}
+                            </h1>
+                            <div className="w-full max-w-3xl mx-auto">
+                                <div className="relative" style={{ paddingBottom: '56.25%' }}>
+                                    <iframe
+                                        src={`https://www.youtube.com/embed/${videoId}`}
+                                        title={lecture.title}
+                                        allowFullScreen
+                                        className="absolute top-0 left-0 w-full h-full rounded-lg
+                                                 bg-zinc-200 dark:bg-zinc-800"
+                                    ></iframe>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div className="card-body">
-                        {isEditingNotes ? (
-                            <textarea
-                                value={tempNotes}
-                                onChange={handleNotesChange}
-                                className="form-control bg-dark text-light"
-                                rows="5"
-                                placeholder="Start typing your notes here..."
-                            ></textarea>
-                        ) : (
-                            <div className="bg-dark p-3 rounded" style={{ minHeight: "100px" }}>
-                                {notes || 'No notes yet. Click "Edit" to start taking notes.'}
+
+                    {/* Transcript Section */}
+                    <div className="bg-white/80 dark:bg-zinc-800/80 rounded-xl backdrop-blur-sm">
+                        <div className="flex items-center justify-between p-4">
+                            <span className="font-medium text-zinc-900 dark:text-white">
+                                Lecture Transcript
+                            </span>
+                            <button
+                                onClick={() => setShowTranscript(!showTranscript)}
+                                className="px-3 py-1 text-sm font-medium rounded-lg
+                                         bg-zinc-900 dark:bg-white 
+                                         text-zinc-100 dark:text-zinc-900
+                                         hover:bg-zinc-800 dark:hover:bg-zinc-100
+                                         transition-colors"
+                            >
+                                {showTranscript ? 'Hide' : 'Show'}
+                            </button>
+                        </div>
+                        {showTranscript && (
+                            <div className="p-4 text-zinc-600 dark:text-zinc-400 
+                                          bg-zinc-50/50 dark:bg-zinc-900/50 rounded-b-xl" 
+                                 style={{ whiteSpace: "pre-wrap" }}>
+                                {lecture.transcript}
                             </div>
                         )}
+                    </div>
+
+                    {/* Notes Section */}
+                    <div className="bg-white/80 dark:bg-zinc-800/80 rounded-xl backdrop-blur-sm">
+                        <div className="flex items-center justify-between p-4">
+                            <span className="font-medium text-zinc-900 dark:text-white">
+                                Your Notes
+                            </span>
+                            <div className="space-x-2">
+                                {!isEditingNotes ? (
+                                    <button 
+                                        onClick={startEditingNotes}
+                                        className="px-3 py-1 text-sm font-medium rounded-lg
+                                                 bg-zinc-900 dark:bg-white 
+                                                 text-zinc-100 dark:text-zinc-900
+                                                 hover:bg-zinc-800 dark:hover:bg-zinc-100
+                                                 transition-colors"
+                                    >
+                                        Edit
+                                    </button>
+                                ) : (
+                                    <>
+                                        <button 
+                                            onClick={saveNotes}
+                                            className="px-3 py-1 text-sm font-medium rounded-lg
+                                                     bg-emerald-600 text-zinc-100
+                                                     hover:bg-emerald-700
+                                                     transition-colors"
+                                        >
+                                            Save
+                                        </button>
+                                        <button 
+                                            onClick={cancelEditingNotes}
+                                            className="px-3 py-1 text-sm font-medium rounded-lg
+                                                     bg-zinc-200 dark:bg-zinc-700
+                                                     text-zinc-900 dark:text-white
+                                                     hover:bg-zinc-300 dark:hover:bg-zinc-600
+                                                     transition-colors"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                        <div className="p-4">
+                            {isEditingNotes ? (
+                                <textarea
+                                    value={tempNotes}
+                                    onChange={handleNotesChange}
+                                    className="w-full min-h-[200px] p-3 rounded-lg
+                                             bg-zinc-50 dark:bg-zinc-900
+                                             text-zinc-900 dark:text-white
+                                             focus:outline-none focus:ring-2 
+                                             focus:ring-zinc-500/50 dark:focus:ring-zinc-400/50
+                                             placeholder-zinc-400 dark:placeholder-zinc-600"
+                                    placeholder="Start typing your notes here..."
+                                />
+                            ) : (
+                                <div className="min-h-[200px] p-3 rounded-lg
+                                              bg-zinc-50 dark:bg-zinc-900
+                                              text-zinc-600 dark:text-zinc-400">
+                                    {notes || 'No notes yet. Click "Edit" to start taking notes.'}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

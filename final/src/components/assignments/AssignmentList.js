@@ -1,27 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 const assignmentData = {
     301: {
         title: 'Practice Assignment 1.1',
         course: 'Introduction to Programming',
         type: 'practice',
         points_possible: 20,
-        due_date: null
+        due_date: null,
+        week: 1
     },
     302: {
         title: 'Graded Assignment 1',
         course: 'Introduction to Programming',
         type: 'graded',
         points_possible: 50,
-        due_date: '2025-03-01'
+        due_date: '2025-03-01',
+        week: 1
     },
     303: {
         title: 'Practice Assignment 2.1',
         course: 'Data Structures',
         type: 'practice',
         points_possible: 30,
-        due_date: null
+        due_date: null,
+        week: 1
     }
 };
 
@@ -98,7 +102,7 @@ const AssignmentList = () => {
                         {filteredAssignments.map(assignment => (
                             <tr
                                 key={assignment.id}
-                                onClick={() => navigate(`/assignments/${assignment.id}`)}
+                                onClick={() => navigate(`/courses/${assignment.week}/assignments/${assignment.id}`)}
                                 className="group hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer transition-colors"
                             >
                                 <td className="px-6 py-4 whitespace-nowrap">
@@ -114,7 +118,7 @@ const AssignmentList = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
                                         ${assignment.type === 'graded' 
-                                            ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
+                                            ? 'bg-zinc-900 dark:bg-white text-zinc-100 dark:text-zinc-900'
                                             : 'bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300'
                                         }`}>
                                         {assignment.type}
