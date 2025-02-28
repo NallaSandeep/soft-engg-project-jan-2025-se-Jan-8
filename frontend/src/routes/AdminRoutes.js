@@ -15,6 +15,7 @@ import AssignmentView from '../components/admin/assignments/AssignmentView';
 import QuestionBank from '../components/admin/QuestionBank';
 import QuestionForm from '../components/admin/QuestionBank/QuestionForm';
 import QuestionList from '../components/admin/QuestionBank/QuestionList';
+import Enroll from '../components/admin/Enroll';
 
 const adminRoutes = [
     {
@@ -122,6 +123,10 @@ const adminRoutes = [
                     {
                         path: ':userId/edit',
                         element: <UserForm />
+                    },
+                    {
+                        path: 'enroll',
+                        element: <Enroll />
                     }
                 ]
             }
@@ -129,4 +134,4 @@ const adminRoutes = [
     }
 ];
 
-export default adminRoutes; 
+export default adminRoutes;

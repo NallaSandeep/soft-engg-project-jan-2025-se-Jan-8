@@ -24,6 +24,7 @@ import AssignmentView from './components/assignments/AssignmentView';
 
 // Admin Routes
 import adminRoutes from './routes/AdminRoutes';
+import Enroll from './components/admin/Enroll';
 
 const App = () => {
     const renderRoutes = (routes) => {
@@ -75,7 +76,6 @@ const App = () => {
 
                                 {/* Admin Routes */}
                                 {renderRoutes(adminRoutes)}
-
                                 {/* Catch all route */}
                                 <Route path="*" element={<Navigate to="/dashboard" replace />} />
                             </Routes>
@@ -88,4 +88,4 @@ const App = () => {
     );
 };
 
-export default App; 
+export default App;

@@ -135,6 +135,12 @@ const AdminDashboard = () => {
                     >
                         Add User
                     </button>
+                    <button
+                        onClick={() => navigate('/admin/users/enroll')}
+                        className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700"
+                    >
+                        Enroll Students/TAs
+                    </button>
                 </div>
             </div>
 
@@ -192,4 +198,4 @@ const AdminDashboard = () => {
     );
 };
 
-export default AdminDashboard; 
+export default AdminDashboard;
