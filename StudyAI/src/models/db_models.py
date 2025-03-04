@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime, timezone
 import uuid
 from pydantic import BaseModel, Field
-from typing import Optional, List, Literal
+from typing import Optional, List, Literal, Any
 
 Base = declarative_base()
 
@@ -124,7 +124,7 @@ class ChatSessionResponse(BaseModel):
 class JSONPatchOperation(BaseModel):
     op: Literal["replace", "add", "remove", "test", "move", "copy"]
     path: str
-    value: Optional[any] = None
+    value: Optional[Any] = None
     from_: Optional[str] = Field(None, alias="from")
 
 
