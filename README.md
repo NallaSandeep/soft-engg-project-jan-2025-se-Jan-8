@@ -67,11 +67,14 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 
 4. **StudyIndexer Setup**:
    ```bash
+   # Needs WSL for Windows or Linux (Ubuntu)
    cd studyindexer
    python -m venv .venv
    source .venv/bin/activate
    pip install -r requirements.txt
-   uvicorn main:app --reload
+   python manage_services.py setup
+   python manage_services.py start
+   python manage_services.py status
    ```
 
 ## Development Environment
@@ -95,15 +98,3 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 - [StudyHub Documentation](studyhub/README.md)
 - [StudyIndexer Documentation](studyindexer/README.md)
 - [StudyAI Documentation](studyai/README.md)
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details. 
