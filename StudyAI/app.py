@@ -12,7 +12,34 @@ import logging
 # Create database tables (if they don't exist)
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Course Assistant API")
+# Define tags metadata for API documentation
+tags_metadata = [
+    {
+        "name": "Chat Session",
+        "description": "Operations for managing chat sessions, including creating, retrieving, and deleting sessions, as well as sending messages.",
+    },
+    {
+        "name": "Stream Chat",
+        "description": """WebSocket endpoints for real-time, streaming chat communication.
+        Note: WebSocket connections cannot be tested directly through Swagger UI. 
+        Please use a WebSocket client or implement the WebSocket connection in your application.""",
+    },
+    {
+        "name": "Report AI",
+        "description": "Operations for reporting and managing inappropriate or incorrect AI responses.",
+    },
+    {
+        "name": "System",
+        "description": "System-level operations including health checks and service status.",
+    },
+]
+
+app = FastAPI(
+    title="Course Assistant API",
+    description="API for interacting with an AI course assistant",
+    version="1.0.0",
+    openapi_tags=tags_metadata,
+)
 
 # Configure CORS
 app.add_middleware(
@@ -44,27 +71,17 @@ async def custom_swagger_ui():
             "docExpansion": "none",
             "filter": True,
             "displayRequestDuration": True,
+            "tagsSorter": "alpha",
+            "operationsSorter": "alpha",
         },
     )
 
 
-# Add tags metadata for better organization
-tags_metadata = [
-    {
-        "name": "chat",
-        "description": "Operations with chat sessions and messages",
-    },
-    {
-        "name": "websocket",
-        "description": "Real-time chat communication",
-    },
-]
-
-
 @app.get(
     "/health",
-    tags=["system"],
+    tags=["System"],
     summary="System Health Check",
+    description="Check the health status of the service including version and current timestamp",
     response_description="Returns the current system status",
 )
 async def health_check():

@@ -17,11 +17,14 @@ import logging
 import json
 from typing import Optional
 
-router = APIRouter(prefix="/stream")
+router = APIRouter(prefix="/stream", tags=["Stream Chat"])
 logger = logging.getLogger(__name__)
 
 
-@router.websocket("/chat/session/{session_id}/message")
+@router.websocket(
+    "/chat/session/{session_id}/message",
+    name="Stream Chat Messages",
+)
 async def websocket_stream_endpoint(
     websocket: WebSocket,
     session_id: str,
@@ -29,6 +32,9 @@ async def websocket_stream_endpoint(
 ):
     """
     WebSocket endpoint for streaming chat responses.
+
+    Establishes a persistent connection allowing for real-time communication.
+    The AI will stream responses token by token as they are generated.
 
     Args:
         websocket (WebSocket): The WebSocket connection

@@ -1,7 +1,7 @@
-import sys
-import os
+# import sys
+# import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 import logging
 from langgraph.graph import StateGraph, END, MessagesState
 from langgraph.checkpoint.memory import MemorySaver
@@ -135,9 +135,9 @@ def create_workflow():
 # THIS CODE PRINTS THE GRAPH
 
 
-def visualize_workflow(graph):
-    return display(Image(graph.get_graph().draw_mermaid_png()))
+# def visualize_workflow(graph):
+#     return display(Image(graph.get_graph().draw_mermaid_png()))
 
 
-graph = create_workflow()
-visualize_workflow(graph)
+# graph = create_workflow()
+# visualize_workflow(graph)
