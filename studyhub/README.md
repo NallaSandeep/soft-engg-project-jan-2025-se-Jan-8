@@ -8,7 +8,7 @@ The StudyHub submodule is the core component of the StudyHub platform, providing
 
 - **Backend**: Flask
 - **Frontend**: React
-- **Database**: SQLite (default), PostgreSQL (optional)
+- **Database**: SQLite (default)
 
 ## Setup Instructions
 
@@ -57,11 +57,6 @@ The StudyHub submodule is the core component of the StudyHub platform, providing
    npm start
    ```
 
-## Development Guide
-
-- Follow the coding standards outlined in the [STANDARDS.md](../documentation/05_DEVELOPMENT_STATUS.md) file.
-- Use feature branches for development and submit pull requests for review.
-
 ## Testing
 
 - Run backend tests:
@@ -75,14 +70,3 @@ The StudyHub submodule is the core component of the StudyHub platform, providing
   cd frontend
   npm test
   ```
-
-## Troubleshooting
-
-- Common issues and solutions are documented in the [TROUBLESHOOTING.md](../documentation/07_SYSTEM_INTEGRATION.md) file.
-
-## Links to Additional Resources
-
-- [Project Overview](../documentation/00_PROJECT_OVERVIEW.md)
-- [Backend Setup Guide](../documentation/01_BACKEND_SETUP.md)
-- [Frontend Setup Guide](../documentation/02_FRONTEND_SETUP.md)
-- [Contributing Guidelines](../documentation/04_CONTRIBUTING.md)
