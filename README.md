@@ -15,8 +15,8 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 
 ```plaintext
 /
-├── studyhub/               # Main application
-│   ├── backend/           # Flask backend service
+├── studyhub/             # Main application
+│   ├── backend/          # Flask backend service
 │   │   ├── app/          # Application code
 │   │   ├── scripts/      # Utility scripts
 │   │   └── setup.ps1     # Backend setup
@@ -26,14 +26,14 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 │       ├── public/       # Static assets
 │       └── setup.ps1     # Frontend setup
 │
-├── studyindexer/          # Document processing service
+├── studyindexer/         # Document processing service
 │   ├── app/              # FastAPI application
 │   ├── data/             # Data storage
-│   │   ├── chroma/      # Vector database
-│   │   ├── processed/   # Processed documents
-│   │   └── uploads/     # Document uploads
-│   ├── logs/            # Service logs
-│   └── setup.ps1        # Service setup
+│   │   ├── chroma/       # Vector database
+│   │   ├── processed/    # Processed documents
+│   │   └── uploads/      # Document uploads
+│   ├── logs/             # Service logs
+│   └── setup.ps1         # Service setup
 │
 └── studyai/              # Future AI service (planned)
 ```
@@ -44,7 +44,7 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 
 1. **Clone the Repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/NallaSandeep/soft-engg-project-jan-2025-se-Jan-8.git
    cd studyhub-platform
    ```
 
