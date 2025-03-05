@@ -1,7 +1,7 @@
 # YAML API Documentation Task
 
 ## Overview
-This document summarizes the task of generating OpenAPI (YAML) documentation for the StudyHub and StudyIndexer microservices. The goal was to create accurate API documentation that reflects the actual implementation of both services, ensuring all endpoints are properly documented with their parameters, request bodies, and responses.
+We need to crate an OpenAPI (YAML) documentation for the StudyHub and StudyIndexer microservices. The goal was to create accurate API documentation that reflects the actual implementation of both services, ensuring all endpoints are properly documented with their parameters, request bodies, and responses.
 
 ## Services Documented
 
