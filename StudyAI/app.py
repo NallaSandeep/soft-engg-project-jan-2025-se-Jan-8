@@ -12,7 +12,7 @@ import logging
 # Create database tables (if they don't exist)
 Base.metadata.create_all(bind=engine)
 
-# Define tags metadata for API documentation
+# Metadata for API documentation
 tags_metadata = [
     {
         "name": "Chat Session",
@@ -99,4 +99,4 @@ async def health_check():
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=5000)
