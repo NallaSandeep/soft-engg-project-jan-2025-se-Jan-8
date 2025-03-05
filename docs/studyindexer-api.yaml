@@ -1,0 +1,800 @@
+openapi: 3.0.0
+info:
+  title: StudyIndexer API
+  description: >
+
+    <p><strong>StudyIndexer:</strong> This microservice ingests documents from StudyHub portal (ranging from lecture transcripts
+    and course PDFs to personal student notes) and automatically extracts text, generating vector embeddings for semantic
+    searches. It supports multiple collections (e.g., course materials, personal KBs, general FAQs), ensuring flexible,
+    ANN-based or hybrid search endpoints. <strong>The AIChat Agent </strong> can then query these vector databases for powerful,
+    context-aware information retrieval.</p>
+
+  version: 1.0.2
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local StudyIndexer development server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    DocumentType:
+      type: string
+      enum: [text, pdf, docx]
+      description: Type or format of the uploaded file
+
+    CollectionType:
+      type: string
+      enum: [general, personal, course]
+      description: Which collection the document belongs to
+
+    DocumentStatus:
+      type: string
+      enum: [pending, processing, completed, failed]
+      description: Current processing status of a document
+
+    DocumentMetadata:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Document title
+        author:
+          type: string
+          description: Document author
+        course_id:
+          type: string
+          description: Course association if relevant
+        document_type:
+          $ref: '#/components/schemas/DocumentType'
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tag array
+        collection:
+          $ref: '#/components/schemas/CollectionType'
+        custom_metadata:
+          type: object
+          description: Arbitrary additional metadata
+
+    PersonalMetadata:
+      type: object
+      properties:
+        folder_path:
+          type: string
+          description: Path/folder in the user's personal KB
+        is_favorite:
+          type: boolean
+          description: Whether user flagged it as favorite
+        importance:
+          type: integer
+          minimum: 1
+          maximum: 5
+        notes:
+          type: string
+        related_docs:
+          type: array
+          items:
+            type: string
+          description: IDs of manually linked documents
+
+    DocumentInfo:
+      type: object
+      properties:
+        document_id:
+          type: string
+        status:
+          $ref: '#/components/schemas/DocumentStatus'
+        metadata:
+          $ref: '#/components/schemas/DocumentMetadata'
+        error:
+          type: string
+          description: Explanation if status=failed
+
+    DocumentResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        document_id:
+          type: string
+        status:
+          $ref: '#/components/schemas/DocumentStatus'
+        message:
+          type: string
+          example: "Document queued for processing"
+        metadata:
+          $ref: '#/components/schemas/DocumentMetadata'
+        error:
+          type: string
+        details:
+          type: object
+
+    DocumentListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentInfo'
+        total:
+          type: integer
+
+    SearchQuery:
+      type: object
+      properties:
+        text:
+          type: string
+        filters:
+          type: object
+        collection:
+          $ref: '#/components/schemas/CollectionType'
+        page:
+          type: integer
+          default: 1
+          minimum: 1
+        page_size:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        min_score:
+          type: number
+          default: 0.5
+          minimum: 0
+          maximum: 1
+
+    SearchResult:
+      type: object
+      properties:
+        document_id:
+          type: string
+        chunk_id:
+          type: string
+        content:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/DocumentMetadata'
+        score:
+          type: number
+          description: Similarity score (0-1)
+
+    PaginationMetadata:
+      type: object
+      properties:
+        current_page:
+          type: integer
+        page_size:
+          type: integer
+        total_pages:
+          type: integer
+        total_results:
+          type: integer
+        has_next:
+          type: boolean
+        has_previous:
+          type: boolean
+
+    SearchResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResult'
+        pagination:
+          $ref: '#/components/schemas/PaginationMetadata'
+        query_time_ms:
+          type: number
+        collection:
+          type: string
+        filters_applied:
+          type: object
+
+    StorageStats:
+      type: object
+      properties:
+        uploads:
+          type: string
+        vectors:
+          type: string
+        total:
+          type: string
+        raw_total_bytes:
+          type: integer
+
+    ProcessingStats:
+      type: object
+      properties:
+        pending:
+          type: integer
+        processing:
+          type: integer
+        completed:
+          type: integer
+        failed:
+          type: integer
+        total:
+          type: integer
+
+    CollectionStats:
+      type: object
+      properties:
+        name:
+          type: string
+        document_count:
+          type: integer
+        metadata:
+          type: object
+
+    SystemStats:
+      type: object
+      properties:
+        success:
+          type: boolean
+        total_documents:
+          type: integer
+        total_collections:
+          type: integer
+        collections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectionStats'
+        storage_used:
+          $ref: '#/components/schemas/StorageStats'
+        processing_status:
+          $ref: '#/components/schemas/ProcessingStats'
+        embedding_model:
+          type: string
+        embedding_device:
+          type: string
+        last_update:
+          type: string
+          format: date-time
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Documents
+    description: Endpoints for uploading, retrieving, reindexing, or deleting documents
+  - name: Search
+    description: Endpoints for semantic search operations
+  - name: Personal
+    description: Endpoints for managing personal knowledge base
+  - name: Admin
+    description: Administrative endpoints requiring privileged access
+
+paths:
+
+  #################################
+  # DOCUMENTS
+  #################################
+
+  /documents/:
+    post:
+      tags:
+        - Documents
+      summary: Upload and index a new document
+      description: >
+        Allows a user to upload a file and queue it for processing. 
+        Typically covers PDF, DOCX, or plain text. The system extracts the text
+        and stores vector embeddings for semantic search.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Document file
+                title:
+                  type: string
+                course_id:
+                  type: string
+                document_type:
+                  $ref: '#/components/schemas/DocumentType'
+                tags:
+                  type: string
+                  description: Comma-separated tags
+                collection:
+                  $ref: '#/components/schemas/CollectionType'
+      responses:
+        '200':
+          description: Document queued for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '400':
+          description: Invalid file or missing data
+        '413':
+          description: File too large
+        '500':
+          description: Server error
+
+  /documents/my:
+    get:
+      tags:
+        - Documents
+      summary: List documents for current user
+      description: >
+        Returns all documents that the user has personally uploaded or owns within the system.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Documents owned by current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentListResponse'
+        '500':
+          description: Internal server error
+
+  /documents/course/{course_id}:
+    get:
+      tags:
+        - Documents
+      summary: List documents for a given course
+      description: >
+        Retrieves all documents associated with the specified course_id.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Found course documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentListResponse'
+        '403':
+          description: Not authorized / not enrolled
+        '500':
+          description: Internal error
+
+  /documents/{document_id}:
+    get:
+      tags:
+        - Documents
+      summary: Retrieve document details
+      description: >
+        Fetches metadata and status for a specific document ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Document details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentInfo'
+        '404':
+          description: Document not found
+        '500':
+          description: Internal error
+
+    delete:
+      tags:
+        - Documents
+      summary: Delete a document
+      description: >
+        Queues deletion for an existing document, removing both the stored file and vector data.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Document deletion queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '403':
+          description: Not authorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  /documents/{document_id}/reindex:
+    post:
+      tags:
+        - Documents
+      summary: Reindex a document
+      description: >
+        Reprocesses a document if indexing was incomplete or outdated.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reindex queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '403':
+          description: Not authorized
+        '404':
+          description: Document not found
+        '500':
+          description: Internal error
+
+  /documents/{document_id}/status:
+    get:
+      tags:
+        - Documents
+      summary: Get processing status
+      description: >
+        Retrieves the status (pending, processing, completed, failed) and any error message if available.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Document status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '403':
+          description: Not authorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  #################################
+  # SEARCH
+  #################################
+
+  /search/:
+    post:
+      tags:
+        - Search
+      summary: Perform semantic search
+      description: >
+        Accepts a text query, optional filters, and pagination. Returns relevant results based on vector embeddings.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchQuery'
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '400':
+          description: Invalid search params
+        '500':
+          description: Internal error
+
+  /search/similar/{document_id}:
+    get:
+      tags:
+        - Search
+      summary: Find similar documents
+      description: >
+        Finds documents semantically similar to a specified document ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 5
+            minimum: 1
+            maximum: 50
+        - name: min_score
+          in: query
+          schema:
+            type: number
+            default: 0.5
+      responses:
+        '200':
+          description: Similar documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '403':
+          description: Not authorized
+        '404':
+          description: Document not found
+        '500':
+          description: Internal error
+
+  #################################
+  # PERSONAL KNOWLEDGE BASE
+  #################################
+
+  /personal/folders:
+    get:
+      tags:
+        - Personal
+      summary: List personal folders
+      description: >
+        Retrieves a list of folder paths the user has used in their personal KB.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Array of folders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: Internal error
+
+  /personal/documents:
+    get:
+      tags:
+        - Personal
+      summary: List personal documents with filters
+      description: >
+        Lists documents in the user's personal collection. Supports folder/favorite/importance filtering, etc.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: folder
+          in: query
+          schema:
+            type: string
+        - name: favorite
+          in: query
+          schema:
+            type: boolean
+        - name: importance
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: tags
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 50
+      responses:
+        '200':
+          description: List of personal documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentListResponse'
+        '500':
+          description: Internal error
+
+  /personal/documents/{document_id}/metadata:
+    patch:
+      tags:
+        - Personal
+      summary: Update personal metadata
+      description: >
+        Allows the user to update custom fields in their personal doc, like notes, importance, folder path, etc.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalMetadata'
+      responses:
+        '200':
+          description: Successfully updated metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '403':
+          description: Not authorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  /personal/documents/{document_id}/related:
+    get:
+      tags:
+        - Personal
+      summary: Get related docs in personal KB
+      description: >
+        Retrieves documents that the user has explicitly linked in "related_docs" for the given doc ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 5
+            minimum: 1
+            maximum: 20
+      responses:
+        '200':
+          description: Related documents returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentListResponse'
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  #################################
+  # ADMIN
+  #################################
+
+  /admin/documents:
+    get:
+      tags:
+        - Admin
+      summary: List all documents (admin)
+      description: >
+        System-wide overview of all documents across all collections. Admin only.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+            maximum: 1000
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: All documents in system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentListResponse'
+        '403':
+          description: Not admin
+        '500':
+          description: Internal error
+
+  /admin/stats:
+    get:
+      tags:
+        - Admin
+      summary: Retrieve global system stats
+      description: >
+        Returns overall statistics: total docs, usage, embedding model, etc. Access restricted to admins.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: System stats
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStats'
+        '403':
+          description: Not admin
+        '500':
+          description: Internal error
+
+  /admin/reindex:
+    post:
+      tags:
+        - Admin
+      summary: Force reindex for a document
+      description: >
+        Admin endpoint that reindexes a specified document, ignoring ownership or current status.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: document_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reindex queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '403':
+          description: Not admin
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
