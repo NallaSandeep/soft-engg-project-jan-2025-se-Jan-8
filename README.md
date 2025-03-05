@@ -1,4 +1,8 @@
-# StudyHub
+# StudyHub Platform
+
+A comprehensive educational platform for course management, document processing, and AI-assisted learning.
+
+## Project Overview
 
 StudyHub is a SEEK-like learning management system that provides a comprehensive platform for academic course management and student learning. The platform enables:
 
@@ -7,143 +11,91 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 - **AI-Powered Learning**: Chat with an AI assistant about courses, FAQs, and general queries
 - **Personal Knowledge Base**: Students can create and reference their own study notes through the chat interface
 
-## Tech Stack
+## Project Structure
 
-### Backend
-- Python 3.x
-- Flask
-- SQLAlchemy
-- PostgreSQL
-- Flask-JWT-Extended for authentication
-- Flask-Migrate for database migrations
-
-### Frontend
-- React 18
-- React Router v6
-- Tailwind CSS
-- Axios for API calls
-- React Icons and HeroIcons
-- React Hot Toast for notifications
-
-## Prerequisites
-
-Make sure you have the following installed:
-- Python 3.x
-- Node.js (v14 or higher)
-- npm (comes with Node.js)
-- Git
-- PostgreSQL (optional - SQLite is used by default in development)
-
-## Installation
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/NallaSandeep/soft-engg-project-jan-2025-se-Jan-8.git
-cd soft-engg-project-jan-2025-se-Jan-8
-git checkout michael-beta
+```plaintext
+/
+├── studyhub/             # Main application
+│   ├── backend/          # Flask backend service
+│   │   ├── app/          # Application code
+│   │   ├── scripts/      # Utility scripts
+│   │   └── setup.ps1     # Backend setup
+│   │
+│   └── frontend/         # React frontend
+│       ├── src/          # Source code
+│       ├── public/       # Static assets
+│       └── setup.ps1     # Frontend setup
+│
+├── studyindexer/         # Document processing service
+│   ├── app/              # FastAPI application
+│   ├── data/             # Data storage
+│   │   ├── chroma/       # Vector database
+│   │   ├── processed/    # Processed documents
+│   │   └── uploads/      # Document uploads
+│   ├── logs/             # Service logs
+│   └── setup.ps1         # Service setup
+│
+└── studyai/              # Future AI service (planned)
 ```
 
-### Backend Setup
+## Quick Start Guide
 
-1. Create and activate a virtual environment:
-```bash
-cd backend
-python -m venv .venv
+### Local Development Setup
 
-# On Windows
-.venv\Scripts\activate
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/NallaSandeep/soft-engg-project-jan-2025-se-Jan-8.git
+   cd studyhub-platform
+   ```
 
-# On macOS/Linux
-source .venv/bin/activate
-```
+2. **Backend Setup**:
+   ```bash
+   cd studyhub/backend
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   python scripts/init_db.py
+   flask run
+   ```
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+3. **Frontend Setup**:
+   ```bash
+   cd studyhub/frontend
+   npm install
+   npm start
+   ```
 
-3. Set up environment variables:
-   - Copy `.env.example` to `.env`
-   - Configure your database and other settings in `.env`
+4. **StudyIndexer Setup**:
+   ```bash
+   # Needs WSL for Windows or Linux (Ubuntu)
+   cd studyindexer
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   python manage_services.py setup
+   python manage_services.py start
+   python manage_services.py status
+   ```
 
-4. Initialize the database and load sample data:
-```bash
-python scripts/init_db.py
-```
-This step is crucial as it sets up:
-- Initial database schema
-- Admin and TA accounts
-- Sample courses and materials
-- Test student accounts
-- Example assignments
+## Development Environment
 
-5. Start the backend server:
-```bash
-# Option 1: Using Flask
-flask run
+- **Prerequisites**:
+  - Python 3.x
+  - Node.js (v14 or higher)
+  - npm (comes with Node.js)
+  - Git
+  - SQLite
+  - ChromaDB
 
-# Option 2: Using WSGI
-python wsgi.py
-```
+## Key Features
 
-The backend server will start at `http://localhost:5000`
+- **Course Management**: Create and manage courses, materials, and assignments.
+- **Document Processing**: Index and search documents using vector embeddings.
+- **AI-Powered Learning**: Chat with an AI assistant for course-related queries.
+- **Personal Knowledge Base**: Manage personal study notes and resources.
 
-### Frontend Setup
+## Links to Submodule Documentation
 
-1. Open a new terminal and navigate to the frontend directory:
-```bash
-cd frontend
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm start
-```
-
-The frontend application will start at `http://localhost:3000`
-
-## Development
-
-### Backend Development
-- The backend uses Flask blueprints for modular organization
-- Database migrations are handled with Flask-Migrate
-- Configuration settings are in `config.py`
-- Environment variables are set in `.env`
-- API endpoints are organized by feature in `app/routes/`
-- Authentication is handled via JWT tokens
-
-### Frontend Development
-- React components are in `src/components`
-- API services are in `src/services`
-- Styling is done with Tailwind CSS
-- Routes are defined in `src/App.js`
-- State management uses React Context
-- Chat interface components in `src/components/chat`
-
-## Testing
-
-### Backend Tests
-```bash
-cd backend
-python run_tests.py
-```
-
-### Frontend Tests
-```bash
-cd frontend
-npm test
-```
-
-## Default Accounts
-
-After initializing the database, you can log in with these sample accounts:
-
-- Admin: admin@studyhub.com / admin123
-- Student: student@studyhub.com / student123
-- TA: ta@studyhub.com / ta123 (interface not ready yet)
+- [StudyHub Documentation](studyhub/README.md)
+- [StudyIndexer Documentation](studyindexer/README.md)
+- [StudyAI Documentation](studyai/README.md)

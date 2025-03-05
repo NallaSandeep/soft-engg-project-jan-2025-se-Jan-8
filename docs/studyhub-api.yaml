@@ -1,0 +1,1494 @@
+openapi: 3.0.0
+info:
+  title: StudyHub API
+  description: >
+  
+    
+    <p><strong>StudyHub API:</strong> This API powers the “Mini Seek” portal, which we call as StudyHub. An online course platform
+    where students can subscribe to courses, watch lecture videos, read supplementary materials, complete practice or
+    graded assignments, and interact with an AI chatbot. Administrators and TAs manage all course content, including
+    scheduling, resource uploads, and assignment settings.</p>
+
+    
+
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local development server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "An error occurred"
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "user123"
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        role:
+          type: string
+          example: "student"
+        first_name:
+          type: string
+          example: "John"
+        last_name:
+          type: string
+          example: "Doe"
+        is_active:
+          type: boolean
+          example: true
+        last_login:
+          type: string
+          format: date-time
+          example: "2025-02-14T10:20:30Z"
+
+    RegisterUser:
+      type: object
+      required: [username, email, password, role]
+      properties:
+        username:
+          type: string
+          example: "user123"
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          example: "Passw0rd!"
+        role:
+          type: string
+          enum: [student, teacher, ta, admin]
+
+    LoginUser:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          example: "Passw0rd!"
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            access_token:
+              type: string
+              description: JWT access token
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            user:
+              $ref: '#/components/schemas/User'
+        message:
+          type: string
+          example: "Login successful"
+
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 101
+        code:
+          type: string
+          example: "CS101"
+        name:
+          type: string
+          example: "Introduction to Computer Science"
+        description:
+          type: string
+          example: "Basic concepts of CS"
+        start_date:
+          type: string
+          format: date
+          example: "2025-01-15"
+        end_date:
+          type: string
+          format: date
+          example: "2025-05-01"
+        is_active:
+          type: boolean
+          example: true
+        max_students:
+          type: integer
+          example: 150
+        enrollment_type:
+          type: string
+          example: "open"
+
+    Week:
+      type: object
+      properties:
+        id:
+          type: integer
+        number:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Week 1: Introduction"
+        description:
+          type: string
+          example: "Foundational concepts"
+        is_published:
+          type: boolean
+          example: true
+        course_id:
+          type: integer
+          example: 101
+
+    Assignment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 501
+        title:
+          type: string
+          example: "Assignment 1"
+        description:
+          type: string
+          example: "Complete the exercises."
+        type:
+          type: string
+          example: "graded"
+        start_date:
+          type: string
+          format: date-time
+          example: "2025-02-01T10:00:00Z"
+        due_date:
+          type: string
+          format: date-time
+          example: "2025-02-07T23:59:59Z"
+        points_possible:
+          type: integer
+          example: 100
+        is_published:
+          type: boolean
+          example: false
+        week_id:
+          type: integer
+          example: 10
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 900
+        title:
+          type: string
+          example: "Sample MCQ question"
+        content:
+          type: string
+          example: "What is 2+2?"
+        type:
+          type: string
+          example: "MCQ"
+        correct_answer:
+          type: string
+          example: "4"
+        points:
+          type: integer
+          example: 1
+        explanation:
+          type: string
+          example: "Simple arithmetic!"
+        status:
+          type: string
+          example: "active"
+
+    Resource:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1001
+        title:
+          type: string
+          example: "Lecture Slides"
+        description:
+          type: string
+          example: "Slides for the first lecture"
+        type:
+          type: string
+          example: "file"
+        file_path:
+          type: string
+          example: "2025_02_14_slides.pdf"
+        is_public:
+          type: boolean
+          example: true
+        course_id:
+          type: integer
+          example: 101
+        created_by_id:
+          type: integer
+          example: 1
+
+    KnowledgeBase:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 101
+        name:
+          type: string
+          example: "My KB"
+        description:
+          type: string
+          example: "My personal notes"
+        user_id:
+          type: integer
+          example: 1
+
+tags:
+  - name: Authentication
+    description: Endpoints for user registration, login, and password resets.
+  - name: Users
+    description: Endpoints for user profile and admin-level user management.
+  - name: Courses
+    description: Endpoints for course creation, enrollment, and updates.
+  - name: Weeks
+    description: Endpoints for managing weeks within a course.
+  - name: Assignments
+    description: Endpoints for assignment creation, listing, updating, and submission.
+  - name: Question Bank
+    description: Endpoints for question creation, listing, updating, deletion.
+  - name: Resources
+    description: Endpoints for managing course resources (files, links, etc.).
+  - name: Personal Knowledge Base
+    description: Endpoints for the user’s personal knowledge base management.
+
+paths:
+  ##########################
+  # AUTHENTICATION
+  ##########################
+
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: >
+        Allows a new user to sign up with a username, email, password, and role.
+        **User Story #1** suggests that new users can self-register to gain access to study materials.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUser'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "User registered successfully"
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Missing/invalid fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Username or email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: >
+        Authenticates the user via email & password, returning a JWT token upon success.
+        Continues **User Story #1** for completing the login flow.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Missing email or password
+        '401':
+          description: Invalid credentials
+        '403':
+          description: Account is deactivated
+
+  /auth/verify-token:
+    get:
+      tags:
+        - Authentication
+      summary: Verify a JWT token’s validity
+      description: >
+        Checks if the provided token (via Authorization header) is still valid, returning user info if so.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Token is valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Token is valid"
+                  user:
+                    $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/request-password-reset:
+    post:
+      tags:
+        - Authentication
+      summary: Request password reset token
+      description: >
+        Sends a reset token to the user’s email if it’s registered, enabling them to reset their password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+      responses:
+        '200':
+          description: Reset token sent if email exists
+        '400':
+          description: Missing email
+        '500':
+          description: Internal error
+
+  /auth/reset-password:
+    post:
+      tags:
+        - Authentication
+      summary: Reset password using token
+      description: >
+        Applies a new password given a valid reset token, completing the forgot-password flow.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: "reset-token-abc123"
+                new_password:
+                  type: string
+                  format: password
+                  example: "NewPassw0rd!"
+      responses:
+        '200':
+          description: Password reset successful
+        '400':
+          description: Invalid or expired token
+        '500':
+          description: Internal error
+
+  ##########################
+  # USERS
+  ##########################
+
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: Retrieve the current user’s details
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current user info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+    put:
+      tags:
+        - Users
+      summary: Update the current user’s profile
+      description: >
+        Lets the user update personal details (like first/last name, email) or password (requires old password).
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                current_password:
+                  type: string
+                  format: password
+                new_password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Profile updated
+        '404':
+          description: User not found
+        '409':
+          description: Email conflict
+        '500':
+          description: Internal error
+
+  /users:
+    get:
+      tags:
+        - Users
+      summary: List all users
+      description: >
+        Returns a list of all users for administrative or broad management tasks. Usually restricted to admin roles.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '500':
+          description: Internal error
+
+  /users/{user_id}:
+    get:
+      tags:
+        - Users
+      summary: Get details of a specific user (admin only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detailed user info
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  /users/{user_id}/activate:
+    post:
+      tags:
+        - Users
+      summary: Activate a user account (admin)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User activated
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  /users/{user_id}/deactivate:
+    post:
+      tags:
+        - Users
+      summary: Deactivate a user account (admin)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User deactivated
+        '403':
+          description: Cannot deactivate the last admin
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  ##########################
+  # COURSES
+  ##########################
+
+  /courses/:
+    get:
+      tags:
+        - Courses
+      summary: List all courses
+      description: >
+        Returns courses visible to the user (depending on role). Students see enrolled courses, TAs see theirs, etc.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Courses retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Course'
+        '500':
+          description: Internal error
+
+    post:
+      tags:
+        - Courses
+      summary: Create a new course (admin only)
+      description: >
+        **User Story #3** example: "As a TA or Admin, I can create new courses, specifying code, name, etc."
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                start_date:
+                  type: string
+                  format: date
+                end_date:
+                  type: string
+                  format: date
+                max_students:
+                  type: integer
+                enrollment_type:
+                  type: string
+      responses:
+        '201':
+          description: Course created
+        '400':
+          description: Missing fields
+        '409':
+          description: Course code exists
+        '500':
+          description: Internal error
+
+  /courses/{course_id}:
+    get:
+      tags:
+        - Courses
+      summary: Get details of a specific course
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Course data
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+    put:
+      tags:
+        - Courses
+      summary: Update course details (admin/TA)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        '200':
+          description: Course updated
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+    delete:
+      tags:
+        - Courses
+      summary: Delete a course (admin)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Course deleted
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  /courses/{course_id}/enroll:
+    post:
+      tags:
+        - Courses
+      summary: Enroll in a course (student/TA)
+      description: >
+        **User Story #2**: "As a student, I can enroll in a course to see its content."
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Enrollment created
+        '400':
+          description: Course not active or enrollment closed
+        '404':
+          description: Course not found
+        '409':
+          description: Already enrolled
+        '500':
+          description: Internal error
+
+  ##########################
+  # WEEKS
+  ##########################
+
+  /courses/{course_id}/weeks:
+    get:
+      tags:
+        - Weeks
+      summary: List all weeks for a course
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Weeks for course
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Week'
+        '404':
+          description: Course not found
+        '500':
+          description: Internal error
+
+    post:
+      tags:
+        - Weeks
+      summary: Create a new week (TA/Admin)
+      description: >
+        Adds a new "Week" to a course. For structured course content. 
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                number:
+                  type: integer
+                title:
+                  type: string
+                description:
+                  type: string
+                is_published:
+                  type: boolean
+      responses:
+        '201':
+          description: Week created
+        '400':
+          description: Missing fields
+        '404':
+          description: Course not found
+        '500':
+          description: Internal error
+
+  ##########################
+  # ASSIGNMENTS
+  ##########################
+
+  /assignments/:
+    get:
+      tags:
+        - Assignments
+      summary: List all assignments
+      description: >
+        May filter by course_id, week_id, type (practice/graded), etc. 
+        Students see published ones from enrolled courses; TAs see all they manage.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: course_id
+          in: query
+          schema:
+            type: integer
+        - name: week_id
+          in: query
+          schema:
+            type: integer
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [practice, graded]
+        - name: status
+          in: query
+          schema:
+            type: string
+            description: "published or draft"
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of assignments
+        '500':
+          description: Internal error
+
+  /assignments/weeks/{week_id}/assignments:
+    get:
+      tags:
+        - Assignments
+      summary: Get assignments for a specific week
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: week_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Week's assignments
+        '500':
+          description: Internal error
+
+    post:
+      tags:
+        - Assignments
+      summary: Create an assignment for a week
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: week_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+      responses:
+        '201':
+          description: Assignment created
+        '400':
+          description: Missing fields
+        '500':
+          description: Internal error
+
+  /assignments/{assignment_id}:
+    get:
+      tags:
+        - Assignments
+      summary: Get assignment details (+ questions)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: assignment_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Assignment details
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+    put:
+      tags:
+        - Assignments
+      summary: Update an assignment (TA/Admin)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: assignment_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+      responses:
+        '200':
+          description: Assignment updated
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+    delete:
+      tags:
+        - Assignments
+      summary: Delete an assignment (TA/Admin)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: assignment_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Assignment deleted
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  /assignments/{assignment_id}/submit:
+    post:
+      tags:
+        - Assignments
+      summary: Submit an assignment
+      description: >
+        A student can submit an assignment by providing answers mapping question ID to answer. 
+        **User Story #2** often references "submitting an assignment" as part of the student role.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: assignment_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answers:
+                  type: object
+                  description: "Map question_id to user answer, e.g. {\"1\": \"B\", \"2\": \"A\"}"
+      responses:
+        '200':
+          description: Submitted successfully
+        '400':
+          description: Already submitted or not available
+        '500':
+          description: Internal error
+
+  ##########################
+  # QUESTION BANK
+  ##########################
+
+  /question-bank/questions:
+    get:
+      tags:
+        - Question Bank
+      summary: List questions (with filters)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, active, inactive]
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [MCQ, MSQ, NUMERIC]
+        - name: difficulty
+          in: query
+          schema:
+            type: string
+            enum: [easy, medium, hard]
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: course_id
+          in: query
+          schema:
+            type: integer
+        - name: week_id
+          in: query
+          schema:
+            type: integer
+        - name: lecture_id
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Question list
+        '400':
+          description: Invalid filters
+        '500':
+          description: Internal error
+
+    post:
+      tags:
+        - Question Bank
+      summary: Create a question
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+      responses:
+        '201':
+          description: Question created
+        '400':
+          description: Validation failed
+        '500':
+          description: Internal error
+
+  /question-bank/questions/{question_id}:
+    get:
+      tags:
+        - Question Bank
+      summary: Get a specific question
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: question_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Question data
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+    put:
+      tags:
+        - Question Bank
+      summary: Update a question
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: question_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+      responses:
+        '200':
+          description: Question updated
+        '400':
+          description: Validation failed
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+    delete:
+      tags:
+        - Question Bank
+      summary: Delete a question
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: question_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Question deleted
+        '400':
+          description: Cannot delete if used in assignments
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  /question-bank/questions/batch:
+    post:
+      tags:
+        - Question Bank
+      summary: Create multiple questions at once
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Question'
+      responses:
+        '201':
+          description: Batch questions created
+        '400':
+          description: Validation failed
+        '500':
+          description: Internal error
+
+  ##########################
+  # RESOURCES
+  ##########################
+
+  /courses/{course_id}/resources:
+    get:
+      tags:
+        - Resources
+      summary: Get all resources for a course
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of resources
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  resources:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Resource'
+        '500':
+          description: Internal error
+
+    post:
+      tags:
+        - Resources
+      summary: Create a new resource
+      description: >
+        Allows a user with privileges (TA, teacher, admin) to upload a file or link for the specified course.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                type:
+                  type: string
+                  example: "file"
+                content:
+                  type: string
+                is_public:
+                  type: string
+                  example: "true"
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Resource created
+        '400':
+          description: Missing title
+        '403':
+          description: Not authorized
+        '404':
+          description: Course not found
+        '500':
+          description: Internal error
+
+  /resources/{resource_id}:
+    get:
+      tags:
+        - Resources
+      summary: Retrieve a specific resource
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: resource_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Resource details
+        '403':
+          description: Not authorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+    put:
+      tags:
+        - Resources
+      summary: Update a resource
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: resource_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                content:
+                  type: string
+                is_public:
+                  type: string
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Resource updated
+        '403':
+          description: Not authorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+    delete:
+      tags:
+        - Resources
+      summary: Delete a resource
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: resource_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Resource deleted
+        '403':
+          description: Not authorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+
+  /resources/{resource_id}/download:
+    get:
+      tags:
+        - Resources
+      summary: Download a resource file
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: resource_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: File downloaded
+        '403':
+          description: Not authorized
+        '404':
+          description: Not found or not a file
+        '500':
+          description: Internal error
+
+  ##########################
+  # PERSONAL KNOWLEDGE BASE
+  ##########################
+
+  /personal/kb:
+    get:
+      tags:
+        - Personal Knowledge Base
+      summary: Get knowledge bases for the current user
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Knowledge bases retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/KnowledgeBase'
+        '500':
+          description: Internal error
+
+    post:
+      tags:
+        - Personal Knowledge Base
+      summary: Create a new personal knowledge base
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: KB created
+        '400':
+          description: Missing required fields
+        '500':
+          description: Internal error
+
+  /personal/kb/{kb_id}/folders:
+    get:
+      tags:
+        - Personal Knowledge Base
+      summary: Get folder structure for a user’s knowledge base
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: kb_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Folders retrieved
+        '404':
+          description: KB not found
+        '500':
+          description: Internal error
+
+    post:
+      tags:
+        - Personal Knowledge Base
+      summary: Create a new folder in a knowledge base
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: kb_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                parent_id:
+                  type: integer
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Folder created
+        '400':
+          description: Missing required fields
+        '404':
+          description: KB not found
+        '500':
+          description: Internal error

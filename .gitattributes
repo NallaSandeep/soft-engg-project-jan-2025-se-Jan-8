@@ -1,0 +1,43 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Source code
+*.py text diff=python
+*.js text
+*.jsx text
+*.ts text
+*.tsx text
+*.css text
+*.scss text
+*.html text
+*.json text
+*.yml text
+*.yaml text
+*.md text
+
+# Scripts
+*.sh text eol=lf
+*.ps1 text eol=crlf
+setup.ps1 text eol=crlf
+
+# Documentation
+*.md text
+*.txt text
+*.pdf binary
+
+# Configs
+.env* text
+.gitignore text
+.gitattributes text
+.dockerignore text
+Dockerfile text
+docker-compose.yml text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.db binary 

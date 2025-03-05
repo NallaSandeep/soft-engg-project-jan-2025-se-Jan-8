@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@layer base {
+  :root {
+    /* Base colors */
+    --color-primary: 59 130 246; /* blue-500 */
+    --color-success: 34 197 94; /* green-500 */
+    --color-warning: 245 158 11; /* amber-500 */
+    --color-error: 239 68 68; /* red-500 */
+    --color-info: 99 102 241; /* indigo-500 */
+
+    /* Light mode */
+    --color-bg-primary: 255 255 255;
+    --color-bg-secondary: 250 250 250;
+    --color-bg-tertiary: 245 245 245;
+    --color-text-primary: 24 24 27;
+    --color-text-secondary: 82 82 91;
+    --color-text-tertiary: 113 113 122;
+    --color-border-primary: 228 228 231;
+    --color-border-secondary: 212 212 216;
+  }
+
+  .dark {
+    /* Dark mode */
+    --color-bg-primary: 24 24 27;
+    --color-bg-secondary: 39 39 42;
+    --color-bg-tertiary: 63 63 70;
+    --color-text-primary: 250 250 250;
+    --color-text-secondary: 212 212 216;
+    --color-text-tertiary: 161 161 170;
+    --color-border-primary: 63 63 70;
+    --color-border-secondary: 82 82 91;
+  }
+
+  html {
+    font-family: 'Inconsolata', system-ui, sans-serif;
+  }
+
+  body {
+    @apply bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 transition-colors duration-200;
+  }
+}
+
+@layer components {
+  /* Card components */
+  .glass-card {
+    @apply bg-white dark:bg-zinc-800 backdrop-blur-xl rounded-lg shadow-sm 
+           border border-zinc-200/50 dark:border-zinc-700/50 transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply hover:shadow-md dark:hover:bg-zinc-700/50 transition-all duration-200;
+  }
+
+  /* Button components */
+  .btn-primary {
+    @apply px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg 
+           hover:bg-blue-700 dark:hover:bg-blue-400 transition-all duration-200 
+           font-medium shadow-sm hover:shadow;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-lg 
+           border border-zinc-300 dark:border-zinc-600 hover:bg-zinc-50 dark:hover:bg-zinc-700 
+           transition-all duration-200 font-medium shadow-sm hover:shadow;
+  }
+
+  .btn-danger {
+    @apply px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded-lg 
+           hover:bg-red-700 dark:hover:bg-red-400 transition-all duration-200 
+           font-medium shadow-sm hover:shadow;
+  }
+
+  .btn-primary-sm {
+    @apply px-3 py-1.5 bg-blue-600 dark:bg-blue-500 text-white rounded-lg 
+           hover:bg-blue-700 dark:hover:bg-blue-400 transition-all duration-200 
+           text-sm font-medium shadow-sm hover:shadow;
+  }
+
+  .btn-secondary-sm {
+    @apply px-3 py-1.5 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-lg 
+           border border-zinc-300 dark:border-zinc-600 hover:bg-zinc-50 dark:hover:bg-zinc-700 
+           transition-all duration-200 text-sm font-medium shadow-sm hover:shadow;
+  }
+
+  /* Form components */
+  .input-field {
+    @apply w-full px-4 py-2.5 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 
+           text-zinc-900 dark:text-zinc-100 rounded-lg focus:ring-2 focus:ring-blue-500/50 
+           dark:focus:ring-blue-400/50 focus:border-transparent transition-all duration-200;
+  }
+
+  .input-field-error {
+    @apply border-red-500 dark:border-red-400 focus:ring-red-500/50 dark:focus:ring-red-400/50;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1;
+  }
+
+  /* Navigation components */
+  .nav-link {
+    @apply flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
+           text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 
+           hover:text-zinc-900 dark:hover:text-white;
+  }
+
+  .nav-link.active {
+    @apply bg-blue-600 text-white dark:bg-blue-500 dark:text-white;
+  }
+
+  /* Status indicators */
+  .status-active {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 dark:bg-green-900/30 
+           text-green-800 dark:text-green-400;
+  }
+
+  .status-inactive {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-red-100 dark:bg-red-900/30 
+           text-red-800 dark:text-red-400;
+  }
+
+  .status-pending {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-yellow-100 dark:bg-yellow-900/30 
+           text-yellow-800 dark:text-yellow-400;
+  }
+
+  .status-draft {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-zinc-100 dark:bg-zinc-800 
+           text-zinc-800 dark:text-zinc-400;
+  }
+
+  .status-published {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 
+           text-blue-800 dark:text-blue-400;
+  }
+
+  /* Table components */
+  .table-header {
+    @apply px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 
+           uppercase tracking-wider bg-zinc-50 dark:bg-zinc-800;
+  }
+
+  .table-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-zinc-900 dark:text-zinc-100;
+  }
+
+  .table-row {
+    @apply border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 
+           transition-colors duration-150;
+  }
+
+  /* Badge components */
+  .badge-blue {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 
+           text-blue-800 dark:text-blue-400;
+  }
+
+  .badge-green {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 dark:bg-green-900/30 
+           text-green-800 dark:text-green-400;
+  }
+
+  .badge-red {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-red-100 dark:bg-red-900/30 
+           text-red-800 dark:text-red-400;
+  }
+
+  .badge-yellow {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-yellow-100 dark:bg-yellow-900/30 
+           text-yellow-800 dark:text-yellow-400;
+  }
+
+  .badge-purple {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-purple-100 dark:bg-purple-900/30 
+           text-purple-800 dark:text-purple-400;
+  }
+
+  .badge-gray {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full bg-zinc-100 dark:bg-zinc-800 
+           text-zinc-800 dark:text-zinc-400;
+  }
+}
+
+/* Password input styling */
+input[type="password"] {
+  font-size: 20px !important;
+  letter-spacing: 3px !important;
+  line-height: 1.2 !important;
+}
+
+input[type="password"]::placeholder {
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+} 

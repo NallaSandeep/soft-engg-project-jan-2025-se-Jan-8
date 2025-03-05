@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyIndexer API Explorer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .auth-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .api-group {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .api-group h2 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .api-tile {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .api-tile:hover {
+            background-color: #e9e9e9;
+        }
+        .api-tile h3 {
+            margin-top: 0;
+            color: #2980b9;
+        }
+        .api-tile p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        .api-form {
+            margin-top: 15px;
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #3498db;
+        }
+        .response-container {
+            margin-top: 15px;
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-success {
+            background-color: #27ae60;
+            color: white;
+        }
+        .status-error {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .hidden {
+            display: none;
+        }
+        .document-link {
+            color: #2980b9;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .logout-btn {
+            background-color: #e74c3c;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #ddd;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: white;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* New styles for table view */
+        .table-view {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .table-view th, .table-view td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .table-view th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .table-view tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .table-view tr:hover {
+            background-color: #f1f1f1;
+        }
+        .view-tabs {
+            display: flex;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .view-tab {
+            padding: 5px 10px;
+            background-color: #eee;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+        .view-tab.active {
+            background-color: #2980b9;
+            color: white;
+        }
+        .view-content {
+            display: none;
+        }
+        .view-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>StudyIndexer API Explorer</h1>
+            <div id="auth-status">
+                <span id="user-info">Not logged in</span>
+                <button id="logout-btn" class="logout-btn hidden">Logout</button>
+            </div>
+        </div>
+
+        <div id="login-section" class="auth-section">
+            <h2>Authentication</h2>
+            <div class="form-group">
+                <label for="jwt-token">JWT Token</label>
+                <input type="text" id="jwt-token" placeholder="Enter your JWT token">
+            </div>
+            <button id="login-btn">Login</button>
+        </div>
+
+        <div id="api-explorer" class="hidden">
+            <div class="tab-container">
+                <div class="tab active" data-tab="system">System</div>
+                <div class="tab" data-tab="documents">Documents</div>
+                <div class="tab" data-tab="search">Search</div>
+                <div class="tab" data-tab="admin">Admin</div>
+            </div>
+
+            <!-- System Tab -->
+            <div id="system-tab" class="tab-content active">
+                <div class="api-group">
+                    <h2>System APIs</h2>
+                    
+                    <div class="api-tile" id="health-check">
+                        <h3>Health Check</h3>
+                        <p>Check if the API is running</p>
+                        <button class="execute-btn">Execute</button>
+                        <div class="response-container hidden">
+                            <pre id="health-check-response"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents Tab -->
+            <div id="documents-tab" class="tab-content">
+                <div class="api-group">
+                    <h2>Document APIs</h2>
+                    
+                    <div class="api-tile" id="upload-document">
+                        <h3>Upload Document</h3>
+                        <p>Upload and index a new document</p>
+                        <div class="api-form">
+                            <div class="form-group">
+                                <label for="upload-file">File</label>
+                                <input type="file" id="upload-file">
+                            </div>
+                            <div class="form-group">
+                                <label for="upload-title">Title</label>
+                                <input type="text" id="upload-title" placeholder="Document title">
+                            </div>
+                            <div class="form-group">
+                                <label for="upload-course-id">Course ID (optional)</label>
+                                <input type="text" id="upload-course-id" placeholder="e.g. CS101">
+                            </div>
+                            <div class="form-group">
+                                <label for="upload-document-type">Document Type</label>
+                                <select id="upload-document-type">
+                                    <option value="pdf">PDF</option>
+                                    <option value="text">Text</option>
+                                    <option value="docx">DOCX</option>
+                                    <option value="markdown">Markdown</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="upload-tags">Tags (comma separated)</label>
+                                <input type="text" id="upload-tags" placeholder="e.g. lecture,notes,important">
+                            </div>
+                            <div class="form-group">
+                                <label for="upload-collection">Collection</label>
+                                <select id="upload-collection">
+                                    <option value="general">General</option>
+                                    <option value="course">Course</option>
+                                    <option value="personal">Personal</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="execute-btn">Upload</button>
+                        <div class="response-container hidden">
+                            <pre id="upload-document-response"></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="api-tile" id="list-my-documents">
+                        <h3>List My Documents</h3>
+                        <p>List all documents uploaded by the current user</p>
+                        <button class="execute-btn">Execute</button>
+                        <div class="view-tabs hidden">
+                            <div class="view-tab active" data-view="json">JSON</div>
+                            <div class="view-tab" data-view="table">Table</div>
+                        </div>
+                        <div class="response-container hidden">
+                            <div class="view-content active" data-view="json">
+                                <pre id="list-my-documents-response"></pre>
+                            </div>
+                            <div class="view-content" data-view="table">
+                                <table id="list-my-documents-table" class="table-view"></table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="api-tile" id="list-course-documents">
+                        <h3>List Course Documents</h3>
+                        <p>List all documents for a specific course</p>
+                        <div class="api-form">
+                            <div class="form-group">
+                                <label for="course-id">Course ID</label>
+                                <input type="text" id="course-id" placeholder="e.g. CS101">
+                            </div>
+                        </div>
+                        <button class="execute-btn">Execute</button>
+                        <div class="view-tabs hidden">
+                            <div class="view-tab active" data-view="json">JSON</div>
+                            <div class="view-tab" data-view="table">Table</div>
+                        </div>
+                        <div class="response-container hidden">
+                            <div class="view-content active" data-view="json">
+                                <pre id="list-course-documents-response"></pre>
+                            </div>
+                            <div class="view-content" data-view="table">
+                                <table id="list-course-documents-table" class="table-view"></table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="api-tile" id="get-document">
+                        <h3>Get Document</h3>
+                        <p>Get details for a specific document</p>
+                        <div class="api-form">
+                            <div class="form-group">
+                                <label for="document-id">Document ID</label>
+                                <input type="text" id="document-id" placeholder="Enter document ID">
+                            </div>
+                        </div>
+                        <button class="execute-btn">Execute</button>
+                        <div class="response-container hidden">
+                            <pre id="get-document-response"></pre>
+                        </div>
+                    </div>
+
+                    <div class="api-tile" id="document-status">
+                        <h3>Document Status</h3>
+                        <p>Check the current status of a document</p>
+                        <div class="api-form">
+                            <div class="form-group">
+                                <label for="status-document-id">Document ID</label>
+                                <input type="text" id="status-document-id" placeholder="Enter document ID">
+                            </div>
+                        </div>
+                        <button class="execute-btn">Execute</button>
+                        <div class="response-container hidden">
+                            <pre id="document-status-response"></pre>
+                        </div>
+                    </div>
+
+                    <div class="api-tile" id="reindex-document">
+                        <h3>Reindex Document</h3>
+                        <p>Reprocess and reindex a document</p>
+                        <div class="api-form">
+                            <div class="form-group">
+                                <label for="reindex-document-id">Document ID</label>
+                                <input type="text" id="reindex-document-id" placeholder="Enter document ID">
+                            </div>
+                        </div>
+                        <button class="execute-btn">Execute</button>
+                        <div class="response-container hidden">
+                            <pre id="reindex-document-response"></pre>
+                        </div>
+                    </div>
+
+                    <div class="api-tile" id="delete-document">
+                        <h3>Delete Document</h3>
+                        <p>Delete a document and all its chunks</p>
+                        <div class="api-form">
+                            <div class="form-group">
+                                <label for="delete-document-id">Document ID</label>
+                                <input type="text" id="delete-document-id" placeholder="Enter document ID">
+                            </div>
+                        </div>
+                        <button class="execute-btn">Execute</button>
+                        <div class="response-container hidden">
+                            <pre id="delete-document-response"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Tab -->
+            <div id="search-tab" class="tab-content">
+                <div class="api-group">
+                    <h2>Search APIs</h2>
+                    
+                    <div class="api-tile" id="search-documents">
+                        <h3>Search Documents</h3>
+                        <p>Search for documents using text and filters</p>
+                        <div class="api-form">
+                            <div class="form-group">
+                                <label for="search-text">Search Text</label>
+                                <input type="text" id="search-text" placeholder="Enter search query">
+                            </div>
+                            <div class="form-group">
+                                <label for="search-course">Course ID (optional)</label>
+                                <input type="text" id="search-course" placeholder="e.g. CS101">
+                            </div>
+                            <div class="form-group">
+                                <label for="min-score">Minimum Score (0-1)</label>
+                                <input type="number" id="min-score" min="0" max="1" step="0.1" value="0.5">
+                            </div>
+                        </div>
+                        <button class="execute-btn">Execute</button>
+                        <div class="view-tabs hidden">
+                            <div class="view-tab active" data-view="json">JSON</div>
+                            <div class="view-tab" data-view="table">Table</div>
+                        </div>
+                        <div class="response-container hidden">
+                            <div class="view-content active" data-view="json">
+                                <pre id="search-documents-response"></pre>
+                            </div>
+                            <div class="view-content" data-view="table">
+                                <table id="search-documents-table" class="table-view"></table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="api-tile" id="similar-documents">
+                        <h3>Find Similar Documents</h3>
+                        <p>Find documents similar to a specific document</p>
+                        <div class="api-form">
+                            <div class="form-group">
+                                <label for="similar-document-id">Document ID</label>
+                                <input type="text" id="similar-document-id" placeholder="Enter document ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="similar-limit">Limit</label>
+                                <input type="number" id="similar-limit" min="1" max="20" value="5">
+                            </div>
+                        </div>
+                        <button class="execute-btn">Execute</button>
+                        <div class="view-tabs hidden">
+                            <div class="view-tab active" data-view="json">JSON</div>
+                            <div class="view-tab" data-view="table">Table</div>
+                        </div>
+                        <div class="response-container hidden">
+                            <div class="view-content active" data-view="json">
+                                <pre id="similar-documents-response"></pre>
+                            </div>
+                            <div class="view-content" data-view="table">
+                                <table id="similar-documents-table" class="table-view"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Tab -->
+            <div id="admin-tab" class="tab-content">
+                <div class="api-group">
+                    <h2>Admin APIs</h2>
+                    
+                    <div class="api-tile" id="list-all-documents">
+                        <h3>List All Documents</h3>
+                        <p>List all documents in the system (admin only)</p>
+                        <div class="api-form">
+                            <div class="form-group">
+                                <label for="admin-limit">Limit</label>
+                                <input type="number" id="admin-limit" min="1" max="100" value="20">
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-offset">Offset</label>
+                                <input type="number" id="admin-offset" min="0" value="0">
+                            </div>
+                        </div>
+                        <button class="execute-btn">Execute</button>
+                        <div class="view-tabs hidden">
+                            <div class="view-tab active" data-view="json">JSON</div>
+                            <div class="view-tab" data-view="table">Table</div>
+                        </div>
+                        <div class="response-container hidden">
+                            <div class="view-content active" data-view="json">
+                                <pre id="list-all-documents-response"></pre>
+                            </div>
+                            <div class="view-content" data-view="table">
+                                <table id="list-all-documents-table" class="table-view"></table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="api-tile" id="system-stats">
+                        <h3>System Stats</h3>
+                        <p>Get system statistics (admin only)</p>
+                        <button class="execute-btn">Execute</button>
+                        <div class="response-container hidden">
+                            <pre id="system-stats-response"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store JWT token
+        let jwtToken = '';
+        let userRole = '';
+
+        // DOM elements
+        const loginSection = document.getElementById('login-section');
+        const apiExplorer = document.getElementById('api-explorer');
+        const jwtInput = document.getElementById('jwt-token');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userInfo = document.getElementById('user-info');
+
+        // Check if token exists in localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedToken = localStorage.getItem('jwt_token');
+            if (storedToken) {
+                jwtToken = storedToken;
+                validateToken(jwtToken);
+            }
+        });
+
+        // Login button click
+        loginBtn.addEventListener('click', () => {
+            const token = jwtInput.value.trim();
+            if (token) {
+                jwtToken = token;
+                validateToken(token);
+            } else {
+                alert('Please enter a JWT token');
+            }
+        });
+
+        // Logout button click
+        logoutBtn.addEventListener('click', () => {
+            jwtToken = '';
+            userRole = '';
+            localStorage.removeItem('jwt_token');
+            loginSection.classList.remove('hidden');
+            apiExplorer.classList.add('hidden');
+            logoutBtn.classList.add('hidden');
+            userInfo.textContent = 'Not logged in';
+        });
+
+        // Validate JWT token
+        function validateToken(token) {
+            // Make a request to health endpoint to validate token
+            fetch('/api/health', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Token is valid
+                    localStorage.setItem('jwt_token', token);
+                    loginSection.classList.add('hidden');
+                    apiExplorer.classList.remove('hidden');
+                    logoutBtn.classList.remove('hidden');
+                    
+                    // Parse token to get user info
+                    try {
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        userRole = payload.role || 'user';
+                        userInfo.textContent = `Logged in as: ${userRole}`;
+                    } catch (e) {
+                        userInfo.textContent = 'Logged in';
+                    }
+                    
+                    // Run health check on load
+                    executeHealthCheck();
+                } else {
+                    alert('Invalid token. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error validating token:', error);
+                alert('Error validating token. Please try again.');
+            });
+        }
+
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                const tabName = tab.getAttribute('data-tab');
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            });
+        });
+
+        // API execution functions
+        document.querySelectorAll('.execute-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const apiTile = e.target.closest('.api-tile');
+                const apiId = apiTile.id;
+                
+                switch (apiId) {
+                    case 'health-check':
+                        executeHealthCheck();
+                        break;
+                    case 'list-my-documents':
+                        executeListMyDocuments();
+                        break;
+                    case 'list-course-documents':
+                        executeListCourseDocuments();
+                        break;
+                    case 'get-document':
+                        executeGetDocument();
+                        break;
+                    case 'document-status':
+                        executeDocumentStatus();
+                        break;
+                    case 'reindex-document':
+                        executeReindexDocument();
+                        break;
+                    case 'delete-document':
+                        executeDeleteDocument();
+                        break;
+                    case 'search-documents':
+                        executeSearchDocuments();
+                        break;
+                    case 'similar-documents':
+                        executeSimilarDocuments();
+                        break;
+                    case 'list-all-documents':
+                        executeListAllDocuments();
+                        break;
+                    case 'system-stats':
+                        executeSystemStats();
+                        break;
+                    case 'upload-document':
+                        executeUploadDocument();
+                        break;
+                }
+            });
+        });
+
+        // API execution functions
+        function executeHealthCheck() {
+            const responseContainer = document.querySelector('#health-check .response-container');
+            const responseElement = document.getElementById('health-check-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            fetch('/api/health', {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseElement.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeListMyDocuments() {
+            const responseContainer = document.querySelector('#list-my-documents .response-container');
+            const responseElement = document.getElementById('list-my-documents-response');
+            const tableContainer = document.querySelector('#list-my-documents .table-container');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            fetch('/api/v1/documents/my', {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show JSON view
+                responseElement.textContent = JSON.stringify(data, null, 2);
+                
+                // Show table view
+                if (data.documents && data.documents.length > 0) {
+                    const tableView = document.getElementById('list-my-documents-table');
+                    if (tableView) {
+                        renderDocumentsTable(data.documents, tableView);
+                    }
+                    
+                    // Show view tabs
+                    document.querySelectorAll('#list-my-documents .view-tabs')[0].classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeListCourseDocuments() {
+            const courseId = document.getElementById('course-id').value.trim();
+            if (!courseId) {
+                alert('Please enter a course ID');
+                return;
+            }
+            
+            const responseContainer = document.querySelector('#list-course-documents .response-container');
+            const responseElement = document.getElementById('list-course-documents-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            fetch(`/api/v1/documents/course/${courseId}`, {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show JSON view
+                responseElement.textContent = JSON.stringify(data, null, 2);
+                
+                // Show table view
+                if (data.documents && data.documents.length > 0) {
+                    const tableView = document.getElementById('list-course-documents-table');
+                    if (tableView) {
+                        renderDocumentsTable(data.documents, tableView);
+                    }
+                    
+                    // Show view tabs
+                    document.querySelectorAll('#list-course-documents .view-tabs')[0].classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeGetDocument() {
+            const documentId = document.getElementById('document-id').value.trim();
+            if (!documentId) {
+                alert('Please enter a document ID');
+                return;
+            }
+            
+            const responseContainer = document.querySelector('#get-document .response-container');
+            const responseElement = document.getElementById('get-document-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            fetch(`/api/v1/documents/${documentId}`, {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseElement.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeSearchDocuments() {
+            const searchText = document.getElementById('search-text').value.trim();
+            const courseId = document.getElementById('search-course').value.trim();
+            const minScore = document.getElementById('min-score').value;
+            
+            if (!searchText) {
+                alert('Please enter a search query');
+                return;
+            }
+            
+            const responseContainer = document.querySelector('#search-documents .response-container');
+            const responseElement = document.getElementById('search-documents-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            const searchData = {
+                text: searchText,
+                collection: "general",
+                min_score: parseFloat(minScore),
+                page: 1,
+                page_size: 10
+            };
+            
+            if (courseId) {
+                searchData.filters = {
+                    course_id: courseId
+                };
+            }
+            
+            fetch('/api/v1/search/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(searchData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show JSON view
+                responseElement.textContent = JSON.stringify(data, null, 2);
+                
+                // Show table view if results exist
+                if (data.results && data.results.length > 0) {
+                    const tableView = document.getElementById('search-documents-table');
+                    if (tableView) {
+                        renderSearchResultsTable(data.results, tableView);
+                    }
+                    
+                    // Show view tabs
+                    document.querySelectorAll('#search-documents .view-tabs')[0].classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeSimilarDocuments() {
+            const documentId = document.getElementById('similar-document-id').value.trim();
+            const limit = document.getElementById('similar-limit').value;
+            
+            if (!documentId) {
+                alert('Please enter a document ID');
+                return;
+            }
+            
+            const responseContainer = document.querySelector('#similar-documents .response-container');
+            const responseElement = document.getElementById('similar-documents-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            fetch(`/api/v1/search/similar/${documentId}?limit=${limit}&min_score=0.5`, {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show JSON view
+                responseElement.textContent = JSON.stringify(data, null, 2);
+                
+                // Show table view if results exist
+                if (data.results && data.results.length > 0) {
+                    const tableView = document.getElementById('similar-documents-table');
+                    if (tableView) {
+                        renderSearchResultsTable(data.results, tableView);
+                    }
+                    
+                    // Show view tabs
+                    document.querySelectorAll('#similar-documents .view-tabs')[0].classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeListAllDocuments() {
+            const limit = document.getElementById('admin-limit').value;
+            const offset = document.getElementById('admin-offset').value;
+            
+            const responseContainer = document.querySelector('#list-all-documents .response-container');
+            const responseElement = document.getElementById('list-all-documents-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            fetch(`/api/v1/admin/documents?limit=${limit}&offset=${offset}`, {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show JSON view
+                responseElement.textContent = JSON.stringify(data, null, 2);
+                
+                // Show table view
+                if (data.documents && data.documents.length > 0) {
+                    const tableView = document.getElementById('list-all-documents-table');
+                    if (tableView) {
+                        renderDocumentsTable(data.documents, tableView);
+                    }
+                    
+                    // Show view tabs
+                    document.querySelectorAll('#list-all-documents .view-tabs')[0].classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeSystemStats() {
+            const responseContainer = document.querySelector('#system-stats .response-container');
+            const responseElement = document.getElementById('system-stats-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            fetch('/api/v1/admin/stats', {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseElement.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeDocumentStatus() {
+            const documentId = document.getElementById('status-document-id').value.trim();
+            if (!documentId) {
+                alert('Please enter a document ID');
+                return;
+            }
+            
+            const responseContainer = document.querySelector('#document-status .response-container');
+            const responseElement = document.getElementById('document-status-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            fetch(`/api/v1/documents/${documentId}/status`, {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseElement.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeReindexDocument() {
+            const documentId = document.getElementById('reindex-document-id').value.trim();
+            if (!documentId) {
+                alert('Please enter a document ID');
+                return;
+            }
+            
+            const responseContainer = document.querySelector('#reindex-document .response-container');
+            const responseElement = document.getElementById('reindex-document-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            fetch(`/api/v1/documents/${documentId}/reindex`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseElement.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeDeleteDocument() {
+            const documentId = document.getElementById('delete-document-id').value.trim();
+            if (!documentId) {
+                alert('Please enter a document ID');
+                return;
+            }
+            
+            // Confirm deletion
+            if (!confirm(`Are you sure you want to delete document ${documentId}? This action cannot be undone.`)) {
+                return;
+            }
+            
+            const responseContainer = document.querySelector('#delete-document .response-container');
+            const responseElement = document.getElementById('delete-document-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Loading...';
+            
+            fetch(`/api/v1/documents/${documentId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseElement.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        function executeUploadDocument() {
+            const fileInput = document.getElementById('upload-file');
+            const title = document.getElementById('upload-title').value.trim();
+            const courseId = document.getElementById('upload-course-id').value.trim();
+            const documentType = document.getElementById('upload-document-type').value;
+            const tags = document.getElementById('upload-tags').value.trim();
+            const collection = document.getElementById('upload-collection').value;
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select a file to upload');
+                return;
+            }
+            
+            const responseContainer = document.querySelector('#upload-document .response-container');
+            const responseElement = document.getElementById('upload-document-response');
+            
+            responseContainer.classList.remove('hidden');
+            responseElement.textContent = 'Uploading...';
+            
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            if (title) formData.append('title', title);
+            if (courseId) formData.append('course_id', courseId);
+            if (documentType) formData.append('document_type', documentType);
+            if (tags) formData.append('tags', tags);
+            if (collection) formData.append('collection', collection);
+            
+            fetch('/api/v1/documents/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseElement.textContent = JSON.stringify(data, null, 2);
+                
+                // If successful, clear the form
+                if (data.success) {
+                    fileInput.value = '';
+                    document.getElementById('upload-title').value = '';
+                    document.getElementById('upload-course-id').value = '';
+                    document.getElementById('upload-tags').value = '';
+                    
+                    // Show a message that we should refresh the document list
+                    responseElement.textContent += '\n\nDocument upload initiated. Please check the document status or refresh your document list to see the new document.';
+                }
+            })
+            .catch(error => {
+                responseElement.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        // Helper function to render documents table
+        function renderDocumentsTable(documents, tableElement) {
+            // Clear existing table content
+            tableElement.innerHTML = '';
+            
+            // Create table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            const headers = ['Document ID', 'Title', 'Status', 'Course', 'Type', 'Chunks', 'Parent/Child', 'Actions'];
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            tableElement.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            
+            documents.forEach(doc => {
+                const row = document.createElement('tr');
+                
+                // Document ID
+                const idCell = document.createElement('td');
+                idCell.textContent = doc.document_id;
+                row.appendChild(idCell);
+                
+                // Title
+                const titleCell = document.createElement('td');
+                titleCell.textContent = doc.metadata?.title || 'Untitled';
+                row.appendChild(titleCell);
+                
+                // Status
+                const statusCell = document.createElement('td');
+                statusCell.textContent = doc.status || 'Unknown';
+                row.appendChild(statusCell);
+                
+                // Course
+                const courseCell = document.createElement('td');
+                courseCell.textContent = doc.metadata?.course_id || 'N/A';
+                row.appendChild(courseCell);
+                
+                // Type
+                const typeCell = document.createElement('td');
+                typeCell.textContent = doc.metadata?.document_type || 'N/A';
+                row.appendChild(typeCell);
+                
+                // Chunks
+                const chunksCell = document.createElement('td');
+                chunksCell.textContent = doc.chunk_count || doc.metadata?.total_chunks || 'N/A';
+                row.appendChild(chunksCell);
+                
+                // Parent/Child
+                const relationshipCell = document.createElement('td');
+                if (doc.metadata?.is_chunk) {
+                    relationshipCell.textContent = `Chunk of ${doc.metadata.parent_document_id}`;
+                    if (doc.metadata.chunk_index !== undefined) {
+                        relationshipCell.textContent += ` (${doc.metadata.chunk_index + 1}/${doc.metadata.total_chunks})`;
+                    }
+                } else if (doc.chunk_count) {
+                    relationshipCell.textContent = `Parent (${doc.chunk_count} chunks)`;
+                } else {
+                    relationshipCell.textContent = 'N/A';
+                }
+                row.appendChild(relationshipCell);
+                
+                // Actions
+                const actionsCell = document.createElement('td');
+                
+                // View button
+                const viewButton = document.createElement('button');
+                viewButton.textContent = 'View';
+                viewButton.style.marginRight = '5px';
+                viewButton.addEventListener('click', () => {
+                    loadDocument(doc.document_id);
+                });
+                actionsCell.appendChild(viewButton);
+                
+                // Status button
+                const statusButton = document.createElement('button');
+                statusButton.textContent = 'Status';
+                statusButton.style.marginRight = '5px';
+                statusButton.addEventListener('click', () => {
+                    document.getElementById('status-document-id').value = doc.document_id;
+                    document.querySelector('#document-status .execute-btn').click();
+                    
+                    // Switch to the documents tab
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.querySelector('.tab[data-tab="documents"]').classList.add('active');
+                    document.getElementById('documents-tab').classList.add('active');
+                    
+                    // Scroll to the document-status section
+                    document.getElementById('document-status').scrollIntoView({ behavior: 'smooth' });
+                });
+                actionsCell.appendChild(statusButton);
+                
+                // Reindex button (only for parent documents)
+                if (!doc.metadata?.is_chunk) {
+                    const reindexButton = document.createElement('button');
+                    reindexButton.textContent = 'Reindex';
+                    reindexButton.style.marginRight = '5px';
+                    reindexButton.addEventListener('click', () => {
+                        document.getElementById('reindex-document-id').value = doc.document_id;
+                        document.querySelector('#reindex-document .execute-btn').click();
+                        
+                        // Switch to the documents tab
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.remove('active');
+                        });
+                        document.querySelector('.tab[data-tab="documents"]').classList.add('active');
+                        document.getElementById('documents-tab').classList.add('active');
+                        
+                        // Scroll to the reindex-document section
+                        document.getElementById('reindex-document').scrollIntoView({ behavior: 'smooth' });
+                    });
+                    actionsCell.appendChild(reindexButton);
+                    
+                    // Delete button
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.style.backgroundColor = '#e74c3c';
+                    deleteButton.addEventListener('click', () => {
+                        document.getElementById('delete-document-id').value = doc.document_id;
+                        document.querySelector('#delete-document .execute-btn').click();
+                        
+                        // Switch to the documents tab
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.remove('active');
+                        });
+                        document.querySelector('.tab[data-tab="documents"]').classList.add('active');
+                        document.getElementById('documents-tab').classList.add('active');
+                        
+                        // Scroll to the delete-document section
+                        document.getElementById('delete-document').scrollIntoView({ behavior: 'smooth' });
+                    });
+                    actionsCell.appendChild(deleteButton);
+                }
+                
+                row.appendChild(actionsCell);
+                
+                tbody.appendChild(row);
+            });
+            
+            tableElement.appendChild(tbody);
+        }
+        
+        // Helper function to render search results table
+        function renderSearchResultsTable(results, tableElement) {
+            // Clear existing table content
+            tableElement.innerHTML = '';
+            
+            // Create table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            const headers = ['Document ID', 'Title', 'Score', 'Content', 'Parent/Child', 'Actions'];
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            tableElement.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                
+                // Document ID
+                const idCell = document.createElement('td');
+                idCell.textContent = result.document_id;
+                row.appendChild(idCell);
+                
+                // Title
+                const titleCell = document.createElement('td');
+                titleCell.textContent = result.metadata?.title || 'Untitled';
+                row.appendChild(titleCell);
+                
+                // Score
+                const scoreCell = document.createElement('td');
+                scoreCell.textContent = result.score ? result.score.toFixed(4) : 'N/A';
+                row.appendChild(scoreCell);
+                
+                // Content
+                const contentCell = document.createElement('td');
+                contentCell.textContent = result.content ? (result.content.length > 100 ? result.content.substring(0, 100) + '...' : result.content) : 'N/A';
+                row.appendChild(contentCell);
+                
+                // Parent/Child
+                const relationshipCell = document.createElement('td');
+                if (result.metadata?.is_chunk) {
+                    relationshipCell.textContent = `Chunk of ${result.metadata.parent_document_id}`;
+                    if (result.metadata.chunk_index !== undefined) {
+                        relationshipCell.textContent += ` (${result.metadata.chunk_index + 1}/${result.metadata.total_chunks})`;
+                    }
+                } else if (result.metadata?.total_chunks) {
+                    relationshipCell.textContent = `Parent (${result.metadata.total_chunks} chunks)`;
+                } else {
+                    relationshipCell.textContent = 'N/A';
+                }
+                row.appendChild(relationshipCell);
+                
+                // Actions
+                const actionsCell = document.createElement('td');
+                
+                // View button
+                const viewButton = document.createElement('button');
+                viewButton.textContent = 'View';
+                viewButton.style.marginRight = '5px';
+                viewButton.addEventListener('click', () => {
+                    loadDocument(result.document_id);
+                });
+                actionsCell.appendChild(viewButton);
+                
+                // View Parent button (only for chunks)
+                if (result.metadata?.is_chunk && result.metadata?.parent_document_id) {
+                    const viewParentButton = document.createElement('button');
+                    viewParentButton.textContent = 'View Parent';
+                    viewParentButton.style.marginRight = '5px';
+                    viewParentButton.addEventListener('click', () => {
+                        loadDocument(result.metadata.parent_document_id);
+                    });
+                    actionsCell.appendChild(viewParentButton);
+                }
+                
+                row.appendChild(actionsCell);
+                
+                tbody.appendChild(row);
+            });
+            
+            tableElement.appendChild(tbody);
+        }
+
+        // View tab switching
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('view-tab')) {
+                const viewType = e.target.getAttribute('data-view');
+                const parentTile = e.target.closest('.api-tile');
+                
+                // Remove active class from all tabs and content in this tile
+                parentTile.querySelectorAll('.view-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                parentTile.querySelectorAll('.view-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab and corresponding content
+                e.target.classList.add('active');
+                parentTile.querySelector(`.view-content[data-view="${viewType}"]`).classList.add('active');
+            }
+        });
+
+        // Global function to load document details
+        window.loadDocument = function(documentId) {
+            // Set the document ID in the get-document form
+            document.getElementById('document-id').value = documentId;
+            
+            // Switch to the documents tab
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.querySelector('.tab[data-tab="documents"]').classList.add('active');
+            document.getElementById('documents-tab').classList.add('active');
+            
+            // Scroll to the get-document section
+            const getDocumentTile = document.getElementById('get-document');
+            getDocumentTile.scrollIntoView({ behavior: 'smooth' });
+            
+            // Execute the get document API
+            setTimeout(() => {
+                getDocumentTile.querySelector('.execute-btn').click();
+            }, 500);
+        };
+    </script>
+</body>
+</html> 
