@@ -84,7 +84,8 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
   - Node.js (v14 or higher)
   - npm (comes with Node.js)
   - Git
-  - PostgreSQL (optional - SQLite is used by default in development)
+  - SQLite
+  - ChromaDB
 
 ## Key Features
 
