@@ -2,17 +2,48 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { courseApi, userApi, assignmentApi, adminApi } from '../../services/apiService';
 import { formatDate } from '../../utils/dateUtils';
+import { 
+    PlusCircleIcon,
+    AcademicCapIcon,
+    UserGroupIcon,
+    ClipboardDocumentListIcon,
+    QuestionMarkCircleIcon
+} from '@heroicons/react/24/outline';
 
-const DashboardCard = ({ title, value, description, onClick }) => (
+const DashboardCard = ({ title, value, description, icon: Icon, onClick }) => (
     <div 
-        className={`bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow ${onClick ? 'cursor-pointer' : ''}`}
+        className={`glass-card p-6 hover:shadow-lg transition-shadow ${onClick ? 'cursor-pointer' : ''}`}
         onClick={onClick}
     >
-        <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-        <p className="text-3xl font-bold text-blue-600 my-2">{value}</p>
-        <p className="text-sm text-gray-600">{description}</p>
+        <div className="flex justify-between items-start">
+            <div>
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{title}</h3>
+                <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 my-2">{value}</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
+            </div>
+            {Icon && <Icon className="w-8 h-8 text-zinc-400 dark:text-zinc-500" />}
+        </div>
     </div>
 );
+
+const ActionButton = ({ label, icon: Icon, onClick, color = 'blue' }) => {
+    const colorClasses = {
+        blue: 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white',
+        green: 'bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white',
+        purple: 'bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-600 text-white',
+        orange: 'bg-orange-600 hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-600 text-white'
+    };
+
+    return (
+        <button
+            onClick={onClick}
+            className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-lg ${colorClasses[color]} transition-colors w-full shadow-sm hover:shadow-md`}
+        >
+            <Icon className="w-5 h-5" />
+            <span>{label}</span>
+        </button>
+    );
+};
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -50,141 +81,159 @@ const AdminDashboard = () => {
                 setError('Failed to load dashboard data');
             }
         } catch (err) {
-            console.error('Error fetching dashboard data:', err);
-            setError('Failed to load dashboard data');
+            setError('An error occurred while fetching dashboard data');
+            console.error(err);
         } finally {
             setLoading(false);
         }
     };
 
+    const navigateTo = (path) => {
+        navigate(path);
+    };
+
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-full">
-                <div className="text-gray-600">Loading dashboard...</div>
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
+                <span className="ml-3 text-zinc-600 dark:text-zinc-400">Loading dashboard...</span>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="p-6">
-                <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-4">
-                    {error}
-                </div>
+            <div className="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded relative" role="alert">
+                <strong className="font-bold">Error!</strong>
+                <span className="block sm:inline"> {error}</span>
             </div>
         );
     }
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
-
-            {/* Stats Grid */}
+        <div className="space-y-8">
+            <h1 className="text-2xl font-bold mb-6 text-zinc-900 dark:text-white">Dashboard</h1>
+            
+            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <DashboardCard
-                    title="Total Courses"
-                    value={stats.totalCourses}
+                <DashboardCard 
+                    title="Total Courses" 
+                    value={stats.totalCourses} 
                     description="Active courses in the platform"
-                    onClick={() => navigate('/admin/courses')}
+                    icon={AcademicCapIcon}
+                    onClick={() => navigateTo('/admin/courses')}
                 />
-                <DashboardCard
-                    title="Total Students"
-                    value={stats.totalStudents}
+                <DashboardCard 
+                    title="Total Students" 
+                    value={stats.totalStudents} 
                     description="Enrolled students"
-                    onClick={() => navigate('/admin/users')}
+                    icon={UserGroupIcon}
+                    onClick={() => navigateTo('/admin/users')}
                 />
-                <DashboardCard
-                    title="Total Assignments"
-                    value={stats.totalAssignments}
+                <DashboardCard 
+                    title="Total Assignments" 
+                    value={stats.totalAssignments} 
                     description="Created assignments"
-                    onClick={() => navigate('/admin/assignments')}
+                    icon={ClipboardDocumentListIcon}
+                    onClick={() => navigateTo('/admin/assignments')}
                 />
-                <DashboardCard
-                    title="Question Bank"
-                    value={stats.totalQuestions}
+                <DashboardCard 
+                    title="Question Bank" 
+                    value={stats.totalQuestions} 
                     description="Available questions"
-                    onClick={() => navigate('/admin/question-bank')}
+                    icon={QuestionMarkCircleIcon}
+                    onClick={() => navigateTo('/admin/question-bank')}
                 />
             </div>
 
             {/* Quick Actions */}
-            <div className="mb-8">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <button
-                        onClick={() => navigate('/admin/courses/new')}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                    >
-                        Create Course
-                    </button>
-                    <button
-                        onClick={() => navigate('/admin/assignments/new')}
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-                    >
-                        Create Assignment
-                    </button>
-                    <button
-                        onClick={() => navigate('/admin/question-bank/new')}
-                        className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
-                    >
-                        Add Question
-                    </button>
-                    <button
-                        onClick={() => navigate('/admin/users/new')}
-                        className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700"
-                    >
-                        Add User
-                    </button>
+            <div>
+                <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-white">Quick Actions</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <ActionButton 
+                        label="Create Course" 
+                        icon={PlusCircleIcon} 
+                        onClick={() => navigateTo('/admin/courses/new')}
+                        color="blue"
+                    />
+                    <ActionButton 
+                        label="Create Assignment" 
+                        icon={PlusCircleIcon} 
+                        onClick={() => navigateTo('/admin/assignments/new')}
+                        color="green"
+                    />
+                    <ActionButton 
+                        label="Add Question" 
+                        icon={PlusCircleIcon} 
+                        onClick={() => navigateTo('/admin/question-bank/new')}
+                        color="purple"
+                    />
+                    <ActionButton 
+                        label="Add User" 
+                        icon={PlusCircleIcon} 
+                        onClick={() => navigateTo('/admin/users/new')}
+                        color="orange"
+                    />
                 </div>
             </div>
 
-            {/* Recent Activity */}
+            {/* Recent Items */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Recent Courses */}
-                <div className="bg-white rounded-lg shadow p-6">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-4">Recent Courses</h2>
+                <div className="glass-card p-6">
+                    <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-white">Recent Courses</h2>
                     <div className="space-y-4">
-                        {stats.recentCourses.map(course => (
-                            <div 
-                                key={course.id}
-                                className="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer"
-                                onClick={() => navigate(`/admin/courses/${course.id}/content`)}
-                            >
-                                <div>
-                                    <h3 className="font-medium">{course.name}</h3>
-                                    <p className="text-sm text-gray-600">{course.code}</p>
+                        {stats.recentCourses.length > 0 ? (
+                            stats.recentCourses.map((course) => (
+                                <div 
+                                    key={course.id} 
+                                    className="p-4 border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer transition-colors rounded-md"
+                                    onClick={() => navigateTo(`/admin/courses/${course.id}`)}
+                                >
+                                    <div className="flex justify-between">
+                                        <div>
+                                            <h3 className="font-medium text-zinc-900 dark:text-white">{course.code}</h3>
+                                            <p className="text-sm text-zinc-600 dark:text-zinc-400">{course.name}</p>
+                                        </div>
+                                        <span className="text-sm text-zinc-500 dark:text-zinc-400">{formatDate(course.createdAt)}</span>
+                                    </div>
                                 </div>
-                                <span className="text-sm text-gray-500">
-                                    {new Date(course.created_at).toLocaleDateString()}
-                                </span>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <p className="text-zinc-500 dark:text-zinc-400">No recent courses</p>
+                        )}
                     </div>
                 </div>
 
                 {/* Recent Assignments */}
-                <div className="bg-white rounded-lg shadow p-6">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-4">Recent Assignments</h2>
+                <div className="glass-card p-6">
+                    <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-white">Recent Assignments</h2>
                     <div className="space-y-4">
-                        {stats.recentAssignments.map(assignment => (
-                            <div 
-                                key={assignment.id}
-                                className="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer"
-                                onClick={() => navigate(`/admin/assignments/${assignment.id}`)}
-                            >
-                                <div>
-                                    <h3 className="font-medium">{assignment.title}</h3>
-                                    <p className="text-sm text-gray-600">Due: {new Date(assignment.due_date).toLocaleDateString()}</p>
+                        {stats.recentAssignments.length > 0 ? (
+                            stats.recentAssignments.map((assignment) => (
+                                <div 
+                                    key={assignment.id} 
+                                    className="p-4 border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer transition-colors rounded-md"
+                                    onClick={() => navigateTo(`/admin/assignments/${assignment.id}`)}
+                                >
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <h3 className="font-medium text-zinc-900 dark:text-white">{assignment.title}</h3>
+                                            <p className="text-sm text-zinc-600 dark:text-zinc-400">Due: {formatDate(assignment.dueDate)}</p>
+                                        </div>
+                                        <span className={`px-2 py-1 text-xs rounded-full ${
+                                            assignment.status === 'published' 
+                                                ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400' 
+                                                : 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400'
+                                        }`}>
+                                            {assignment.status}
+                                        </span>
+                                    </div>
                                 </div>
-                                <span className={`px-2 py-1 rounded-full text-sm ${
-                                    assignment.is_published 
-                                        ? 'bg-green-100 text-green-800' 
-                                        : 'bg-yellow-100 text-yellow-800'
-                                }`}>
-                                    {assignment.is_published ? 'Published' : 'Draft'}
-                                </span>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <p className="text-zinc-500 dark:text-zinc-400">No recent assignments</p>
+                        )}
                     </div>
                 </div>
             </div>

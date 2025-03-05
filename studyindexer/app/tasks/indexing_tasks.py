@@ -1,232 +1,315 @@
-"""Celery tasks for document processing"""
-from app.core.celery_app import celery_app
+"""Document processing functions"""
 from app.services.indexer import DocumentIndexer
-from app.services.tracker import DocumentTracker
-from app.schemas.documents import DocumentStatus
-from celery.utils.log import get_task_logger
+from app.core.background_tasks import document_tracker, DocumentStatus
 from datetime import datetime, timedelta
 import os
 from app.core.config import settings
+import asyncio
+import logging
 
-logger = get_task_logger(__name__)
+logger = logging.getLogger(__name__)
 
-@celery_app.task(
-    bind=True,
-    name="app.tasks.indexing_tasks.process_document",
-    queue="indexing",
-    autoretry_for=(Exception,),
-    retry_kwargs={'max_retries': 3, 'countdown': 60}
-)
-def process_document(self, document_id: str):
+def process_document(document_id: str):
     """
-    Celery task to process and index a document
+    Process a document and index it in the vector store
     """
     try:
-        logger.info(f"Starting document processing for {document_id}")
+        logger.info(f"Processing document: {document_id}")
         
-        # Initialize services (lazy initialization)
+        # Initialize services
         indexer = DocumentIndexer()
-        tracker = DocumentTracker()
         
-        # Update tracking status
-        tracker.update_status(
-            document_id=document_id,
-            status=DocumentStatus.PROCESSING
+        # Update document status
+        document_tracker.update_status(
+            document_id, 
+            DocumentStatus.PROCESSING
         )
         
-        # Process document
-        indexer.index_document(document_id)
-        
-        # Update tracking status
-        tracker.update_status(
-            document_id=document_id,
-            status=DocumentStatus.COMPLETED
-        )
-        
-        logger.info(f"Document {document_id} processed successfully")
-        return {"status": "success", "document_id": document_id}
-        
+        # Use a new event loop for async operations
+        loop = asyncio.new_event_loop()
+        try:
+            # Run the async process_document method
+            result = loop.run_until_complete(indexer.process_document(document_id))
+            
+            # Check result
+            if result and result.get("success", False):
+                # Update document status with metadata
+                document_tracker.update_status(
+                    document_id, 
+                    DocumentStatus.COMPLETED,
+                    metadata=result.get("metadata", {})
+                )
+                logger.info(f"Document {document_id} processed successfully")
+                return {"success": True, "document_id": document_id}
+            else:
+                # Update document status with error
+                error_message = result.get("error", "Unknown error") if result else "Processing failed"
+                document_tracker.update_status(
+                    document_id, 
+                    DocumentStatus.FAILED,
+                    error=error_message
+                )
+                logger.error(f"Document {document_id} processing failed: {error_message}")
+                return {"success": False, "document_id": document_id, "error": error_message}
+        finally:
+            # Always close the loop
+            loop.close()
+            
     except Exception as e:
-        logger.error(f"Error processing document {document_id}: {str(e)}")
-        
-        # Update tracking status with error
-        tracker = DocumentTracker()  # Re-initialize in case of error
-        tracker.update_status(
-            document_id=document_id,
-            status=DocumentStatus.FAILED,
+        logger.exception(f"Error processing document {document_id}: {str(e)}")
+        # Update document status with error
+        document_tracker.update_status(
+            document_id, 
+            DocumentStatus.FAILED,
             error=str(e)
         )
-        
-        # Retry if possible
-        raise self.retry(exc=e)
+        return {"success": False, "document_id": document_id, "error": str(e)}
 
-@celery_app.task(
-    bind=True,
-    name="app.tasks.indexing_tasks.reindex_document",
-    queue="indexing",
-    autoretry_for=(Exception,),
-    retry_kwargs={'max_retries': 3, 'countdown': 60}
-)
-def reindex_document(self, document_id: str):
+def reindex_document(document_id: str):
     """
-    Celery task to reindex an existing document
+    Reindex a document in the vector store
     """
     try:
-        logger.info(f"Starting document reindexing for {document_id}")
+        logger.info(f"Reindexing document: {document_id}")
         
-        # Initialize services (lazy initialization)
+        # Initialize services
         indexer = DocumentIndexer()
-        tracker = DocumentTracker()
         
-        # Update tracking status
-        tracker.update_status(
-            document_id=document_id,
-            status=DocumentStatus.PROCESSING
+        # Get document status
+        doc_status = document_tracker.get_status(document_id)
+        if not doc_status:
+            logger.error(f"Document {document_id} not found for reindexing")
+            return {"success": False, "document_id": document_id, "error": "Document not found"}
+        
+        # Update document status
+        document_tracker.update_status(
+            document_id, 
+            DocumentStatus.PROCESSING
         )
         
-        # Delete existing vectors
-        indexer.delete_document(document_id)
+        # Delete existing vectors if they exist
+        vector_ids = doc_status.get("metadata", {}).get("vector_ids", [])
+        if vector_ids:
+            logger.info(f"Deleting existing vectors for document {document_id}")
+            # Use a new event loop for async operations
+            loop = asyncio.new_event_loop()
+            try:
+                loop.run_until_complete(indexer.delete_vectors(vector_ids))
+            finally:
+                loop.close()
         
-        # Reindex document
-        indexer.index_document(document_id)
-        
-        # Update tracking status
-        tracker.update_status(
-            document_id=document_id,
-            status=DocumentStatus.COMPLETED
-        )
-        
-        logger.info(f"Document {document_id} reindexed successfully")
-        return {"status": "success", "document_id": document_id}
-        
+        # Reindex the document
+        loop = asyncio.new_event_loop()
+        try:
+            # Run the async index_document method
+            result = loop.run_until_complete(indexer.index_document(document_id))
+            
+            # Check result
+            if result and result.get("success", False):
+                # Update document status with metadata
+                document_tracker.update_status(
+                    document_id, 
+                    DocumentStatus.COMPLETED,
+                    metadata=result.get("metadata", {})
+                )
+                logger.info(f"Document {document_id} reindexed successfully")
+                return {"success": True, "document_id": document_id}
+            else:
+                # Update document status with error
+                error_message = result.get("error", "Unknown error") if result else "Reindexing failed"
+                document_tracker.update_status(
+                    document_id, 
+                    DocumentStatus.FAILED,
+                    error=error_message
+                )
+                logger.error(f"Document {document_id} reindexing failed: {error_message}")
+                return {"success": False, "document_id": document_id, "error": error_message}
+        finally:
+            # Always close the loop
+            loop.close()
+            
     except Exception as e:
-        logger.error(f"Error reindexing document {document_id}: {str(e)}")
-        
-        # Update tracking status with error
-        tracker = DocumentTracker()  # Re-initialize in case of error
-        tracker.update_status(
-            document_id=document_id,
-            status=DocumentStatus.FAILED,
+        logger.exception(f"Error reindexing document {document_id}: {str(e)}")
+        # Update document status with error
+        document_tracker.update_status(
+            document_id, 
+            DocumentStatus.FAILED,
             error=str(e)
         )
-        
-        # Retry if possible
-        raise self.retry(exc=e)
+        return {"success": False, "document_id": document_id, "error": str(e)}
 
-@celery_app.task(
-    name="app.tasks.indexing_tasks.delete_document",
-    queue="maintenance"
-)
 def delete_document(document_id: str):
     """
-    Celery task to delete a document and its tracking
+    Delete a document from the vector store
     """
     try:
-        logger.info(f"Deleting document {document_id}")
+        logger.info(f"Deleting document: {document_id}")
         
-        # Initialize services (lazy initialization)
+        # Initialize services
         indexer = DocumentIndexer()
-        tracker = DocumentTracker()
         
-        # Delete from vector store
-        indexer.delete_document(document_id)
+        # Get document status
+        doc_status = document_tracker.get_status(document_id)
+        if not doc_status:
+            logger.error(f"Document {document_id} not found for deletion")
+            return {"success": False, "document_id": document_id, "error": "Document not found"}
         
-        # Delete tracking
-        tracker.delete_tracking(document_id)
+        # Delete vectors if they exist
+        vector_ids = doc_status.get("metadata", {}).get("vector_ids", [])
+        if vector_ids:
+            logger.info(f"Deleting vectors for document {document_id}")
+            # Use a new event loop for async operations
+            loop = asyncio.new_event_loop()
+            try:
+                loop.run_until_complete(indexer.delete_vectors(vector_ids))
+                logger.info(f"Vectors deleted for document {document_id}")
+            except Exception as e:
+                logger.error(f"Error deleting vectors for document {document_id}: {str(e)}")
+            finally:
+                loop.close()
         
-        logger.info(f"Document {document_id} deleted successfully")
-        return {"status": "success", "document_id": document_id}
+        # Mark document as deleted in tracker
+        document_tracker.delete_document(document_id)
         
+        # Delete document file if it exists
+        file_path = os.path.join(settings.UPLOAD_DIR, f"{document_id}")
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            logger.info(f"Document file deleted: {file_path}")
+        
+        return {"success": True, "document_id": document_id, "message": "Document deleted successfully"}
+            
     except Exception as e:
-        logger.error(f"Error deleting document {document_id}: {str(e)}")
-        raise
+        logger.exception(f"Error deleting document {document_id}: {str(e)}")
+        return {"success": False, "document_id": document_id, "error": str(e)}
 
-@celery_app.task(
-    name="app.tasks.indexing_tasks.cleanup_documents",
-    queue="maintenance"
-)
 def cleanup_old_documents():
     """
-    Periodic task to clean up old processed documents
+    Cleanup old documents based on retention policy
     """
     try:
-        logger.info("Starting document cleanup")
+        logger.info("Starting document cleanup task")
         
-        # Initialize services (lazy initialization)
+        # Get all documents
+        documents = document_tracker.list_documents()
+        
+        # Get retention period from settings (default 30 days)
+        retention_days = getattr(settings, "DOCUMENT_RETENTION_DAYS", 30)
+        retention_date = datetime.now() - timedelta(days=retention_days)
+        
+        # Initialize services
         indexer = DocumentIndexer()
         
-        # Get list of processed documents
-        processed_dir = os.path.join(settings.PROCESSED_DIR)
-        for filename in os.listdir(processed_dir):
-            if not filename.endswith('.json'):
-                continue
-                
-            document_id = filename.replace('.json', '')
-            
-            try:
-                # Get document status
-                status = indexer.get_document_status(document_id)
-                
-                # Check if document is old and failed
-                if (
-                    status and
-                    status["status"] == "failed" and
-                    datetime.fromisoformat(status["upload_time"]) < datetime.utcnow() - timedelta(days=7)
-                ):
-                    logger.info(f"Cleaning up old failed document {document_id}")
-                    delete_document.delay(document_id)
-                    
-            except Exception as e:
-                logger.warning(f"Error checking document {document_id}: {str(e)}")
-                continue
+        # Track cleanup stats
+        deleted_count = 0
+        failed_count = 0
         
-        logger.info("Document cleanup completed")
+        for doc in documents:
+            try:
+                # Skip if not completed or already deleted
+                if doc.get("status") not in [DocumentStatus.COMPLETED, DocumentStatus.FAILED]:
+                    continue
+                
+                # Check if document is older than retention period
+                updated_at = doc.get("updated_at")
+                if not updated_at:
+                    continue
+                
+                # Convert timestamp to datetime
+                if isinstance(updated_at, (int, float)):
+                    doc_date = datetime.fromtimestamp(updated_at)
+                else:
+                    continue
+                
+                if doc_date < retention_date:
+                    # Document is older than retention period, delete it
+                    document_id = doc.get("document_id")
+                    logger.info(f"Cleaning up old document: {document_id}")
+                    
+                    # Delete vectors if they exist
+                    if "metadata" in doc and "vector_ids" in doc["metadata"]:
+                        vector_ids = doc["metadata"]["vector_ids"]
+                        if vector_ids:
+                            # Use a new event loop
+                            loop = asyncio.new_event_loop()
+                            try:
+                                loop.run_until_complete(indexer.delete_vectors(vector_ids))
+                            finally:
+                                loop.close()
+                    
+                    # Mark document as deleted in tracker
+                    document_tracker.delete_document(document_id)
+                    
+                    # Delete document file if it exists
+                    file_path = os.path.join(settings.UPLOAD_DIR, f"{document_id}")
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                    
+                    deleted_count += 1
+            except Exception as e:
+                logger.error(f"Error cleaning up document {doc.get('document_id')}: {str(e)}")
+                failed_count += 1
+        
+        logger.info(f"Document cleanup completed: {deleted_count} deleted, {failed_count} failed")
+        return {
+            "success": True, 
+            "deleted_count": deleted_count, 
+            "failed_count": failed_count
+        }
         
     except Exception as e:
-        logger.error(f"Error during document cleanup: {str(e)}")
-        raise
+        logger.exception(f"Error in document cleanup task: {str(e)}")
+        return {"success": False, "error": str(e)}
 
-@celery_app.task(
-    name="app.tasks.indexing_tasks.check_stuck_tasks",
-    queue="maintenance"
-)
 def check_stuck_tasks():
     """
-    Periodic task to check for stuck processing tasks
+    Check for stuck processing tasks and mark them as failed
     """
     try:
-        logger.info("Checking for stuck tasks")
+        logger.info("Checking for stuck processing tasks")
         
-        # Initialize services (lazy initialization)
-        indexer = DocumentIndexer()
+        # Get all documents with processing status
+        processing_docs = document_tracker.list_documents(status=DocumentStatus.PROCESSING)
         
-        # Get list of processing documents
-        processed_dir = os.path.join(settings.PROCESSED_DIR)
-        for filename in os.listdir(processed_dir):
-            if not filename.endswith('.json'):
-                continue
-                
-            document_id = filename.replace('.json', '')
-            
+        # Get timeout period from settings (default 1 hour)
+        timeout_hours = getattr(settings, "PROCESSING_TIMEOUT_HOURS", 1)
+        timeout_time = datetime.now() - timedelta(hours=timeout_hours)
+        
+        # Track stats
+        marked_failed = 0
+        
+        for doc in processing_docs:
             try:
-                # Get document status
-                status = indexer.get_document_status(document_id)
+                # Check if document has been processing for too long
+                updated_at = doc.get("updated_at")
+                if not updated_at:
+                    continue
                 
-                # Check if document is stuck in processing
-                if (
-                    status and
-                    status["status"] == "processing" and
-                    datetime.fromisoformat(status["upload_time"]) < datetime.utcnow() - timedelta(hours=1)
-                ):
-                    logger.warning(f"Found stuck document {document_id}, requeueing")
-                    process_document.delay(document_id)
+                # Convert timestamp to datetime
+                if isinstance(updated_at, (int, float)):
+                    doc_date = datetime.fromtimestamp(updated_at)
+                else:
+                    continue
+                
+                if doc_date < timeout_time:
+                    # Document has been processing for too long, mark as failed
+                    document_id = doc.get("document_id")
+                    logger.warning(f"Document {document_id} has been processing for over {timeout_hours} hours, marking as failed")
                     
+                    # Update document status
+                    document_tracker.update_status(
+                        document_id, 
+                        DocumentStatus.FAILED,
+                        error=f"Processing timed out after {timeout_hours} hours"
+                    )
+                    
+                    marked_failed += 1
             except Exception as e:
-                logger.warning(f"Error checking document {document_id}: {str(e)}")
-                continue
+                logger.error(f"Error checking document {doc.get('document_id')}: {str(e)}")
         
-        logger.info("Stuck task check completed")
+        logger.info(f"Stuck task check completed: {marked_failed} tasks marked as failed")
+        return {"success": True, "marked_failed": marked_failed}
         
     except Exception as e:
-        logger.error(f"Error checking stuck tasks: {str(e)}")
-        raise 
+        logger.exception(f"Error in stuck task check: {str(e)}")
+        return {"success": False, "error": str(e)} 

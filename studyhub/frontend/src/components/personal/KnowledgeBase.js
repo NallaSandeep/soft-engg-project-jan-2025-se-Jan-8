@@ -5,6 +5,7 @@ import { kbApi } from '../../services/kbService';
 import LoadingSpinner from '../common/LoadingSpinner';
 import ErrorAlert from '../common/ErrorAlert';
 import { useModal } from '../common/Modal/ModalContext';
+import { Card } from '../common/Card';
 
 const KnowledgeBase = () => {
     const { kbId } = useParams();
@@ -76,12 +77,12 @@ const KnowledgeBase = () => {
                 <div className="space-y-4">
                     <input
                         type="file"
-                        className="block w-full text-sm text-gray-500
+                        className="block w-full text-sm text-zinc-500 dark:text-zinc-400
                             file:mr-4 file:py-2 file:px-4
                             file:rounded-full file:border-0
                             file:text-sm file:font-semibold
-                            file:bg-blue-50 file:text-blue-700
-                            hover:file:bg-blue-100"
+                            file:bg-blue-50 dark:file:bg-blue-900/30 file:text-blue-700 dark:file:text-blue-400
+                            hover:file:bg-blue-100 dark:hover:file:bg-blue-800/40"
                         accept=".pdf,.doc,.docx,.txt"
                         multiple
                     />
@@ -102,8 +103,8 @@ const KnowledgeBase = () => {
             title: doc.title,
             children: (
                 <div className="space-y-4">
-                    <p className="text-sm text-gray-500">{doc.description}</p>
-                    <div className="prose max-w-none">{doc.content}</div>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">{doc.description}</p>
+                    <div className="prose dark:prose-invert max-w-none">{doc.content}</div>
                 </div>
             ),
             showFooter: false,
@@ -117,11 +118,11 @@ const KnowledgeBase = () => {
     return (
         <div className="flex h-full">
             {/* Folder Navigation */}
-            <div className="w-64 bg-gray-50 border-r border-gray-200 p-4">
+            <div className="w-64 bg-zinc-50 dark:bg-zinc-800 border-r border-zinc-200 dark:border-zinc-700 p-4">
                 <div className="mb-4">
-                    <h2 className="text-lg font-semibold text-gray-700">Folders</h2>
+                    <h2 className="text-lg font-semibold text-zinc-700 dark:text-zinc-300">Folders</h2>
                     <button
-                        className="mt-2 flex items-center text-sm text-blue-600 hover:text-blue-800"
+                        className="mt-2 flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                         onClick={() => setCurrentFolder(null)}
                     >
                         All Documents
@@ -133,13 +134,13 @@ const KnowledgeBase = () => {
                             key={folder.id}
                             className={`flex items-center w-full p-2 rounded-md text-sm ${
                                 currentFolder?.id === folder.id
-                                    ? 'bg-blue-100 text-blue-700'
-                                    : 'text-gray-700 hover:bg-gray-100'
-                            }`}
+                                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
+                                    : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700'
+                            } transition-colors`}
                             onClick={() => handleFolderClick(folder)}
                         >
                             {folder.name}
-                            <span className="ml-auto text-xs text-gray-500">
+                            <span className="ml-auto text-xs text-zinc-500 dark:text-zinc-400">
                                 {folder.document_count}
                             </span>
                         </button>
@@ -150,7 +151,7 @@ const KnowledgeBase = () => {
             {/* Document List */}
             <div className="flex-1 p-4">
                 <div className="mb-4 flex items-center justify-between">
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
                         {currentFolder ? currentFolder.name : 'All Documents'}
                     </h1>
                     <div className="flex items-center space-x-4">
@@ -158,7 +159,7 @@ const KnowledgeBase = () => {
                             <input
                                 type="text"
                                 placeholder="Search documents..."
-                                className="rounded-md border border-gray-300 px-4 py-2 w-64"
+                                className="rounded-md border border-zinc-300 dark:border-zinc-600 px-4 py-2 w-64 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
@@ -181,27 +182,27 @@ const KnowledgeBase = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {documents.map((doc) => (
-                        <div
+                        <Card
                             key={doc.id}
-                            className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                            className="p-4 border border-zinc-200 dark:border-zinc-700 hover:shadow-md transition-shadow cursor-pointer"
                             onClick={() => handleDocumentClick(doc)}
                         >
                             <div className="flex items-start">
                                 <div className="ml-3">
-                                    <h3 className="text-sm font-medium text-gray-900">
+                                    <h3 className="text-sm font-medium text-zinc-900 dark:text-white">
                                         {doc.title}
                                     </h3>
-                                    <p className="mt-1 text-sm text-gray-500">
+                                    <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                                         {doc.description || 'No description'}
                                     </p>
-                                    <div className="mt-2 flex items-center text-xs text-gray-500">
+                                    <div className="mt-2 flex items-center text-xs text-zinc-500 dark:text-zinc-400">
                                         <span>Last viewed: {doc.last_viewed || 'Never'}</span>
                                         <span className="mx-2">•</span>
                                         <span>Views: {doc.view_count}</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </Card>
                     ))}
                 </div>
             </div>

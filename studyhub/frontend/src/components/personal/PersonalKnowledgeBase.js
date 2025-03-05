@@ -4,6 +4,7 @@ import FolderTree from './FolderTree';
 import SearchBar from './SearchBar';
 import DocumentList from './DocumentList';
 import { kbService } from '../../services/kbService';
+import { Card } from '../common/Card';
 
 const PersonalKnowledgeBase = () => {
     const [selectedKB, setSelectedKB] = useState(null);
@@ -116,18 +117,18 @@ const PersonalKnowledgeBase = () => {
     return (
         <div className="h-full flex">
             {/* Sidebar */}
-            <div className="w-64 bg-white border-r p-4">
-                <h2 className="text-lg font-semibold mb-4">Folders</h2>
+            <Card className="w-64 border-r border-zinc-200 dark:border-zinc-700 p-4">
+                <h2 className="text-lg font-semibold mb-4 text-zinc-900 dark:text-white">Folders</h2>
                 <FolderTree
                     folders={folders}
                     selectedFolder={selectedFolder}
                     onSelectFolder={setSelectedFolder}
                     onCreateFolder={handleCreateFolder}
                 />
-            </div>
+            </Card>
 
             {/* Main Content */}
-            <div className="flex-1 p-6">
+            <div className="flex-1 p-6 bg-zinc-50 dark:bg-zinc-800">
                 <SearchBar
                     value={searchQuery}
                     onChange={setSearchQuery}

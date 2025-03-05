@@ -1,135 +1,173 @@
-# StudyHub Platform
+# StudyIndexer
 
-A comprehensive educational platform for course management, document processing, and AI-assisted learning.
+## Overview
 
-## Project Structure
+StudyIndexer is a document processing and indexing service that enables efficient search and retrieval of academic materials. It provides vector-based search capabilities and manages document collections for the StudyHub platform.
 
-```plaintext
-/
-├── documentation/           # Comprehensive documentation
-│   ├── 00_PROJECT_OVERVIEW.md
-│   ├── 01_BACKEND_SETUP.md
-│   ├── 02_FRONTEND_SETUP.md
-│   ├── 03_STUDYINDEXER_SETUP.md
-│   ├── 04_CONTRIBUTING.md
-│   ├── 05_DEVELOPMENT_STATUS.md
-│   ├── 06_API_REFERENCE.md
-│   └── 07_SYSTEM_INTEGRATION.md
-│
-├── studyhub/               # Main application
-│   ├── backend/           # Flask backend service
-│   │   ├── app/          # Application code
-│   │   ├── scripts/      # Utility scripts
-│   │   └── setup.ps1     # Backend setup
-│   │
-│   └── frontend/         # React frontend
-│       ├── src/          # Source code
-│       ├── public/       # Static assets
-│       └── setup.ps1     # Frontend setup
-│
-├── studyindexer/          # Document processing service
-│   ├── app/              # FastAPI application
-│   ├── data/             # Data storage
-│   │   ├── chroma/      # Vector database
-│   │   ├── processed/   # Processed documents
-│   │   └── uploads/     # Document uploads
-│   ├── logs/            # Service logs
-│   └── setup.ps1        # Service setup
-│
-└── studyai/              # Future AI service (planned)
-```
+## Prerequisites
 
-## Components
+- Python 3.x
+- WSL (Windows Subsystem for Linux) or Linux environment
+- Virtual environment support
+- 4GB+ RAM (for ML models)
 
-### 1. StudyHub Main Application
-- Course management system
-- User authentication
-- Assignment handling
-- Resource management
+## Key Components
 
-### 2. StudyIndexer Service
-- Document processing
-- Vector search
-- Personal knowledge base
-- Course-specific collections
+- **ChromaDB**: Vector database (port 8000)
+- **FastAPI**: REST API server (port 8081)
+- **ML Model**: all-MiniLM-L6-v2 for document embedding
 
-### 3. StudyAI Service (Planned)
-- AI-powered assistance
-- Content recommendations
-- Learning path optimization
-- Personalized tutoring
+## API Tools
+
+The StudyIndexer provides three ways to interact with the API:
+
+1. **API Explorer** (http://127.0.0.1:8081/explorer)
+   - Custom-built interactive testing interface
+   - Features:
+     - Document Management
+       - Upload new documents with metadata
+       - List and manage existing documents
+       - Track document processing status
+       - View parent-child document relationships
+     - Search Capabilities
+       - Text-based search with filters
+       - Similarity search between documents
+     - Authentication Support
+       - JWT token-based authentication
+       - Role-based access control
+     - Visual Features
+       - Tabular views for document lists
+       - JSON/Table view toggle
+       - Intuitive form-based input
+     - Administrative Functions
+       - System statistics
+       - Collection management
+       - User access control
+
+2. **Swagger UI** (http://127.0.0.1:8081/docs)
+   - OpenAPI documentation and testing interface
+   - Features:
+     - Complete API documentation
+     - Request/response examples
+     - Interactive testing
+     - Schema definitions
+
+3. **ReDoc** (http://127.0.0.1:8081/redoc)
+   - Alternative API documentation viewer
+   - Features:
+     - Clean, organized documentation
+     - Search functionality
+     - Mobile-friendly view
 
 ## Setup Instructions
 
-1. Clone the repository:
+1. Create and activate a virtual environment:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # Linux/WSL
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Start the services:
+   ```bash
+   python manage_services.py start
+   ```
+
+4. Verify services are running:
+   ```bash
+   python manage_services.py status
+   ```
+
+## Service Management
+
+### Starting Services
 ```bash
-git clone <repository-url>
-cd studyhub-platform
+python manage_services.py start
 ```
+- Starts ChromaDB and FastAPI services
+- Initializes ML components
+- Creates necessary collections
 
-2. Run the reorganization script (if needed):
-```powershell
-.\reorganize.ps1
+### Checking Status
+```bash
+python manage_services.py status
 ```
+- Verifies health of all services
+- Checks ChromaDB and FastAPI endpoints
 
-3. Set up individual components:
+### Service Information
+```bash
+python manage_services.py info
+```
+Displays detailed information about:
+- Service configurations
+- Environment variables
+- Current status
+- Available API endpoints and tools
+- Gracefully stops all running services
 
-```powershell
-# Backend setup
-cd studyhub/backend
-.\setup.ps1
+## Service Architecture
 
-# Frontend setup
-cd ../frontend
-.\setup.ps1
+- **ChromaDB Service**
+  - Port: 8000
+  - Purpose: Vector database for document embeddings
+  - Health check: `/api/v2/heartbeat`
 
-# StudyIndexer setup
-cd ../../studyindexer
-.\setup.ps1
+- **FastAPI Service**
+  - Port: 8081
+  - Purpose: REST API for document processing
+  - Health check: `/api/health`
+
+## Troubleshooting
+
+1. **Service Startup Issues**
+   - Initial health checks may fail as services take time to start
+   - Wait 30 seconds and run `manage_services.py status` to verify
+   - Check logs in `logs/` directory for specific errors
+
+2. **ChromaDB Issues**
+   - Ensure port 8000 is available
+   - Check ChromaDB logs for initialization errors
+   - Verify data directory permissions
+
+3. **FastAPI Issues**
+   - Ensure port 8081 is available
+   - Check application logs for startup errors
+   - Verify ML model initialization
+
+4. **Common Solutions**
+   - Restart services: `python manage_services.py restart`
+   - Clear ChromaDB cache if needed
+   - Check system resources (RAM, CPU)
+
+## Environment Variables
+
+Create a `.env` file with:
+```
+CHROMA_PORT=8000
+FASTAPI_PORT=8081
+LOG_LEVEL=INFO
+ENVIRONMENT=development
 ```
 
 ## Development
 
-Each component can be developed independently:
+### API Documentation
+- Swagger UI: http://localhost:8081/docs
+- ReDoc: http://localhost:8081/redoc
 
-### Backend
-```powershell
-cd studyhub/backend
-python wsgi.py
+### Testing
+```bash
+pytest tests/
 ```
-
-### Frontend
-```powershell
-cd studyhub/frontend
-npm start
-```
-
-### StudyIndexer
-```powershell
-cd studyindexer
-.\start.ps1
-```
-
-## Documentation
-
-Comprehensive documentation is available in the `/documentation` directory:
-
-- Project Overview
-- Setup Guides
-- API Reference
-- Development Status
-- Integration Guide
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run tests
-5. Submit a pull request
-
-See `/documentation/04_CONTRIBUTING.md` for detailed guidelines.
-
-## License
-
-This project is licensed under [appropriate license]. See LICENSE file for details. 
+4. Submit a pull request 

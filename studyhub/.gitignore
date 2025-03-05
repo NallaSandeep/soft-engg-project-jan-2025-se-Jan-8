@@ -1,3 +1,38 @@
+# StudyHub specific ignores
+
+# Backend specific
+/backend/instance/*
+!/backend/instance/.gitkeep
+/backend/uploads/*
+!/backend/uploads/.gitkeep
+/backend/logs/*
+!/backend/logs/.gitkeep
+/backend/temp/*
+!/backend/temp/.gitkeep
+/backend/.venv/
+/backend/venv/
+
+# Frontend specific
+/frontend/build/
+/frontend/node_modules/
+/frontend/logs/*
+!/frontend/logs/.gitkeep
+/frontend/coverage/
+/frontend/.next/
+/frontend/.nuxt/
+/frontend/.output/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Database
+/backend/instance/*.db
+/backend/instance/*.sqlite
+/backend/instance/*.sqlite3
+
 # Environment variables
 .env
 .env.local

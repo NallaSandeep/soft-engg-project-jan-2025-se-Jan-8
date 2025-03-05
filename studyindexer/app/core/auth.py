@@ -92,6 +92,8 @@ class AuthMiddleware:
             "/docs",
             "/redoc",
             "/openapi.json",
+            "/explorer",
+            "/debug/token",
             f"{settings.API_V1_STR}/docs",
             f"{settings.API_V1_STR}/redoc",
             f"{settings.API_V1_STR}/openapi.json"

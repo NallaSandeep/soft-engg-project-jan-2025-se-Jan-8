@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { courseApi } from '../../services/apiService';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 const LectureForm = ({ mode = 'create' }) => {
     const navigate = useNavigate();
@@ -51,7 +52,7 @@ const LectureForm = ({ mode = 'create' }) => {
             if (mode === 'edit') {
                 response = await courseApi.updateLecture(lectureId, lectureData);
             } else {
-                response = await courseApi.createLecture(weekId, lectureData);
+                response = await courseApi.createLecture(courseId, weekId, lectureData);
             }
 
             if (response.success) {
@@ -67,8 +68,8 @@ const LectureForm = ({ mode = 'create' }) => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-full">
-                <div className="text-gray-600">Loading lecture data...</div>
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
             </div>
         );
     }
@@ -76,15 +77,15 @@ const LectureForm = ({ mode = 'create' }) => {
     if (error) {
         return (
             <div className="p-6">
-                <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-4">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4">
                     {error}
                 </div>
                 <div className="mt-4 text-center">
                     <button
                         onClick={() => navigate(`/admin/courses/${courseId}/content`)}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center justify-center gap-1"
                     >
-                        ← Back to Course Content
+                        <ArrowLeftIcon className="h-4 w-4" /> Back to Course Content
                     </button>
                 </div>
             </div>
@@ -94,57 +95,57 @@ const LectureForm = ({ mode = 'create' }) => {
     return (
         <div className="p-6">
             <div className="mb-6">
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 mb-2">
                     <button
                         onClick={() => navigate(`/admin/courses/${courseId}/content`)}
-                        className="hover:text-blue-600"
+                        className="hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
                     >
-                        Course Content
+                        <ArrowLeftIcon className="h-3 w-3" /> Course Content
                     </button>
                     <span>→</span>
                     <span>{mode === 'edit' ? 'Edit' : 'New'} Lecture</span>
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
                     {mode === 'edit' ? 'Edit' : 'Add New'} Lecture
                 </h1>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="glass-card p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                             Title
                         </label>
                         <input
                             type="text"
                             value={lectureData.title}
                             onChange={(e) => setLectureData(prev => ({ ...prev, title: e.target.value }))}
-                            className="block w-full rounded-lg border border-gray-300 px-3 py-2"
+                            className="input-field"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                             Description
                         </label>
                         <textarea
                             value={lectureData.description}
                             onChange={(e) => setLectureData(prev => ({ ...prev, description: e.target.value }))}
-                            className="block w-full rounded-lg border border-gray-300 px-3 py-2"
+                            className="input-field"
                             rows="4"
-                        />
+                        ></textarea>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                             YouTube URL
                         </label>
                         <input
                             type="url"
                             value={lectureData.youtube_url}
                             onChange={(e) => setLectureData(prev => ({ ...prev, youtube_url: e.target.value }))}
-                            className="block w-full rounded-lg border border-gray-300 px-3 py-2"
+                            className="input-field"
                             required
                             placeholder="https://www.youtube.com/watch?v=..."
                         />
@@ -156,9 +157,9 @@ const LectureForm = ({ mode = 'create' }) => {
                             id="is_published"
                             checked={lectureData.is_published}
                             onChange={(e) => setLectureData(prev => ({ ...prev, is_published: e.target.checked }))}
-                            className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                            className="h-4 w-4 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded"
                         />
-                        <label htmlFor="is_published" className="ml-2 text-sm text-gray-700">
+                        <label htmlFor="is_published" className="ml-2 text-sm text-zinc-700 dark:text-zinc-300">
                             Published
                         </label>
                     </div>
@@ -167,15 +168,15 @@ const LectureForm = ({ mode = 'create' }) => {
                         <button
                             type="button"
                             onClick={() => navigate(`/admin/courses/${courseId}/content`)}
-                            className="px-4 py-2 text-gray-700 hover:text-gray-900"
+                            className="px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                            className="btn-primary"
                         >
-                            {mode === 'edit' ? 'Save Changes' : 'Create Lecture'}
+                            {mode === 'edit' ? 'Update' : 'Create'} Lecture
                         </button>
                     </div>
                 </form>

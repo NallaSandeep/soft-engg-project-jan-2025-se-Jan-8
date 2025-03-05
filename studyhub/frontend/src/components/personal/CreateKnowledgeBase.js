@@ -36,14 +36,14 @@ const CreateKnowledgeBase = ({ onSuccess }) => {
             <div>
                 <label
                     htmlFor="name"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
                 >
                     Name
                 </label>
                 <input
                     type="text"
                     id="name"
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="mt-1 block w-full border border-zinc-300 dark:border-zinc-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -53,21 +53,21 @@ const CreateKnowledgeBase = ({ onSuccess }) => {
             <div>
                 <label
                     htmlFor="description"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
                 >
                     Description
                 </label>
                 <textarea
                     id="description"
                     rows={3}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="mt-1 block w-full border border-zinc-300 dark:border-zinc-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
             </div>
 
             {error && (
-                <p className="text-sm text-red-600">
+                <p className="text-sm text-red-600 dark:text-red-400">
                     {error}
                 </p>
             )}

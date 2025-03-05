@@ -1,27 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Navbar from './Navbar';
-import Chat from '../Chat';
+import Chatbot from '../Chatbot';
 
 const Layout = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [isChatOpen, setIsChatOpen] = useState(false);
 
     // Redirect if no user
-    React.useEffect(() => {
+    useEffect(() => {
         if (!user) {
             navigate('/login');
         }
     }, [user, navigate]);
 
+    useEffect(() => {
+        // Control body overflow when chat is open
+        document.body.style.overflow = isChatOpen ? 'hidden' : 'auto';
+        
+        // Cleanup function
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isChatOpen]);
+
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white dark:bg-zinc-900 transition-colors duration-200">
             <Navbar />
-            <main className="flex-1">
+            <main className="container mx-auto px-4 py-8">
                 <Outlet />
             </main>
-            <Chat />
+            {user && user.role === 'student' && (
+                <Chatbot isOpen={isChatOpen} setIsOpen={setIsChatOpen} />
+            )}
         </div>
     );
 };

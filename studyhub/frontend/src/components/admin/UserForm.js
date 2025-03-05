@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { userApi } from '../../services/apiService';
 import { toast } from 'react-hot-toast';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 const UserForm = () => {
     const navigate = useNavigate();
@@ -61,18 +62,23 @@ const UserForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
-
+        
         try {
-            // Don't send password if it's empty in edit mode
-            const userData = isEditMode && !formData.password
-                ? { ...formData, password: undefined }
-                : formData;
-
-            const response = isEditMode
-                ? await userApi.updateUser(userId, userData)
-                : await userApi.createUser(userData);
-
+            setLoading(true);
+            setError(null);
+            
+            let response;
+            if (isEditMode) {
+                // For edit mode, only send password if it's been changed
+                const userData = { ...formData };
+                if (!userData.password) {
+                    delete userData.password;
+                }
+                response = await userApi.updateUser(userId, userData);
+            } else {
+                response = await userApi.createUser(formData);
+            }
+            
             if (response.success) {
                 toast.success(`User ${isEditMode ? 'updated' : 'created'} successfully!`);
                 navigate('/admin/users');
@@ -80,46 +86,48 @@ const UserForm = () => {
                 setError(response.message || `Failed to ${isEditMode ? 'update' : 'create'} user`);
             }
         } catch (err) {
-            console.error('Error saving user:', err);
+            console.error(`Error ${isEditMode ? 'updating' : 'creating'} user:`, err);
             setError(err.message || `Failed to ${isEditMode ? 'update' : 'create'} user`);
+        } finally {
+            setLoading(false);
         }
     };
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-full">
-                <div className="text-gray-600">Loading user...</div>
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
             </div>
         );
     }
 
     return (
-        <div className="p-6">
+        <div>
             <div className="max-w-3xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
                         {isEditMode ? 'Edit User' : 'Create User'}
                     </h1>
                     <button
                         onClick={() => navigate('/admin/users')}
-                        className="text-gray-600 hover:text-gray-800"
+                        className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 flex items-center gap-1"
                     >
-                        Cancel
+                        <ArrowLeftIcon className="h-4 w-4" /> Back to Users
                     </button>
                 </div>
 
                 {error && (
-                    <div className="mb-6 bg-red-50 border border-red-200 text-red-600 rounded-lg p-4">
+                    <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4">
                         {error}
                     </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="bg-white rounded-lg shadow p-6">
+                    <div className="glass-card p-6">
                         <div className="grid grid-cols-1 gap-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                         First Name
                                     </label>
                                     <input
@@ -127,13 +135,13 @@ const UserForm = () => {
                                         name="first_name"
                                         value={formData.first_name}
                                         onChange={handleChange}
-                                        className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                        className="input-field"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                         Last Name
                                     </label>
                                     <input
@@ -141,14 +149,14 @@ const UserForm = () => {
                                         name="last_name"
                                         value={formData.last_name}
                                         onChange={handleChange}
-                                        className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                        className="input-field"
                                         required
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                     Username
                                 </label>
                                 <input
@@ -156,13 +164,13 @@ const UserForm = () => {
                                     name="username"
                                     value={formData.username}
                                     onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                    className="input-field"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                     Email
                                 </label>
                                 <input
@@ -170,53 +178,58 @@ const UserForm = () => {
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                    className="input-field"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Password {isEditMode && '(leave blank to keep unchanged)'}
+                                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                    Password {isEditMode && <span className="text-zinc-500 dark:text-zinc-400 text-xs">(Leave blank to keep current password)</span>}
                                 </label>
                                 <input
                                     type="password"
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                                    required={!isEditMode}
+                                    className="input-field"
+                                    {...(!isEditMode && { required: true })}
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Role
-                                </label>
-                                <select
-                                    name="role"
-                                    value={formData.role}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                                >
-                                    <option value="student">Student</option>
-                                    <option value="ta">Teaching Assistant</option>
-                                    <option value="teacher">Teacher</option>
-                                    <option value="admin">Admin</option>
-                                </select>
-                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                        Role
+                                    </label>
+                                    <select
+                                        name="role"
+                                        value={formData.role}
+                                        onChange={handleChange}
+                                        className="input-field"
+                                        required
+                                    >
+                                        <option value="student">Student</option>
+                                        <option value="teacher">Teacher</option>
+                                        <option value="ta">Teaching Assistant</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
 
-                            <div className="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    name="is_active"
-                                    checked={formData.is_active}
-                                    onChange={handleChange}
-                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-                                />
-                                <label className="ml-2 text-sm text-gray-700">
-                                    User is active
-                                </label>
+                                <div className="flex items-center h-full pt-6">
+                                    <label className="flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            name="is_active"
+                                            checked={formData.is_active}
+                                            onChange={handleChange}
+                                            className="h-4 w-4 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded"
+                                        />
+                                        <span className="ml-2 text-sm text-zinc-700 dark:text-zinc-300">
+                                            Active Account
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -225,15 +238,15 @@ const UserForm = () => {
                         <button
                             type="button"
                             onClick={() => navigate('/admin/users')}
-                            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                            className="px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                            className="btn-primary"
                         >
-                            {isEditMode ? 'Update User' : 'Create User'}
+                            {isEditMode ? 'Update' : 'Create'} User
                         </button>
                     </div>
                 </form>

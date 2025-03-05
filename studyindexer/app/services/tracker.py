@@ -9,7 +9,6 @@ import logging
 from app.core.config import settings
 from app.core.errors import StudyIndexerError
 from app.schemas.documents import DocumentIndexTracker, DocumentStatus
-from app.utils.redis import get_redis_client
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +33,6 @@ class DocumentTracker:
             
         self.tracking_dir = os.path.join(settings.PROCESSED_DIR, "tracking")
         os.makedirs(self.tracking_dir, exist_ok=True)
-        self.redis = get_redis_client()
         self._initialized = True
     
     async def compute_checksum(self, file_content: bytes) -> str:
@@ -101,23 +99,33 @@ class DocumentTracker:
                 code="TRACKING_ERROR"
             )
     
-    def update_status(
+    async def update_status(
         self,
         document_id: str,
         status: DocumentStatus,
         error: Optional[str] = None
     ):
         """Update document processing status"""
-        key = f"doc:{document_id}:status"
-        data = {
-            "status": status.value,
-            "updated_at": datetime.now().isoformat(),
-        }
-        if error:
-            data["error"] = error
-            
-        self.redis.set(key, json.dumps(data))
-        return data
+        try:
+            tracker = await self.get_document_status(document_id)
+            if not tracker:
+                logger.warning(f"Cannot update status for non-existent document: {document_id}")
+                return None
+                
+            tracker.status = status
+            tracker.updated_at = datetime.utcnow()
+            if error:
+                tracker.error = error
+                
+            tracking_path = await self.get_tracking_path(document_id)
+            async with aiofiles.open(tracking_path, 'w') as f:
+                await f.write(tracker.model_dump_json(indent=2))
+                
+            logger.info(f"Updated document status [id={document_id}, status={status}]")
+            return tracker
+        except Exception as e:
+            logger.error(f"Failed to update document status {document_id}: {str(e)}")
+            return None
     
     async def get_document_status(
         self,
@@ -158,4 +166,47 @@ class DocumentTracker:
             raise StudyIndexerError(
                 message=f"Failed to delete document tracking: {str(e)}",
                 code="TRACKING_DELETE_ERROR"
-            ) 
+            )
+            
+    def update_document_status(
+        self,
+        document_id: str,
+        status: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        """Synchronous version of update_status for use in non-async contexts"""
+        try:
+            # Create tracking file path
+            tracking_path = os.path.join(self.tracking_dir, f"{document_id}.track.json")
+            
+            # Create or update tracker data
+            now = datetime.utcnow().isoformat()
+            
+            # Check if tracker already exists
+            if os.path.exists(tracking_path):
+                with open(tracking_path, 'r') as f:
+                    data = json.load(f)
+                    tracker_data = data
+                    tracker_data["status"] = status
+                    tracker_data["updated_at"] = now
+                    if metadata:
+                        tracker_data["metadata"] = metadata
+            else:
+                # Create new tracker
+                tracker_data = {
+                    "document_id": document_id,
+                    "status": status,
+                    "created_at": now,
+                    "updated_at": now,
+                    "metadata": metadata or {}
+                }
+            
+            # Write tracker data
+            with open(tracking_path, 'w') as f:
+                json.dump(tracker_data, f, indent=2)
+                
+            logger.info(f"Updated document status [id={document_id}, status={status}]")
+            return tracker_data
+        except Exception as e:
+            logger.error(f"Failed to update document status {document_id}: {str(e)}")
+            return None 

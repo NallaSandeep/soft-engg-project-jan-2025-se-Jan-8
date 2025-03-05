@@ -30,6 +30,10 @@ class DocumentMetadata(BaseModel):
     collection: CollectionType = Field(default=CollectionType.GENERAL)
     custom_metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
     personal: Optional[PersonalMetadata] = Field(None, description="Personal KB metadata")
+    parent_document_id: Optional[str] = Field(None, description="Parent document ID if this is a chunk")
+    is_chunk: bool = Field(False, description="Whether this is a chunk of a larger document")
+    chunk_index: Optional[int] = Field(None, description="Index of this chunk in the parent document")
+    total_chunks: Optional[int] = Field(None, description="Total number of chunks in the parent document")
 
     @field_validator('tags')
     def validate_tags(cls, v):
@@ -102,6 +106,7 @@ class DocumentInfo(BaseModel):
     status: DocumentStatus
     metadata: DocumentMetadata
     error: Optional[str] = None
+    chunk_count: Optional[int] = Field(None, description="Number of chunks if this is a parent document")
 
 class DocumentListResponse(BaseResponse):
     """Response model for document list operations"""
@@ -145,6 +150,9 @@ class DocumentIndexTracker(BaseModel):
     last_checked: datetime = Field(default_factory=datetime.utcnow)
     error: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    parent_document_id: Optional[str] = Field(None, description="Parent document ID if this is a chunk")
+    is_chunk: bool = Field(False, description="Whether this is a chunk of a larger document")
+    chunk_count: Optional[int] = Field(None, description="Number of chunks if this is a parent document")
 
     class Config:
         json_schema_extra = {

@@ -1,13 +1,13 @@
 """Admin endpoints for StudyIndexer"""
 from typing import List, Dict
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
 from fastapi import status as http_status
 from app.core.auth import require_admin, UserContext
 from app.core.errors import StudyIndexerError, DocumentNotFoundError
 from app.schemas.documents import DocumentMetadata, DocumentResponse, DocumentListResponse, DocumentInfo
 from app.schemas.admin import SystemStats, StorageStats, ProcessingStats, CollectionStats
 from app.services.indexer import DocumentIndexer
-from app.tasks.indexing_tasks import process_document
+from app.tasks.indexing_tasks import process_document, reindex_document
 from app.core.config import settings
 import logging
 import os
@@ -48,7 +48,7 @@ async def list_all_documents(
         for collection in collections:
             try:
                 # Get search results for this collection
-                search_result = await indexer.search(
+                total_results, results = await indexer.search(
                     query="",  # Empty query to get all documents
                     collection=collection["name"],
                     limit=limit,
@@ -56,11 +56,9 @@ async def list_all_documents(
                     filters={"chunk_index": 0}  # Only get first chunk of each document
                 )
                 
-                if not search_result:
+                if not results:
                     continue
                     
-                total_results, results = search_result
-                
                 # Process results for this collection
                 for result in results:
                     try:
@@ -108,6 +106,16 @@ async def list_all_documents(
             total=len(all_documents)
         )
         
+    except StudyIndexerError as e:
+        logger.error(
+            "StudyIndexer error during admin document listing [user=%s]: %s",
+            current_user.username,
+            str(e)
+        )
+        raise HTTPException(
+            status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Database error: {str(e)}"
+        )
     except Exception as e:
         logger.error(
             "Failed to list all documents [user=%s]: %s",
@@ -116,7 +124,7 @@ async def list_all_documents(
         )
         raise HTTPException(
             status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            detail=f"Failed to list documents: {str(e)}"
         )
 
 @router.get("/stats", response_model=SystemStats)
@@ -182,6 +190,16 @@ async def get_system_stats(current_user: UserContext = Depends(require_admin)) -
             last_update=datetime.utcnow()
         )
         
+    except StudyIndexerError as e:
+        logger.error(
+            "StudyIndexer error during system stats retrieval [user=%s]: %s",
+            current_user.username,
+            str(e)
+        )
+        raise HTTPException(
+            status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Database error: {str(e)}"
+        )
     except Exception as e:
         logger.error(
             "Failed to get system stats [user=%s]: %s",
@@ -190,34 +208,39 @@ async def get_system_stats(current_user: UserContext = Depends(require_admin)) -
         )
         raise HTTPException(
             status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            detail=f"Failed to retrieve system statistics: {str(e)}"
         )
 
 @router.post("/reindex", response_model=DocumentResponse)
 async def reindex_document(
     document_id: str,
-    current_user: UserContext = Depends(require_admin)
+    current_user: UserContext = Depends(require_admin),
+    background_tasks: BackgroundTasks = BackgroundTasks()
 ) -> DocumentResponse:
     """Force reindex a specific document (admin only)"""
     try:
         # Verify document exists
         doc_status = await indexer.get_document_status(document_id)
+        if not doc_status:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Document {document_id} not found"
+            )
         
         # Start reindexing task
-        task = process_document.delay(document_id)
+        background_tasks.add_task(reindex_document, document_id)
         
         logger.info(
-            "Document reindexing initiated [id=%s, user=%s, task=%s]",
+            "Document reindexing initiated [id=%s, user=%s]",
             document_id,
-            current_user.username,
-            task.id
+            current_user.username
         )
         
         return DocumentResponse(
             success=True,
             document_id=document_id,
-            status="processing",
-            message=f"Document queued for reindexing (task: {task.id})"
+            status=DocumentStatus.PENDING,
+            message="Document reindexing queued"
         )
         
     except DocumentNotFoundError:
@@ -234,5 +257,5 @@ async def reindex_document(
         )
         raise HTTPException(
             status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            detail=f"Database error: {str(e)}"
         ) 

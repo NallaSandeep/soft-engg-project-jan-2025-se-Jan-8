@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { courseApi } from '../../services/apiService';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 const WeekEdit = () => {
     const navigate = useNavigate();
@@ -62,8 +63,8 @@ const WeekEdit = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-full">
-                <div className="text-gray-600">Loading week data...</div>
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
             </div>
         );
     }
@@ -71,15 +72,17 @@ const WeekEdit = () => {
     if (error) {
         return (
             <div className="p-6">
-                <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-4">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4">
                     {error}
                 </div>
                 <div className="mt-4 text-center">
                     <button
                         onClick={() => navigate(`/admin/courses/${courseId}/content`)}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                     >
-                        ← Back to Course Content
+                        <span className="flex items-center justify-center gap-1">
+                            <ArrowLeftIcon className="h-4 w-4" /> Back to Course Content
+                        </span>
                     </button>
                 </div>
             </div>
@@ -89,58 +92,58 @@ const WeekEdit = () => {
     return (
         <div className="p-6">
             <div className="mb-6">
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 mb-2">
                     <button
                         onClick={() => navigate(`/admin/courses/${courseId}/content`)}
-                        className="hover:text-blue-600"
+                        className="hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
                     >
-                        Course Content
+                        <ArrowLeftIcon className="h-3 w-3" /> Course Content
                     </button>
                     <span>→</span>
                     <span>Edit Week</span>
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900">Edit Week</h1>
+                <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Edit Week</h1>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="glass-card p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                             Week Number
                         </label>
                         <input
                             type="number"
                             value={weekData.number}
                             onChange={(e) => setWeekData(prev => ({ ...prev, number: parseInt(e.target.value) }))}
-                            className="block w-full rounded-lg border border-gray-300 px-3 py-2"
+                            className="input-field"
                             required
                             min="1"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                             Title
                         </label>
                         <input
                             type="text"
                             value={weekData.title}
                             onChange={(e) => setWeekData(prev => ({ ...prev, title: e.target.value }))}
-                            className="block w-full rounded-lg border border-gray-300 px-3 py-2"
+                            className="input-field"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                             Description
                         </label>
                         <textarea
                             value={weekData.description}
                             onChange={(e) => setWeekData(prev => ({ ...prev, description: e.target.value }))}
-                            className="block w-full rounded-lg border border-gray-300 px-3 py-2"
+                            className="input-field"
                             rows="4"
-                        />
+                        ></textarea>
                     </div>
 
                     <div className="flex items-center">
@@ -149,9 +152,9 @@ const WeekEdit = () => {
                             id="is_published"
                             checked={weekData.is_published}
                             onChange={(e) => setWeekData(prev => ({ ...prev, is_published: e.target.checked }))}
-                            className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                            className="h-4 w-4 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded"
                         />
-                        <label htmlFor="is_published" className="ml-2 text-sm text-gray-700">
+                        <label htmlFor="is_published" className="ml-2 text-sm text-zinc-700 dark:text-zinc-300">
                             Published
                         </label>
                     </div>
@@ -160,13 +163,13 @@ const WeekEdit = () => {
                         <button
                             type="button"
                             onClick={() => navigate(`/admin/courses/${courseId}/content`)}
-                            className="px-4 py-2 text-gray-700 hover:text-gray-900"
+                            className="px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                            className="btn-primary"
                         >
                             Save Changes
                         </button>

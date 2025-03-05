@@ -5,6 +5,7 @@ import { personalApi } from '../../services/apiService';
 import { showCreateKnowledgeBase } from './CreateKnowledgeBase';
 import LoadingSpinner from '../common/LoadingSpinner';
 import ErrorAlert from '../common/ErrorAlert';
+import { Card } from '../common/Card';
 
 const KnowledgeBaseLanding = () => {
     const navigate = useNavigate();
@@ -42,10 +43,10 @@ const KnowledgeBaseLanding = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center">
-                <h2 className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                <h2 className="mt-2 text-3xl font-extrabold text-zinc-900 dark:text-white sm:text-4xl">
                     Personal Knowledge Base
                 </h2>
-                <p className="mt-4 text-lg text-gray-500">
+                <p className="mt-4 text-lg text-zinc-500 dark:text-zinc-400">
                     Organize your documents, notes, and resources in one place
                 </p>
             </div>
@@ -53,8 +54,8 @@ const KnowledgeBaseLanding = () => {
             <div className="mt-12">
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {/* Create New KB Card */}
-                    <div
-                        className="relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 hover:bg-gray-50 cursor-pointer rounded-lg border border-gray-200"
+                    <Card
+                        className="p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer border border-zinc-200 dark:border-zinc-700 transition-colors"
                         onClick={handleCreateKB}
                     >
                         <div>
@@ -62,34 +63,34 @@ const KnowledgeBaseLanding = () => {
                                 Create New Knowledge Base
                             </Button>
                         </div>
-                        <p className="mt-2 text-sm text-gray-500">
+                        <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
                             Start organizing your knowledge with a new collection
                         </p>
-                    </div>
+                    </Card>
 
                     {/* Existing Knowledge Bases */}
                     {knowledgeBases.map((kb) => (
-                        <div
+                        <Card
                             key={kb.id}
-                            className="relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 hover:bg-gray-50 cursor-pointer rounded-lg border border-gray-200"
+                            className="p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer border border-zinc-200 dark:border-zinc-700 transition-colors"
                             onClick={() => navigate(`/knowledge-base/${kb.id}`)}
                         >
                             <div className="mt-8">
-                                <h3 className="text-lg font-medium">
+                                <h3 className="text-lg font-medium text-zinc-900 dark:text-white">
                                     <span
                                         className="absolute inset-0"
                                         aria-hidden="true"
                                     />
                                     {kb.name}
                                 </h3>
-                                <p className="mt-2 text-sm text-gray-500">
+                                <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
                                     {kb.description || 'No description'}
                                 </p>
-                                <div className="mt-4 flex items-center text-sm text-gray-500">
+                                <div className="mt-4 flex items-center text-sm text-zinc-500 dark:text-zinc-400">
                                     <span>{kb.document_count} documents</span>
                                 </div>
                             </div>
-                        </div>
+                        </Card>
                     ))}
                 </div>
             </div>

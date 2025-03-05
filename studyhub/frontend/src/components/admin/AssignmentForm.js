@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { assignmentApi, courseApi } from '../../services/apiService';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 const AssignmentForm = ({ mode = 'create' }) => {
     const navigate = useNavigate();
@@ -48,103 +49,119 @@ const AssignmentForm = ({ mode = 'create' }) => {
                         });
                         if (data.week) {
                             setWeek(data.week);
-                            // Find and set the course
-                            const course = coursesResponse.data.find(c => c.id === data.week.course_id);
-                            if (course) {
-                                setSelectedCourse(course);
+                            if (data.week.course) {
+                                setSelectedCourse(data.week.course);
                                 // Fetch weeks for this course
-                                const courseContent = await courseApi.getCourseContent(course.id);
-                                if (courseContent.success) {
-                                    setWeeks(courseContent.data.weeks);
+                                const weeksResponse = await courseApi.getCourseWeeks(data.week.course.id);
+                                if (weeksResponse.success) {
+                                    setWeeks(weeksResponse.data);
                                 }
                             }
                         }
                     } else {
-                        setError(response.message || 'Failed to load assignment data');
+                        throw new Error('Failed to load assignment');
                     }
                 }
-
-                // If we have a specific weekId and courseId, fetch that week's data
-                if (weekId && courseId) {
-                    const courseResponse = await courseApi.getCourseContent(courseId);
+                
+                // If creating from course content, load course and week data
+                if (courseId) {
+                    const courseResponse = await courseApi.getCourse(courseId);
                     if (courseResponse.success) {
-                        const weekData = courseResponse.data.weeks.find(w => w.id === parseInt(weekId));
-                        if (weekData) {
-                            setWeek(weekData);
-                            setSelectedCourse(courseResponse.data);
-                            setWeeks(courseResponse.data.weeks);
+                        setSelectedCourse(courseResponse.data);
+                        
+                        // Fetch weeks for this course
+                        const weeksResponse = await courseApi.getCourseWeeks(courseId);
+                        if (weeksResponse.success) {
+                            setWeeks(weeksResponse.data);
+                            
+                            // If weekId is provided, set the week
+                            if (weekId) {
+                                const selectedWeek = weeksResponse.data.find(w => w.id === parseInt(weekId));
+                                if (selectedWeek) {
+                                    setWeek(selectedWeek);
+                                }
+                            }
                         }
+                    } else {
+                        throw new Error('Failed to load course');
                     }
                 }
             } catch (err) {
                 console.error('Error loading data:', err);
-                setError('Failed to load data');
+                setError(err.message || 'Failed to load data');
             } finally {
                 setLoading(false);
             }
         };
 
         loadData();
-    }, [mode, assignmentId, weekId, courseId]);
+    }, [mode, assignmentId, courseId, weekId]);
 
-    // Handle course selection
     const handleCourseChange = async (courseId) => {
-        try {
+        if (!courseId) {
+            setSelectedCourse(null);
             setWeek(null);
-            if (!courseId) {
-                setSelectedCourse(null);
-                setWeeks([]);
-                return;
-            }
+            setWeeks([]);
+            return;
+        }
 
+        try {
             const course = courses.find(c => c.id === parseInt(courseId));
             setSelectedCourse(course);
+            setWeek(null);
 
-            // Fetch weeks for selected course
-            const response = await courseApi.getCourseContent(courseId);
+            // Fetch weeks for this course
+            const response = await courseApi.getCourseWeeks(courseId);
             if (response.success) {
-                setWeeks(response.data.weeks);
+                setWeeks(response.data);
             } else {
-                setError('Failed to load weeks for selected course');
+                throw new Error('Failed to load weeks');
             }
         } catch (err) {
-            console.error('Error loading course weeks:', err);
-            setError('Failed to load course weeks');
+            console.error('Error loading weeks:', err);
+            setError('Failed to load weeks for this course');
         }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setAssignmentData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            if (!selectedCourse) {
-                setError('Please select a course');
-                return;
-            }
-            if (!week && !weekId) {
-                setError('Please select a week');
-                return;
-            }
+        
+        if (!week) {
+            setError('Please select a week');
+            return;
+        }
 
-            const submitData = {
+        try {
+            setLoading(true);
+            setError(null);
+
+            const payload = {
                 ...assignmentData,
-                week_id: weekId || week.id
+                week_id: week.id
             };
 
             let response;
             if (mode === 'edit') {
-                response = await assignmentApi.updateAssignment(assignmentId, submitData);
+                response = await assignmentApi.updateAssignment(assignmentId, payload);
             } else {
-                response = await assignmentApi.createAssignment(weekId || week.id, submitData);
+                response = await assignmentApi.createAssignment(payload);
             }
 
             if (response.success) {
-                if (courseId) {
-                    navigate(`/admin/courses/${courseId}/content`);
-                } else {
-                    navigate('/admin/assignments');
-                }
+                // Navigate back to course content or assignments list
+                navigate(courseId 
+                    ? `/admin/courses/${courseId}/content` 
+                    : `/admin/courses/${selectedCourse.id}/content`);
             } else {
-                setError(response.message || `Failed to ${mode} assignment`);
+                throw new Error(response.message || `Failed to ${mode} assignment`);
             }
         } catch (err) {
             console.error(`Error ${mode}ing assignment:`, err);
@@ -154,8 +171,8 @@ const AssignmentForm = ({ mode = 'create' }) => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-full">
-                <div className="text-gray-600">Loading...</div>
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
             </div>
         );
     }
@@ -163,15 +180,15 @@ const AssignmentForm = ({ mode = 'create' }) => {
     if (error) {
         return (
             <div className="p-6">
-                <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-4">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4">
                     {error}
                 </div>
                 <div className="mt-4 text-center">
                     <button
                         onClick={() => navigate(courseId ? `/admin/courses/${courseId}/content` : '/admin/assignments')}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center justify-center gap-1"
                     >
-                        ← Back
+                        <ArrowLeftIcon className="h-4 w-4" /> Back
                     </button>
                 </div>
             </div>
@@ -179,33 +196,34 @@ const AssignmentForm = ({ mode = 'create' }) => {
     }
 
     return (
-        <div className="p-6">
+        <div>
             <div className="mb-6">
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 mb-2">
                     <button
                         onClick={() => navigate(courseId ? `/admin/courses/${courseId}/content` : '/admin/assignments')}
-                        className="hover:text-blue-600"
+                        className="hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
                     >
+                        <ArrowLeftIcon className="h-4 w-4" />
                         {courseId ? 'Course Content' : 'Assignments'}
                     </button>
                     <span>→</span>
                     <span>{mode === 'edit' ? 'Edit' : 'New'} Assignment</span>
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
                     {mode === 'edit' ? 'Edit' : 'Add New'} Assignment
                 </h1>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="glass-card p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Course Selection - Only show if not creating from course content */}
                     {!courseId && (
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                 Course
                             </label>
                             <select
-                                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                className="input-field"
                                 value={selectedCourse?.id || ''}
                                 onChange={(e) => handleCourseChange(e.target.value)}
                                 required
@@ -223,11 +241,11 @@ const AssignmentForm = ({ mode = 'create' }) => {
                     {/* Week Selection - Only show if course is selected and not creating from course content */}
                     {!weekId && selectedCourse && (
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                 Week
                             </label>
                             <select
-                                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                className="input-field"
                                 value={week?.id || ''}
                                 onChange={(e) => {
                                     const selectedWeek = weeks.find(w => w.id === parseInt(e.target.value));
@@ -246,95 +264,107 @@ const AssignmentForm = ({ mode = 'create' }) => {
                     )}
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                             Title
                         </label>
                         <input
                             type="text"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                            name="title"
                             value={assignmentData.title}
-                            onChange={(e) => setAssignmentData(prev => ({ ...prev, title: e.target.value }))}
+                            onChange={handleInputChange}
+                            className="input-field"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                             Description
                         </label>
                         <textarea
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                            rows="4"
+                            name="description"
                             value={assignmentData.description}
-                            onChange={(e) => setAssignmentData(prev => ({ ...prev, description: e.target.value }))}
+                            onChange={handleInputChange}
+                            rows={4}
+                            className="input-field"
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Type
-                        </label>
-                        <select
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                            value={assignmentData.type}
-                            onChange={(e) => setAssignmentData(prev => ({ ...prev, type: e.target.value }))}
-                            required
-                        >
-                            <option value="practice">Practice</option>
-                            <option value="graded">Graded</option>
-                        </select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                Type
+                            </label>
+                            <select
+                                name="type"
+                                value={assignmentData.type}
+                                onChange={handleInputChange}
+                                className="input-field"
+                                required
+                            >
+                                <option value="practice">Practice</option>
+                                <option value="graded">Graded</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                Due Date
+                            </label>
+                            <input
+                                type="date"
+                                name="due_date"
+                                value={assignmentData.due_date}
+                                onChange={handleInputChange}
+                                className="input-field"
+                                required
+                            />
+                        </div>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Due Date
-                        </label>
-                        <input
-                            type="date"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                            value={assignmentData.due_date}
-                            onChange={(e) => setAssignmentData(prev => ({ ...prev, due_date: e.target.value }))}
-                        />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                Late Submission Penalty (%)
+                            </label>
+                            <input
+                                type="number"
+                                name="late_submission_penalty"
+                                value={assignmentData.late_submission_penalty}
+                                onChange={handleInputChange}
+                                min="0"
+                                max="100"
+                                className="input-field"
+                            />
+                        </div>
+
+                        <div className="flex items-center h-full pt-6">
+                            <label className="flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    name="is_published"
+                                    checked={assignmentData.is_published}
+                                    onChange={handleInputChange}
+                                    className="h-4 w-4 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded"
+                                />
+                                <span className="ml-2 text-sm text-zinc-700 dark:text-zinc-300">
+                                    Publish Assignment
+                                </span>
+                            </label>
+                        </div>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Late Submission Penalty (%)
-                        </label>
-                        <input
-                            type="number"
-                            min="0"
-                            max="100"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                            value={assignmentData.late_submission_penalty}
-                            onChange={(e) => setAssignmentData(prev => ({ ...prev, late_submission_penalty: parseFloat(e.target.value) || 0 }))}
-                        />
-                    </div>
-
-                    <div className="flex items-center">
-                        <input
-                            type="checkbox"
-                            id="is_published"
-                            className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-                            checked={assignmentData.is_published}
-                            onChange={(e) => setAssignmentData(prev => ({ ...prev, is_published: e.target.checked }))}
-                        />
-                        <label htmlFor="is_published" className="ml-2 block text-sm text-gray-900">
-                            Published
-                        </label>
-                    </div>
-
-                    <div className="flex justify-end space-x-3">
+                    <div className="flex justify-end space-x-4 pt-4">
                         <button
                             type="button"
                             onClick={() => navigate(courseId ? `/admin/courses/${courseId}/content` : '/admin/assignments')}
-                            className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                            className="px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                            className="btn-primary"
                         >
                             {mode === 'edit' ? 'Update' : 'Create'} Assignment
                         </button>

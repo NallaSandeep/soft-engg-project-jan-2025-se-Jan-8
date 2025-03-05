@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaStar, FaEllipsisV, FaFile, FaFileWord, FaFilePdf } from 'react-icons/fa';
 import { Menu } from '@headlessui/react';
 import { format } from 'date-fns';
+import { Card } from '../common/Card';
 
 const DocumentIcon = ({ type }) => {
     switch (type.toLowerCase()) {
@@ -11,7 +12,7 @@ const DocumentIcon = ({ type }) => {
         case 'doc':
             return <FaFileWord className="text-blue-500" />;
         default:
-            return <FaFile className="text-gray-500" />;
+            return <FaFile className="text-zinc-500 dark:text-zinc-400" />;
     }
 };
 
@@ -53,13 +54,13 @@ const DocumentList = ({
     };
 
     return (
-        <div className="bg-white rounded-lg shadow">
+        <Card className="rounded-lg shadow">
             {/* Header */}
-            <div className="flex items-center p-4 border-b">
+            <div className="flex items-center p-4 border-b border-zinc-200 dark:border-zinc-700">
                 <button
                     onClick={() => handleSort('title')}
                     className={`flex-1 text-left font-medium ${
-                        sortBy === 'title' ? 'text-blue-600' : 'text-gray-600'
+                        sortBy === 'title' ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-600 dark:text-zinc-400'
                     }`}
                 >
                     Title
@@ -70,7 +71,7 @@ const DocumentList = ({
                 <button
                     onClick={() => handleSort('lastViewed')}
                     className={`w-32 text-left font-medium ${
-                        sortBy === 'lastViewed' ? 'text-blue-600' : 'text-gray-600'
+                        sortBy === 'lastViewed' ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-600 dark:text-zinc-400'
                     }`}
                 >
                     Last Viewed
@@ -81,7 +82,7 @@ const DocumentList = ({
                 <button
                     onClick={() => handleSort('importance')}
                     className={`w-24 text-left font-medium ${
-                        sortBy === 'importance' ? 'text-blue-600' : 'text-gray-600'
+                        sortBy === 'importance' ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-600 dark:text-zinc-400'
                     }`}
                 >
                     Importance
@@ -93,24 +94,24 @@ const DocumentList = ({
             </div>
 
             {/* Document List */}
-            <div className="divide-y">
+            <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
                 {sortedDocuments.map((doc) => (
                     <div
                         key={doc.id}
-                        className="flex items-center p-4 hover:bg-gray-50 transition-colors"
+                        className="flex items-center p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
                     >
                         <div
                             className="flex-1 flex items-center cursor-pointer"
                             onClick={() => onViewDocument(doc)}
                         >
                             <DocumentIcon type={doc.type} />
-                            <span className="ml-3">{doc.title}</span>
+                            <span className="ml-3 text-zinc-900 dark:text-white">{doc.title}</span>
                             {doc.tags.length > 0 && (
                                 <div className="ml-4 flex gap-2">
                                     {doc.tags.map((tag) => (
                                         <span
                                             key={tag}
-                                            className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600"
+                                            className="px-2 py-1 text-xs rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300"
                                         >
                                             #{tag}
                                         </span>
@@ -118,7 +119,7 @@ const DocumentList = ({
                                 </div>
                             )}
                         </div>
-                        <div className="w-32 text-sm text-gray-500">
+                        <div className="w-32 text-sm text-zinc-500 dark:text-zinc-400">
                             {format(new Date(doc.lastViewed), 'MMM d, yyyy')}
                         </div>
                         <div className="w-24 flex items-center">
@@ -128,31 +129,31 @@ const DocumentList = ({
                                     onClick={() => onUpdateImportance(doc.id, level)}
                                     className={`w-4 h-4 rounded-full mx-0.5 ${
                                         level <= doc.importance
-                                            ? 'bg-blue-600'
-                                            : 'bg-gray-200'
+                                            ? 'bg-blue-600 dark:bg-blue-500'
+                                            : 'bg-zinc-200 dark:bg-zinc-600'
                                     }`}
                                 />
                             ))}
                         </div>
                         <div className="w-8 flex items-center">
                             <Menu as="div" className="relative">
-                                <Menu.Button className="p-1 rounded-full hover:bg-gray-100">
-                                    <FaEllipsisV className="text-gray-400" />
+                                <Menu.Button className="p-1 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                                    <FaEllipsisV className="text-zinc-400 dark:text-zinc-500" />
                                 </Menu.Button>
-                                <Menu.Items className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10">
+                                <Menu.Items className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-800 rounded-lg shadow-lg z-10 border border-zinc-200 dark:border-zinc-700">
                                     <Menu.Item>
                                         {({ active }) => (
                                             <button
                                                 className={`${
-                                                    active ? 'bg-gray-100' : ''
-                                                } flex items-center w-full px-4 py-2 text-left text-sm`}
+                                                    active ? 'bg-zinc-100 dark:bg-zinc-700' : ''
+                                                } flex items-center w-full px-4 py-2 text-left text-sm text-zinc-900 dark:text-white`}
                                                 onClick={() => onToggleFavorite(doc.id)}
                                             >
                                                 <FaStar
                                                     className={`mr-2 ${
                                                         doc.favorite
-                                                            ? 'text-yellow-500'
-                                                            : 'text-gray-400'
+                                                            ? 'text-yellow-500 dark:text-yellow-400'
+                                                            : 'text-zinc-400 dark:text-zinc-500'
                                                     }`}
                                                 />
                                                 {doc.favorite ? 'Remove from' : 'Add to'} Favorites
@@ -163,8 +164,8 @@ const DocumentList = ({
                                         {({ active }) => (
                                             <button
                                                 className={`${
-                                                    active ? 'bg-gray-100' : ''
-                                                } flex items-center w-full px-4 py-2 text-left text-sm text-red-600`}
+                                                    active ? 'bg-zinc-100 dark:bg-zinc-700' : ''
+                                                } flex items-center w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400`}
                                                 onClick={() => onDeleteDocument(doc.id)}
                                             >
                                                 Delete Document
@@ -178,12 +179,12 @@ const DocumentList = ({
                 ))}
 
                 {documents.length === 0 && (
-                    <div className="p-8 text-center text-gray-500">
+                    <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
                         No documents found matching your criteria
                     </div>
                 )}
             </div>
-        </div>
+        </Card>
     );
 };
 

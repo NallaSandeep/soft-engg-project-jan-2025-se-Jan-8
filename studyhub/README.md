@@ -1,149 +1,88 @@
-# StudyHub
+# StudyHub Submodule
 
-StudyHub is a SEEK-like learning management system that provides a comprehensive platform for academic course management and student learning. The platform enables:
+## Overview
 
-- **Admins & TAs**: Create and manage courses, materials, and assignments
-- **Students**: Access course materials, complete assignments, and track academic progress
-- **AI-Powered Learning**: Chat with an AI assistant about courses, FAQs, and general queries
-- **Personal Knowledge Base**: Students can create and reference their own study notes through the chat interface
+The StudyHub submodule is the core component of the StudyHub platform, providing backend and frontend services for course management and student interaction.
 
 ## Tech Stack
 
-### Backend
-- Python 3.x
-- Flask
-- SQLAlchemy
-- PostgreSQL
-- Flask-JWT-Extended for authentication
-- Flask-Migrate for database migrations
+- **Backend**: Flask
+- **Frontend**: React
+- **Database**: SQLite (default), PostgreSQL (optional)
 
-### Frontend
-- React 18
-- React Router v6
-- Tailwind CSS
-- Axios for API calls
-- React Icons and HeroIcons
-- React Hot Toast for notifications
-
-## Prerequisites
-
-Make sure you have the following installed:
-- Python 3.x
-- Node.js (v14 or higher)
-- npm (comes with Node.js)
-- Git
-- PostgreSQL (optional - SQLite is used by default in development)
-
-## Installation
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/NallaSandeep/soft-engg-project-jan-2025-se-Jan-8.git
-cd soft-engg-project-jan-2025-se-Jan-8
-git checkout michael-beta
-```
+## Setup Instructions
 
 ### Backend Setup
 
-1. Create and activate a virtual environment:
-```bash
-cd backend
-python -m venv .venv
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
 
-# On Windows
-.venv\Scripts\activate
+2. Create a virtual environment and activate it:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
 
-# On macOS/Linux
-source .venv/bin/activate
-```
+3. Install the required packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+4. Initialize the database:
+   ```bash
+   python scripts/init_db.py
+   ```
 
-3. Set up environment variables:
-   - Copy `.env.example` to `.env`
-   - Configure your database and other settings in `.env`
-
-4. Initialize the database and load sample data:
-```bash
-python scripts/init_db.py
-```
-This step is crucial as it sets up:
-- Initial database schema
-- Admin and TA accounts
-- Sample courses and materials
-- Test student accounts
-- Example assignments
-
-5. Start the backend server:
-```bash
-# Option 1: Using Flask
-flask run
-
-# Option 2: Using WSGI
-python wsgi.py
-```
-
-The backend server will start at `http://localhost:5000`
+5. Run the Flask server:
+   ```bash
+   flask run
+   ```
 
 ### Frontend Setup
 
-1. Open a new terminal and navigate to the frontend directory:
-```bash
-cd frontend
-```
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+2. Install the required packages:
+   ```bash
+   npm install
+   ```
 
 3. Start the development server:
-```bash
-npm start
-```
+   ```bash
+   npm start
+   ```
 
-The frontend application will start at `http://localhost:3000`
+## Development Guide
 
-## Development
-
-### Backend Development
-- The backend uses Flask blueprints for modular organization
-- Database migrations are handled with Flask-Migrate
-- Configuration settings are in `config.py`
-- Environment variables are set in `.env`
-- API endpoints are organized by feature in `app/routes/`
-- Authentication is handled via JWT tokens
-
-### Frontend Development
-- React components are in `src/components`
-- API services are in `src/services`
-- Styling is done with Tailwind CSS
-- Routes are defined in `src/App.js`
-- State management uses React Context
-- Chat interface components in `src/components/chat`
+- Follow the coding standards outlined in the [STANDARDS.md](../documentation/05_DEVELOPMENT_STATUS.md) file.
+- Use feature branches for development and submit pull requests for review.
 
 ## Testing
 
-### Backend Tests
-```bash
-cd backend
-python run_tests.py
-```
+- Run backend tests:
+  ```bash
+  cd backend
+  pytest
+  ```
 
-### Frontend Tests
-```bash
-cd frontend
-npm test
-```
+- Run frontend tests:
+  ```bash
+  cd frontend
+  npm test
+  ```
 
-## Default Accounts
+## Troubleshooting
 
-After initializing the database, you can log in with these sample accounts:
+- Common issues and solutions are documented in the [TROUBLESHOOTING.md](../documentation/07_SYSTEM_INTEGRATION.md) file.
 
-- Admin: admin@studyhub.com / admin123
-- Student: student@studyhub.com / student123
-- TA: ta@studyhub.com / ta123 (interface not ready yet)
+## Links to Additional Resources
+
+- [Project Overview](../documentation/00_PROJECT_OVERVIEW.md)
+- [Backend Setup Guide](../documentation/01_BACKEND_SETUP.md)
+- [Frontend Setup Guide](../documentation/02_FRONTEND_SETUP.md)
+- [Contributing Guidelines](../documentation/04_CONTRIBUTING.md)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { Button } from '../common/Button';
 import Input from '../common/Input';
@@ -9,7 +9,15 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const { login } = useAuth();
+
+    // Set dark mode as default when component mounts
+    useEffect(() => {
+        const root = window.document.documentElement;
+        root.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,7 +25,7 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const result = await login({ email, password });
+            const result = await login({ email, password, rememberMe });
             if (!result.success) {
                 setError(result.error || 'Login failed');
             }
@@ -30,45 +38,79 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="flex items-center justify-center min-h-screen bg-zinc-50 dark:bg-zinc-900">
             <div className="w-full max-w-md">
-                <Card variant="elevated" className="overflow-hidden">
-                    <div className="px-8 py-6 bg-white">
+                <Card className="overflow-hidden">
+                    <div className="px-8 py-6 bg-white dark:bg-zinc-800">
                         <div className="text-center mb-6">
-                            <h2 className="text-2xl font-bold text-gray-900">
-                                Login to StudyHub
+                            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">
+                                StudyHub
                             </h2>
                         </div>
 
                         {error && (
-                            <div className="mb-6 p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-100">
+                            <div className="mb-6 p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-800">
                                 {error}
                             </div>
                         )}
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-4">
-                                <Input
-                                    type="email"
-                                    label="Email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    disabled={loading}
-                                    required
-                                    fullWidth
-                                    placeholder="Enter your email"
-                                />
+                                <div>
+                                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                        Email Address
+                                    </label>
+                                    <Input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        disabled={loading}
+                                        required
+                                        fullWidth
+                                        placeholder="Enter your email"
+                                        className="dark:bg-zinc-700 dark:border-zinc-600"
+                                    />
+                                </div>
 
-                                <Input
-                                    type="password"
-                                    label="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    disabled={loading}
-                                    required
-                                    fullWidth
-                                    placeholder="Enter your password"
-                                />
+                                <div>
+                                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                        Password
+                                    </label>
+                                    <Input
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        disabled={loading}
+                                        required
+                                        fullWidth
+                                        placeholder="••••••••"
+                                        className="dark:bg-zinc-700 dark:border-zinc-600"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                    <input
+                                        id="remember-me"
+                                        name="remember-me"
+                                        type="checkbox"
+                                        checked={rememberMe}
+                                        onChange={(e) => setRememberMe(e.target.checked)}
+                                        className="h-4 w-4 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded"
+                                    />
+                                    <label htmlFor="remember-me" className="ml-2 block text-sm text-zinc-700 dark:text-zinc-300">
+                                        Remember me
+                                    </label>
+                                </div>
+                                <div className="text-sm">
+                                    <a 
+                                        href="/forgot-password"
+                                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                                    >
+                                        Forgot password?
+                                    </a>
+                                </div>
                             </div>
 
                             <Button
@@ -77,16 +119,18 @@ const Login = () => {
                                 disabled={loading}
                                 loading={loading}
                                 fullWidth
+                                className="bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600"
                             >
-                                {loading ? 'Logging in...' : 'Login'}
+                                {loading ? 'Signing in...' : 'Sign in'}
                             </Button>
 
-                            <div className="text-center text-sm text-gray-600">
+                            <div className="text-center text-sm text-zinc-600 dark:text-zinc-400">
+                                Don't have an account?{' '}
                                 <a 
-                                    href="/forgot-password"
-                                    className="hover:text-blue-600 transition-colors duration-200"
+                                    href="/register"
+                                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                                 >
-                                    Forgot your password?
+                                    Create one now
                                 </a>
                             </div>
                         </form>

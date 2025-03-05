@@ -2,7 +2,7 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, HTTPException, status
 from app.core.auth import require_student, UserContext, get_current_user
-from app.core.errors import StudyIndexerError, SearchError
+from app.core.errors import StudyIndexerError, SearchError, DocumentNotFoundError
 from app.schemas.documents import DocumentMetadata
 from app.schemas.base import CollectionType
 from app.schemas.search import (
@@ -89,6 +89,28 @@ async def search_documents(
             filters_applied=filters
         )
         
+    except SearchError as e:
+        logger.error(
+            "Search error [query=%s, user=%s]: %s",
+            query.text,
+            current_user.username,
+            str(e)
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Search error: {str(e)}"
+        )
+    except StudyIndexerError as e:
+        logger.error(
+            "StudyIndexer error during search [query=%s, user=%s]: %s",
+            query.text,
+            current_user.username,
+            str(e)
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Database error: {str(e)}"
+        )
     except Exception as e:
         logger.error(
             "Search failed [query=%s, user=%s]: %s",
@@ -98,7 +120,7 @@ async def search_documents(
         )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            detail=f"Search failed: {str(e)}"
         )
 
 @router.get(
@@ -205,9 +227,27 @@ async def find_similar_documents(
         
     except HTTPException:
         raise
+    except DocumentNotFoundError as e:
+        logger.error(f"Document not found during similarity search [document={document_id}, user={current_user.user_id}]: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Document not found: {str(e)}"
+        )
+    except SearchError as e:
+        logger.error(f"Search error during similarity search [document={document_id}, user={current_user.user_id}]: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Search error: {str(e)}"
+        )
+    except StudyIndexerError as e:
+        logger.error(f"StudyIndexer error during similarity search [document={document_id}, user={current_user.user_id}]: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Database error: {str(e)}"
+        )
     except Exception as e:
         logger.error(f"Unexpected error during similarity search [document={document_id}, user={current_user.user_id}]: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to find similar documents"
+            detail=f"Failed to find similar documents: {str(e)}"
         )

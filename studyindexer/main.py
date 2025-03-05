@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     # Run the application
     uvicorn.run(
-        "app:app",
+        "app:app",  # Use import string to enable reload and workers
         host=settings.HOST,
         port=settings.PORT,
         reload=settings.DEBUG,

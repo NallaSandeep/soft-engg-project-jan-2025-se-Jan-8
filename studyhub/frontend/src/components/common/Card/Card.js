@@ -12,9 +12,9 @@ const Card = ({
   const baseStyles = 'rounded-lg transition-all duration-300';
   
   const variants = {
-    default: 'bg-white shadow-sm',
-    elevated: 'bg-white shadow-md',
-    flat: 'bg-gray-50'
+    default: 'bg-white dark:bg-zinc-800 shadow-sm dark:shadow-zinc-900/50',
+    elevated: 'bg-white dark:bg-zinc-800 shadow-md dark:shadow-zinc-900/50',
+    flat: 'bg-gray-50 dark:bg-zinc-800/50'
   };
 
   const hoverStyles = hover ? 'hover:shadow-md hover:scale-[1.01]' : '';

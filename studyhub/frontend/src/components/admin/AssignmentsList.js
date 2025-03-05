@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { assignmentApi, courseApi } from '../../services/apiService';
-import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
 import { format } from 'date-fns';
-import { PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
+import { 
+    PencilSquareIcon, 
+    TrashIcon, 
+    EyeIcon, 
+    PlusCircleIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    ClipboardDocumentListIcon
+} from '@heroicons/react/24/outline';
 
 const AssignmentsList = () => {
     const navigate = useNavigate();
@@ -36,7 +43,20 @@ const AssignmentsList = () => {
                 courseApi.getCourses()
             ]);
 
-            setAssignments(assignmentsResponse.data || []);
+            // Process assignments to ensure week is properly formatted
+            const processedAssignments = assignmentsResponse.data?.map(assignment => {
+                // Handle the case where week is an object
+                if (assignment.week && typeof assignment.week === 'object') {
+                    return {
+                        ...assignment,
+                        weekNumber: assignment.week.number,
+                        weekTitle: assignment.week.title
+                    };
+                }
+                return assignment;
+            }) || [];
+
+            setAssignments(processedAssignments);
             setTotalPages(Math.ceil((assignmentsResponse.total || 0) / itemsPerPage));
             setCourses(coursesResponse.data || []);
         } catch (err) {
@@ -48,21 +68,23 @@ const AssignmentsList = () => {
     };
 
     const handleDelete = async (assignmentId) => {
-        if (!window.confirm('Are you sure you want to delete this assignment?')) {
-            return;
-        }
-
-        try {
-            await assignmentApi.deleteAssignment(assignmentId);
-            fetchData(); // Refresh the list
-        } catch (err) {
-            console.error('Error deleting assignment:', err);
-            setError('Failed to delete assignment');
+        if (window.confirm('Are you sure you want to delete this assignment?')) {
+            try {
+                const response = await assignmentApi.deleteAssignment(assignmentId);
+                if (response.success) {
+                    setAssignments(assignments.filter(a => a.id !== assignmentId));
+                } else {
+                    alert(response.message || 'Failed to delete assignment');
+                }
+            } catch (err) {
+                console.error('Error deleting assignment:', err);
+                alert('An error occurred while deleting the assignment');
+            }
         }
     };
 
     const handleFilterChange = (name, value) => {
-        setFilters(prev => ({ ...prev, [name]: value }));
+        setFilters({ ...filters, [name]: value });
         setCurrentPage(1); // Reset to first page when filters change
     };
 
@@ -71,257 +93,246 @@ const AssignmentsList = () => {
     };
 
     const handleEdit = (e, assignmentId) => {
-        e.stopPropagation(); // Prevent row click
+        e.stopPropagation();
         navigate(`/admin/assignments/${assignmentId}/edit`);
     };
 
     const handleDeleteRow = async (e, assignmentId) => {
-        e.stopPropagation(); // Prevent row click
-        if (window.confirm('Are you sure you want to delete this assignment?')) {
-            try {
-                const response = await fetch(`/api/v1/assignments/${assignmentId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                if (response.ok) {
-                    // Refresh the page or update the list
-                    window.location.reload();
-                } else {
-                    const data = await response.json();
-                    alert(data.message || 'Failed to delete assignment');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to delete assignment');
-            }
-        }
+        e.stopPropagation();
+        await handleDelete(assignmentId);
     };
 
-    if (loading) {
+    if (loading && assignments.length === 0) {
         return (
-            <div className="flex justify-center items-center h-full">
-                <div className="text-gray-600">Loading assignments...</div>
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
+                <span className="ml-3 text-zinc-600 dark:text-zinc-400">Loading assignments...</span>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="p-6">
-                <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-4">
-                    {error}
-                </div>
+            <div className="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded relative" role="alert">
+                <strong className="font-bold">Error!</strong>
+                <span className="block sm:inline"> {error}</span>
             </div>
         );
     }
 
     return (
-        <div className="p-6">
+        <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">Assignments</h1>
+                <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Assignments</h1>
                 <button
                     onClick={() => navigate('/admin/assignments/new')}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    className="btn-primary flex items-center space-x-2"
                 >
-                    Create Assignment
+                    <PlusCircleIcon className="w-5 h-5" />
+                    <span>Create Assignment</span>
                 </button>
             </div>
 
             {/* Filters */}
-            <div className="bg-white rounded-lg shadow p-6 mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Course
-                        </label>
-                        <select
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                            value={filters.course}
-                            onChange={(e) => handleFilterChange('course', e.target.value)}
-                        >
-                            <option value="">All Courses</option>
-                            {courses.map(course => (
-                                <option key={course.id} value={course.id}>
-                                    {course.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Status
-                        </label>
-                        <select
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                            value={filters.status}
-                            onChange={(e) => handleFilterChange('status', e.target.value)}
-                        >
-                            <option value="">All Status</option>
-                            <option value="published">Published</option>
-                            <option value="draft">Draft</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Search
-                        </label>
-                        <input
-                            type="text"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                            placeholder="Search assignments..."
-                            value={filters.search}
-                            onChange={(e) => handleFilterChange('search', e.target.value)}
-                        />
-                    </div>
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <div className="flex-1">
+                    <input
+                        type="text"
+                        placeholder="Search assignments..."
+                        value={filters.search}
+                        onChange={(e) => handleFilterChange('search', e.target.value)}
+                        className="input-field"
+                    />
+                </div>
+                <div className="w-full md:w-48">
+                    <select
+                        value={filters.course}
+                        onChange={(e) => handleFilterChange('course', e.target.value)}
+                        className="input-field"
+                    >
+                        <option value="">All Courses</option>
+                        {courses.map(course => (
+                            <option key={course.id} value={course.id}>
+                                {course.code} - {course.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="w-full md:w-48">
+                    <select
+                        value={filters.status}
+                        onChange={(e) => handleFilterChange('status', e.target.value)}
+                        className="input-field"
+                    >
+                        <option value="">All Status</option>
+                        <option value="published">Published</option>
+                        <option value="draft">Draft</option>
+                    </select>
                 </div>
             </div>
 
-            {/* Assignments Grid */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            {/* Assignments Table */}
+            <div className="glass-card overflow-hidden">
+                <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
+                    <thead className="bg-zinc-50 dark:bg-zinc-800">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Course
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Week
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                                 Title
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                                Course
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                                Week
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                                 Type
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                                 Due Date
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Points
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                                 Status
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {assignments.map((assignment) => (
-                            <tr 
-                                key={assignment.id} 
-                                onClick={() => handleRowClick(assignment.id)}
-                                className="hover:bg-gray-50 cursor-pointer"
-                            >
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">
-                                        {assignment.course?.name || 'N/A'}
-                                    </div>
-                                    <div className="text-sm text-gray-500">
-                                        {assignment.course?.code || ''}
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">
-                                        Week {assignment.week?.number || 'N/A'}
-                                    </div>
-                                    <div className="text-sm text-gray-500">
-                                        {assignment.week?.title || ''}
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4">
-                                    <div className="text-sm text-gray-900">
-                                        {assignment.title}
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                        assignment.type === 'practice' 
-                                            ? 'bg-green-100 text-green-800' 
-                                            : 'bg-blue-100 text-blue-800'
-                                    }`}>
-                                        {assignment.type === 'practice' ? 'Practice' : 'Graded'}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {assignment.due_date 
-                                        ? format(new Date(assignment.due_date), 'MMM d, yyyy')
-                                        : 'No due date'
-                                    }
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {assignment.points_possible > 0 
-                                        ? `${assignment.points_possible} pts` 
-                                        : 'No questions added'}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                        assignment.is_published
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-yellow-100 text-yellow-800'
-                                    }`}>
-                                        {assignment.is_published ? 'Published' : 'Draft'}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-3">
-                                    <button
-                                        onClick={(e) => handleRowClick(assignment.id)}
-                                        className="text-indigo-600 hover:text-indigo-900"
-                                    >
-                                        <EyeIcon className="h-5 w-5" />
-                                    </button>
-                                    <button
-                                        onClick={(e) => handleEdit(e, assignment.id)}
-                                        className="text-blue-600 hover:text-blue-900"
-                                    >
-                                        <PencilIcon className="h-5 w-5" />
-                                    </button>
-                                    <button
-                                        onClick={(e) => handleDeleteRow(e, assignment.id)}
-                                        className="text-red-600 hover:text-red-900"
-                                    >
-                                        <TrashIcon className="h-5 w-5" />
-                                    </button>
+                    <tbody className="bg-white dark:bg-zinc-900 divide-y divide-zinc-200 dark:divide-zinc-700">
+                        {assignments.length > 0 ? (
+                            assignments.map((assignment) => (
+                                <tr 
+                                    key={assignment.id} 
+                                    onClick={() => handleRowClick(assignment.id)}
+                                    className="hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer transition-colors"
+                                >
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="flex items-center">
+                                            <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                                                <ClipboardDocumentListIcon className="h-6 w-6" />
+                                            </div>
+                                            <div className="ml-4">
+                                                <div className="text-sm font-medium text-zinc-900 dark:text-white">
+                                                    {assignment.title}
+                                                </div>
+                                                <div className="text-sm text-zinc-500 dark:text-zinc-400">
+                                                    {assignment.points} pts
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-zinc-900 dark:text-white">
+                                            {assignment.course?.code || 'N/A'}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-zinc-900 dark:text-white">
+                                            {assignment.weekNumber ? 
+                                                `Week ${assignment.weekNumber}` : 
+                                                (typeof assignment.week === 'object' ? 
+                                                    `Week ${assignment.week.number}` : 
+                                                    (assignment.week ? `Week ${assignment.week}` : 'N/A'))}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                            assignment.type === 'practice' 
+                                                ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400' 
+                                                : 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400'
+                                        }`}>
+                                            {assignment.type}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-zinc-900 dark:text-white">
+                                            {assignment.dueDate ? format(new Date(assignment.dueDate), 'MMM d, yyyy') : 
+                                             (assignment.due_date ? format(new Date(assignment.due_date), 'MMM d, yyyy') : 'N/A')}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                            (assignment.status === 'published' || assignment.is_published) 
+                                                ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400' 
+                                                : 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400'
+                                        }`}>
+                                            {assignment.status || (assignment.is_published ? 'Published' : 'Draft')}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div className="flex justify-end space-x-2">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(`/admin/assignments/${assignment.id}`);
+                                                }}
+                                                className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
+                                                title="View Assignment"
+                                            >
+                                                <EyeIcon className="h-5 w-5" />
+                                            </button>
+                                            <button
+                                                onClick={(e) => handleEdit(e, assignment.id)}
+                                                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
+                                                title="Edit Assignment"
+                                            >
+                                                <PencilSquareIcon className="h-5 w-5" />
+                                            </button>
+                                            <button
+                                                onClick={(e) => handleDeleteRow(e, assignment.id)}
+                                                className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                                                title="Delete Assignment"
+                                            >
+                                                <TrashIcon className="h-5 w-5" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="7" className="px-6 py-4 text-center text-sm text-zinc-500 dark:text-zinc-400">
+                                    No assignments found
                                 </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>
 
             {/* Pagination */}
-            <div className="flex justify-between items-center mt-6">
-                <div className="text-sm text-gray-700">
-                    Showing page {currentPage} of {totalPages}
+            {totalPages > 1 && (
+                <div className="flex justify-between items-center mt-6">
+                    <div className="text-sm text-zinc-600 dark:text-zinc-400">
+                        Page {currentPage} of {totalPages}
+                    </div>
+                    <div className="flex space-x-2">
+                        <button
+                            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                            disabled={currentPage === 1}
+                            className={`p-2 rounded-lg ${
+                                currentPage === 1
+                                    ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed'
+                                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-600'
+                            }`}
+                        >
+                            <ChevronLeftIcon className="h-5 w-5" />
+                        </button>
+                        <button
+                            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                            disabled={currentPage === totalPages}
+                            className={`p-2 rounded-lg ${
+                                currentPage === totalPages
+                                    ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed'
+                                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-600'
+                            }`}
+                        >
+                            <ChevronRightIcon className="h-5 w-5" />
+                        </button>
+                    </div>
                 </div>
-                <div className="flex space-x-2">
-                    <button
-                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                        className={`px-4 py-2 border rounded-lg ${
-                            currentPage === 1
-                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                : 'bg-white text-gray-700 hover:bg-gray-50'
-                        }`}
-                    >
-                        Previous
-                    </button>
-                    <button
-                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                        className={`px-4 py-2 border rounded-lg ${
-                            currentPage === totalPages
-                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                : 'bg-white text-gray-700 hover:bg-gray-50'
-                        }`}
-                    >
-                        Next
-                    </button>
-                </div>
-            </div>
+            )}
         </div>
     );
 };

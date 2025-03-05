@@ -1,105 +1,108 @@
-# StudyHub
+# StudyHub Platform
 
-A comprehensive study material management and indexing system that uses AI to help organize and search through study materials.
+A comprehensive educational platform for course management, document processing, and AI-assisted learning.
 
-## Quick Start with GitHub Codespaces
+## Project Overview
 
-1. Click the green "Code" button above
-2. Select "Open with Codespaces"
-3. Click "New codespace"
+StudyHub is a SEEK-like learning management system that provides a comprehensive platform for academic course management and student learning. The platform enables:
 
-That's it! GitHub will automatically:
-- Set up the development environment
-- Install all dependencies
-- Configure Docker
-- Start all services
-
-Your application will be available at:
-- Frontend: https://[codespace-name]-3000.preview.app.github.dev
-- Backend API: https://[codespace-name]-5000.preview.app.github.dev
-- StudyIndexer API: https://[codespace-name]-8000.preview.app.github.dev
-
-## Development in Codespaces
-
-All services are running in Docker containers:
-- `frontend`: React application
-- `backend`: Flask API
-- `studyindexer`: FastAPI service
-- `chromadb`: Vector database
-- `redis`: Cache and message broker
-
-### Useful Commands
-
-```bash
-# View running containers
-docker compose ps
-
-# View logs
-docker compose logs -f
-
-# Restart a service
-docker compose restart [service-name]
-
-# Rebuild and restart all services
-docker compose up -d --build
-```
+- **Admins & TAs**: Create and manage courses, materials, and assignments
+- **Students**: Access course materials, complete assignments, and track academic progress
+- **AI-Powered Learning**: Chat with an AI assistant about courses, FAQs, and general queries
+- **Personal Knowledge Base**: Students can create and reference their own study notes through the chat interface
 
 ## Project Structure
 
-- `studyindexer/` - AI-powered document indexing and processing module
-- `studyhub/` - Main application core
-- `docker/` - Docker configuration and deployment files
-- `documentation/` - Project documentation and guides
-
-## Prerequisites
-
-- Docker and Docker Compose
-- Python 3.10+
-- Node.js (for frontend)
-
-## Quick Start
-
-1. Clone the repository:
-```bash
-git clone [repository-url]
-cd studyhub
+```plaintext
+/
+├── studyhub/               # Main application
+│   ├── backend/           # Flask backend service
+│   │   ├── app/          # Application code
+│   │   ├── scripts/      # Utility scripts
+│   │   └── setup.ps1     # Backend setup
+│   │
+│   └── frontend/         # React frontend
+│       ├── src/          # Source code
+│       ├── public/       # Static assets
+│       └── setup.ps1     # Frontend setup
+│
+├── studyindexer/          # Document processing service
+│   ├── app/              # FastAPI application
+│   ├── data/             # Data storage
+│   │   ├── chroma/      # Vector database
+│   │   ├── processed/   # Processed documents
+│   │   └── uploads/     # Document uploads
+│   ├── logs/            # Service logs
+│   └── setup.ps1        # Service setup
+│
+└── studyai/              # Future AI service (planned)
 ```
 
-2. Set up environment variables:
-```bash
-cp docker/.env.example docker/.env
-# Edit .env file with your configurations
-```
+## Quick Start Guide
 
-3. Start the services:
-```bash
-cd docker
-docker compose up -d
-```
+### Local Development Setup
 
-## Development Setup
+1. **Clone the Repository**:
+   ```bash
+   git clone <repository-url>
+   cd studyhub-platform
+   ```
 
-See [SETUP_GUIDE.md](documentation/project/SETUP_GUIDE.md) for detailed development setup instructions.
+2. **Backend Setup**:
+   ```bash
+   cd studyhub/backend
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   python scripts/init_db.py
+   flask run
+   ```
 
-## Documentation
+3. **Frontend Setup**:
+   ```bash
+   cd studyhub/frontend
+   npm install
+   npm start
+   ```
 
-- [Architecture Overview](documentation/project/ARCHITECTURE.md)
-- [Development Workflow](documentation/project/DEVELOPMENT_WORKFLOW.md)
-- [API Documentation](documentation/api/)
-- [Troubleshooting Guide](documentation/project/TROUBLESHOOTING.md)
+4. **StudyIndexer Setup**:
+   ```bash
+   cd studyindexer
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   uvicorn main:app --reload
+   ```
+
+## Development Environment
+
+- **Prerequisites**:
+  - Python 3.x
+  - Node.js (v14 or higher)
+  - npm (comes with Node.js)
+  - Git
+  - PostgreSQL (optional - SQLite is used by default in development)
+
+## Key Features
+
+- **Course Management**: Create and manage courses, materials, and assignments.
+- **Document Processing**: Index and search documents using vector embeddings.
+- **AI-Powered Learning**: Chat with an AI assistant for course-related queries.
+- **Personal Knowledge Base**: Manage personal study notes and resources.
+
+## Links to Submodule Documentation
+
+- [StudyHub Documentation](studyhub/README.md)
+- [StudyIndexer Documentation](studyindexer/README.md)
+- [StudyAI Documentation](studyai/README.md)
 
 ## Contributing
 
-1. Create a new branch
-2. Make your changes
-3. Submit a pull request
-
-## Troubleshooting
-
-If you encounter any issues:
-1. Check the logs: `docker compose logs -f`
-2. Rebuild services: `docker compose up -d --build`
-3. Reset Codespace: Click "Stop Current Codespace" and create a new one
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a pull request
 
 ## License
 

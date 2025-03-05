@@ -14,45 +14,50 @@ class Settings(BaseSettings):
     
     # Server Settings
     HOST: str = Field("0.0.0.0", env="HOST")
-    PORT: int = Field(8000, env="PORT")
+    PORT: int = Field(8080, env="PORT")
     
     # API Settings
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "StudyIndexer"
-    VERSION: str = "0.1.0"
+    VERSION: str = Field("0.1.0", env="VERSION")
     
     # Security
     API_KEY_HEADER: str = "X-API-Key"
-    API_KEY: Optional[str] = Field(None, env="API_KEY")
-    CORS_ORIGINS: Set[str] = Field(default={"http://localhost", "http://localhost:3000"})
+    API_KEY: str = Field("studyhub_dev_api_key_2024", env="API_KEY")
+    CORS_ORIGINS: Set[str] = Field(default={"http://localhost:3000", "http://localhost:5100"}, env="CORS_ORIGINS")
     
     # JWT Settings
-    JWT_SECRET: str = Field("development_jwt_secret_key_minimum_32_chars_long", env="JWT_SECRET")
+    JWT_SECRET: str = Field("studyhub_development_jwt_secret_key_32chars", env="JWT_SECRET")
     JWT_ALGORITHM: str = Field("HS256", env="JWT_ALGORITHM")
     JWT_TOKEN_PREFIX: str = Field("Bearer", env="JWT_TOKEN_PREFIX")
-    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(30, env="JWT_ACCESS_TOKEN_EXPIRE_MINUTES")
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(1440, env="JWT_ACCESS_TOKEN_EXPIRE_MINUTES")  # 24 hours
     
     # Rate Limiting
-    RATE_LIMIT_ENABLED: bool = True
+    RATE_LIMIT_ENABLED: bool = Field(True, env="RATE_LIMIT_ENABLED")
     RATE_LIMIT_CALLS: int = Field(100, env="RATE_LIMIT_CALLS")
     RATE_LIMIT_PERIOD: int = Field(3600, env="RATE_LIMIT_PERIOD")  # in seconds
     
     # ChromaDB Settings
-    CHROMA_HOST: str = Field("localhost", env="CHROMA_HOST")
+    CHROMA_HOST: str = Field("0.0.0.0", env="CHROMA_HOST")  # For binding
+    CHROMA_CONNECT_HOST: str = Field("localhost", env="CHROMA_CONNECT_HOST")  # For connecting
     CHROMA_PORT: int = Field(8000, env="CHROMA_PORT")
     CHROMA_PERSIST_DIR: str = Field("./data/chroma", env="CHROMA_PERSIST_DIR")
+    CHROMA_HEALTH_ENDPOINT: str = Field("/api/v1/heartbeat", env="CHROMA_HEALTH_ENDPOINT")
     
     # Document Processing
     MAX_CHUNK_SIZE: int = Field(1000, env="MAX_CHUNK_SIZE")
     CHUNK_OVERLAP: int = Field(200, env="CHUNK_OVERLAP")
     MAX_FILE_SIZE: int = Field(16777216, env="MAX_FILE_SIZE")  # 16MB
     MAX_UPLOAD_SIZE: int = Field(16777216, env="MAX_UPLOAD_SIZE")  # 16MB (same as MAX_FILE_SIZE)
-    SUPPORTED_FILE_TYPES: Set[str] = {
-        "application/pdf",
-        "text/plain",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "text/markdown"
-    }
+    SUPPORTED_FILE_TYPES: Set[str] = Field(
+        default={
+            "application/pdf",
+            "text/plain",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "text/markdown"
+        },
+        env="SUPPORTED_FILE_TYPES"
+    )
     
     # Model Settings
     EMBEDDING_MODEL: str = Field("all-MiniLM-L6-v2", env="EMBEDDING_MODEL")
@@ -60,24 +65,17 @@ class Settings(BaseSettings):
     
     # Logging
     LOG_LEVEL: str = Field("INFO", env="LOG_LEVEL")
-    LOG_FILE: str = Field("app.log", env="LOG_FILE")
-    LOG_FORMAT: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    
-    # Redis Settings (Updated for WSL)
-    REDIS_HOST: str = Field("localhost", env="REDIS_HOST")  # WSL Redis is accessible via localhost
-    REDIS_PORT: int = Field(6379, env="REDIS_PORT")
-    REDIS_DB: int = Field(0, env="REDIS_DB")
-    REDIS_PASSWORD: Optional[str] = Field(None, env="REDIS_PASSWORD")
-    
-    # Celery Settings (Updated for WSL)
-    CELERY_BROKER_URL: str = Field("redis://localhost:6379/0", env="CELERY_BROKER_URL")
-    CELERY_RESULT_BACKEND: str = Field("redis://localhost:6379/0", env="CELERY_RESULT_BACKEND")
+    LOG_FILE: str = Field("logs/app.log", env="LOG_FILE")
+    LOG_FORMAT: str = Field("%(asctime)s - %(name)s - %(levelname)s - %(message)s", env="LOG_FORMAT")
     
     # Storage
-    UPLOAD_DIR: str = Field("./data/uploads", env="UPLOAD_DIR")
+    UPLOAD_DIR: str = Field("./uploads", env="UPLOAD_DIR")
     PROCESSED_DIR: str = Field("./data/processed", env="PROCESSED_DIR")
     TEMP_DIR: str = Field("./data/temp", env="TEMP_DIR")
     LOG_DIR: str = Field("./logs", env="LOG_DIR")
+    
+    # Health Check
+    FASTAPI_HEALTH_ENDPOINT: str = Field("/api/health", env="FASTAPI_HEALTH_ENDPOINT")
     
     @field_validator("ENV")
     def validate_env(cls, v: str) -> str:
@@ -121,12 +119,6 @@ class Settings(BaseSettings):
         except (ValueError, TypeError):
             raise ValueError("MAX_FILE_SIZE must be a valid integer")
     
-    def get_redis_url(self) -> str:
-        """Get Redis URL with optional password"""
-        if self.REDIS_PASSWORD:
-            return f"redis://:{self.REDIS_PASSWORD}@{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
-        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
-    
     def ensure_directories(self) -> None:
         """Ensure all required directories exist"""
         dirs = [
@@ -140,7 +132,7 @@ class Settings(BaseSettings):
             Path(dir_path).mkdir(parents=True, exist_ok=True)
     
     model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ".env"),
+        env_file=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), ".env"),
         env_file_encoding="utf-8",
         case_sensitive=True,
         extra="allow",

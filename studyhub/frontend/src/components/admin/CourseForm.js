@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { courseApi } from '../../services/apiService';
 import { toast } from 'react-hot-toast';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 const CourseForm = () => {
     const navigate = useNavigate();
@@ -63,13 +64,18 @@ const CourseForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
-
+        
         try {
-            const response = isEditMode
-                ? await courseApi.updateCourse(courseId, formData)
-                : await courseApi.createCourse(formData);
-
+            setLoading(true);
+            setError(null);
+            
+            let response;
+            if (isEditMode) {
+                response = await courseApi.updateCourse(courseId, formData);
+            } else {
+                response = await courseApi.createCourse(formData);
+            }
+            
             if (response.success) {
                 toast.success(`Course ${isEditMode ? 'updated' : 'created'} successfully!`);
                 navigate('/admin/courses');
@@ -77,45 +83,47 @@ const CourseForm = () => {
                 setError(response.message || `Failed to ${isEditMode ? 'update' : 'create'} course`);
             }
         } catch (err) {
-            console.error('Error saving course:', err);
+            console.error(`Error ${isEditMode ? 'updating' : 'creating'} course:`, err);
             setError(err.message || `Failed to ${isEditMode ? 'update' : 'create'} course`);
+        } finally {
+            setLoading(false);
         }
     };
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-full">
-                <div className="text-gray-600">Loading course...</div>
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
             </div>
         );
     }
 
     return (
-        <div className="p-6">
+        <div>
             <div className="max-w-3xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
                         {isEditMode ? 'Edit Course' : 'Create Course'}
                     </h1>
                     <button
                         onClick={() => navigate('/admin/courses')}
-                        className="text-gray-600 hover:text-gray-800"
+                        className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 flex items-center gap-1"
                     >
-                        Cancel
+                        <ArrowLeftIcon className="h-4 w-4" /> Back to Courses
                     </button>
                 </div>
 
                 {error && (
-                    <div className="mb-6 bg-red-50 border border-red-200 text-red-600 rounded-lg p-4">
+                    <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4">
                         {error}
                     </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="bg-white rounded-lg shadow p-6">
+                    <div className="glass-card p-6">
                         <div className="grid grid-cols-1 gap-6">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                     Course Code
                                 </label>
                                 <input
@@ -123,13 +131,13 @@ const CourseForm = () => {
                                     name="code"
                                     value={formData.code}
                                     onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                    className="input-field"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                     Course Name
                                 </label>
                                 <input
@@ -137,27 +145,27 @@ const CourseForm = () => {
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                    className="input-field"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                     Description
                                 </label>
                                 <textarea
                                     name="description"
                                     value={formData.description}
                                     onChange={handleChange}
-                                    rows={4}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                                />
+                                    rows="4"
+                                    className="input-field"
+                                ></textarea>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                         Max Students
                                     </label>
                                     <input
@@ -165,30 +173,33 @@ const CourseForm = () => {
                                         name="max_students"
                                         value={formData.max_students}
                                         onChange={handleChange}
-                                        min={1}
-                                        className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                        min="1"
+                                        className="input-field"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                         Enrollment Type
                                     </label>
                                     <select
                                         name="enrollment_type"
                                         value={formData.enrollment_type}
                                         onChange={handleChange}
-                                        className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                        className="input-field"
+                                        required
                                     >
                                         <option value="open">Open</option>
                                         <option value="invite">Invite Only</option>
                                         <option value="closed">Closed</option>
                                     </select>
                                 </div>
+                            </div>
 
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                         Start Date
                                     </label>
                                     <input
@@ -196,13 +207,13 @@ const CourseForm = () => {
                                         name="start_date"
                                         value={formData.start_date}
                                         onChange={handleChange}
-                                        className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                        className="input-field"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                         End Date
                                     </label>
                                     <input
@@ -210,7 +221,7 @@ const CourseForm = () => {
                                         name="end_date"
                                         value={formData.end_date}
                                         onChange={handleChange}
-                                        className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                                        className="input-field"
                                         required
                                     />
                                 </div>
@@ -222,9 +233,9 @@ const CourseForm = () => {
                                     name="is_active"
                                     checked={formData.is_active}
                                     onChange={handleChange}
-                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                    className="h-4 w-4 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded"
                                 />
-                                <label className="ml-2 text-sm text-gray-700">
+                                <label className="ml-2 text-sm text-zinc-700 dark:text-zinc-300">
                                     Course is active
                                 </label>
                             </div>
@@ -235,15 +246,15 @@ const CourseForm = () => {
                         <button
                             type="button"
                             onClick={() => navigate('/admin/courses')}
-                            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                            className="px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                            className="btn-primary"
                         >
-                            {isEditMode ? 'Update Course' : 'Create Course'}
+                            {isEditMode ? 'Update' : 'Create'} Course
                         </button>
                     </div>
                 </form>
