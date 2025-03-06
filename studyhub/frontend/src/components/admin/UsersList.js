@@ -24,7 +24,7 @@ const UsersList = () => {
             setLoading(true);
             const response = await userApi.getUsers(filters);
             if (response.success) {
-                setUsers(response.data || []);
+                setUsers(response.users || []);
             } else {
                 setError(response.message || 'Failed to load users');
             }
@@ -83,13 +83,23 @@ const UsersList = () => {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Users</h1>
-                <button
-                    onClick={() => navigate('/admin/users/new')}
-                    className="btn-primary flex items-center gap-2"
-                >
-                    <PlusCircleIcon className="h-5 w-5" />
-                    <span>Add User</span>
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => navigate('/admin/users/new')}
+                        className="btn-primary flex items-center gap-2"
+                    >
+                        <PlusCircleIcon className="h-5 w-5" />
+                        <span>Add User</span>
+                    </button>
+                    {/* Added Enroll button */}
+                    <button
+                        onClick={() => navigate('/admin/users/enroll')}
+                        className="btn-secondary flex items-center gap-2"
+                    >
+                        <PlusCircleIcon className="h-5 w-5" />
+                        <span>Enroll</span>
+                    </button>
+                </div>
             </div>
 
             {/* Filters */}
@@ -241,4 +251,4 @@ const UsersList = () => {
     );
 };
 
-export default UsersList; 
+export default UsersList;

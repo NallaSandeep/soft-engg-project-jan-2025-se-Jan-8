@@ -13,7 +13,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key'
     
     # SQLAlchemy
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///app.db'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///studyhub.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # JWT
@@ -37,7 +37,7 @@ class Config:
     
     # Server
     HOST = os.getenv('FLASK_HOST', '0.0.0.0')
-    PORT = int(os.getenv('FLASK_PORT', 5100))
+    PORT = int(os.getenv('FLASK_PORT', 5000))
 
     # StudyIndexer Service
     INDEXER_SERVICE_URL = os.getenv('INDEXER_SERVICE_URL', 'http://localhost:8000')
