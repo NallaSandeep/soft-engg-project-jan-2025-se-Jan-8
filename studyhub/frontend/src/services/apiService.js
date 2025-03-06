@@ -61,8 +61,8 @@ export const courseApi = {
     updateCourse: (id, courseData) => api.put(`/courses/${id}`, courseData),
     deleteCourse: (id) => api.delete(`/courses/${id}`),
     getCourseContent: (courseId) => api.get(`/courses/${courseId}/content`),
-    enrollStudent: (courseId, studentId) => api.post(`/courses/${courseId}/enroll/${studentId}`),
-    unenrollStudent: (courseId, studentId) => api.delete(`/courses/${courseId}/enroll/${studentId}`),
+    enrollStudent: (courseId, userId, role) => api.post(`/courses/${courseId}/enroll/${userId}`, { role }),
+    unenrollStudent: (courseId, userId) => api.delete(`/courses/${courseId}/enroll/${userId}`),
     getEnrolledStudents: (courseId) => api.get(`/courses/${courseId}/students`),
     // Week management
     getAllWeeks: () => api.get('/courses/weeks'),
@@ -221,4 +221,4 @@ export const adminApi = {
     }
 };
 
-export default api; 
+export default api;

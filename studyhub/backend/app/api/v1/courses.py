@@ -192,54 +192,60 @@ def delete_course(course_id):
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-@courses_bp.route('/<int:course_id>/enroll', methods=['POST'])
-@student_or_ta_required
-def enroll_in_course(course_id):
-    """Enroll in a course (student/TA only)"""
+@courses_bp.route('/<int:course_id>/enroll/<int:user_id>', methods=['POST'])
+@admin_required
+def enroll_in_course(course_id, user_id):
+    """Enroll a user in a course (admin only)"""
     try:
+        data = request.get_json()
+        role = data.get('role', 'student')
+
         course = Course.query.get(course_id)
         if not course:
-            return jsonify({'error': 'Course not found'}), 404
+            return jsonify({'success': False, 'error': 'Course not found'}), 404
 
-        current_user = User.query.get(get_jwt_identity())
-        
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'success': False, 'error': 'User not found'}), 404
+
         # Check if already enrolled
         existing_enrollment = CourseEnrollment.query.filter_by(
             course_id=course_id,
-            user_id=current_user.id
+            user_id=user_id
         ).first()
-        
+
         if existing_enrollment:
-            return jsonify({'error': 'Already enrolled in this course'}), 409
+            return jsonify({'success': False, 'error': 'User is already enrolled in this course'}), 409
 
         # Check enrollment conditions
         if not course.is_active:
-            return jsonify({'error': 'Course is not active'}), 400
-        
+            return jsonify({'success': False, 'error': 'Course is not active'}), 400
+
         if course.enrollment_type == 'closed':
-            return jsonify({'error': 'Course enrollment is closed'}), 400
-        
+            return jsonify({'success': False, 'error': 'Course enrollment is closed'}), 400
+
         if course.max_students and course.get_enrolled_count('student') >= course.max_students:
-            return jsonify({'error': 'Course has reached maximum enrollment'}), 400
+            return jsonify({'success': False, 'error': 'Course has reached maximum enrollment'}), 400
 
         # Create enrollment
         enrollment = CourseEnrollment(
             course_id=course_id,
-            user_id=current_user.id,
-            role='student' if current_user.role == 'student' else 'ta'
+            user_id=user_id,
+            role=role
         )
 
         db.session.add(enrollment)
         db.session.commit()
 
         return jsonify({
+            'success': True,
             'msg': 'Successfully enrolled in course',
             'enrollment': enrollment.to_dict()
-        }), 201
+        }), 200
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @courses_bp.route('/health', methods=['GET'])
 def health_check():

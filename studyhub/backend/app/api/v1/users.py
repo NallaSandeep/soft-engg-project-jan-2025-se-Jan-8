@@ -197,3 +197,56 @@ def deactivate_user(user_id):
 def health_check():
     """Health check endpoint."""
     return {'status': 'ok', 'message': 'Users API is running'}
+
+
+@users_bp.route('/', methods=['POST'])
+@admin_required
+def create_user():
+    """Create a new user (admin only)."""
+    try:
+        data = request.get_json()
+        
+        print(data)
+        """{'username': 'testuser42', 'email': 'testuserCreate@studyhub.com', 'password': '1234', 'first_name': 'TestUser1', 'last_name': 'TestLast', 'role': 'student', 'is_active': True}
+        2025-02-14 16:41:07,602 - studybot - INFO - Response: {"timestamp": "2025-02-14T11:11:07.602354", "method": "POST", "path": "/api/v1/users", "status_code": 200, "duration_ms": 63.88, "response_size": 24, "content_type": "application/json"}"""
+
+        # Check if all fields are there 
+        required_fields = ['username', 'email', 'password', 'role']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'msg': f'{field} is required'}), 400
+        
+        # Check email already created or not (hoping only email is unique key, if username is also unique key need to check that also)
+        existing_user = User.query.filter_by(email=data['email']).first()
+        if existing_user:
+            return jsonify({'msg': 'Email already exists'}), 409
+
+        user = User(
+            username=data['username'],
+            email=data['email'],
+            password=data['password'],
+            first_name=data.get('first_name'),
+            last_name=data.get('last_name'),
+            role=data['role'],
+            is_active=data.get('is_active', False)
+        )
+        user.save()
+
+        return jsonify({
+            'success': True,
+            'msg': 'User created successfully',
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'role': user.role,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'is_active': user.is_active,
+                'is_email_verified': user.is_email_verified,
+                'last_login': user.last_login.isoformat() if user.last_login else None
+            }
+        }), 201
+    except:
+        return jsonify({'msg': 'Invalid data'}), 400
+

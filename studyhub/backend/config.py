@@ -37,7 +37,7 @@ class Config:
     
     # Server
     HOST = os.getenv('FLASK_HOST', '0.0.0.0')
-    PORT = int(os.getenv('FLASK_PORT', 5100))
+    PORT = int(os.getenv('FLASK_PORT', 5000))
 
     # StudyIndexer Service
     INDEXER_SERVICE_URL = os.getenv('INDEXER_SERVICE_URL', 'http://localhost:8000')
@@ -67,7 +67,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.getenv(
         'DATABASE_URL',
-        'sqlite:///' + os.path.join(os.path.dirname(__file__), 'studyhub.db')
+        'sqlite:///' + os.path.join(os.path.dirname(__file__), 'instance', 'app.db')
     )
 
 class TestingConfig(Config):
