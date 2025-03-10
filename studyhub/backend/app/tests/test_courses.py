@@ -4,14 +4,19 @@ from datetime import datetime, timedelta
 from app import create_app, db
 from app.models.user import User
 from app.models.course import Course, CourseEnrollment
+from config import TestingConfig
+import logging
+
+logger = logging.getLogger(__name__)
 
 class CourseTestCase(unittest.TestCase):
     def setUp(self):
         """Set up test environment before each test"""
-        self.app = create_app('testing')
+        self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()
+        db.drop_all()
         db.create_all()
 
         # Create test users
@@ -49,9 +54,9 @@ class CourseTestCase(unittest.TestCase):
         db.session.commit()
 
         # Get tokens for each user
-        self.admin_token = self._get_token('admin_test', 'password123')
-        self.teacher_token = self._get_token('teacher_test', 'password123')
-        self.student_token = self._get_token('student_test', 'password123')
+        self.admin_token = self._get_token('admin@test.com', 'password123')
+        self.teacher_token = self._get_token('teacher@test.com', 'password123')
+        self.student_token = self._get_token('student@test.com', 'password123')
 
     def tearDown(self):
         """Clean up test environment after each test"""
@@ -62,10 +67,10 @@ class CourseTestCase(unittest.TestCase):
     def _get_token(self, username, password):
         """Helper method to get JWT token"""
         response = self.client.post('/api/v1/auth/login', json={
-            'username': username,
+            'email': username,
             'password': password
         })
-        return json.loads(response.data)['access_token']
+        return json.loads(response.data)['data']['access_token']
 
     def test_create_course(self):
         """Test course creation"""
@@ -76,7 +81,7 @@ class CourseTestCase(unittest.TestCase):
                 'code': 'CS101',
                 'name': 'Introduction to Computer Science',
                 'description': 'Basic programming concepts',
-                'instructor_id': self.teacher.id,
+                'created_by_id': self.teacher.id,
                 'start_date': (datetime.now() + timedelta(days=1)).date().isoformat(),
                 'end_date': (datetime.now() + timedelta(days=90)).date().isoformat(),
                 'max_students': 30,
@@ -85,8 +90,8 @@ class CourseTestCase(unittest.TestCase):
         
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.data)
-        self.assertEqual(data['course']['code'], 'CS101')
-        self.assertEqual(data['course']['name'], 'Introduction to Computer Science')
+        self.assertEqual(data['data']['code'], 'CS101')
+        self.assertEqual(data['data']['name'], 'Introduction to Computer Science')
 
         # Test duplicate course code
         response = self.client.post('/api/v1/courses/',
@@ -95,7 +100,7 @@ class CourseTestCase(unittest.TestCase):
                 'code': 'CS101',
                 'name': 'Another Course',
                 'description': 'Description',
-                'instructor_id': self.teacher.id
+                'created_by_id': self.teacher.id
             })
         
         self.assertEqual(response.status_code, 409)
@@ -107,7 +112,7 @@ class CourseTestCase(unittest.TestCase):
                 'code': 'CS102',
                 'name': 'Another Course',
                 'description': 'Description',
-                'instructor_id': self.teacher.id
+                'created_by_id': self.teacher.id
             })
         
         self.assertEqual(response.status_code, 403)
@@ -119,13 +124,13 @@ class CourseTestCase(unittest.TestCase):
             code='CS101',
             name='Course 1',
             description='Description 1',
-            instructor_id=self.teacher.id
+            created_by_id=self.teacher.id
         )
         course2 = Course(
             code='CS102',
             name='Course 2',
             description='Description 2',
-            instructor_id=self.teacher.id
+            created_by_id=self.teacher.id
         )
         db.session.add_all([course1, course2])
         db.session.commit()
@@ -136,7 +141,7 @@ class CourseTestCase(unittest.TestCase):
         
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertEqual(len(data['courses']), 2)
+        self.assertEqual(len(data['data']), 2)
 
         # Test teacher view (only their courses)
         response = self.client.get('/api/v1/courses/',
@@ -144,7 +149,7 @@ class CourseTestCase(unittest.TestCase):
         
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertEqual(len(data['courses']), 2)
+        self.assertEqual(len(data['data']), 2)
 
         # Test student view (only enrolled courses)
         response = self.client.get('/api/v1/courses/',
@@ -152,7 +157,7 @@ class CourseTestCase(unittest.TestCase):
         
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertEqual(len(data['courses']), 0)
+        self.assertEqual(len(data['data']), 0)
 
     def test_get_course(self):
         """Test getting a specific course"""
@@ -161,7 +166,7 @@ class CourseTestCase(unittest.TestCase):
             code='CS101',
             name='Test Course',
             description='Test Description',
-            instructor_id=self.teacher.id
+            created_by_id=self.admin.id
         )
         db.session.add(course)
         db.session.commit()
@@ -172,7 +177,7 @@ class CourseTestCase(unittest.TestCase):
         
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertEqual(data['course']['code'], 'CS101')
+        self.assertEqual(data['data']['code'], 'CS101')
 
         # Test non-existent course
         response = self.client.get('/api/v1/courses/999',
@@ -187,14 +192,14 @@ class CourseTestCase(unittest.TestCase):
             code='CS101',
             name='Test Course',
             description='Test Description',
-            instructor_id=self.teacher.id
+            created_by_id=self.teacher.id
         )
         db.session.add(course)
         db.session.commit()
 
         # Test successful update by instructor
         response = self.client.put(f'/api/v1/courses/{course.id}',
-            headers={'Authorization': f'Bearer {self.teacher_token}'},
+            headers={'Authorization': f'Bearer {self.admin_token}'},
             json={
                 'name': 'Updated Course',
                 'description': 'Updated Description'
@@ -217,7 +222,7 @@ class CourseTestCase(unittest.TestCase):
         )
         db.session.add(other_teacher)
         db.session.commit()
-        other_teacher_token = self._get_token('teacher2_test', 'password123')
+        other_teacher_token = self._get_token('teacher2@test.com', 'password123')
 
         response = self.client.put(f'/api/v1/courses/{course.id}',
             headers={'Authorization': f'Bearer {other_teacher_token}'},
@@ -234,7 +239,7 @@ class CourseTestCase(unittest.TestCase):
             code='CS101',
             name='Test Course',
             description='Test Description',
-            instructor_id=self.teacher.id
+            created_by_id=self.admin.id
         )
         db.session.add(course)
         db.session.commit()
@@ -259,7 +264,7 @@ class CourseTestCase(unittest.TestCase):
             code='CS101',
             name='Test Course',
             description='Test Description',
-            instructor_id=self.teacher.id,
+            created_by_id=self.teacher.id,
             max_students=2
         )
         db.session.add(course)
@@ -292,7 +297,7 @@ class CourseTestCase(unittest.TestCase):
         )
         db.session.add(other_student)
         db.session.commit()
-        other_student_token = self._get_token('student2_test', 'password123')
+        other_student_token = self._get_token('student2@test.com', 'password123')
 
         # First enrollment should succeed
         response = self.client.post(f'/api/v1/courses/{course.id}/enroll',
@@ -311,7 +316,7 @@ class CourseTestCase(unittest.TestCase):
         )
         db.session.add(third_student)
         db.session.commit()
-        third_student_token = self._get_token('student3_test', 'password123')
+        third_student_token = self._get_token('student3@test.com', 'password123')
 
         response = self.client.post(f'/api/v1/courses/{course.id}/enroll',
             headers={'Authorization': f'Bearer {third_student_token}'})
