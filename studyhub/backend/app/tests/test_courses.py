@@ -9,6 +9,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# command to run test case
+#  pytest --disable-warnings -n 1 .\app\tests\test_courses.py
 class CourseTestCase(unittest.TestCase):
     def setUp(self):
         """Set up test environment before each test"""
