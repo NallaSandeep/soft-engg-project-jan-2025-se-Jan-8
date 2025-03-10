@@ -20,9 +20,10 @@ tags_metadata = [
     },
     {
         "name": "Stream Chat",
-        "description": """WebSocket endpoints for real-time, streaming chat communication.
-        Note: WebSocket connections cannot be tested directly through Swagger UI. 
-        Please use a WebSocket client or implement the WebSocket connection in your application.""",
+
+        "description": """<p>WebSocket endpoints <strong>(stream/chat/session/{session_id}/message)</strong> for real-time, streaming chat communication.</p>
+        <p><strong>Note:</strong> WebSocket connections cannot be tested directly through Swagger UI. 
+        Please use a WebSocket client or implement the WebSocket connection in your application.</p>""",
     },
     {
         "name": "Report AI",
@@ -35,10 +36,13 @@ tags_metadata = [
 ]
 
 app = FastAPI(
-    title="Course Assistant API",
-    description="API for interacting with an AI course assistant",
+    title="StudyAI API",
+    description="<p><strong>StudyAI:</strong> This microservice contains all APIs for interacting with an <strong>Agentic AI</strong> course assistant. You can leverage <strong>Websocket API</strong> for streaming the chat. It also includes features to report AI responses for <strong>course team/admin</strong> review.</p>",
     version="1.0.0",
     openapi_tags=tags_metadata,
+    servers=[
+        {"url": "http://127.0.0.1:5000", "description": "Development server"},
+    ],
 )
 
 # Configure CORS
