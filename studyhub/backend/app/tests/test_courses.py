@@ -42,6 +42,16 @@ class CourseTestCase(unittest.TestCase):
             is_active=True
         )
 
+        self.ta = User(
+            username='ta_test',
+            email='ta@test.com',
+            password='password123',
+            role='ta',
+            first_name='TA',
+            last_name='User',
+            is_active=True
+        )
+
         self.student = User(
             username='student_test',
             email='student@test.com',
@@ -58,6 +68,7 @@ class CourseTestCase(unittest.TestCase):
         # Get tokens for each user
         self.admin_token = self._get_token('admin@test.com', 'password123')
         self.teacher_token = self._get_token('teacher@test.com', 'password123')
+        # self.ta_token = self._get_token('ta@test.com', 'password123')
         self.student_token = self._get_token('student@test.com', 'password123')
 
     def tearDown(self):
@@ -74,7 +85,7 @@ class CourseTestCase(unittest.TestCase):
         })
         return json.loads(response.data)['data']['access_token']
 
-    def test_create_course(self):
+    def test_create_course_admin(self):
         """Test course creation"""
         # Test successful course creation
         response = self.client.post('/api/v1/courses/', 
@@ -95,6 +106,35 @@ class CourseTestCase(unittest.TestCase):
         self.assertEqual(data['data']['code'], 'CS101')
         self.assertEqual(data['data']['name'], 'Introduction to Computer Science')
 
+    def test_create_course_admin_missing_fields(self):
+        response = self.client.post('/api/v1/courses/', 
+            headers={'Authorization': f'Bearer {self.admin_token}'},
+            json={
+                # 'code': 'CS101', missing field
+                'name': 'Introduction to Computer Science',
+                'description': 'Basic programming concepts',
+                'created_by_id': self.teacher.id,
+                'start_date': (datetime.now() + timedelta(days=1)).date().isoformat(),
+                'end_date': (datetime.now() + timedelta(days=90)).date().isoformat(),
+                'max_students': 30,
+                'enrollment_type': 'open'
+            })
+        
+        self.assertEqual(response.status_code, 400)
+
+    def test_create_course_admin_already_exists(self):
+        self.client.post('/api/v1/courses/', 
+            headers={'Authorization': f'Bearer {self.admin_token}'},
+            json={
+                'code': 'CS101',
+                'name': 'Introduction to Computer Science',
+                'description': 'Basic programming concepts',
+                'created_by_id': self.teacher.id,
+                'start_date': (datetime.now() + timedelta(days=1)).date().isoformat(),
+                'end_date': (datetime.now() + timedelta(days=90)).date().isoformat(),
+                'max_students': 30,
+                'enrollment_type': 'open'
+            })
         # Test duplicate course code
         response = self.client.post('/api/v1/courses/',
             headers={'Authorization': f'Bearer {self.admin_token}'},
@@ -107,9 +147,44 @@ class CourseTestCase(unittest.TestCase):
         
         self.assertEqual(response.status_code, 409)
 
+    def test_create_course_teacher(self):
+        """Test course creation"""
+        # Test successful course creation
+        response = self.client.post('/api/v1/courses/', 
+            headers={'Authorization': f'Bearer {self.teacher_token}'},
+            json={
+                'code': 'CS101',
+                'name': 'Introduction to Computer Science',
+                'description': 'Basic programming concepts',
+                'created_by_id': self.teacher.id,
+                'start_date': (datetime.now() + timedelta(days=1)).date().isoformat(),
+                'end_date': (datetime.now() + timedelta(days=90)).date().isoformat(),
+                'max_students': 30,
+                'enrollment_type': 'open'
+            })
+        
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)
+        self.assertEqual(data['data']['code'], 'CS101')
+        self.assertEqual(data['data']['name'], 'Introduction to Computer Science')
+
+    def test_create_course_student_unauth(self):
         # Test non-admin user
         response = self.client.post('/api/v1/courses/',
-            headers={'Authorization': f'Bearer {self.teacher_token}'},
+            headers={'Authorization': f'Bearer {self.student_token}'},
+            json={
+                'code': 'CS102',
+                'name': 'Another Course',
+                'description': 'Description',
+                'created_by_id': self.teacher.id
+            })
+        
+        self.assertEqual(response.status_code, 403)
+
+    def test_create_course_ta_unauth(self):
+        # Test non-admin user
+        response = self.client.post('/api/v1/courses/',
+            headers={'Authorization': f'Bearer {self.ta_token}'},
             json={
                 'code': 'CS102',
                 'name': 'Another Course',
