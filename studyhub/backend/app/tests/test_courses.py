@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from app import create_app, db
 from app.models.user import User
 from app.models.course import Course, CourseEnrollment
-from config import TestingConfig
+from config import config
 import logging
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class CourseTestCase(unittest.TestCase):
     def setUp(self):
         """Set up test environment before each test"""
-        self.app = create_app(TestingConfig)
+        self.app = create_app(config['testing'])
         self.client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()
