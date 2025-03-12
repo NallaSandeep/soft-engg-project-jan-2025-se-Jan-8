@@ -74,6 +74,7 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
    pip install -r requirements.txt
    python manage_services.py setup
    python manage_services.py start
+   python manage_services.py restart
    python manage_services.py status
    ```
 
