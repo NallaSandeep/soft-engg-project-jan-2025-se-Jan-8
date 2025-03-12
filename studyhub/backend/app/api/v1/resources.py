@@ -66,7 +66,7 @@ def create_resource(course_id):
         current_user = User.query.get(get_jwt_identity())
         
         # Check if user can add resources to this course
-        if course.instructor_id != current_user.id and current_user.role != 'admin':
+        if course.created_by_id != current_user.id and current_user.role != 'admin':
             enrollment = course.enrollments.filter_by(
                 user_id=current_user.id,
                 role='ta',

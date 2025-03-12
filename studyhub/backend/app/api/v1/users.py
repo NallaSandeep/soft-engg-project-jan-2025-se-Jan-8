@@ -126,6 +126,7 @@ def get_user(user_id):
             return jsonify({'msg': 'User not found'}), 404
             
         return jsonify({
+            'success': True,
             'user': {
                 'id': user.id,
                 'username': user.username,
@@ -136,7 +137,7 @@ def get_user(user_id):
                 'is_active': user.is_active,
                 'is_email_verified': user.is_email_verified,
                 'last_login': user.last_login.isoformat() if user.last_login else None
-            }
+            }   
         }), 200
         
     except Exception as e:

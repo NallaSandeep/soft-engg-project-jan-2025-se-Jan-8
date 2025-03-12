@@ -116,14 +116,26 @@ def list_all_assignments():
             # Execute query
             assignments = query.all()
 
+            # Get the end of the current year
+            end_of_year = datetime(datetime.utcnow().year, 12, 31, 23, 59, 59)
+
             # Convert to dict with calculated points
             assignments_data = []
             for assignment in assignments:
                 assignment_dict = assignment.to_dict()
+                
+                # Ensure practice assignments have the due date set to end of the year
+                if assignment.type == 'practice' and (not assignment.due_date or assignment.due_date < end_of_year):
+                    assignment.due_date = end_of_year
+                    db.session.add(assignment)  # Mark for update
+                
                 # Calculate total points from questions
                 total_points = sum(aq.question.points for aq in assignment.questions.all())
                 assignment_dict['points_possible'] = total_points
                 assignments_data.append(assignment_dict)
+
+            # Commit updates to practice assignment due dates if changed
+            db.session.commit()
 
             return jsonify({
                 'success': True,
@@ -131,6 +143,7 @@ def list_all_assignments():
             }), 200
 
         except Exception as e:
+            db.session.rollback()  # Ensure database consistency
             return jsonify({
                 'success': False,
                 'message': str(e)
@@ -151,12 +164,28 @@ def get_week_assignments(week_id):
         week = Week.query.get_or_404(week_id)
         assignments = Assignment.query.filter_by(week_id=week_id).all()
         
+        # Get end of the current year timestamp
+        end_of_year = datetime(datetime.utcnow().year, 12, 31, 23, 59, 59)
+
+        # Check and update due dates for practice assignments
+        updated = False
+        for assignment in assignments:
+            if assignment.type == 'practice' and (not assignment.due_date or assignment.due_date < end_of_year):
+                assignment.due_date = end_of_year
+                db.session.add(assignment)  # Mark for update
+                updated = True
+
+        # Commit updates if any assignments were modified
+        if updated:
+            db.session.commit()
+
         return jsonify({
             'success': True,
             'data': [assignment.to_dict() for assignment in assignments]
         }), 200
-        
+
     except Exception as e:
+        db.session.rollback()  # Ensure database consistency in case of error
         return jsonify({
             'success': False,
             'message': str(e)
@@ -182,6 +211,20 @@ def create_assignment(week_id):
         # Ensure week exists
         week = Week.query.get_or_404(week_id)
         
+        # Get the end of the current year (December 31st)
+        end_of_year = datetime(datetime.now().year, 12, 31, 23, 59, 59)
+
+        # Ensure all existing practice assignments have their due_date set to end of the current year
+        practice_assignments = Assignment.query.filter_by(week_id=week_id, type='practice').all()
+        for assignment in practice_assignments:
+            if assignment.due_date is None or assignment.due_date < end_of_year:
+                assignment.due_date = end_of_year
+
+        # Apply the due_date validation for the new assignment
+        due_date = data.get('due_date')
+        if due_date is None or datetime.fromisoformat(due_date) < end_of_year:
+            due_date = end_of_year
+
         # Create assignment
         assignment = Assignment(
             week_id=week_id,
@@ -189,12 +232,14 @@ def create_assignment(week_id):
             description=data.get('description', ''),
             type=data['type'],
             start_date=data.get('start_date'),
-            due_date=data.get('due_date'),
+            due_date=due_date,
             points_possible=data.get('points_possible', 0),
             late_submission_penalty=data.get('late_submission_penalty', 0),
             is_published=data.get('is_published', False)
         )
         db.session.add(assignment)
+
+        # Commit all changes
         db.session.commit()
         
         return jsonify({
@@ -610,9 +655,21 @@ def get_student_assignments():
         ).order_by(Assignment.due_date).all()
         
         # Get submissions for these assignments
-        submissions = {
-            s.assignment_id: s for s in current_user.submissions
-        }
+        submissions = {s.assignment_id: s for s in current_user.submissions}
+        
+        # Get the end of the current year (December 31st)
+        end_of_year = datetime(datetime.now().year, 12, 31, 23, 59, 59)
+        
+        # Ensure all practice assignments have due_date set to end of the current year
+        updated_assignments = []
+        for assignment in assignments:
+            if assignment.type == 'practice' and (assignment.due_date is None or assignment.due_date != end_of_year):
+                assignment.due_date = end_of_year
+                updated_assignments.append(assignment)
+
+        # Commit updated practice assignments
+        if updated_assignments:
+            db.session.commit()
         
         # Prepare assignment data with submission status
         assignments_data = []
@@ -636,6 +693,7 @@ def get_student_assignments():
         }), 200
         
     except Exception as e:
+        db.session.rollback()
         return jsonify({
             'success': False,
             'message': str(e)
@@ -662,6 +720,13 @@ def submit_assignment(assignment_id):
             return jsonify({
                 'success': False,
                 'message': 'This assignment is not available for submission'
+            }), 400
+        
+        # Check if due date has already passed
+        if assignment.due_date and datetime.utcnow() > assignment.due_date:
+            return jsonify({
+                'success': False,
+                'message': 'The due date for this assignment has passed. Submission is not allowed.'
             }), 400
             
         # Check if user is enrolled in the course
@@ -765,14 +830,6 @@ def submit_assignment(assignment_id):
             question_scores=question_scores
         )
         
-        # Calculate if submission is late
-        if assignment.due_date and datetime.utcnow() > assignment.due_date:
-            submission.status = 'late'
-            if assignment.late_submission_penalty:
-                submission.score = round(total_score * (1 - assignment.late_submission_penalty/100), 2)
-        else:
-            submission.status = 'submitted'
-            
         # Save submission
         db.session.add(submission)
         db.session.commit()
@@ -784,7 +841,7 @@ def submit_assignment(assignment_id):
                 'id': submission.id,
                 'score': submission.score,
                 'max_score': max_score,
-                'status': submission.status,
+                'status': 'submitted',
                 'question_scores': submission.question_scores,
                 'answers': submission.answers,
                 'submitted_at': submission.submitted_at.isoformat(),
