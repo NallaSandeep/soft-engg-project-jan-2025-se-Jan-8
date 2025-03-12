@@ -199,7 +199,6 @@ def health_check():
     """Health check endpoint."""
     return {'status': 'ok', 'message': 'Users API is running'}
 
-
 @users_bp.route('/', methods=['POST'])
 @admin_required
 def create_user():
@@ -250,4 +249,3 @@ def create_user():
         }), 201
     except:
         return jsonify({'msg': 'Invalid data'}), 400
-

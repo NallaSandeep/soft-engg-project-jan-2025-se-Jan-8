@@ -742,3 +742,54 @@ def get_all_weeks():
             'success': False,
             'message': str(e)
         }), 500
+
+@courses_bp.route('/enroll/', methods=['POST'])
+@jwt_required()
+@roles_required('admin', 'ta')
+def enroll_student():
+    """Enroll a student or TA in a course"""
+    try:
+        data = request.get_json()
+        course_id = data.get('courseId')
+        student_id = data.get('studentId')
+        role = data.get('role', 'student')
+
+        # Validate input
+        if not course_id or not student_id:
+            return jsonify({'success': False, 'message': 'Missing courseId or studentId'}), 400
+
+        course = Course.query.get(course_id)
+        if not course:
+            return jsonify({'success': False, 'message': 'Course not found'}), 404
+
+        student = User.query.get(student_id)
+        if not student:
+            return jsonify({'success': False, 'message': 'Student not found'}), 404
+
+        # Check if already enrolled
+        existing_enrollment = CourseEnrollment.query.filter_by(course_id=course_id, user_id=student_id).first()
+        if existing_enrollment:
+            return jsonify({'success': False, 'message': 'Already enrolled in this course'}), 409
+
+        # Check enrollment conditions
+        if not course.is_active:
+            return jsonify({'success': False, 'message': 'Course is not active'}), 400
+
+        if course.enrollment_type == 'closed':
+            return jsonify({'success': False, 'message': 'Course enrollment is closed'}), 400
+
+        if course.max_students and course.get_enrolled_count('student') >= course.max_students:
+            return jsonify({'success': False, 'message': 'Course has reached maximum enrollment'}), 400
+
+        # Create enrollment
+        enrollment = CourseEnrollment(course_id=course_id, user_id=student_id, role=role)
+        db.session.add(enrollment)
+        db.session.commit()
+
+        return jsonify({'success': True, 'message': 'Successfully enrolled in course', 'enrollment': enrollment.to_dict()}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e), 'message': 'Failed to enroll student'}), 500
+
+

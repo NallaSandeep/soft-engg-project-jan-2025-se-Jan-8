@@ -24,7 +24,7 @@ const UsersList = () => {
             setLoading(true);
             const response = await userApi.getUsers(filters);
             if (response.success) {
-                setUsers(response.users || []);
+                setUsers(response.users  || []);
             } else {
                 setError(response.message || 'Failed to load users');
             }

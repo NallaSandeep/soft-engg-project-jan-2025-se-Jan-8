@@ -15,7 +15,7 @@ import AssignmentView from '../components/admin/assignments/AssignmentView';
 import QuestionBank from '../components/admin/QuestionBank';
 import QuestionForm from '../components/admin/QuestionBank/QuestionForm';
 import QuestionList from '../components/admin/QuestionBank/QuestionList';
-import EnrollStudents from '../components/admin/EnrollStudents';
+import EnrollStudents from '../components/admin/EnrollStudTA';
 
 const adminRoutes = [
     {
@@ -129,6 +129,10 @@ const adminRoutes = [
                         element: <UserForm />
                     }
                 ]
+            },
+            {
+                path: 'enroll',
+                element: <EnrollStudents />
             }
         ]
     }

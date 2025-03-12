@@ -61,8 +61,8 @@ export const courseApi = {
     updateCourse: (id, courseData) => api.put(`/courses/${id}`, courseData),
     deleteCourse: (id) => api.delete(`/courses/${id}`),
     getCourseContent: (courseId) => api.get(`/courses/${courseId}/content`),
-    enrollStudent: (courseId, userId, role) => api.post(`/courses/${courseId}/enroll/${userId}`, { role }),
-    unenrollStudent: (courseId, userId) => api.delete(`/courses/${courseId}/enroll/${userId}`),
+    enrollStudent: (courseId, studentId, role) => api.post(`/courses/enroll/`, { courseId, studentId, role }),
+    unenrollStudent: (courseId, studentId) => api.delete(`/courses/${courseId}/enroll/${studentId}`),
     getEnrolledStudents: (courseId) => api.get(`/courses/${courseId}/students`),
     // Week management
     getAllWeeks: () => api.get('/courses/weeks'),
