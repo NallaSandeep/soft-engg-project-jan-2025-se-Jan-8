@@ -57,6 +57,9 @@ const AdminLayout = () => {
                         <MenuItem to="/admin/users" icon={UserGroupIcon}>
                             Users
                         </MenuItem>
+                        <MenuItem to="/admin/enroll" icon={UserGroupIcon}>
+                            Enroll
+                        </MenuItem>
                         <div className="pt-4 mt-4 border-t border-zinc-200 dark:border-zinc-700">
                             <button
                                 onClick={handleLogout}
