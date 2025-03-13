@@ -167,10 +167,9 @@ def create_question():
 @ta_required
 def get_question(question_id):
     """Get a specific question"""
+    question = Question.query.get_or_404(question_id)
     try:
-        question = Question.query.get_or_404(question_id)
-        
-        return jsonify({
+       return jsonify({
             'success': True,
             'data': question.to_dict()
         }), 200
@@ -186,10 +185,9 @@ def get_question(question_id):
 @ta_required
 def update_question(question_id):
     """Update a question"""
+    question = Question.query.get_or_404(question_id)
     try:
-        question = Question.query.get_or_404(question_id)
         data = request.get_json()
-        
         # Validate data
         errors = validate_question_data(data, check_required=False)
         if errors:
@@ -226,9 +224,8 @@ def update_question(question_id):
 @ta_required
 def delete_question(question_id):
     """Delete a question"""
+    question = Question.query.get_or_404(question_id)
     try:
-        question = Question.query.get_or_404(question_id)
-        
         # Check if question is used in any assignments
         if question.assignments.count() > 0:
             return jsonify({
