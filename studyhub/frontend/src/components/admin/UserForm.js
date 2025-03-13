@@ -30,8 +30,8 @@ const UserForm = () => {
     const fetchUser = async () => {
         try {
             const response = await userApi.getUser(userId);
-            if (response.success) {
-                const user = response.data;
+            if (response.user.id != undefined) {
+                const user = response.user;
                 setFormData({
                     username: user.username,
                     email: user.email,

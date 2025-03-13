@@ -52,7 +52,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                             if (data.week.course) {
                                 setSelectedCourse(data.week.course);
                                 // Fetch weeks for this course
-                                const weeksResponse = await courseApi.getCourseWeeks(data.week.course.id);
+                                const weeksResponse = await courseApi.getWeeks(data.week.course.id);
                                 if (weeksResponse.success) {
                                     setWeeks(weeksResponse.data);
                                 }
@@ -70,7 +70,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                         setSelectedCourse(courseResponse.data);
                         
                         // Fetch weeks for this course
-                        const weeksResponse = await courseApi.getCourseWeeks(courseId);
+                        const weeksResponse = await courseApi.getWeeks(courseId);
                         if (weeksResponse.success) {
                             setWeeks(weeksResponse.data);
                             
@@ -111,7 +111,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
             setWeek(null);
 
             // Fetch weeks for this course
-            const response = await courseApi.getCourseWeeks(courseId);
+            const response = await courseApi.getWeeks(courseId);
             if (response.success) {
                 setWeeks(response.data);
             } else {
@@ -152,7 +152,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
             if (mode === 'edit') {
                 response = await assignmentApi.updateAssignment(assignmentId, payload);
             } else {
-                response = await assignmentApi.createAssignment(payload);
+                response = await assignmentApi.createAssignment(week.id, payload);
             }
 
             if (response.success) {
@@ -322,7 +322,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                 Late Submission Penalty (%)
@@ -352,7 +352,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                                 </span>
                             </label>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="flex justify-end space-x-4 pt-4">
                         <button
