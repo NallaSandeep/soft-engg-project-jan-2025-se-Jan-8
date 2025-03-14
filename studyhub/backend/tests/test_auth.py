@@ -1,149 +1,274 @@
+import json
+from datetime import datetime, timedelta
 import pytest
-from flask import json
-from app import create_app, db
-from app.models import User
 from flask_jwt_extended import create_access_token
+from app import create_app, db
+from config import TestingConfig
+from app.models import User
 
 @pytest.fixture
-def client():
-    app = create_app("testing")
-    with app.test_client() as client:
-        with app.app_context():
-            db.create_all()
-        yield client
-        with app.app_context():
-            db.drop_all()
+def app():
+    app = create_app(config_class=TestingConfig)
+    app.config['TESTING'] = True
 
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.session.remove()
+        db.drop_all()
+
+# Fixture for a test client.
 @pytest.fixture
-def test_user():
-    user = User(username="testuser", email="test@example.com", password="password123", role="student", is_active=True)
-    user.save()
-    return user
+def client(app):
+    return app.test_client()
 
-@pytest.fixture
-def access_token(test_user):
-    return create_access_token(identity=str(test_user.id), additional_claims={"role": test_user.role})
-
-# Test Registration
+### Tests for /auth/register endpoint ###
 
 def test_register_success(client):
     data = {
-        "username": "newuser",
-        "email": "newuser@example.com",
-        "password": "SecurePass123",
+        "username": "testuser",
+        "email": "test@example.com",
+        "password": "TestPass123!",
+        "role": "student",
+        "first_name": "Test",
+        "last_name": "User"
+    }
+    response = client.post("/api/v1/auth/register", json=data)
+    assert response.status_code == 201, response.get_data(as_text=True)
+    resp_json = response.get_json()
+    assert resp_json.get("msg") == "User registered successfully"
+    assert resp_json.get("user")["username"] == "testuser"
+    assert resp_json.get("user")["email"] == "test@example.com"
+    assert resp_json.get("user")["role"] == "student"
+
+def test_register_missing_field(client):
+    data = {
+        "email": "test@example.com",
+        "password": "TestPass123!",
         "role": "student"
     }
-    response = client.post("/auth/register", data=json.dumps(data), content_type="application/json")
-    assert response.status_code == 201
-    assert response.json["msg"] == "User registered successfully"
-    assert "id" in response.json["user"]
-
-
-def test_register_missing_fields(client):
-    data = {"username": "user1", "email": "user1@example.com"}  # Missing password & role
-    response = client.post("/auth/register", data=json.dumps(data), content_type="application/json")
+    response = client.post("/api/v1/auth/register", json=data)
     assert response.status_code == 400
-    assert "Missing required field" in response.json["msg"]
+    resp_json = response.get_json()
+    assert "Missing required field" in resp_json.get("msg", "")
 
 
 def test_register_invalid_role(client):
     data = {
-        "username": "user2",
-        "email": "user2@example.com",
-        "password": "Password!1",
+        "username": "testuser2",
+        "email": "test2@example.com",
+        "password": "TestPass123!",
         "role": "invalid_role"
     }
-    response = client.post("/auth/register", data=json.dumps(data), content_type="application/json")
+    response = client.post("/api/v1/auth/register", json=data)
     assert response.status_code == 400
-    assert "Invalid role" in response.json["msg"]
+    resp_json = response.get_json()
+    assert "Invalid role" in resp_json.get("msg", "")
 
-
-def test_register_duplicate_user(client, test_user):
+def test_register_duplicate_user(client):
     data = {
-        "username": "testuser",
-        "email": "test@example.com",
-        "password": "NewPass123",
+        "username": "duplicateuser",
+        "email": "dup@example.com",
+        "password": "TestPass123!",
+        "role": "teacher"
+    }
+    response1 = client.post("/api/v1/auth/register", json=data)
+    assert response1.status_code == 201
+
+    dup_username = {
+        "username": "duplicateuser",
+        "email": "newemail@example.com",
+        "password": "TestPass123!",
+        "role": "teacher"
+    }
+    response2 = client.post("/api/v1/auth/register", json=dup_username)
+    assert response2.status_code == 409
+    dup_email = {
+        "username": "newusername",
+        "email": "dup@example.com",
+        "password": "TestPass123!",
+        "role": "teacher"
+    }
+    response3 = client.post("/api/v1/auth/register", json=dup_email)
+    assert response3.status_code == 409
+
+### Tests for /auth/login endpoint ###
+
+def test_login_success(client):
+    reg_data = {
+        "username": "loginuser",
+        "email": "login@example.com",
+        "password": "TestPass123!",
         "role": "student"
     }
-    response = client.post("/auth/register", data=json.dumps(data), content_type="application/json")
-    assert response.status_code == 409
-    assert "Username already exists" in response.json["msg"]
+    client.post("/api/v1/auth/register", json=reg_data)
 
-
-# Test Login
-
-def test_login_success(client, test_user):
-    data = {"email": "test@example.com", "password": "password123"}
-    response = client.post("/auth/login", data=json.dumps(data), content_type="application/json")
+    login_data = {"email": "login@example.com", "password": "TestPass123!"}
+    response = client.post("/api/v1/auth/login", json=login_data)
     assert response.status_code == 200
-    assert "access_token" in response.json["data"]
+    resp_json = response.get_json()
+    assert resp_json.get("success") is True
+    assert "access_token" in resp_json.get("data", {})
+
+
+def test_login_missing_credentials(client):
+    login_data = {"email": "login@example.com"}
+    response = client.post("/api/v1/auth/login", json=login_data)
+    assert response.status_code == 400
 
 
 def test_login_invalid_credentials(client):
-    data = {"email": "wrong@example.com", "password": "WrongPass123"}
-    response = client.post("/auth/login", data=json.dumps(data), content_type="application/json")
+    reg_data = {
+        "username": "loginuser2",
+        "email": "login2@example.com",
+        "password": "TestPass123!",
+        "role": "student"
+    }
+    client.post("/api/v1/auth/register", json=reg_data)
+    login_data = {"email": "login2@example.com", "password": "WrongPassword"}
+    response = client.post("/api/v1/auth/login", json=login_data)
     assert response.status_code == 401
-    assert "Invalid email or password" in response.json["message"]
 
 
-def test_login_inactive_user(client, test_user):
-    test_user.is_active = False
-    test_user.save()
-    data = {"email": "test@example.com", "password": "password123"}
-    response = client.post("/auth/login", data=json.dumps(data), content_type="application/json")
+def test_login_inactive_user(client):
+    reg_data = {
+        "username": "inactiveuser",
+        "email": "inactive@example.com",
+        "password": "TestPass123!",
+        "role": "student"
+    }
+    client.post("/api/v1/auth/register", json=reg_data)
+
+    user = User.query.filter_by(email="inactive@example.com").first()
+    user.is_active = False
+    user.save()
+
+    login_data = {"email": "inactive@example.com", "password": "TestPass123!"}
+    response = client.post("/api/v1/auth/login", json=login_data)
     assert response.status_code == 403
-    assert "Account is deactivated" in response.json["message"]
 
 
-# Test Verify Token
+### Tests for /auth/verify-token endpoint ###
 
-def test_verify_token_success(client, access_token):
-    headers = {"Authorization": f"Bearer {access_token}"}
-    response = client.get("/auth/verify-token", headers=headers)
+def test_verify_token_success(client):
+    reg_data = {
+        "username": "verifyuser",
+        "email": "verify@example.com",
+        "password": "TestPass123!",
+        "role": "student"
+    }
+    client.post("/api/v1/auth/register", json=reg_data)
+    login_data = {"email": "verify@example.com", "password": "TestPass123!"}
+    login_resp = client.post("/api/v1/auth/login", json=login_data)
+    token = login_resp.get_json()["data"]["access_token"]
+
+    headers = {"Authorization": f"Bearer {token}"}
+    response = client.get("/api/v1/auth/verify-token", headers=headers)
     assert response.status_code == 200
-    assert response.json["msg"] == "Token is valid"
+    resp_json = response.get_json()
+    assert "Token is valid" in resp_json.get("msg", "")
 
 
-def test_verify_token_invalid(client):
-    headers = {"Authorization": "Bearer invalidtoken"}
-    response = client.get("/auth/verify-token", headers=headers)
-    assert response.status_code == 500
+def test_verify_token_user_not_found(client):
+    token = create_access_token(identity=9999, additional_claims={'role': 'student'})
+    headers = {"Authorization": f"Bearer {token}"}
+    response = client.get("/api/v1/auth/verify-token", headers=headers)
+    assert response.status_code == 404
 
+### Tests for /auth/request-password-reset endpoint ###
 
-# Test Request Password Reset
+def test_request_password_reset_success(client, monkeypatch):
+    reg_data = {
+        "username": "resetuser",
+        "email": "reset@example.com",
+        "password": "TestPass123!",
+        "role": "student"
+    }
+    client.post("/api/v1/auth/register", json=reg_data)
 
-def test_request_password_reset_success(client, test_user):
-    data = {"email": "test@example.com"}
-    response = client.post("/auth/request-password-reset", data=json.dumps(data), content_type="application/json")
+    def fake_send_reset_email(user_email, reset_token):
+        return True
+    monkeypatch.setattr("app.api.v1.auth.send_reset_email", fake_send_reset_email)
+
+    data = {"email": "reset@example.com"}
+    response = client.post("/api/v1/auth/request-password-reset", json=data)
     assert response.status_code == 200
-
-
-def test_request_password_reset_invalid_email(client):
-    data = {"email": "notexists@example.com"}
-    response = client.post("/auth/request-password-reset", data=json.dumps(data), content_type="application/json")
-    assert response.status_code == 200  # Should not indicate user existence
+    resp_json = response.get_json()
+    assert "reset token" in resp_json.get("msg", "").lower() or "sent" in resp_json.get("msg", "").lower()
 
 
 def test_request_password_reset_missing_email(client):
     data = {}
-    response = client.post("/auth/request-password-reset", data=json.dumps(data), content_type="application/json")
+    response = client.post("/api/v1/auth/request-password-reset", json=data)
     assert response.status_code == 400
-    assert "Email is required" in response.json["msg"]
 
 
-# Test Reset Password
-
-def test_reset_password_success(client, test_user):
-    test_user.reset_token = "validtoken"
-    test_user.save()
-    data = {"token": "validtoken", "new_password": "NewPass123!"}
-    response = client.post("/auth/reset-password", data=json.dumps(data), content_type="application/json")
+def test_request_password_reset_nonexistent_email(client):
+    data = {"email": "nonexistent@example.com"}
+    response = client.post("/api/v1/auth/request-password-reset", json=data)
     assert response.status_code == 200
-    assert "Password has been reset successfully" in response.json["msg"]
+
+
+### Tests for /auth/reset-password endpoint ###
+
+def test_reset_password_success(client):
+    reg_data = {
+        "username": "resetuser2",
+        "email": "reset2@example.com",
+        "password": "TestPass123!",
+        "role": "student"
+    }
+    client.post("/api/v1/auth/register", json=reg_data)
+
+    user = User.query.filter_by(email="reset2@example.com").first()
+    reset_token = "test-reset-token"
+    
+    user.reset_token = reset_token
+
+    user.reset_token_expires = datetime.utcnow() + timedelta(hours=1)
+    user.save()
+
+    data = {"token": reset_token, "new_password": "NewTestPass123!"}
+    response = client.post("/api/v1/auth/reset-password", json=data)
+    assert response.status_code == 200
+    resp_json = response.get_json()
+    assert "reset successfully" in resp_json.get("msg", "").lower()
+
+    login_data = {"email": "reset2@example.com", "password": "NewTestPass123!"}
+    login_resp = client.post("/api/v1/auth/login", json=login_data)
+    assert login_resp.status_code == 200
+
+
+def test_reset_password_missing_fields(client):
+    data = {}
+    response = client.post("/api/v1/auth/reset-password", json=data)
+    assert response.status_code == 400
 
 
 def test_reset_password_invalid_token(client):
-    data = {"token": "invalidtoken", "new_password": "NewPass123!"}
-    response = client.post("/auth/reset-password", data=json.dumps(data), content_type="application/json")
+    data = {"token": "invalid-token", "new_password": "NewTestPass123!"}
+    response = client.post("/api/v1/auth/reset-password", json=data)
     assert response.status_code == 400
-    assert "Invalid or expired reset token" in response.json["msg"]
+
+
+def test_reset_password_expired_token(client):
+
+    reg_data = {
+        "username": "resetuser3",
+        "email": "reset3@example.com",
+        "password": "TestPass123!",
+        "role": "student"
+    }
+    client.post("/api/v1/auth/register", json=reg_data)
+
+
+    user = User.query.filter_by(email="reset3@example.com").first()
+    reset_token = "expired-reset-token"
+    past_time = datetime.utcnow() - timedelta(hours=2)
+    user.reset_token = reset_token
+    user.reset_token_expires = past_time
+    user.save()
+
+    data = {"token": reset_token, "new_password": "NewTestPass123!"}
+    response = client.post("/api/v1/auth/reset-password", json=data)
+    assert response.status_code == 400

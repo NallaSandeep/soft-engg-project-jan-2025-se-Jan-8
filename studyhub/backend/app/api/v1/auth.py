@@ -215,7 +215,7 @@ def request_password_reset():
         # Send reset email
         if send_reset_email(user.email, reset_token):
             return jsonify({'msg': 'Reset token has been sent to your email'}), 200
-        else:
+        else:   
             return jsonify({'msg': 'Failed to send reset email'}), 500
             
     except Exception as e:
@@ -235,13 +235,12 @@ def reset_password():
         if not data or not data.get('token') or not data.get('new_password'):
             return jsonify({'msg': 'Token and new password are required'}), 400
             
-        user = User.query.filter_by(reset_token=data['token']).first()
+        user = User.query.filter(
+            User.reset_token == data['token'],
+            User.reset_token_expires > db.func.now()
+        ).first()
         if not user:
             return jsonify({'msg': 'Invalid or expired reset token'}), 400
-            
-        # Check if token is expired
-        if user.reset_token_expires < db.func.now():
-            return jsonify({'msg': 'Reset token has expired'}), 400
             
         # Update password
         user.password = data['new_password']

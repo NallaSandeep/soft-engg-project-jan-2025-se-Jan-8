@@ -256,6 +256,7 @@ def health_check():
 @jwt_required()
 def get_course_weeks(course_id):
     """Get all weeks for a course"""
+    from werkzeug.exceptions import NotFound
     try:
         course = Course.query.get_or_404(course_id)
         weeks = Week.query.filter_by(course_id=course_id).order_by(Week.number).all()
@@ -265,6 +266,13 @@ def get_course_weeks(course_id):
             'data': [week.to_dict() for week in weeks],
             'message': 'Course weeks retrieved successfully'
         }), 200
+         
+    except NotFound:
+        return jsonify({
+            'success': False,
+            'error': 'Course not found',
+            'message': 'Failed to retrieve course weeks'
+        }), 404
         
     except Exception as e:
         return jsonify({
@@ -278,6 +286,7 @@ def get_course_weeks(course_id):
 @roles_required('admin', 'ta')  # Allow both admin and TA
 def create_week(course_id):
     """Create a new week in a course"""
+    from werkzeug.exceptions import NotFound
     try:
         data = request.get_json()
         if not all(k in data for k in ['number', 'title']):
@@ -314,7 +323,14 @@ def create_week(course_id):
             'data': week.to_dict(),
             'message': 'Week created successfully'
         }), 201
-        
+    
+    except NotFound:
+        return jsonify({
+            'success': False,
+            'error': 'Course not found',
+            'message': 'Failed to retrieve course weeks'
+        }), 404
+          
     except Exception as e:
         db.session.rollback()
         # Check if it's a unique constraint violation

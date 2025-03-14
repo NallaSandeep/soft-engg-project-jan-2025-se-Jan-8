@@ -16,7 +16,6 @@ jwt = JWTManager()
 cors = CORS()
 
 def create_app(config_class=Config):
-    """Create and configure the Flask application"""
     app = Flask(__name__)
     
     # Load configuration
@@ -33,7 +32,7 @@ def create_app(config_class=Config):
     # Configure CORS
     CORS(app, resources={
         r"/*": {  # Allow all routes during development
-            "origins": ["http://localhost:3000", "http://127.0.0.1:3000"],
+            "origins": ["http://localhost:3000"],
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"],
             "supports_credentials": True
@@ -44,7 +43,7 @@ def create_app(config_class=Config):
     @app.after_request
     def after_request(response):
         origin = request.headers.get('Origin')
-        if origin in ["http://localhost:3000", "http://127.0.0.1:3000"]:
+        if origin == "http://localhost:3000":
             response.headers.add('Access-Control-Allow-Origin', origin)
             response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
             response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')

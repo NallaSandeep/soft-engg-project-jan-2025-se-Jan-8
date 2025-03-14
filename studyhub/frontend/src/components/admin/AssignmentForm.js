@@ -52,7 +52,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                             if (data.week.course) {
                                 setSelectedCourse(data.week.course);
                                 // Fetch weeks for this course
-                                const weeksResponse = await courseApi.getCourseWeeks(data.week.course.id);
+                                const weeksResponse = await courseApi.getWeeks(data.week.course.id);
                                 if (weeksResponse.success) {
                                     setWeeks(weeksResponse.data);
                                 }
@@ -70,7 +70,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                         setSelectedCourse(courseResponse.data);
                         
                         // Fetch weeks for this course
-                        const weeksResponse = await courseApi.getCourseWeeks(courseId);
+                        const weeksResponse = await courseApi.getWeeks(courseId);
                         if (weeksResponse.success) {
                             setWeeks(weeksResponse.data);
                             
@@ -111,7 +111,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
             setWeek(null);
 
             // Fetch weeks for this course
-            const response = await courseApi.getCourseWeeks(courseId);
+            const response = await courseApi.getWeeks(courseId);
             if (response.success) {
                 setWeeks(response.data);
             } else {
