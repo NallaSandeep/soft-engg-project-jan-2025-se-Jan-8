@@ -152,7 +152,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
             if (mode === 'edit') {
                 response = await assignmentApi.updateAssignment(assignmentId, payload);
             } else {
-                response = await assignmentApi.createAssignment(payload);
+                response = await assignmentApi.createAssignment(week.id, payload);
             }
 
             if (response.success) {
@@ -322,7 +322,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                 Late Submission Penalty (%)
@@ -352,7 +352,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                                 </span>
                             </label>
                         </div>
-                    </div>
+                    </div>8 */}
 
                     <div className="flex justify-end space-x-4 pt-4">
                         <button

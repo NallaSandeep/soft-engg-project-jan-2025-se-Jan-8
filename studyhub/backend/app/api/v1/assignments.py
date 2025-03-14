@@ -122,7 +122,7 @@ def list_all_assignments():
             for assignment in assignments:
                 assignment_dict = assignment.to_dict()
                 
-                if assignment.type == 'practice' and (not assignment.due_date or assignment.due_date < end_of_year):
+                if assignment.type == 'practice' and (not assignment.due_date or assignment.due_date > end_of_year):
                     assignment.due_date = end_of_year
                     db.session.add(assignment)  # Mark for update
                 
