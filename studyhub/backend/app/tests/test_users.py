@@ -4,12 +4,13 @@ from flask_jwt_extended import create_access_token, JWTManager
 from app.models.user import User  # Absolute import
 from app.api.v1.users import users_bp  # Absolute import
 from app import create_app, db
-
+from config import config
 
 class UserTestCase(unittest.TestCase):
     def setUp(self):
         """Set up test environment before each test"""
-        self.app = create_app('testing')
+        # self.app = create_app('testing')
+        self.app = create_app(config['testing']) 
         self.client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()
