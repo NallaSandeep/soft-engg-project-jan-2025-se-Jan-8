@@ -14,7 +14,7 @@ const Button = ({
   fullWidth = false,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2';
+  const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2';
   
   const variants = {
     primary: 'bg-brand-primary hover:bg-brand-primary/90 text-white focus:ring-brand-primary/50',

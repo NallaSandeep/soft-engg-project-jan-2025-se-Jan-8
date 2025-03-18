@@ -12,21 +12,29 @@ const Login = () => {
     const [rememberMe, setRememberMe] = useState(false);
     const { login } = useAuth();
 
-    // Set dark mode as default when component mounts
     useEffect(() => {
-        const root = window.document.documentElement;
-        root.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
+        console.log("Email: ", email);
+        console.log("Password: ", password);
+        console.log("Remember me: ", rememberMe);
 
         try {
             const result = await login({ email, password, rememberMe });
             if (!result.success) {
+                console.log('Login failed:', result.error);
                 setError(result.error || 'Login failed');
             }
         } catch (error) {
@@ -97,7 +105,7 @@ const Login = () => {
                                         type="checkbox"
                                         checked={rememberMe}
                                         onChange={(e) => setRememberMe(e.target.checked)}
-                                        className="h-4 w-4 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded"
+                                        className="h-4 w-4 text-blue-600 dark:text-gray-400 focus:ring-gray-500 dark:focus:ring-gray-400 rounded dark:bg-zinc-700"
                                     />
                                     <label htmlFor="remember-me" className="ml-2 block text-sm text-zinc-700 dark:text-zinc-300">
                                         Remember me

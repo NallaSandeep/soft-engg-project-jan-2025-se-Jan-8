@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:5100/api/v1';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -36,7 +36,7 @@ api.interceptors.response.use(
             // Handle token expiration
             if (error.response.status === 401) {
                 localStorage.removeItem('token');
-                window.location.href = '/login';
+                // window.location.href = '/login';
             }
             return Promise.reject(error.response.data);
         }
@@ -48,7 +48,7 @@ api.interceptors.response.use(
 export const authApi = {
     login: (credentials) => api.post('/auth/login', credentials),
     register: (userData) => api.post('/auth/register', userData),
-    getCurrentUser: () => api.get('/auth/me'),
+    getCurrentUser: () => api.get('/auth/verify-token'),
     updateProfile: (userData) => api.put('/auth/profile', userData),
     changePassword: (passwords) => api.post('/auth/change-password', passwords)
 };

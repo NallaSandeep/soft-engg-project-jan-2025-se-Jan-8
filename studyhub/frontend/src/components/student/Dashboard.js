@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { courseApi } from '../../services/apiService';
 import { useAuth } from '../../hooks/useAuth';
 import { Card } from '../common/Card';
@@ -62,14 +62,18 @@ const StudentDashboard = () => {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <Link to={`/${user?.role}/courses`}>
                 <Card className="p-6 dark:bg-zinc-800">
                     <h3 className="text-lg font-semibold mb-2 text-zinc-900 dark:text-white">Enrolled Courses</h3>
                     <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{courses.length}</p>
                 </Card>
+                </Link>
+                <Link to={`/${user?.role}/assignments`}>
                 <Card className="p-6 dark:bg-zinc-800">
                     <h3 className="text-lg font-semibold mb-2 text-zinc-900 dark:text-white">Pending Assignments</h3>
                     <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">0</p>
                 </Card>
+                </Link>
                 <Card className="p-6 dark:bg-zinc-800">
                     <h3 className="text-lg font-semibold mb-2 text-zinc-900 dark:text-white">Overall Progress</h3>
                     <p className="text-3xl font-bold text-green-600 dark:text-green-400">0%</p>

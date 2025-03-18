@@ -174,32 +174,32 @@ const AssignmentsList = () => {
             {/* Assignments Table */}
             <div className="glass-card overflow-hidden">
                 <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
-                    <thead className="bg-zinc-50 dark:bg-zinc-800">
+                    <thead className="bg-zinc-100 dark:bg-zinc-800">
                         <tr>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
                                 Title
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
                                 Course
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
                                 Week
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
                                 Type
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
                                 Due Date
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
                                 Status
                             </th>
-                            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white dark:bg-zinc-900 divide-y divide-zinc-200 dark:divide-zinc-700">
+                    <tbody className="bg-zinc-0 dark:bg-zinc-900 divide-y divide-zinc-200 dark:divide-zinc-700">
                         {assignments.length > 0 ? (
                             assignments.map((assignment) => (
                                 <tr 
@@ -242,7 +242,7 @@ const AssignmentsList = () => {
                                                 ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400' 
                                                 : 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400'
                                         }`}>
-                                            {assignment.type}
+                                            {assignment.type.charAt(0).toUpperCase() + assignment.type.slice(1)}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">

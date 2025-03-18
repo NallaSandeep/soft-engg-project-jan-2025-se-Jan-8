@@ -9,11 +9,11 @@ const Card = ({
   onClick,
   ...props
 }) => {
-  const baseStyles = 'rounded-lg transition-all duration-300';
+  const baseStyles = 'rounded-lg';
   
   const variants = {
-    default: 'bg-white dark:bg-zinc-800 shadow-sm dark:shadow-zinc-900/50',
-    elevated: 'bg-white dark:bg-zinc-800 shadow-md dark:shadow-zinc-900/50',
+    default: 'bg-zinc-100 dark:bg-zinc-800 shadow-sm dark:shadow-zinc-900/50',
+    elevated: 'bg-zinc-100 dark:bg-zinc-800 shadow-md dark:shadow-zinc-900/50',
     flat: 'bg-gray-50 dark:bg-zinc-800/50'
   };
 

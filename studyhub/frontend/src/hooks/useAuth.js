@@ -15,19 +15,20 @@ export const AuthProvider = ({ children }) => {
 
     const checkAuth = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
             if (token) {
                 const response = await authApi.getCurrentUser();
-                if (response.success) {
-                    setUser(response.data.user);
+                if (response && response.user) {
+                    setUser(response.user);
                 } else {
                     localStorage.removeItem('token');
+                    sessionStorage.removeItem('token');
                     setUser(null);
                 }
             }
         } catch (err) {
-            console.error('Auth check failed:', err);
             localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
             setUser(null);
         } finally {
             setLoading(false);
