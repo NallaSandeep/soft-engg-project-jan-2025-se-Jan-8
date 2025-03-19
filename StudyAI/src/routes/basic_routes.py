@@ -40,17 +40,17 @@ async def create_session(db: Session = Depends(get_db)):
     return create_new_session(db)
 
 
-@router.post(
-    "/session/{session_id}/message",
-    tags=["Chat Session"],
-    summary="Send Message to Chat Session",
-    description="Sends a message to the specified chat session and returns the AI response",
-)
-async def post_message(
-    session_id: str, message_data: MessageCreate, db: Session = Depends(get_db)
-):
-    response = await process_message(session_id, message_data.message)
-    return response
+# @router.post(
+#     "/session/{session_id}/message",
+#     tags=["Chat Session"],
+#     summary="Send Message to Chat Session",
+#     description="Sends a message to the specified chat session and returns the AI response",
+# )
+# async def post_message(
+#     session_id: str, message_data: MessageCreate, db: Session = Depends(get_db)
+# ):
+#     response = await process_message(session_id, message_data.message)
+#     return response
 
 
 @router.get(

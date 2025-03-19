@@ -84,17 +84,14 @@ async def process_message_stream(thread_id: str, message: str):
         Dict: Response from the workflow including messages
     """
     try:
-        # Initialize workflow if needed
         if thread_id not in active_workflows:
             initialize_workflow(thread_id)
 
-        # Get the workflow
         workflow = active_workflows.get(thread_id)
-
         config = {"configurable": {"thread_id": "1"}}
 
-        # if message:
-        #     add_message_to_session(thread_id, "user", message)
+        if message:
+            add_message_to_session(thread_id, "user", message)
 
         human_message = HumanMessage(content=message)
         message = {"messages": [human_message]}
@@ -105,11 +102,10 @@ async def process_message_stream(thread_id: str, message: str):
             stream_mode="values",
         ):
             if "messages" in chunk and chunk["messages"]:
-                # last_message = chunk["messages"][-1]
-                # if hasattr(last_message, "content"):
-                #     yield last_message
                 for msg in chunk["messages"]:
                     if hasattr(msg, "content"):
+                        # Save bot's response to session when we get content
+                        add_message_to_session(thread_id, "bot", msg.content)
                         yield msg
                     else:
                         logger.warning("No content in message")

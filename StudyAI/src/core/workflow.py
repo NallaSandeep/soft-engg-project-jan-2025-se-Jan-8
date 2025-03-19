@@ -10,24 +10,24 @@ from IPython.display import Image, display
 from src.modules.supervisor import supervisor_node
 from src.core.state import AgentState
 from langchain_core.messages import SystemMessage, HumanMessage
-from src.modules.rag import rag_agent_node
+from src.modules.faq_agent import rag_agent_node
 from src.modules.course_guide import course_guidance_node
 from src.modules.integrity import integrity_node
 from pprint import pprint
+from typing import AsyncGenerator
 
 
 # ..................................................................................................
 
 
-def dismiss_node(state: AgentState) -> AgentState:
+async def dismiss_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
     # Return a dismissive answer if the query is beyond deployed scope.
     state["messages"].append(
         SystemMessage(content="Sorry, I cannot help with that question.")
     )
-
-    # Reset next_step so that the supervisor can reengage
-    state["next_step"] = "END"
-    return state
+    state["current_agent"] = "supervisor"
+    state["next_step"] = END
+    yield state
 
 
 def create_workflow():
@@ -65,70 +65,17 @@ def create_workflow():
             "rag": "rag",
             "course_guidance": "course_guidance",
             "dismiss": "dismiss",
-            END: END,
+            "END": END,
         },
     )
 
     # Add terminal edges: after processing, route back to supervisor
-    workflow.add_edge("rag", "supervisor")
-    workflow.add_edge("course_guidance", "supervisor")
-    workflow.add_edge("dismiss", "supervisor")
+    workflow.add_edge("rag", END)
+    workflow.add_edge("course_guidance", END)
+    workflow.add_edge("dismiss", END)
 
     return workflow.compile(checkpointer=MemorySaver())
 
-
-# from langchain_core.messages import HumanMessage
-# from langgraph.checkpoint.memory import MemorySaver
-# from langgraph.graph import START, MessagesState, StateGraph
-# from langchain_google_genai import ChatGoogleGenerativeAI
-# from config import Config
-# from pprint import pprint
-
-# # Define a new graph
-# workflow = StateGraph(state_schema=MessagesState)
-
-# llm = ChatGoogleGenerativeAI(
-#     model = "gemini-2.0-flash-exp",
-#     temperature= 0.1,
-#     google_api_key= Config.get("GEMINI_API_KEY"),
-# )
-
-# # Define the function that calls the model
-# def call_model(state: MessagesState):
-#     response = llm.invoke(state["messages"])
-#     # Update message history with response:
-#     return {"messages": response}
-
-
-# # Define the (single) node in the graph
-# workflow.add_edge(START, "model")
-# workflow.add_node("model", call_model)
-
-# # Add memory
-# memory = MemorySaver()
-# app = workflow.compile(checkpointer=memory)
-
-# def run(app):
-#     config = {"configurable": {"thread_id": "1"}}
-
-#     query = "Hi! I'm Bob."
-
-#     input_messages = [HumanMessage(query)]
-#     output = app.invoke({"messages": input_messages}, config)
-#     pprint(output["messages"][-1])
-
-#     query = "What's my name?"
-
-#     input_messages = [HumanMessage(query)]
-#     output = app.invoke({"messages": input_messages}, config)
-#     pprint(output["messages"][-1])
-
-#     return None
-
-
-# if __name__ == "__main__":
-#     res = run(app)
-#     print(res)
 
 # ..................................................................................................
 

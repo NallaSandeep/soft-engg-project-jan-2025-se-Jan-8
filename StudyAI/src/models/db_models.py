@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List, Literal, Any
 
 Base = declarative_base()
@@ -116,8 +116,7 @@ class ChatSessionResponse(BaseModel):
     status: str
     is_bookmarked: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # JSON Patch model
@@ -145,9 +144,10 @@ class ReportResponse(BaseModel):
     reason: Optional[str] = None
     report_timestamp: str
     status: str
-
-    class Config:
+        
+    model_config = ConfigDict(
         from_attributes = True
+    )
 
 
 # Replace ReportUpdateStatus with JSONPatch

@@ -2,7 +2,7 @@ from typing import Literal
 from langgraph.graph import END
 import logging
 import asyncio
-from langchain_core.messages import SystemMessage, AIMessage
+from langchain_core.messages import SystemMessage, AIMessage, HumanMessage
 from src.core.base import BaseAgent
 from src.core.state import AgentState
 
@@ -52,39 +52,32 @@ class Supervisor(BaseAgent):
 async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
     """Production-ready supervisor node."""
     try:
+        if "current_agent" not in state:
+            state["current_agent"] = "supervisor"
+        if "metadata" not in state:
+            state["metadata"] = {}
+
         supervisor = Supervisor()
-        # last_message = (
-        #     state["messages"][-1].content if state["messages"] else "No messages yet"
-        # )
 
-        # Make it awaitable since route is an async method
-        # next_step = asyncio.run(supervisor.route(last_message))
+        # Get original query
+        last_message = next(
+            (
+                msg.content
+                for msg in reversed(state["messages"])
+                if isinstance(msg, HumanMessage)
+            ),
+            "No messages yet",
+        )
 
-        # state["next_step"] = END if next_step == "END" else next_step
-        # state["current_agent"] = next_step if next_step != "END" else "supervisor"
+        # Initial routing only - since agents now go directly to END
+        next_step = await supervisor.route(last_message)
+        logging.info(f"Routing to: {next_step}")
 
-        # logging.info(f"Routing to: {next_step}")
-
-        # Use astream instead of invoke for streaming
-        async for chunk in supervisor.llm.astream(state["messages"]):
-            if hasattr(chunk, "content") and chunk.content:
-                state["messages"].append(AIMessage(content=chunk.content))
-                # Allow streaming to propagate through the graph
-                state["next_step"] = END
-                yield state
-
-        # Two lines for testing
-        # res = supervisor.llm.invoke(state["messages"])
-        # state["messages"].append(AIMessage(content=res.content))
-        # state["next_step"] = END
-        # return state
+        state["next_step"] = next_step
+        state["current_agent"] = next_step
+        yield state
 
     except Exception as e:
         logging.error(f"Supervisor node error: {str(e)}")
-        state["messages"].append(
-            SystemMessage(
-                content="Sorry, I cannot help with that question due to internal error."
-            )
-        )
-        state["next_step"] = END
+        state["next_step"] = "dismiss"
         yield state
