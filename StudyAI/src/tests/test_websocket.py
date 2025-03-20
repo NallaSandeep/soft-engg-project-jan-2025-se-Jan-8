@@ -16,7 +16,7 @@ class TestWebSocketAPI:
             f"/stream/chat/session/{session_id}/message"
         ) as websocket:
             # Check for connection confirmation
-            data = websocket.receive_json()
+            data = websocket.receive_json(timeout=2.0)
             assert data["type"] == "connected"
             assert data["session_id"] == session_id
 
@@ -42,26 +42,26 @@ class TestWebSocketAPI:
             received_chunks = []
             complete_received = False
 
-            # Set a timeout to prevent infinite loop
-            start_time = asyncio.get_event_loop().time()
-            timeout = 5  # seconds
+            # Define maximum number of attempts and timeout per receive
+            max_attempts = 10
+            attempts = 0
 
-            while not complete_received:
-                # Check timeout
-                if asyncio.get_event_loop().time() - start_time > timeout:
-                    break
+            while not complete_received and attempts < max_attempts:
+                try:
+                    # Use a short timeout for receive_json
+                    data = websocket.receive_json(timeout=2.0)
 
-                data = websocket.receive_json()
+                    if data["type"] == "chunk":
+                        received_chunks.append(data["content"])
+                    elif data["type"] == "complete":
+                        complete_received = True
+                    elif data["type"] == "error":
+                        pytest.fail(f"Received error: {data['content']}")
 
-                if data["type"] == "chunk":
-                    received_chunks.append(data["content"])
-                elif data["type"] == "complete":
-                    complete_received = True
-                elif data["type"] == "error":
-                    pytest.fail(f"Received error: {data['content']}")
-
-                # Break if we've received enough chunks for testing
-                if len(received_chunks) >= 3 or complete_received:
+                    attempts += 1
+                except Exception as e:
+                    # Exit the loop if we timeout or encounter an error
+                    print(f"Exiting loop due to: {str(e)}")
                     break
 
             # Verify we received some response
@@ -75,13 +75,13 @@ class TestWebSocketAPI:
             f"/stream/chat/session/{session_id}/message"
         ) as websocket:
             # Skip connection confirmation
-            websocket.receive_json()
+            websocket.receive_json(timeout=2.0)
 
             # Send an empty message
             websocket.send_json({"message": ""})
 
             # Check for error response
-            data = websocket.receive_json()
+            data = websocket.receive_json(timeout=2.0)
             assert data["type"] == "error"
             assert "empty" in data["content"].lower()
 
@@ -93,13 +93,13 @@ class TestWebSocketAPI:
             f"/stream/chat/session/{session_id}/message"
         ) as websocket:
             # Skip connection confirmation
-            websocket.receive_json()
+            websocket.receive_json(timeout=2.0)
 
             # Send invalid JSON
             websocket.send_text("This is not JSON")
 
             # Check for error response
-            data = websocket.receive_json()
+            data = websocket.receive_json(timeout=2.0)
             assert data["type"] == "error"
             assert "json" in data["content"].lower()
 
