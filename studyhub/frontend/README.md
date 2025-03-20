@@ -65,14 +65,14 @@ npm run build
 
 Create a `.env` file in the root directory:
 ```
-REACT_APP_API_URL=http://localhost:5100
+REACT_APP_API_URL=http://localhost:5000
 REACT_APP_ENV=development
 ```
 
 ## Connecting with Backend
 
 The frontend connects to the backend API at:
-- Development: http://localhost:5100
+- Development: http://localhost:5000
 - Configure API URL in `.env` file
 
 ## Troubleshooting

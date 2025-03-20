@@ -7,7 +7,7 @@ from .course_content import Week, Lecture
 from .assignment import Assignment, AssignmentSubmission, AssignmentQuestion
 from .question import Question
 from .resource import Resource
-from .personal_kb import PersonalKnowledgeBase, KBFolder, KBDocument
+from .personal_resource import PersonalResource, ResourceFile
 
 __all__ = [
     'BaseModel',
@@ -21,7 +21,6 @@ __all__ = [
     'AssignmentQuestion',
     'Question',
     'Resource',
-    'PersonalKnowledgeBase',
-    'KBFolder',
-    'KBDocument'
+    'PersonalResource',
+    'ResourceFile'
 ] 

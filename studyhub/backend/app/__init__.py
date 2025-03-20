@@ -30,26 +30,16 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    # Configure CORS
-    CORS(app, resources={
-        r"/*": {  # Allow all routes during development
+    # Configure CORS - must be done before registering blueprints
+    cors.init_app(app, resources={
+        r"/api/*": {  # Match all API routes
             "origins": ["http://localhost:3000", "http://127.0.0.1:3000"],
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"],
-            "supports_credentials": True
+            "supports_credentials": True,
+            "expose_headers": ["Content-Type", "Authorization"]
         }
     })
-
-    # Handle OPTIONS requests
-    @app.after_request
-    def after_request(response):
-        origin = request.headers.get('Origin')
-        if origin in ["http://localhost:3000", "http://127.0.0.1:3000"]:
-            response.headers.add('Access-Control-Allow-Origin', origin)
-            response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-            response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-            response.headers.add('Access-Control-Allow-Credentials', 'true')
-        return response
 
     # Register blueprints
     from .api.v1 import api_v1_bp
@@ -82,7 +72,7 @@ def create_app(config_class=Config):
     with app.app_context():
         db.create_all()
 
-    @app.route('/api/health')  # Changed from /health to /api/health
+    @app.route('/api/health')
     def health_check():
         """Health check endpoint"""
         return {'status': 'ok', 'message': 'StudyBot API is running'}

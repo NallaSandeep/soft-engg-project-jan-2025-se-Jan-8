@@ -11,9 +11,6 @@ import Register from './components/auth/Register';
 import ForgotPassword from './components/auth/ForgotPassword';
 import ResetPassword from './components/auth/ResetPassword';
 
-// Common Components
-import Dashboard from './components/Dashboard';
-
 // Student Components
 import StudentDashboard from './components/student/Dashboard';
 import StudentCourses from './components/student/MyCourses';
@@ -21,8 +18,8 @@ import AssignmentList from './components/assignments/AssignmentList';
 import CourseView from './components/student/CourseView';
 import LectureView from './components/student/LectureView';
 import AssignmentView from './components/assignments/AssignmentView';
-import KnowledgeBase from './components/personal/KnowledgeBase';
-import KnowledgeBaseLanding from './components/personal/KnowledgeBaseLanding';
+import PersonalResource from './components/personal/PersonalResource';
+import PersonalResourcesLanding from './components/personal/PersonalResourcesLanding';
 
 // Admin Routes
 import adminRoutes from './routes/AdminRoutes';
@@ -74,15 +71,16 @@ const App = () => {
                                 {/* Protected Routes */}
                                 <Route element={<PrivateRoute><Layout /></PrivateRoute>}>
                                     {/* Default redirect */}
-                                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                                    <Route path="/" element={<Navigate to="/student/dashboard" replace />} />
                                     
-                                    {/* Common Dashboard */}
-                                    <Route path="/dashboard" element={<Dashboard />} />
+                                    {/* Redirect old dashboard to student dashboard */}
+                                    <Route path="/dashboard" element={<Navigate to="/student/dashboard" replace />} />
 
                                     {/* Student Routes */}
                                     <Route path="/student">
                                         <Route path="dashboard" element={<StudentDashboard />} />
                                         <Route path="courses" element={<StudentCourses />} />
+                                        <Route path="courses/:courseId" element={<CourseView />} />
                                         <Route path="assignments" element={<AssignmentList />} />
                                     </Route>
 
@@ -90,20 +88,19 @@ const App = () => {
                                     {renderRoutes(taRoutes)}
 
                                     {/* Course and Assignment Routes */}
-                                    <Route path="/courses/:courseId" element={<CourseView />} />
                                     <Route path="/courses/:courseId/lectures/:lectureId" element={<LectureView />} />
                                     <Route path="/courses/:courseId/assignments/:assignmentId" element={<AssignmentView />} />
 
-                                    {/* Knowledge Base Routes */}
-                                    <Route path="/knowledge-base" element={<KnowledgeBaseLanding />} />
-                                    <Route path="/knowledge-base/:kbId" element={<KnowledgeBase />} />
+                                    {/* Personal Resources Routes */}
+                                    <Route path="/personal-resources" element={<PersonalResourcesLanding />} />
+                                    <Route path="/personal-resources/:resourceId" element={<PersonalResource />} />
                                 </Route>
 
                                 {/* Admin Routes */}
                                 {renderRoutes(adminRoutes)}
 
                                 {/* Catch all route */}
-                                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                                <Route path="*" element={<Navigate to="/student/dashboard" replace />} />
                             </Routes>
                             <ModalContainer />
                         </DropdownProvider>

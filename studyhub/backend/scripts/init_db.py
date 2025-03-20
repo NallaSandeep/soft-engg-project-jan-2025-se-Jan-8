@@ -12,8 +12,8 @@ from app.models import (
     User, Course, CourseEnrollment,
     Week, Lecture, Assignment,
     Question, AssignmentQuestion, Resource,
-    AssignmentSubmission, PersonalKnowledgeBase,
-    KBFolder, KBDocument
+    AssignmentSubmission, PersonalResource,
+    ResourceFile
 )
 
 # Configuration
@@ -549,101 +549,150 @@ def create_ml_course(admin, users):
     db.session.commit()
     log("ML course setup completed successfully!")
 
-def create_personal_knowledge_bases(users):
-    """Create sample personal knowledge bases for users."""
-    for username, user in users.items():
-        if user.role == 'student':
-            # Create a personal knowledge base
-            kb = PersonalKnowledgeBase(
-                user_id=user.id,
-                name=f"{user.first_name}'s Knowledge Base",
-                description="My personal study materials and notes",
-                is_active=True,
-                settings={"theme": "light", "default_view": "list"}
-            )
-            db.session.add(kb)
-            db.session.flush()
-
-            # Create some sample folders
-            folders = {
-                "Study Notes": ["Math", "Physics", "Programming"],
-                "Projects": ["Research", "Assignments"],
-                "Resources": ["Books", "Articles", "Videos"]
-            }
-
-            for main_folder, subfolders in folders.items():
-                parent = KBFolder(
-                    kb_id=kb.id,
-                    name=main_folder,
-                    description=f"Collection of {main_folder.lower()}",
-                    is_active=True
-                )
-                db.session.add(parent)
-                db.session.flush()
-
-                for subfolder in subfolders:
-                    child = KBFolder(
-                        kb_id=kb.id,
-                        parent_id=parent.id,
-                        name=subfolder,
-                        description=f"{subfolder} materials",
-                        is_active=True
-                    )
-                    db.session.add(child)
-
-            log(f"Created personal knowledge base for {username}")
-
-    db.session.commit()
+def create_personal_resources(db):
+    """Create sample personal resources for users."""
+    # This function is now empty as the old create_personal_knowledge_bases function has been removed.
+    pass
 
 def init_db():
     """Initialize the database with sample data."""
     app = create_app()
     with app.app_context():
-        # Create tables if they don't exist
-        db.create_all()
-        
-        # Check for existing data
+        # Check if there is existing data
         if check_existing_data() and not RECREATE_DB:
-            log("Database already contains data. Skipping initialization.")
+            log("Database already contains data. Use RECREATE_DB=True to force recreation.")
             return
 
-        if RECREATE_DB:
-            log("Warning: Dropping existing tables...")
-            db.drop_all()
-            log("Creating tables...")
-            db.create_all()
-
-        try:
-            # Create users
-            users = create_users()
-            
-            # Create courses
-            courses = create_courses(users['teacher'])
-            
-            # Create course content
+        log("Dropping all tables...")
+        db.drop_all()
+        
+        log("Creating all tables...")
+        db.create_all()
+        
+        log("Creating users...")
+        users = create_users()
+        
+        log("Creating courses...")
+        courses = create_courses(users['teacher'])
+        
+        log("Creating course content...")
+        for course in courses:
+            create_course_content(course, users['teacher'].id)
+        
+        log("Creating enrollments...")
+        create_enrollments(users, courses)
+        
+        log("Creating ML course...")
+        create_ml_course(users['admin'], users)
+        
+        log("Creating personal resources...")
+        # Create personal resources for each student in each course
+        students = [u for u in users.values() if u.role == 'student']
+        for student in students:
             for course in courses:
-                create_course_content(course, users['teacher'].id)
-            
-            # Create enrollments
-            create_enrollments(users, courses)
-            
-            # Create ML course
-            create_ml_course(users['admin'], users)
-            
-            # Create personal knowledge bases
-            create_personal_knowledge_bases(users)
-            
-            log("Database initialization completed successfully!")
-            log("\nTest Credentials:")
-            log("Admin     - username: admin    password: admin123")
-            log("Teacher   - username: teacher  password: teacher123")
-            log("Students  - username: student1 password: student123")
-            log("           username: student2 password: student123")
-            log("           ... up to student5")
-            
-        except Exception as e:
-            log(f"Error during database initialization: {str(e)}")
-            raise
+                # Create a sample resource for each student in each course
+                resource = PersonalResource(
+                    user_id=student.id,
+                    course_id=course.id,
+                    name=f"Course Notes - {course.code}",
+                    description=f"My personal notes and materials for {course.name}",
+                    is_active=True,
+                    settings={'visibility': 'private'}
+                )
+                db.session.add(resource)
+                db.session.flush()
+
+                # Add a sample note file
+                note = ResourceFile(
+                    resource_id=resource.id,
+                    name="Week 1 Notes.txt",
+                    type="note",
+                    content="Important points from Week 1:\n- Key concepts\n- Practice problems\n- Study tips",
+                    file_type="text/plain",
+                    file_size=150
+                )
+                db.session.add(note)
+
+                # Add a sample link file
+                link = ResourceFile(
+                    resource_id=resource.id,
+                    name="Useful Resources.txt",
+                    type="link",
+                    content="https://example.com/study-guide\nhttps://example.com/practice",
+                    file_type="text/plain",
+                    file_size=80
+                )
+                db.session.add(link)
+        
+        db.session.commit()
+        log("Database initialization complete!")
+        log("\nTest Credentials:")
+        log("Admin     - username: admin    password: admin123")
+        log("Teacher   - username: teacher  password: teacher123")
+        log("Students  - username: student1 password: student123")
+        log("           username: student2 password: student123")
+        log("           ... up to student5")
+
+def init_personal_resources():
+    """Initialize only personal resources without affecting other data."""
+    app = create_app()
+    with app.app_context():
+        log("Creating personal resources...")
+        # Get existing students and courses
+        students = User.query.filter_by(role='student').all()
+        courses = Course.query.all()
+        
+        for student in students:
+            for course in courses:
+                # Check if student is enrolled in the course
+                enrollment = CourseEnrollment.query.filter_by(
+                    user_id=student.id,
+                    course_id=course.id,
+                    status='active'
+                ).first()
+                
+                if not enrollment:
+                    continue
+                
+                # Create a sample resource for each student in each course
+                resource = PersonalResource(
+                    user_id=student.id,
+                    course_id=course.id,
+                    name=f"Course Notes - {course.code}",
+                    description=f"My personal notes and materials for {course.name}",
+                    is_active=True,
+                    settings={'visibility': 'private'}
+                )
+                db.session.add(resource)
+                db.session.flush()
+
+                # Add a sample note file
+                note = ResourceFile(
+                    resource_id=resource.id,
+                    name="Week 1 Notes.txt",
+                    type="note",
+                    content="Important points from Week 1:\n- Key concepts\n- Practice problems\n- Study tips",
+                    file_type="text/plain",
+                    file_size=150
+                )
+                db.session.add(note)
+
+                # Add a sample link file
+                link = ResourceFile(
+                    resource_id=resource.id,
+                    name="Useful Resources.txt",
+                    type="link",
+                    content="https://example.com/study-guide\nhttps://example.com/practice",
+                    file_type="text/plain",
+                    file_size=80
+                )
+                db.session.add(link)
+        
+        db.session.commit()
+        log("Personal resources initialization complete!")
 
 if __name__ == '__main__':
-    init_db()
+    if len(sys.argv) > 1 and sys.argv[1] == 'personal_resources':
+        init_personal_resources()
+    else:
+        init_db()

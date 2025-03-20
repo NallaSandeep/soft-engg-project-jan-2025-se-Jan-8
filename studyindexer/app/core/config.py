@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     # Security
     API_KEY_HEADER: str = "X-API-Key"
     API_KEY: str = Field("studyhub_dev_api_key_2024", env="API_KEY")
-    CORS_ORIGINS: Set[str] = Field(default={"http://localhost:3000", "http://localhost:5100"}, env="CORS_ORIGINS")
+    CORS_ORIGINS: Set[str] = Field(default={"http://localhost:3000", "http://localhost:5000"}, env="CORS_ORIGINS")
     
     # JWT Settings
     JWT_SECRET: str = Field("studyhub_development_jwt_secret_key_32chars", env="JWT_SECRET")

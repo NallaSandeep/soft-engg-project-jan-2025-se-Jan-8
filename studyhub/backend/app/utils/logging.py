@@ -55,9 +55,12 @@ def init_request_logging(app):
             'path': request.path,
             'status_code': response.status_code,
             'duration_ms': round(duration * 1000, 2),
-            'response_size': len(response.get_data()),
             'content_type': response.content_type
         }
+        
+        # Only try to get response size for non-file responses
+        if not response.direct_passthrough:
+            log_data['response_size'] = len(response.get_data())
         
         # Log level based on status code
         if response.status_code >= 500:
