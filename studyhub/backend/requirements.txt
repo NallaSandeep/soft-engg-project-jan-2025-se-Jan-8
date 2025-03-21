@@ -39,4 +39,4 @@ bcrypt==4.0.1
 gunicorn==21.2.0
 black==24.2.0
 flake8==6.1.0
-pytest-xdist=3.6.1 # to run tests in sequence
+pytest-xdist==3.6.1 # to run tests in sequence

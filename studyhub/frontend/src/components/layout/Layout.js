@@ -27,9 +27,9 @@ const Layout = () => {
     }, [isChatOpen]);
 
     return (
-        <div className="min-h-screen bg-white dark:bg-zinc-900 transition-colors duration-200">
+        <div className="min-h-screen bg-white dark:bg-zinc-900">
             <Navbar />
-            <main className="container mx-auto px-4 py-8">
+            <main className="container mx-auto px-4 py-8 min-h-screen">
                 <Outlet />
             </main>
             {user && user.role === 'student' && (

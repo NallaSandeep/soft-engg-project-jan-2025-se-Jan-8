@@ -123,14 +123,14 @@ const AssignmentList = () => {
                                             ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400'
                                             : 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400'
                                     }`}>
-                                        {assignment.type}
+                                        {assignment.type.charAt(0).toUpperCase() + assignment.type.slice(1)}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
                                     {new Date(assignment.due_date).toLocaleDateString()}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
-                                    {assignment.points_possible} pts
+                                    {assignment.points_possible} Pts
                                 </td>
                             </tr>
                         ))}
@@ -139,7 +139,7 @@ const AssignmentList = () => {
 
                 {assignments.length === 0 && (
                     <div className="text-center py-8 text-zinc-600 dark:text-zinc-400">
-                        No assignments found
+                        No Assignments Found
                     </div>
                 )}
             </Card>
