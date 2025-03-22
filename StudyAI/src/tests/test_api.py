@@ -180,13 +180,12 @@ class TestReportAPI:
 
     def test_report_message(self, client, mock_data):
         """Test reporting a message."""
-        # Verify test data
+
         bot_message = self.verify_test_data(mock_data)
 
-        # Report the first bot message
         report_data = {
-            "message_id": bot_message.message_id,
-            "reason": "inappropriate_content",
+            "message_id": str(bot_message.message_id),
+            "reason": "inappropriate content",
         }
 
         print(f"\nAttempting to report message:")

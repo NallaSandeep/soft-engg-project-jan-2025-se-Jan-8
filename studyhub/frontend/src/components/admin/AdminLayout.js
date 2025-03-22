@@ -19,7 +19,7 @@ const MenuItem = ({ to, icon: Icon, children }) => (
         }
     >
         <Icon className="w-5 h-5" />
-        <span>{children}</span>
+        <span className='ml-2'>{children}</span>
     </NavLink>
 );
 
@@ -33,10 +33,11 @@ const AdminLayout = () => {
     };
 
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900 transition-colors duration-200">
+        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
             <div className="flex">
                 {/* Sidebar */}
-                <div className="w-64 bg-white dark:bg-zinc-800 shadow-md min-h-screen border-r border-zinc-200 dark:border-zinc-700">
+                <div className="hidden md:block w-64 bg-white dark:bg-zinc-800 shadow-md min-h-screen border-r border-zinc-200 dark:border-zinc-700">
+                <div className="fixed w-64 bg-white dark:bg-zinc-800 shadow-md min-h-screen border-r border-zinc-200 dark:border-zinc-700">
                     <div className="p-4 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-700">
                         <h1 className="text-xl font-bold text-zinc-900 dark:text-white">StudyHub Admin</h1>
                         <ThemeToggle />
@@ -63,13 +64,14 @@ const AdminLayout = () => {
                         <div className="pt-4 mt-4 border-t border-zinc-200 dark:border-zinc-700">
                             <button
                                 onClick={handleLogout}
-                                className="flex items-center space-x-2 px-4 py-2.5 w-full text-left text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-white rounded-lg transition-all duration-200"
+                                className="flex items-center space-x-2 px-4 py-2.5 w-full text-left text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-white rounded-lg"
                             >
                                 <ArrowRightOnRectangleIcon className="w-5 h-5" />
                                 <span>Logout</span>
                             </button>
                         </div>
                     </nav>
+                </div>
                 </div>
 
                 {/* Main Content */}

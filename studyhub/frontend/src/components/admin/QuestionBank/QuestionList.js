@@ -92,22 +92,22 @@ const QuestionList = () => {
         <div className="p-6">
             <div className="mb-6">
                 <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-2xl font-bold text-gray-900">Question Bank</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Question Bank</h1>
                     <button
                         onClick={() => navigate('/admin/question-bank/new')}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm"
                     >
                         Add Question
                     </button>
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-lg shadow p-4 mb-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div className="bg-zinc-10 rounded-lg shadow p-4 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2">
                         <select
                             value={filters.status}
                             onChange={(e) => handleFilterChange('status', e.target.value)}
-                            className="rounded-lg border-gray-300"
+                            className="rounded-lg border-gray-300 dark:border-gray-500 dark:bg-zinc-700 dark:text-zinc-100 text-xs"
                         >
                             <option value="">All Status</option>
                             <option value="draft">Draft</option>
@@ -118,7 +118,7 @@ const QuestionList = () => {
                         <select
                             value={filters.type}
                             onChange={(e) => handleFilterChange('type', e.target.value)}
-                            className="rounded-lg border-gray-300"
+                            className="rounded-lg border-gray-300 dark:border-gray-500 dark:bg-zinc-700 dark:text-zinc-100 text-xs"
                         >
                             <option value="">All Types</option>
                             <option value="MCQ">Multiple Choice</option>
@@ -129,7 +129,7 @@ const QuestionList = () => {
                         <select
                             value={filters.course_id}
                             onChange={(e) => handleFilterChange('course_id', e.target.value)}
-                            className="rounded-lg border-gray-300"
+                            className="rounded-lg border-gray-300 dark:border-gray-500 dark:bg-zinc-700 dark:text-zinc-100 text-xs"
                         >
                             <option value="">All Courses</option>
                             {courses.map(course => (
@@ -153,33 +153,33 @@ const QuestionList = () => {
                 {questions.map(question => (
                     <div
                         key={question.id}
-                        className="bg-white rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer"
+                        className="bg-zinc-100 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer dark:bg-zinc-800"
                         onClick={() => handleRowClick(question.id)}
                     >
                         <div className="p-6">
                             <div className="flex justify-between items-start mb-4">
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900">
+                                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-400">
                                         {question.title}
                                     </h3>
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-sm text-blue-600 dark:text-blue-300">
                                         {question.type} • {question.points} points
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className={`px-3 py-1 rounded-full text-sm ${
                                         question.status === 'active'
-                                            ? 'bg-green-100 text-green-800'
+                                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                             : question.status === 'draft'
-                                            ? 'bg-yellow-100 text-yellow-800'
-                                            : 'bg-red-100 text-red-800'
+                                            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                                            : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                                     }`}>
-                                        {question.status}
+                                        {question.status.charAt(0).toUpperCase() + question.status.slice(1)}
                                     </span>
                                     <div className="flex gap-2 ml-4">
                                         <button
                                             onClick={(e) => handleEdit(e, question.id)}
-                                            className="p-1 text-blue-600 hover:text-blue-800 rounded-full hover:bg-blue-50"
+                                            className="p-1 text-blue-600 hover:text-blue-800 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-blue-400"
                                         >
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -187,7 +187,7 @@ const QuestionList = () => {
                                         </button>
                                         <button
                                             onClick={(e) => handleDelete(e, question.id)}
-                                            className="p-1 text-red-600 hover:text-red-800 rounded-full hover:bg-red-50"
+                                            className="p-1 text-red-600 hover:text-red-800 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400"
                                         >
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -197,10 +197,10 @@ const QuestionList = () => {
                                 </div>
                             </div>
 
-                            <p className="text-gray-700 mb-4">{question.content}</p>
+                            <p className="text-gray-700 mb-2 dark:text-gray-100">{question.content}</p>
 
                             {/* Question Preview */}
-                            <div className="bg-gray-50 rounded-lg p-4">
+                            <div className="bg-gray-100 text-sm rounded-lg p-2 dark:bg-zinc-800">
                                 {question.type === 'MCQ' && question.options && (
                                     <div className="space-y-2">
                                         {question.options.map((option, index) => (
@@ -209,7 +209,7 @@ const QuestionList = () => {
                                                     type="radio"
                                                     name={`question-${question.id}`}
                                                     disabled
-                                                    className="text-blue-600"
+                                                    className="bg-zinc-100 dark:bg-zinc-700 text-blue-600 dark:text-blue-400"
                                                 />
                                                 <span>{option}</span>
                                             </div>
@@ -224,7 +224,7 @@ const QuestionList = () => {
                                                 <input
                                                     type="checkbox"
                                                     disabled
-                                                    className="text-blue-600"
+                                                    className="bg-zinc-100 dark:bg-zinc-700 text-blue-600 dark:text-blue-400"
                                                 />
                                                 <span>{option}</span>
                                             </div>
@@ -238,7 +238,7 @@ const QuestionList = () => {
                                             type="number"
                                             disabled
                                             placeholder="Enter numeric value"
-                                            className="rounded-lg border-gray-300"
+                                            className="rounded-lg border-gray-300 dark:border-gray-500 bg-zinc-100 dark:bg-zinc-700"
                                         />
                                     </div>
                                 )}

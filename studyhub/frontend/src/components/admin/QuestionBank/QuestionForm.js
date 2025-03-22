@@ -166,21 +166,21 @@ const QuestionForm = ({ mode = 'create' }) => {
                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
                     <button
                         onClick={() => navigate('/admin/question-bank')}
-                        className="hover:text-blue-600"
+                        className="hover:text-blue-600 dark:hover:text-blue-400 dark:text-gray-400"
                     >
                         Question Bank
                     </button>
                     <span>→</span>
-                    <span>{isViewMode ? 'View Question' : (questionId ? 'Edit Question' : 'New Question')}</span>
+                    <span className='dark: text-gray-400'>{isViewMode ? 'View Question' : (questionId ? 'Edit Question' : 'New Question')}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-200">
                         {isViewMode ? 'View Question' : (questionId ? 'Edit Question' : 'Create New Question')}
                     </h1>
                     {isViewMode && (
                         <button
                             onClick={() => navigate(`/admin/question-bank/${questionId}/edit`)}
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                            className="bg-blue-600 text-gray-100 px-4 py-2 rounded-lg hover:bg-blue-700 dark"
                         >
                             Edit Question
                         </button>
@@ -195,11 +195,11 @@ const QuestionForm = ({ mode = 'create' }) => {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="bg-white rounded-lg shadow p-6">
+                <div className="bg-gray-50 dark:bg-zinc-800 rounded-lg shadow p-6">
                     {/* Basic Info */}
                     <div className="grid grid-cols-1 gap-6 mb-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-zinc-400 mb-1">
                                 Title
                             </label>
                             <input
@@ -207,21 +207,21 @@ const QuestionForm = ({ mode = 'create' }) => {
                                 name="title"
                                 value={formData.title}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300"
+                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
                                 required
                                 disabled={isViewMode}
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-zinc-400 mb-1">
                                 Question Text
                             </label>
                             <textarea
                                 name="content"
                                 value={formData.content}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300"
+                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
                                 rows="3"
                                 required
                                 disabled={isViewMode}
@@ -230,14 +230,14 @@ const QuestionForm = ({ mode = 'create' }) => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-zinc-400 mb-1">
                                     Question Type
                                 </label>
                                 <select
                                     name="type"
                                     value={formData.type}
                                     onChange={handleInputChange}
-                                    className="w-full rounded-lg border-gray-300"
+                                    className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
                                     required
                                     disabled={isViewMode}
                                 >
@@ -248,7 +248,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-zinc-400 mb-1">
                                     Points
                                 </label>
                                 <input
@@ -256,7 +256,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                     name="points"
                                     value={formData.points}
                                     onChange={handleInputChange}
-                                    className="w-full rounded-lg border-gray-300"
+                                    className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
                                     min="1"
                                     required
                                     disabled={isViewMode}
@@ -268,7 +268,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                     {/* Options and Answer */}
                     {(formData.type === 'MCQ' || formData.type === 'MSQ') && (
                         <div className="mb-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-zinc-400 mb-2">
                                 Options
                             </label>
                             <div className="space-y-2">
@@ -278,7 +278,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                             type="text"
                                             value={option}
                                             onChange={(e) => handleOptionChange(index, e.target.value)}
-                                            className="flex-1 rounded-lg border-gray-300"
+                                            className="flex-1 rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
                                             placeholder={`Option ${index + 1}`}
                                             required
                                             disabled={isViewMode}
@@ -287,7 +287,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => removeOption(index)}
-                                                className="text-red-600 hover:text-red-800"
+                                                className="text-red-600 hover:text-red-800 dark:text-red-200 dark:hover:text-red-400"
                                                 disabled={isViewMode}
                                             >
                                                 Remove
@@ -298,7 +298,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                 <button
                                     type="button"
                                     onClick={addOption}
-                                    className="text-blue-600 hover:text-blue-800"
+                                    className="text-blue-600 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-400"
                                     disabled={isViewMode}
                                 >
                                     Add Option
@@ -308,7 +308,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                     )}
 
                     <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-zinc-400 mb-1">
                             Correct Answer
                         </label>
                         {formData.type === 'MCQ' && (
@@ -316,7 +316,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                 name="correct_answer"
                                 value={formData.correct_answer}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300"
+                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
                                 required
                                 disabled={isViewMode}
                             >
@@ -345,7 +345,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                                     correct_answer: newAnswer
                                                 }));
                                             }}
-                                            className="text-blue-600"
+                                            className="text-blue-600 dark:text-blue-400 dark:bg-zinc-600"
                                             disabled={isViewMode}
                                         />
                                         <span>{option}</span>
@@ -360,7 +360,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                 name="correct_answer"
                                 value={formData.correct_answer}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300"
+                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
                                 step="any"
                                 required
                                 disabled={isViewMode}
@@ -371,14 +371,14 @@ const QuestionForm = ({ mode = 'create' }) => {
                     {/* Organization */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-zinc-400 mb-1">
                                 Course
                             </label>
                             <select
                                 name="course_id"
                                 value={formData.course_id}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300"
+                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
                                 required
                                 disabled={isViewMode}
                             >
@@ -392,14 +392,14 @@ const QuestionForm = ({ mode = 'create' }) => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-zinc-400 mb-1">
                                 Status
                             </label>
                             <select
                                 name="status"
                                 value={formData.status}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300"
+                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
                                 required
                                 disabled={isViewMode}
                             >
@@ -411,14 +411,14 @@ const QuestionForm = ({ mode = 'create' }) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-zinc-400 mb-1">
                             Explanation
                         </label>
                         <textarea
                             name="explanation"
                             value={formData.explanation}
                             onChange={handleInputChange}
-                            className="w-full rounded-lg border-gray-300"
+                            className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
                             rows="3"
                             placeholder="Explain the correct answer (optional)"
                             disabled={isViewMode}
@@ -431,13 +431,13 @@ const QuestionForm = ({ mode = 'create' }) => {
                         <button
                             type="button"
                             onClick={() => navigate('/admin/question-bank')}
-                            className="px-4 py-2 text-gray-700 hover:text-gray-900"
+                            className="px-4 py-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-50"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
                         >
                             {questionId ? 'Update Question' : 'Create Question'}
                         </button>

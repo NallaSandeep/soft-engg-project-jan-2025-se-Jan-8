@@ -5,6 +5,9 @@ import { useAuth } from '../../hooks/useAuth';
 const PrivateRoute = ({ children, roles = [] }) => {
     const { user, loading } = useAuth();
     const location = useLocation();
+    console.log("Location: ", location);
+    console.log("Roles: ", roles);
+    console.log("User: ", user);
 
     if (loading) {
         return (
@@ -15,7 +18,6 @@ const PrivateRoute = ({ children, roles = [] }) => {
     }
 
     if (!user) {
-        // Redirect to login page with return url
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 

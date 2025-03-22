@@ -107,6 +107,7 @@ const MyCourses = () => {
                                 <div className="w-full bg-zinc-200 dark:bg-zinc-600 rounded-full h-2">
                                     <div className="bg-blue-500 h-2 rounded-full" style={{ width: '0%' }}></div>
                                 </div>
+
                             </div>
                             <div className="flex justify-between items-center text-sm text-zinc-600 dark:text-gray-400">
                                 <button

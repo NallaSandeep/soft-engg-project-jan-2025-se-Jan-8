@@ -37,7 +37,7 @@ const ActionButton = ({ label, icon: Icon, onClick, color = 'blue' }) => {
     return (
         <button
             onClick={onClick}
-            className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-lg ${colorClasses[color]} transition-colors w-full shadow-sm hover:shadow-md`}
+            className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-lg ${colorClasses[color]} w-full shadow-sm hover:shadow-md`}
         >
             <Icon className="w-5 h-5" />
             <span>{label}</span>
@@ -187,7 +187,7 @@ const AdminDashboard = () => {
                             stats.recentCourses.map((course) => (
                                 <div 
                                     key={course.id} 
-                                    className="p-4 border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer transition-colors rounded-md"
+                                    className="p-4 border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer rounded-md"
                                     onClick={() => navigateTo(`/admin/courses/${course.id}`)}
                                 >
                                     <div className="flex justify-between">
@@ -213,7 +213,7 @@ const AdminDashboard = () => {
                             stats.recentAssignments.map((assignment) => (
                                 <div 
                                     key={assignment.id} 
-                                    className="p-4 border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer transition-colors rounded-md"
+                                    className="p-4 border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer rounded-md"
                                     onClick={() => navigateTo(`/admin/assignments/${assignment.id}`)}
                                 >
                                     <div className="flex justify-between items-center">

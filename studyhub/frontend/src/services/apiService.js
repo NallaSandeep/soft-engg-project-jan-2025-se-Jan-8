@@ -57,7 +57,7 @@ api.interceptors.response.use(
             // Handle token expiration
             if (error.response.status === 401) {
                 localStorage.removeItem('token');
-                window.location.href = '/login';
+                // window.location.href = '/login';
             }
             return Promise.reject(error.response.data);
         }
@@ -69,7 +69,7 @@ api.interceptors.response.use(
 export const authApi = {
     login: (credentials) => api.post('/auth/login', credentials),
     register: (userData) => api.post('/auth/register', userData),
-    getCurrentUser: () => api.get('/auth/me'),
+    getCurrentUser: () => api.get('/auth/verify-token'),
     updateProfile: (userData) => api.put('/auth/profile', userData),
     changePassword: (passwords) => api.post('/auth/change-password', passwords)
 };

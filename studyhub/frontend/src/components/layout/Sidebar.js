@@ -83,7 +83,7 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className="w-64 bg-white shadow-lg min-h-screen">
+        <aside className="w-64 bg-white shadow-lg fixed top-0 left-0 w-64 h-screen">
             <div className="p-4">
                 <nav className="space-y-6">
                     {Object.entries(groupedLinks).map(([group, links]) => (
