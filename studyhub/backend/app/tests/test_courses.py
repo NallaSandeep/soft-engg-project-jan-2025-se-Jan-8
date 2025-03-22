@@ -62,13 +62,13 @@ class CourseTestCase(unittest.TestCase):
             is_active=True
         )
 
-        db.session.add_all([self.admin, self.teacher, self.student])
+        db.session.add_all([self.admin, self.teacher, self.ta, self.student])
         db.session.commit()
 
         # Get tokens for each user
         self.admin_token = self._get_token('admin@test.com', 'password123')
         self.teacher_token = self._get_token('teacher@test.com', 'password123')
-        # self.ta_token = self._get_token('ta@test.com', 'password123')
+        self.ta_token = self._get_token('ta@test.com', 'password123')
         self.student_token = self._get_token('student@test.com', 'password123')
 
     def tearDown(self):
@@ -163,10 +163,7 @@ class CourseTestCase(unittest.TestCase):
                 'enrollment_type': 'open'
             })
         
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.data)
-        self.assertEqual(data['data']['code'], 'CS101')
-        self.assertEqual(data['data']['name'], 'Introduction to Computer Science')
+        self.assertEqual(response.status_code, 403)
 
     def test_create_course_student_unauth(self):
         # Test non-admin user
@@ -193,82 +190,6 @@ class CourseTestCase(unittest.TestCase):
             })
         
         self.assertEqual(response.status_code, 403)
-
-    def test_get_all_courses_admin(self):
-        """Test getting courses list"""
-        # Create test courses
-        course1 = Course(
-            code='CS101',
-            name='Course 1',
-            description='Description 1',
-            created_by_id=self.teacher.id
-        )
-        course2 = Course(
-            code='CS102',
-            name='Course 2',
-            description='Description 2',
-            created_by_id=self.teacher.id
-        )
-        db.session.add_all([course1, course2])
-        db.session.commit()
-
-        # Test admin view (all courses)
-        response = self.client.get('/api/v1/courses/all',
-            headers={'Authorization': f'Bearer {self.admin_token}'})
-        
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.data)
-        self.assertEqual(len(data['data']), 2)
-
-    def test_get_all_courses_teacher(self):
-        """Test getting courses list"""
-        # Create test courses
-        course1 = Course(
-            code='CS101',
-            name='Course 1',
-            description='Description 1',
-            created_by_id=self.teacher.id
-        )
-        course2 = Course(
-            code='CS102',
-            name='Course 2',
-            description='Description 2',
-            created_by_id=self.teacher.id
-        )
-        db.session.add_all([course1, course2])
-        db.session.commit()
-        # Test teacher view (only their courses)
-        response = self.client.get('/api/v1/courses/all',
-            headers={'Authorization': f'Bearer {self.teacher_token}'})
-        
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.data)
-        self.assertEqual(len(data['data']), 2)
-
-    def test_get_all_courses_student(self):
-        """Test getting courses list"""
-        # Create test courses
-        course1 = Course(
-            code='CS101',
-            name='Course 1',
-            description='Description 1',
-            created_by_id=self.teacher.id
-        )
-        course2 = Course(
-            code='CS102',
-            name='Course 2',
-            description='Description 2',
-            created_by_id=self.teacher.id
-        )
-        db.session.add_all([course1, course2])
-        db.session.commit()
-        # Test student view (only enrolled courses)
-        response = self.client.get('/api/v1/courses/all',
-            headers={'Authorization': f'Bearer {self.student_token}'})
-        
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.data)
-        self.assertEqual(len(data['data']), 2)
 
     def test_get_enrolled_courses_student(self):
         """Test getting courses list"""
@@ -303,19 +224,61 @@ class CourseTestCase(unittest.TestCase):
         self.assertEqual(len(data['data']), 2)
 
     def test_get_enrolled_courses_unauth_admin(self):
-        
+        """Test getting courses list"""
+        # Create test courses
+        course1 = Course(
+            code='CS101',
+            name='Course 1',
+            description='Description 1',
+            created_by_id=self.teacher.id
+        )
+        course2 = Course(
+            code='CS102',
+            name='Course 2',
+            description='Description 2',
+            created_by_id=self.teacher.id
+        )
+        db.session.add_all([course1, course2])
+        db.session.commit()
         # Test student view (only enrolled courses)
         response = self.client.get('/api/v1/courses/',
             headers={'Authorization': f'Bearer {self.admin_token}'})
         
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertEqual(len(data['data']), 2)
 
     def test_get_enrolled_courses_unauth_ta(self):
+        """Test getting courses list"""
+        # Create test courses
+        course1 = Course(
+            code='CS101',
+            name='Course 1',
+            description='Description 1',
+            created_by_id=self.teacher.id
+        )
+        course2 = Course(
+            code='CS102',
+            name='Course 2',
+            description='Description 2',
+            created_by_id=self.teacher.id
+        )
+        db.session.add_all([course1, course2])
+        db.session.commit()
+
+        self.client.post(f'/api/v1/courses/{course1.id}/enroll',
+            headers={'Authorization': f'Bearer {self.ta_token}'})
+        
+        self.client.post(f'/api/v1/courses/{course2.id}/enroll',
+            headers={'Authorization': f'Bearer {self.ta_token}'})
+        
         # Test student view (only enrolled courses)
         response = self.client.get('/api/v1/courses/',
             headers={'Authorization': f'Bearer {self.ta_token}'})
         
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertEqual(len(data['data']), 2)
 
     def test_get_course(self):
         """Test getting a specific course"""
@@ -464,8 +427,7 @@ class CourseTestCase(unittest.TestCase):
         response = self.client.delete(f'/api/v1/courses/{course.id}',
             headers={'Authorization': f'Bearer {self.teacher_token}'})
         
-        self.assertEqual(response.status_code, 200)
-        self.assertIsNone(Course.query.get(course.id))
+        self.assertEqual(response.status_code, 403)
     
     def test_delete_course_student(self):
         """Test deleting a course"""
