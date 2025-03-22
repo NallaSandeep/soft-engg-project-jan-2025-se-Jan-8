@@ -46,7 +46,7 @@ backend/
    ```bash
    .\start.ps1
    ```
-   The API will be available at: http://localhost:5100
+   The API will be available at: http://localhost:5000
 
 ## Dependencies
 
@@ -91,7 +91,7 @@ flake8
    - Check Redis connection settings in `.env`
 
 3. **Port Conflicts**
-   - Default port is 5100
+   - Default port is 5000
    - Can be modified in `.env` file
 
 ## Environment Variables

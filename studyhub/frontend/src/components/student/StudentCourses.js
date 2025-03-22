@@ -1,42 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { courseApi } from '../../services/apiService';
-import { useAuth } from '../../hooks/useAuth';
 
-const CourseList = () => {
+const StudentCourses = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const { user } = useAuth();
 
     useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                setLoading(true);
+                const response = await courseApi.getCourses();
+                setCourses(Array.isArray(response.data) ? response.data : []);
+            } catch (err) {
+                console.error('Error fetching courses:', err);
+                setError('Failed to load courses');
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchCourses();
     }, []);
-
-    const fetchCourses = async () => {
-        try {
-            setLoading(true);
-            const response = await courseApi.getCourses();
-            setCourses(response || []);
-        } catch (err) {
-            setError('Failed to load courses');
-            console.error('Error loading courses:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleEnroll = async (courseId) => {
-        try {
-            await courseApi.enrollStudent(courseId, user.id);
-            // Refresh course list after enrollment
-            fetchCourses();
-        } catch (err) {
-            setError('Failed to enroll in course');
-            console.error('Error enrolling in course:', err);
-        }
-    };
 
     if (loading) {
         return (
@@ -57,7 +44,7 @@ const CourseList = () => {
     return (
         <div className="container mx-auto px-4 py-6">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-white">Available Courses</h1>
+                <h1 className="text-2xl font-bold text-white">My Courses</h1>
                 <div className="flex gap-4">
                     <input
                         type="text"
@@ -77,7 +64,7 @@ const CourseList = () => {
                 {courses.map(course => (
                     <div
                         key={course.code}
-                        className="bg-zinc-800 rounded-lg overflow-hidden hover:bg-zinc-700 transition-colors"
+                        className="bg-zinc-800 rounded-lg overflow-hidden hover:bg-zinc-700 transition-colors cursor-pointer"
                     >
                         <div className="p-6">
                             <div className="flex justify-between items-start mb-4">
@@ -91,14 +78,14 @@ const CourseList = () => {
                             </div>
                             <p className="text-gray-400 mb-4 line-clamp-2">{course.description}</p>
                             <div className="flex justify-between items-center text-sm text-gray-400">
-                                <div>Duration: {course.duration || '12 weeks'}</div>
+                                <div>Progress: {course.progress || 0}%</div>
                                 <div>{course.start_date} - {course.end_date}</div>
                             </div>
                             <button
-                                onClick={() => handleEnroll(course.id)}
+                                onClick={() => navigate(`/student/course/${course.code}`)}
                                 className="mt-4 w-full text-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
                             >
-                                Enroll Now →
+                                View Course →
                             </button>
                         </div>
                     </div>
@@ -108,4 +95,4 @@ const CourseList = () => {
     );
 };
 
-export default CourseList; 
+export default StudentCourses; 

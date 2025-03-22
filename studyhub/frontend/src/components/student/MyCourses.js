@@ -41,25 +41,38 @@ const MyCourses = () => {
         return matchesSearch;
     });
 
-    if (loading) return <div className="flex justify-center items-center h-screen">Loading courses...</div>;
-    if (error) return <div className="text-red-500 text-center p-4">{error}</div>;
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <p className="text-zinc-600 dark:text-zinc-400">Loading courses...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="text-center text-red-500 dark:text-red-400 p-4">
+                <p>{error}</p>
+            </div>
+        );
+    }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-2xl font-bold">My Courses</h1>
-                <div className="flex space-x-4">
+        <div className="container mx-auto px-4 py-6">
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">My Courses</h1>
+                <div className="flex gap-4">
                     <input
                         type="text"
                         placeholder="Search courses..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="px-4 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 dark:bg-zinc-800 dark:text-gray-100"
+                        className="px-4 py-2 rounded-lg bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-gray-400 border border-zinc-300 dark:border-zinc-600 focus:outline-none focus:border-blue-500"
                     />
                     <select
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
-                        className="px-8 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 dark:bg-zinc-800 dark:text-gray-100"
+                        className="px-4 py-2 rounded-lg bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white border border-zinc-300 dark:border-zinc-600 focus:outline-none focus:border-blue-500"
                     >
                         <option value="all">All Courses</option>
                         <option value="active">Active</option>
@@ -70,40 +83,43 @@ const MyCourses = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredCourses.map(course => (
-                    <div key={course.id} className="bg-gray-50 dark:bg-zinc-800 rounded-lg shadow-sm p-6">
-                        <div className="flex justify-between items-start mb-4">
-                            <div>
-                                <h2 className="text-lg font-semibold">{course.name}</h2>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">{course.code}</p>
+                    <div key={course.id} className="bg-zinc-50 dark:bg-zinc-800 rounded-lg overflow-hidden hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors border border-zinc-200 dark:border-zinc-700">
+                        <div className="p-6">
+                            <div className="flex justify-between items-start mb-4">
+                                <div>
+                                    <h2 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">{course.name}</h2>
+                                    <p className="text-zinc-600 dark:text-gray-400 text-sm">{course.code}</p>
+                                </div>
+                                <span className={`px-2 py-1 text-xs rounded-full border ${
+                                    course.is_active 
+                                        ? 'bg-green-50 dark:bg-green-400/20 text-green-800 dark:text-green-400 border-green-200 dark:border-green-400/30' 
+                                        : 'bg-zinc-100 dark:bg-gray-400/20 text-zinc-800 dark:text-gray-400 border-zinc-200 dark:border-gray-400/30'
+                                }`}>
+                                    {course.is_active ? 'Active' : 'Completed'}
+                                </span>
                             </div>
-                            <span className={`text-xs px-2 py-1 rounded-full ${
-                                course.is_active 
-                                    ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' 
-                                    : 'bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-400'
-                            }`}>
-                                {course.is_active ? 'Active' : 'Completed'}
-                            </span>
-                        </div>
-                        <p className="text-gray-600 text-sm mb-4 line-clamp-2 dark:text-gray-400">{course.description}</p>
-                        <div className="mb-4">
-                            <div className="flex justify-between text-sm text-gray-600 mb-1 dark:text-gray-400">
-                                <span>Progress</span>
-                                <span>0%</span>
+                            <p className="text-zinc-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">{course.description}</p>
+                            <div className="mb-4">
+                                <div className="flex justify-between text-sm text-zinc-600 dark:text-gray-400 mb-1">
+                                    <span>Progress</span>
+                                    <span>0%</span>
+                                </div>
+                                <div className="w-full bg-zinc-200 dark:bg-zinc-600 rounded-full h-2">
+                                    <div className="bg-blue-500 h-2 rounded-full" style={{ width: '0%' }}></div>
+                                </div>
+
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div className="bg-blue-600 h-2 rounded-full" style={{ width: '0%' }}></div>
+                            <div className="flex justify-between items-center text-sm text-zinc-600 dark:text-gray-400">
+                                <button
+                                    onClick={() => navigate(`/student/courses/${course.id}`)}
+                                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                                >
+                                    View Course →
+                                </button>
+                                <span>
+                                    {course.start_date} - {course.end_date}
+                                </span>
                             </div>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <button
-                                onClick={() => navigate(`/courses/${course.id}`)}
-                                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                            >
-                                View Course →
-                            </button>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
-                                {course.start_date} - {course.end_date}
-                            </span>
                         </div>
                     </div>
                 ))}
@@ -111,7 +127,7 @@ const MyCourses = () => {
 
             {filteredCourses.length === 0 && (
                 <div className="text-center py-12">
-                    <p className="text-gray-600">No courses found</p>
+                    <p className="text-zinc-600 dark:text-gray-400">No courses found</p>
                 </div>
             )}
         </div>

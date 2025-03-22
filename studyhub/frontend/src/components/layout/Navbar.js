@@ -15,6 +15,18 @@ import {
 const Navbar = () => {
     const { user, logout } = useAuth();
 
+    const getDashboardPath = () => {
+        switch (user?.role) {
+            case 'admin':
+                return '/admin/dashboard';
+            case 'ta':
+                return '/ta/dashboard';
+            case 'student':
+            default:
+                return '/student/dashboard';
+        }
+    };
+
     const getNavLinks = () => {
         switch (user?.role) {
             case 'admin':
@@ -34,7 +46,7 @@ const Navbar = () => {
                     { to: '/student/dashboard', text: 'Dashboard', icon: ChartBarIcon },
                     { to: '/student/courses', text: 'My Courses', icon: BookOpenIcon },
                     { to: '/student/assignments', text: 'Assignments', icon: ClipboardDocumentListIcon },
-                    { to: '/knowledge-base', text: 'Knowledge Base', icon: AcademicCapIcon }
+                    { to: '/personal-resources', text: 'Personal Resources', icon: AcademicCapIcon }
                 ];
             default:
                 return [];
@@ -59,7 +71,7 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex items-center space-x-8">
-                        <Link to="/" className="flex items-center text-xl font-bold text-zinc-900 dark:text-white">
+                        <Link to={getDashboardPath()} className="flex items-center text-xl font-bold text-zinc-900 dark:text-white">
                             <AcademicCapIcon className="h-8 w-8 mr-2" />
                             StudyHub
                         </Link>

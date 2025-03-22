@@ -30,6 +30,10 @@ class Course(db.Model):
                               back_populates='course',
                               lazy='dynamic',
                               cascade='all, delete-orphan')
+    personal_resources = db.relationship('PersonalResource',
+                                       back_populates='course',
+                                       lazy='dynamic',
+                                       cascade='all, delete-orphan')
     weeks = db.relationship('Week',
                           back_populates='course',
                           lazy='dynamic',

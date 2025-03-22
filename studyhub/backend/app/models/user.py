@@ -30,9 +30,6 @@ class User(BaseModel):
     course_enrollments = db.relationship('CourseEnrollment',
                                        back_populates='user',
                                        lazy='dynamic')
-    knowledge_bases = db.relationship('PersonalKnowledgeBase', 
-                                    back_populates='user', 
-                                    lazy='dynamic')
     
     resources_uploaded = db.relationship('Resource',
                                        back_populates='created_by',
@@ -56,6 +53,10 @@ class User(BaseModel):
                                        foreign_keys='Submission.graded_by_id')
 
     assignment_submissions = db.relationship('AssignmentSubmission', back_populates='student', lazy='dynamic')
+
+    personal_resources = db.relationship('PersonalResource',
+                                       back_populates='user',
+                                       lazy='dynamic')
 
     @property
     def password(self):

@@ -19,9 +19,18 @@ api.interceptors.request.use(
         }
         // Remove trailing slashes from the URL
         config.url = config.url.replace(/\/+$/, '');
+        
+        // Debug log for requests
+        console.log('API Request:', {
+            url: config.url,
+            method: config.method,
+            headers: config.headers
+        });
+        
         return config;
     },
     (error) => {
+        console.error('Request Error:', error);
         return Promise.reject(error);
     }
 );
@@ -29,9 +38,21 @@ api.interceptors.request.use(
 // Add response interceptor to handle errors
 api.interceptors.response.use(
     (response) => {
+        // If it's a blob response, return the whole response, not just the data
+        if (response.config.responseType === 'blob') {
+            return response;
+        }
         return response.data;
     },
     (error) => {
+        console.error('API Error:', {
+            url: error.config?.url,
+            method: error.config?.method,
+            status: error.response?.status,
+            data: error.response?.data,
+            error: error.message
+        });
+
         if (error.response) {
             // Handle token expiration
             if (error.response.status === 401) {
@@ -197,22 +218,92 @@ export const questionBankApi = {
 
 // Personal Knowledge Base API
 export const personalApi = {
-    // Knowledge Base Management
-    getKnowledgeBases: () => api.get('/personal/kb'),
-    createKnowledgeBase: (data) => api.post('/personal/kb', data),
-    getFolderStructure: (kbId) => api.get(`/personal/kb/${kbId}/folders`),
-    createFolder: (kbId, data) => api.post(`/personal/kb/${kbId}/folders`, data),
+    // Resource Management
+    getPersonalResources: (courseId = null) => {
+        return api.get(`/personal-resources${courseId ? `?course_id=${courseId}` : ''}`);
+    },
+    
+    getResource: (resourceId) => api.get(`/personal-resources/${resourceId}`),
+    
+    createPersonalResource: (data) => {
+        // Ensure course_id is sent as a string
+        const payload = {
+            ...data,
+            course_id: data.course_id.toString()
+        };
+        return api.post('/personal-resources', payload);
+    },
 
-    // Document Management
-    addDocument: (kbId, data) => api.post(`/personal/kb/${kbId}/documents`, data),
-    updateDocument: (kbId, documentId, data) => api.patch(`/personal/kb/${kbId}/documents/${documentId}`, data),
-    addRelatedDocuments: (kbId, documentId, data) => api.post(`/personal/kb/${kbId}/documents/${documentId}/related`, data),
-    removeRelatedDocument: (kbId, documentId, relatedId) => api.delete(`/personal/kb/${kbId}/documents/${documentId}/related/${relatedId}`),
+    updateResource: (resourceId, data) => {
+        return api.put(`/personal-resources/${resourceId}`, data);
+    },
 
-    // StudyIndexer Integration
-    searchPersonalDocuments: (data) => api.post('/personal/documents', data),
-    updateIndexerMetadata: (documentId, data) => api.patch(`/personal/documents/${documentId}/metadata`, data),
-    getRelatedDocuments: (documentId, limit = 5) => api.get(`/personal/documents/${documentId}/related`, { params: { limit } })
+    deleteResource: (resourceId) => {
+        return api.delete(`/personal-resources/${resourceId}`);
+    },
+
+    // File Management
+    getResourceFiles: (resourceId) => api.get(`/personal-resources/${resourceId}/files`),
+    
+    downloadFile: async (resourceId, fileId) => {
+        const response = await api({
+            url: `/personal-resources/${resourceId}/files/${fileId}/download`,
+            method: 'GET',
+            responseType: 'blob'
+        });
+        
+        // Create a URL for the blob and trigger download
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        
+        // Get filename from Content-Disposition header or use a default
+        const contentDisposition = response.headers['content-disposition'];
+        let filename = 'download';
+        if (contentDisposition) {
+            const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
+            if (matches != null && matches[1]) {
+                filename = matches[1].replace(/['"]/g, '');
+            }
+        }
+        
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+    },
+
+    addFile: (resourceId, data) => {
+        if (data instanceof File) {
+            // Handle file upload
+            const formData = new FormData();
+            formData.append('file', data);
+            return api.post(`/personal-resources/${resourceId}/files`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+        } else {
+            // Handle text note
+            return api.post(`/personal-resources/${resourceId}/files`, {
+                name: data.name,
+                type: 'text',
+                content: data.content
+            });
+        }
+    },
+
+    deleteFile: (resourceId, fileId) => api.delete(`/personal-resources/${resourceId}/files/${fileId}`),
+
+    // Search and Related Documents
+    searchResources: (query) => api.get('/personal-resources', { params: { search: query } }),
+    getRelatedResources: (resourceId, limit = 5) => api.get(`/personal-resources/${resourceId}/related`, { 
+        params: { limit } 
+    }),
+
+    async updateFile(resourceId, fileId, data) {
+        const response = await api.put(`/personal-resources/${resourceId}/files/${fileId}`, data);
+        return response.data;
+    }
 };
 
 export const adminApi = {

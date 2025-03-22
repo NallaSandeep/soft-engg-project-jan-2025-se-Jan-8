@@ -23,7 +23,7 @@ class Config:
     )
     
     # File Upload
-    UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+    UPLOAD_FOLDER = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads'))
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
     ALLOWED_FILE_EXTENSIONS = set(
         os.getenv('ALLOWED_FILE_EXTENSIONS', 'pdf,doc,docx,txt').split(',')
@@ -37,7 +37,7 @@ class Config:
     
     # Server
     HOST = os.getenv('FLASK_HOST', '0.0.0.0')
-    PORT = int(os.getenv('FLASK_PORT', 5100))
+    PORT = int(os.getenv('FLASK_PORT', 5000))
 
     # StudyIndexer Service
     INDEXER_SERVICE_URL = os.getenv('INDEXER_SERVICE_URL', 'http://localhost:8000')

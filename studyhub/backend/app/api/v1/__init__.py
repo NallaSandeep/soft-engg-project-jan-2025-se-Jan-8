@@ -8,7 +8,7 @@ from .users import users_bp
 from .resources import resources_bp
 from .question_bank import question_bank_bp
 from .admin import admin_bp
-from .personal import personal_bp
+from .personal_resources import bp as personal_resources_bp
 
 api_v1_bp = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
@@ -20,7 +20,7 @@ api_v1_bp.register_blueprint(users_bp, url_prefix='/users')
 api_v1_bp.register_blueprint(resources_bp, url_prefix='/resources')
 api_v1_bp.register_blueprint(question_bank_bp, url_prefix='/question-bank')
 api_v1_bp.register_blueprint(admin_bp, url_prefix='/admin')
-api_v1_bp.register_blueprint(personal_bp, url_prefix='/personal')
+api_v1_bp.register_blueprint(personal_resources_bp, url_prefix='/personal-resources')
 
 __all__ = [
     'auth_bp',
@@ -30,5 +30,5 @@ __all__ = [
     'assignments_bp',
     'question_bank_bp',
     'admin_bp',
-    'personal_bp'
+    'personal_resources_bp'
 ] 

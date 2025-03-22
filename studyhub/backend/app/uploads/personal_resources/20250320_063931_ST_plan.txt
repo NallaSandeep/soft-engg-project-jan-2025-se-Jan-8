@@ -1,0 +1,133 @@
+WEEK 5 (Very Importa)
+===============
+#Logic basics
+Focus on definations
+
+Predicate and clauses
+Truth Table
+ *If empty consider False
+Satisfiable, valid and tautology
+ * Givne predicate identify whether satisfiable, valid, tautology etc
+
+#Logic Covergae Algorithm
+when a particular clause will be come a determinant (XOR)
+
+#Logic Coverage Criteria (v Imp)
+Logic Coverage critieria CHART
+Not much theorital questino but calculations are expected
+
+Making a clause determine a predicate
+
+E.g. what is GACC given variable
+e.g. given truth table answer questinos
+GACC
+CACC
+RACC
+ACC
+ICC
+
+given conditionatla predicate
+find correct otpion to fulfill test coverage for clause / predicate 
+
+how many test cases for combinatorial covergae (2^n)
+
+combinatinoal covergae
+multiple combinational coverage
+
+a predicate p with n clauses has 2^n possible assignment of truth values
+Active & non active clauses
+
+#Logic Sourec Code
+One specific type of qustion
+e.g. given clauses find Pa
+There is a GA qustion given a program find GACC,RACC. Simple program
+a small function with a few lins with some predicate conditions (if/else)
+find Coverage (e.g RACC)
+check GA
+
+
+
+WEEK 6 (NOT TOO MUCH)
+#Logic FSM (not that important)
+
+given some form identify CNF,DNF,None
+some theoritcal may come
+
+#logic-source-code2
+similart to preivous one.
+translate to predicate
+check for test cases for RACC etc
+
+#Logic Specificaiton
+recognize the form whehter CNF or DNF
+
+#SMT-Solvers (not very important)
+Theoritical only. Some defination based qustins
+
+
+WEEK 7: (standard qustions GA)
+#Symbolic Testing (V IMP)
+Code is given, questions will be like
+in spefifcic line, what are the PC conditions.
+or find test case for which we get the errror
+or find test caess that coever all 4 flows
+
+Symbolic covergae is important
+Theory is important
+all definatinos (blue/red)
+PC Values
+
+some program is given and find symbolic condition
+or for which symbolic condition it will reach...
+
+Symbolic Execution Tree is not asked
+Loop testing
+ * e.g what condietion will hvae true values
+ 
+
+#DART (not too important)
+Theoritical qustion
+Presentatino is important
+(comma is used instead)
+Definations are important
+How to prepresent the DART equstion is only important
+
+WEEK 8: (IMPORTANT)
+#FUNCTIONAL TESTING
+Type of functuional testing
+
+All are important but these two are more
+Decision tables
+Random testing
+
+Equivalence class partionining
+
+Bounderay Value Analysis*
+We do a bit differently. Just follow the slide example, not internet.
+
+Decision tables: defination is important
+
+Random testing: learn defination
+
+#ISP (IMP)
+Partitinls and Charecteristics
+Given some program,criteria
+what is the partition
+or given a parition whehter it is disjoint or complete partition
+ 
+Identifying values** important slide
+Combination strategies criteria
+All combination
+each choice 
+base choicse
+Only these (ACoC,ECC,BCC)
+Defination for all 
+
+Base coverage is important
+base case should be given
+carefully check whether all is akked (includineg or exlcuding base input)
+
+#Software Requirments
+Read the theory
+Given an example  identify 
+reuiqirement 
