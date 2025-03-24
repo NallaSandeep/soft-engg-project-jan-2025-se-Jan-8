@@ -52,7 +52,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                             if (data.week.course) {
                                 setSelectedCourse(data.week.course);
                                 // Fetch weeks for this course
-                                const weeksResponse = await courseApi.getCourseWeeks(data.week.course.id);
+                                const weeksResponse = await courseApi.getWeeks(data.week.course.id);
                                 if (weeksResponse.success) {
                                     setWeeks(weeksResponse.data);
                                 }
@@ -70,7 +70,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                         setSelectedCourse(courseResponse.data);
                         
                         // Fetch weeks for this course
-                        const weeksResponse = await courseApi.getCourseWeeks(courseId);
+                        const weeksResponse = await courseApi.getWeeks(courseId);
                         if (weeksResponse.success) {
                             setWeeks(weeksResponse.data);
                             
@@ -111,7 +111,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
             setWeek(null);
 
             // Fetch weeks for this course
-            const response = await courseApi.getCourseWeeks(courseId);
+            const response = await courseApi.getWeeks(courseId);
             if (response.success) {
                 setWeeks(response.data);
             } else {
@@ -152,14 +152,12 @@ const AssignmentForm = ({ mode = 'create' }) => {
             if (mode === 'edit') {
                 response = await assignmentApi.updateAssignment(assignmentId, payload);
             } else {
-                response = await assignmentApi.createAssignment(payload);
+                response = await assignmentApi.createAssignment(week.id, payload);
             }
 
             if (response.success) {
                 // Navigate back to course content or assignments list
-                navigate(courseId 
-                    ? `/admin/courses/${courseId}/content` 
-                    : `/admin/courses/${selectedCourse.id}/content`);
+                navigate(`/admin/assignments`);
             } else {
                 throw new Error(response.message || `Failed to ${mode} assignment`);
             }
@@ -321,9 +319,9 @@ const AssignmentForm = ({ mode = 'create' }) => {
                             />
                         </div>
                     </div>
-
+                        
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
+                        {/*<div>
                             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                 Late Submission Penalty (%)
                             </label>
@@ -336,7 +334,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
                                 max="100"
                                 className="input-field"
                             />
-                        </div>
+                        </div>*/}
 
                         <div className="flex items-center h-full pt-6">
                             <label className="flex items-center cursor-pointer">

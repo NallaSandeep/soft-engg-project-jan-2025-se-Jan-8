@@ -31,7 +31,7 @@ const UserForm = () => {
         try {
             const response = await userApi.getUser(userId);
             if (response.success) {
-                const user = response.data;
+                const user = response.user;
                 setFormData({
                     username: user.username,
                     email: user.email,

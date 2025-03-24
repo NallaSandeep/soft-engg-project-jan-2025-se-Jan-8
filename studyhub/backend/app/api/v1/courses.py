@@ -623,7 +623,7 @@ def get_assignment_content(assignment_id):
 
         # Get questions without correct answers for students
         questions = []
-        for aq in assignment.questions.order_by(AssignmentQuestion.order):
+        for aq in assignment.questions.order_by(Question.order):
             question = aq.question
             question_data = {
                 'id': question.id,

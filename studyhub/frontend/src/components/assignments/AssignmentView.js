@@ -91,13 +91,14 @@ const AssignmentView = () => {
             [questionId]: value
         }));
     };
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const handleSubmit = async () => {
         try {
             setSubmitting(true);
-            const response = await assignmentApi.submitAssignment(assignmentId, {
-                answers: answers
-            });
+            setErrorMessage(null); // Clear previous errors
+            const response = await assignmentApi.submitAssignment(assignmentId, { answers });
+            
             if (response.success) {
                 // Show score in toast message
                 const scoreMessage = `Score: ${response.data.score}/${response.data.max_score}`;
@@ -121,19 +122,23 @@ const AssignmentView = () => {
                         initialAnswers[q.id] = q.type === 'MSQ' ? [] : '';
                     });
                     setAnswers(initialAnswers);
-                } else {
-                    navigate('/courses');
                 }
             } else {
-                toast.error(response.message || 'Failed to submit assignment');
+                setErrorMessage(response.message || 'Failed to submit assignment');
             }
         } catch (err) {
             console.error('Error submitting assignment:', err);
+            setErrorMessage(err.message || 'Failed to submit assignment');
             toast.error(err.message || 'Failed to submit assignment');
         } finally {
             setSubmitting(false);
         }
     };
+    {errorMessage && (
+        <div className="mt-4 p-3 text-red-600 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
+            {errorMessage}
+        </div>
+    )}
 
     if (loading) {
         return (
@@ -374,6 +379,12 @@ const AssignmentView = () => {
                             >
                                 {submitting ? 'Submitting...' : 'Submit Assignment'}
                             </button>
+                            {errorMessage && (
+                                <div className="mt-4 p-3 text-red-600 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
+                                    {errorMessage}
+                                </div>
+                            )}
+                            
                         </div>
                     </div>
 
