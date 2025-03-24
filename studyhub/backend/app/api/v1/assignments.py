@@ -686,7 +686,7 @@ def submit_assignment(assignment_id):
             }), 400
             
         # Check for existing submission - only for graded assignments
-        if assignment.type != 'practice':
+        if assignment.type != 'practice' and datetime.utcnow() > assignment.due_date:
             submission = AssignmentSubmission.query.filter_by(
                 assignment_id=assignment_id,
                 student_id=current_user.id
@@ -697,7 +697,11 @@ def submit_assignment(assignment_id):
                     'success': False,
                     'message': 'You have already submitted this assignment'
                 }), 400
-            
+
+
+
+
+
         # Calculate scores and format answers
         total_score = 0
         max_score = 0
