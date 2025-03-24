@@ -69,18 +69,21 @@ const CourseForm = () => {
             setLoading(true);
             setError(null);
             
-            let response;
+            let response
+
             if (isEditMode) {
                 response = await courseApi.updateCourse(courseId, formData);
+                
             } else {
                 response = await courseApi.createCourse(formData);
             }
-            
-            if (response.success) {
+           
+            if (response.msg === "Course updated successfully") {
                 toast.success(`Course ${isEditMode ? 'updated' : 'created'} successfully!`);
                 navigate('/admin/courses');
+                
             } else {
-                setError(response.message || `Failed to ${isEditMode ? 'update' : 'create'} course`);
+                setError(response.message || `Sorry, Failed to ${isEditMode ? 'update' : 'create'} course`);
             }
         } catch (err) {
             console.error(`Error ${isEditMode ? 'updating' : 'creating'} course:`, err);
@@ -89,6 +92,9 @@ const CourseForm = () => {
             setLoading(false);
         }
     };
+
+    
+   
 
     if (loading) {
         return (

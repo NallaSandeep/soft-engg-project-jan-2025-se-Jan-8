@@ -164,7 +164,9 @@ def update_course(course_id):
 
         return jsonify({
             'msg': 'Course updated successfully',
-            'course': course.to_dict()
+            'code': 200
+            'course': course.to_dict(),
+          
         }), 200
 
     except Exception as e:
