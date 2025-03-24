@@ -35,6 +35,7 @@ const AssignmentView = () => {
         fetchAssignment();
         fetchLastSubmission();
         fetchCourseContent();
+        setErrorMessage(null);
     }, [assignmentId]);
 
     const fetchCourseContent = async () => {

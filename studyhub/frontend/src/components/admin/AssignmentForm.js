@@ -9,12 +9,15 @@ const AssignmentForm = ({ mode = 'create' }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [assignmentData, setAssignmentData] = useState({
+        course_code: '',
+        course_name: '',
         title: '',
         description: '',
         type: 'practice', // practice or graded
         due_date: '',
         late_submission_penalty: 0,
-        is_published: false
+        is_published: false,
+        week: {title: ''},
     });
     const [courses, setCourses] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState(null);
@@ -40,7 +43,10 @@ const AssignmentForm = ({ mode = 'create' }) => {
                     if (response.success) {
                         const { data } = response;
                         setAssignmentData({
+                            course_code: data.course_code,
+                            course_name: data.course_name,
                             title: data.title,
+                            week: data.week || {},
                             description: data.description || '',
                             type: data.type,
                             due_date: data.due_date ? new Date(data.due_date).toISOString().split('T')[0] : '',
@@ -215,7 +221,7 @@ const AssignmentForm = ({ mode = 'create' }) => {
             <div className="glass-card p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Course Selection - Only show if not creating from course content */}
-                    {!courseId && (
+                    {mode != 'edit' && (
                         <div>
                             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                 Course
@@ -233,6 +239,13 @@ const AssignmentForm = ({ mode = 'create' }) => {
                                     </option>
                                 ))}
                             </select>
+                        </div>
+                    )}
+                    {mode == 'edit' && (
+                        <div>
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                Course: {assignmentData?.course_name} ({assignmentData?.course_code})
+                            </label>
                         </div>
                     )}
 
@@ -258,6 +271,13 @@ const AssignmentForm = ({ mode = 'create' }) => {
                                     </option>
                                 ))}
                             </select>
+                        </div>
+                    )}
+                    {mode == 'edit' && (
+                        <div>
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                Week: {assignmentData?.week?.title}
+                            </label>
                         </div>
                     )}
 

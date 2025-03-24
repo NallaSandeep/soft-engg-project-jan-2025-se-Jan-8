@@ -145,28 +145,28 @@ const CoursesList = () => {
                                         <div className="text-sm text-zinc-900 dark:text-white">{course.code}</div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-zinc-900 dark:text-white">{course.students} / {course.maxStudents}</div>
+                                        <div className="text-sm text-zinc-900 dark:text-white">{course.enrolled_students} / {course.max_students}</div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                            course.status === 'active' 
+                                            course.is_active 
                                                 ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400' 
-                                                : course.status === 'inactive'
+                                                : course.is_active === 'inactive'
                                                 ? 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400'
                                                 : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-400'
                                         }`}>
-                                            {course.status}
+                                            {course.is_active ? 'Active' : 'Inactive'}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div className="flex justify-end space-x-2">
-                                            <button
+                                            {/* <button
                                                 onClick={() => navigate(`/admin/courses/${course.id}`)}
                                                 className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
                                                 title="View Course"
                                             >
                                                 <EyeIcon className="h-5 w-5" />
-                                            </button>
+                                            </button> */}
                                             <button
                                                 onClick={() => navigate(`/admin/courses/${course.id}/edit`)}
                                                 className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
