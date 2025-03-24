@@ -65,6 +65,15 @@ const CourseForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        setError(null);
+        if (formData.start_date && formData.end_date) {
+            const startDate = new Date(formData.start_date);
+            const endDate = new Date(formData.end_date);
+            if (endDate < startDate) {
+                setError('End date cannot be before the start date.');
+                return; // Prevent form submission
+            }
+        }
         try {
             setLoading(true);
             setError(null);
@@ -179,7 +188,7 @@ const CourseForm = () => {
                                     />
                                 </div>
 
-                                <div>
+                                {/*<div>
                                     <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                                         Enrollment Type
                                     </label>
@@ -194,7 +203,7 @@ const CourseForm = () => {
                                         <option value="invite">Invite Only</option>
                                         <option value="closed">Closed</option>
                                     </select>
-                                </div>
+                                </div>*/}
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

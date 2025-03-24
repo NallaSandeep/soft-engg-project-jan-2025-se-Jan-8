@@ -126,6 +126,7 @@ def get_user(user_id):
             return jsonify({'msg': 'User not found'}), 404
             
         return jsonify({
+            'success': True,
             'user': {
                 'id': user.id,
                 'username': user.username,
