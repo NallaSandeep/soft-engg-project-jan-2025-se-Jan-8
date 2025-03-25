@@ -5,6 +5,7 @@ import {
   ClipboardDocumentIcon, 
   CheckIcon, 
   StopIcon,
+  FlagIcon,
   ChatBubbleOvalLeftEllipsisIcon, 
   XMarkIcon,
   BookmarkIcon,
@@ -16,7 +17,7 @@ const dummyMessages = [
   { id: 1, text: "Hi! How can I help you today?", isBot: true, time: "10:00 AM" }
 ];
 
-const Chatbot = ({isOpen, setIsOpen}) => {
+const Chatbot = ({ isOpen, setIsOpen }) => {
   const [files, setFiles] = useState([]);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState(dummyMessages);
@@ -24,6 +25,8 @@ const Chatbot = ({isOpen, setIsOpen}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [savedChats, setSavedChats] = useState([]);
   const [showSavedChats, setShowSavedChats] = useState(false);
+  const [showSavePrompt, setShowSavePrompt] = useState(false);
+  const [showReportPrompt, setShowReportPrompt] = useState(false);
   const messagesEndRef = useRef(null);
   const abortControllerRef = useRef(null);
 
@@ -56,14 +59,10 @@ const Chatbot = ({isOpen, setIsOpen}) => {
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    
-    // Check file size (limit to 5MB per file)
     const validFiles = selectedFiles.filter(file => file.size <= 5 * 1024 * 1024);
-    
     if (validFiles.length !== selectedFiles.length) {
       alert('Some files were not added because they exceed the 5MB limit.');
     }
-    
     setFiles(prevFiles => [...prevFiles, ...validFiles]);
   };
 
@@ -77,6 +76,14 @@ const Chatbot = ({isOpen, setIsOpen}) => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const handleReportChat = () => {
+    // Add logic to send the report to the server or handle it as needed
+
+    // Show report animation
+    setShowReportPrompt(true);
+    setTimeout(() => setShowReportPrompt(false), 2000); // Hide after 2 seconds
+  };
+
   const handleSaveChat = () => {
     const chatId = Date.now().toString();
     const newSavedChat = {
@@ -85,6 +92,9 @@ const Chatbot = ({isOpen, setIsOpen}) => {
       date: new Date().toLocaleString()
     };
     setSavedChats([...savedChats, newSavedChat]);
+
+    setShowSavePrompt(true);
+    setTimeout(() => setShowSavePrompt(false), 2000); // Hide after 2 seconds
   };
 
   const handleDeleteSavedChat = (chatId) => {
@@ -106,7 +116,6 @@ const Chatbot = ({isOpen, setIsOpen}) => {
   const handleSubmit = () => {
     if (!message.trim() && files.length === 0) return;
 
-    // Add user message
     const userMessageId = Date.now();
     const userMessage = {
       id: userMessageId,
@@ -125,14 +134,12 @@ const Chatbot = ({isOpen, setIsOpen}) => {
     setFiles([]);
     setIsLoading(true);
 
-    // Create a new AbortController
     abortControllerRef.current = new AbortController();
 
-    // Simulate AI response (replace with actual API call)
     setTimeout(() => {
       const botMessage = {
         id: Date.now(),
-        text: "I'm here to help! This is a simulated response. In a real implementation, this would be connected to your backend API.",
+        text: "I'm here to help! This is a simulated response.",
         isBot: true,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
@@ -155,7 +162,6 @@ const Chatbot = ({isOpen, setIsOpen}) => {
     }
   };
 
-  // Format message text with line breaks
   const formatMessage = (text) => {
     return text.split('\n').map((line, i) => (
       <React.Fragment key={i}>
@@ -186,77 +192,98 @@ const Chatbot = ({isOpen, setIsOpen}) => {
       >
         {/* Chatbot container */}
         <div
-          className={`fixed bottom-0 right-0 w-full sm:w-[400px] md:w-[450px] h-[600px] max-h-[90vh] bg-white dark:bg-zinc-900 rounded-t-xl sm:rounded-xl shadow-xl transform transition-all duration-300 overflow-hidden z-50 sm:bottom-4 sm:right-4 ${
+          className={`fixed bottom-0 right-0 w-full sm:w-[400px] md:w-[450px] h-[600px] max-h-[90vh] bg-white dark:bg-zinc-900 rounded-t-xl sm:rounded-xl shadow-xl transform transition-all duration-300 flex flex-col z-50 sm:bottom-4 sm:right-4 ${
             isOpen ? 'translate-y-0' : 'translate-y-full sm:translate-y-8 opacity-0'
           }`}
         >
           {/* Header */}
-          <div className="flex justify-between items-center p-4 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800">
-            <div className="flex items-center">
-              <h3 className="font-semibold text-zinc-900 dark:text-white">StudyBot</h3>
-            </div>
+          <div className="flex justify-between items-center p-4 border-b border-zinc-200 dark:border-zinc-700">
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">StudyBot</h3>
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setShowSavedChats(!showSavedChats)}
+                title="View Saved Chats"
                 className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700"
               >
                 <Squares2X2Icon className="h-5 w-5" />
               </button>
-              <button
+              {!showSavedChats && ( <button
                 onClick={handleSaveChat}
+                title="Bookmark Chat"
                 className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700"
               >
                 <BookmarkIcon className="h-5 w-5" />
+              </button>)}
+              {/* Report Chat */}
+              <button
+                onClick={handleReportChat}
+                title="Report Chat"
+                className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                >
+                <FlagIcon className="h-5 w-5" />
               </button>
               <button
                 onClick={toggleChat}
+                title="Close Chat"
                 className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700"
               >
                 <XMarkIcon className="h-5 w-5" />
               </button>
             </div>
-          </div>
-
-          {/* Saved Chats Panel */}
-          {showSavedChats && (
-            <div className="absolute inset-0 top-[57px] bg-white dark:bg-zinc-900 z-10 overflow-y-auto">
-              <div className="p-4 border-b border-zinc-200 dark:border-zinc-700">
-                <h3 className="font-semibold text-zinc-900 dark:text-white">Saved Conversations</h3>
-              </div>
-              {savedChats.length === 0 ? (
-                <div className="p-4 text-center text-zinc-500 dark:text-zinc-400">
-                  No saved conversations yet
-                </div>
-              ) : (
-                <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
-                  {savedChats.map(chat => (
-                    <div key={chat.id} className="p-4 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                      <div className="flex justify-between items-start">
-                        <button
-                          onClick={() => handleLoadSavedChat(chat)}
-                          className="text-left flex-1"
-                        >
-                          <p className="font-medium text-zinc-900 dark:text-white truncate">
-                            {chat.messages[1]?.text.substring(0, 30) || "Conversation"}...
-                          </p>
-                          <p className="text-sm text-zinc-500 dark:text-zinc-400">{chat.date}</p>
-                        </button>
-                        <button
-                          onClick={() => handleDeleteSavedChat(chat.id)}
-                          className="p-1 text-zinc-500 hover:text-red-500 dark:text-zinc-400"
-                        >
-                          <BookmarkSlashIcon className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+             {/* Save Prompt Animation */}
+              {showSavePrompt && (
+                <div className="absolute top-0 right-0 mt-2 mr-4 bg-zinc-100 dark:bg-zinc-600 text-zinc-700 dark:text-zinc-100 text-xs font-semibold px-3 py-1 rounded-lg shadow-lg animate-fade-in-out">
+                  Chat Saved!
                 </div>
               )}
-            </div>
-          )}
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 h-[calc(100%-130px)]">
+              {/* Report Prompt Animation */}
+              {showReportPrompt && (
+                <div className="absolute top-0 right-0 mt-2 mr-4 bg-red-200 dark:bg-red-900/50 text-xs font-semibold px-3 py-1 rounded-lg shadow-lg animate-fade-in-out">
+                  Chat Reported!
+                </div>
+              )}
+          </div>
+          {/* Saved Chats Panel */}
+{showSavedChats && (
+  <div className="absolute inset-0 top-[57px] bg-white dark:bg-zinc-900 rounded-t-xl sm:rounded-xl z-10 overflow-y-auto">
+    <div className="p-4 border-b border-zinc-200 dark:border-zinc-700">
+      <h3 className="font-semibold text-zinc-900 dark:text-white">Saved Conversations</h3>
+    </div>
+    {savedChats.length === 0 ? (
+      <div className="p-4 text-center text-zinc-500 dark:text-zinc-400">
+        No saved conversations yet
+      </div>
+    ) : (
+      <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
+        {savedChats.map(chat => (
+          <div key={chat.id} className="p-4 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+            <div className="flex justify-between items-start">
+              <button
+                onClick={() => handleLoadSavedChat(chat)}
+                className="text-left flex-1"
+              >
+                <p className="font-medium text-zinc-900 dark:text-white truncate">
+                  {chat.messages[0]?.text.substring(0, 30) || "Conversation"}...
+                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">{chat.date}</p>
+              </button>
+              <button
+                onClick={() => handleDeleteSavedChat(chat.id)}
+                className="p-1 text-zinc-500 hover:text-red-500 dark:text-zinc-400"
+              >
+                <BookmarkSlashIcon className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
+
+          {/* Messages Section */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 text-sm text-md">
             {messages.map((msg) => (
               <div
                 key={msg.id}
@@ -265,38 +292,14 @@ const Chatbot = ({isOpen, setIsOpen}) => {
                 <div
                   className={`max-w-[85%] rounded-lg p-3 ${
                     msg.isBot
-                      ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
-                      : 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900'
+                      ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white'
+                      : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200'
                   }`}
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1 break-words">
                       {formatMessage(msg.text)}
-                      
-                      {/* Display files if any */}
-                      {msg.files && msg.files.length > 0 && (
-                        <div className="mt-2 space-y-1">
-                          {msg.files.map((file, index) => (
-                            <div key={index} className="flex items-center text-xs p-1.5 rounded bg-zinc-200 dark:bg-zinc-700">
-                              <PaperClipIcon className="h-3 w-3 mr-1" />
-                              <span className="truncate">{file.name}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
                     </div>
-                    
-                    {/* Copy button */}
-                    <button
-                      onClick={() => handleCopy(msg.text, msg.id)}
-                      className="ml-2 p-1 opacity-0 group-hover:opacity-100 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded transition-opacity"
-                    >
-                      {copiedId === msg.id ? (
-                        <CheckIcon className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <ClipboardDocumentIcon className="h-4 w-4 text-zinc-500 dark:text-zinc-400" />
-                      )}
-                    </button>
                   </div>
                   <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                     {msg.time}
@@ -304,85 +307,69 @@ const Chatbot = ({isOpen, setIsOpen}) => {
                 </div>
               </div>
             ))}
-            
-            {/* Loading indicator */}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="max-w-[85%] rounded-lg p-3 bg-zinc-100 dark:bg-zinc-800">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex space-x-1">
-                      <div className="h-2 w-2 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="h-2 w-2 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="h-2 w-2 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                    </div>
-                    <button
-                      onClick={handleStopResponse}
-                      className="p-1 rounded text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30"
-                    >
-                      <StopIcon className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-            
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input area */}
-          <div className="p-4 border-t border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
-            <div className="flex items-end space-x-2">
-              <div className="flex-1 bg-zinc-100 dark:bg-zinc-700 rounded-lg">
+          {/* Input Area */}
+          <div className="p-4 border-t border-zinc-200 dark:border-zinc-700">
+            {/* File Preview */}
+            {files.length > 0 && (
+              <div className="px-3 pb-2 flex flex-wrap gap-2 overflow-y-auto max-h-[60px]">
+                {files.map((file, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center text-xs p-1.5 rounded bg-zinc-200 dark:bg-zinc-600 text-zinc-900 dark:text-white"
+                  >
+                    <PaperClipIcon className="h-3 w-3 mr-1" />
+                    <span className="truncate max-w-[100px]">{file.name}</span>
+                    <button
+                      onClick={() => handleRemoveFile(file)}
+                      className="ml-1 text-zinc-500 hover:text-red-500"
+                    >
+                      <XMarkIcon className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Input and Send Button */}
+            <div className="flex items-center space-x-2">
+              <div className="flex-1 rounded-lg">
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Type your message..."
-                  className="w-full bg-transparent p-3 max-h-32 focus:outline-none text-zinc-900 dark:text-white resize-none"
-                  rows={1}
+                  className="text-sm w-full bg-zinc-100 dark:bg-zinc-800 p-3 max-h-32 focus:outline-none text-zinc-900 dark:text-zinc-100 resize-none"
+                  rows={2}
                 />
-                
-                {/* Display selected files */}
-                {files.length > 0 && (
-                  <div className="px-3 pb-2 flex flex-wrap gap-2">
-                    {files.map((file, index) => (
-                      <div key={index} className="flex items-center text-xs p-1.5 rounded bg-zinc-200 dark:bg-zinc-600 text-zinc-900 dark:text-white">
-                        <PaperClipIcon className="h-3 w-3 mr-1" />
-                        <span className="truncate max-w-[100px]">{file.name}</span>
-                        <button
-                          onClick={() => handleRemoveFile(file)}
-                          className="ml-1 text-zinc-500 hover:text-red-500"
-                        >
-                          <XMarkIcon className="h-3 w-3" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
-              
-              <div className="flex space-x-2">
-                <label className="p-3 rounded-lg bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 cursor-pointer">
-                  <PaperClipIcon className="h-5 w-5 text-zinc-500 dark:text-zinc-400" />
-                  <input
-                    type="file"
-                    multiple
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                </label>
-                <button
-                  onClick={handleSubmit}
-                  disabled={!message.trim() && files.length === 0}
-                  className={`p-3 rounded-lg ${
-                    !message.trim() && files.length === 0
-                      ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-400 dark:text-zinc-500 cursor-not-allowed'
-                      : 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100'
-                  }`}
-                >
-                  <ArrowUpIcon className="h-5 w-5" />
-                </button>
-              </div>
+
+              {/* File Attachment Button */}
+              <label className="p-3 rounded-lg bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 cursor-pointer" title="Attach files">
+                <PaperClipIcon className="h-5 w-5 text-zinc-500 dark:text-zinc-400" />
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </label>
+
+              {/* Send Button */}
+              <button
+                onClick={handleSubmit}
+                title="Send Message"
+                disabled={!message.trim() && files.length === 0}
+                className={`p-3 rounded-lg ${
+                  !message.trim() && files.length === 0
+                    ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-400 dark:text-zinc-500 cursor-not-allowed'
+                    : 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100'
+                }`}
+              >
+                <ArrowUpIcon className="h-5 w-5" />
+              </button>
             </div>
           </div>
         </div>
@@ -391,4 +378,4 @@ const Chatbot = ({isOpen, setIsOpen}) => {
   );
 };
 
-export default Chatbot; 
+export default Chatbot;
