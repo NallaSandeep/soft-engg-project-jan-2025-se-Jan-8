@@ -162,7 +162,7 @@ const Dashboard = () => {
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">Personal Resources</h2>
                     <button
-                        onClick={() => navigate('/personal-resources')}
+                        onClick={() => navigate('/student/personal-resources')}
                         className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm"
                     >
                         View All →
@@ -174,7 +174,7 @@ const Dashboard = () => {
                             <div
                                 key={resource.id}
                                 className="bg-white dark:bg-zinc-700 rounded-lg p-4 hover:bg-zinc-100 dark:hover:bg-zinc-600 cursor-pointer transition-colors border border-zinc-200 dark:border-zinc-600"
-                                onClick={() => navigate(`/personal-resources/${resource.id}`)}
+                                onClick={() => navigate(`/student/personal-resources/${resource.id}`)}
                             >
                                 <h3 className="font-medium text-zinc-900 dark:text-white mb-2">{resource.name}</h3>
                                 <p className="text-sm text-zinc-600 dark:text-gray-400 mb-4">{resource.description}</p>
@@ -189,7 +189,7 @@ const Dashboard = () => {
                     <div className="text-center py-8">
                         <p className="text-zinc-600 dark:text-gray-400 mb-4">You haven't created any resources yet.</p>
                         <button
-                            onClick={() => navigate('/personal-resources')}
+                            onClick={() => navigate('/student/personal-resources')}
                             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
                         >
                             Create Resource

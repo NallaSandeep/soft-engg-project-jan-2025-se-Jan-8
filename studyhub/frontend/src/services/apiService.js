@@ -82,7 +82,7 @@ export const courseApi = {
     updateCourse: (id, courseData) => api.put(`/courses/${id}`, courseData),
     deleteCourse: (id) => api.delete(`/courses/${id}`),
     getCourseContent: (courseId) => api.get(`/courses/${courseId}/content`),
-    enrollStudent: (courseId, studentId, role) => api.post(`/courses/enroll/`, { courseId, studentId, role }),
+    enrollStudent: (courseId, studentId) => api.post(`/courses/${courseId}/enroll/${studentId}`),
     unenrollStudent: (courseId, studentId) => api.delete(`/courses/${courseId}/enroll/${studentId}`),
     getEnrolledStudents: (courseId) => api.get(`/courses/${courseId}/students`),
     // Week management
@@ -94,6 +94,13 @@ export const courseApi = {
     // Lecture management
     getLectures: (weekId) => api.get(`/courses/weeks/${weekId}/lectures`),
     getLectureContent: (lectureId) => api.get(`/courses/lectures/${lectureId}/content`),
+    getLecturePdf: (lectureId) => api.get(`/courses/lectures/${lectureId}/pdf`, {
+        responseType: 'blob',
+        headers: {
+            'Accept': 'application/pdf'
+        },
+        withCredentials: true
+    }),
     createLecture: (weekId, lectureData) => api.post(`/courses/weeks/${weekId}/lectures`, lectureData),
     updateLecture: (lectureId, lectureData) => api.put(`/courses/lectures/${lectureId}`, lectureData),
     deleteLecture: (lectureId) => api.delete(`/courses/lectures/${lectureId}`),
@@ -102,6 +109,8 @@ export const courseApi = {
     createAssignment: (weekId, assignmentData) => api.post(`/courses/weeks/${weekId}/assignments`, assignmentData),
     updateAssignment: (assignmentId, assignmentData) => api.put(`/courses/assignments/${assignmentId}`, assignmentData),
     deleteAssignment: (assignmentId) => api.delete(`/courses/assignments/${assignmentId}`),
+    markLectureCompleted: (lectureId) => api.post(`/courses/lectures/${lectureId}/progress`),
+    getCourseProgress: (courseId) => api.get(`/courses/${courseId}/progress`),
 };
 
 // User API
@@ -139,11 +148,13 @@ export const assignmentApi = {
     // Get all assignments (admin/teacher view)
     getAssignments: (filters = {}) => {
         const params = new URLSearchParams();
-        if (filters.course) params.append('course_id', filters.course);
-        if (filters.type) params.append('type', filters.type);
-        if (filters.status) params.append('status', filters.status);
+        if (filters.course_id) params.append('course_id', filters.course_id);
+        if (filters.type && filters.type !== 'All Types') params.append('type', filters.type.toLowerCase());
+        if (filters.status && filters.status !== 'All Status') params.append('status', filters.status.toLowerCase());
         if (filters.search) params.append('search', filters.search);
         if (filters.week_id) params.append('week_id', filters.week_id);
+        if (filters.page) params.append('page', filters.page);
+        if (filters.limit) params.append('limit', filters.limit);
         return api.get(`/assignments?${params.toString()}`);
     },
 
@@ -151,7 +162,7 @@ export const assignmentApi = {
     getWeekAssignments: (weekId) => api.get(`/courses/weeks/${weekId}/assignments`),
 
     // Get all assignments for a student (across all courses)
-    getStudentAssignments: () => api.get('/assignments/student'),
+    getStudentAssignments: () => api.get('/assignments/student/assignments'),
 
     // Get a specific assignment
     getAssignment: (assignmentId) => api.get(`/assignments/${assignmentId}`),
@@ -161,6 +172,9 @@ export const assignmentApi = {
 
     // Get student's submissions for an assignment
     getSubmissions: (assignmentId) => api.get(`/assignments/${assignmentId}/submissions`),
+
+    // Get correct answers for an assignment (only available under specific conditions)
+    getCorrectAnswers: (assignmentId) => api.get(`/assignments/${assignmentId}/correct-answers`),
 
     // For TAs: Create an assignment
     createAssignment: (weekId, assignmentData) => api.post(`/courses/weeks/${weekId}/assignments`, assignmentData),
@@ -181,135 +195,74 @@ export const assignmentApi = {
     getAssignmentQuestions: (assignmentId) => api.get(`/assignments/${assignmentId}/questions`),
 
     // For TAs: Update question order in assignment
-    updateQuestionOrder: (assignmentId, questionOrders) => api.put(`/assignments/${assignmentId}/questions/order`, { question_orders: questionOrders })
+    updateQuestionOrder: (assignmentId, questionOrders) => api.put(`/assignments/${assignmentId}/questions/order`, { orders: questionOrders })
+};
+
+// Admin API
+export const adminApi = {
+    getDashboardStats: () => api.get('/admin/dashboard/stats'),
+    getSystemLogs: () => api.get('/admin/logs'),
+    getUserActivity: () => api.get('/admin/user-activity'),
+    getSystemHealth: () => api.get('/admin/health'),
+    manageRoles: (userId, roleData) => api.put(`/admin/users/${userId}/roles`, roleData),
+    getAuditLogs: () => api.get('/admin/audit-logs')
 };
 
 // Question Bank API
 export const questionBankApi = {
-    // List questions with filters
     getQuestions: (filters = {}) => {
         const params = new URLSearchParams();
-        if (filters.status) params.append('status', filters.status);
         if (filters.type) params.append('type', filters.type);
         if (filters.difficulty) params.append('difficulty', filters.difficulty);
-        if (filters.course_id) params.append('course_id', filters.course_id);
-        if (filters.week_id) params.append('week_id', filters.week_id);
-        if (filters.lecture_id) params.append('lecture_id', filters.lecture_id);
-        if (filters.page) params.append('page', filters.page);
-        if (filters.limit) params.append('limit', filters.limit);
-        return api.get(`/question-bank/questions?${params.toString()}`);
+        if (filters.search) params.append('search', filters.search);
+        return api.get(`/questions?${params.toString()}`);
     },
-
-    // Get a specific question
-    getQuestion: (questionId) => api.get(`/question-bank/questions/${questionId}`),
-
-    // Create a question
-    createQuestion: (questionData) => api.post('/question-bank/questions', questionData),
-
-    // Update a question
-    updateQuestion: (questionId, questionData) => api.put(`/question-bank/questions/${questionId}`, questionData),
-
-    // Delete a question
-    deleteQuestion: (questionId) => api.delete(`/question-bank/questions/${questionId}`),
-
-    // Batch create questions
-    batchCreateQuestions: (questionsData) => api.post('/question-bank/questions/batch', questionsData)
+    getQuestion: (id) => api.get(`/questions/${id}`),
+    createQuestion: (questionData) => api.post('/questions', questionData),
+    updateQuestion: (id, questionData) => api.put(`/questions/${id}`, questionData),
+    deleteQuestion: (id) => api.delete(`/questions/${id}`),
+    importQuestions: (fileData) => api.post('/questions/import', fileData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+    exportQuestions: () => api.get('/questions/export', { responseType: 'blob' })
 };
 
-// Personal Knowledge Base API
+// Personal Resources API
 export const personalApi = {
-    // Resource Management
-    getPersonalResources: (courseId = null) => {
-        return api.get(`/personal-resources${courseId ? `?course_id=${courseId}` : ''}`);
-    },
-    
-    getResource: (resourceId) => api.get(`/personal-resources/${resourceId}`),
-    
-    createPersonalResource: (data) => {
-        // Ensure course_id is sent as a string
-        const payload = {
-            ...data,
-            course_id: data.course_id.toString()
-        };
-        return api.post('/personal-resources', payload);
-    },
-
-    updateResource: (resourceId, data) => {
-        return api.put(`/personal-resources/${resourceId}`, data);
-    },
-
-    deleteResource: (resourceId) => {
-        return api.delete(`/personal-resources/${resourceId}`);
-    },
-
-    // File Management
-    getResourceFiles: (resourceId) => api.get(`/personal-resources/${resourceId}/files`),
-    
-    downloadFile: async (resourceId, fileId) => {
-        const response = await api({
-            url: `/personal-resources/${resourceId}/files/${fileId}/download`,
-            method: 'GET',
-            responseType: 'blob'
-        });
-        
-        // Create a URL for the blob and trigger download
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        
-        // Get filename from Content-Disposition header or use a default
-        const contentDisposition = response.headers['content-disposition'];
-        let filename = 'download';
-        if (contentDisposition) {
-            const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
-            if (matches != null && matches[1]) {
-                filename = matches[1].replace(/['"]/g, '');
-            }
+    getResources: () => api.get('/personal-resources'),
+    getResource: (id) => api.get(`/personal-resources/${id}`),
+    createResource: (resourceData) => api.post('/personal-resources', resourceData),
+    updateResource: (id, resourceData) => api.put(`/personal-resources/${id}`, resourceData),
+    deleteResource: (id) => api.delete(`/personal-resources/${id}`),
+    uploadFile: (formData) => api.post('/personal-resources/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+    downloadFile: (resourceId, fileId) => api.get(`/personal-resources/${resourceId}/files/${fileId}/download`, {
+        responseType: 'blob',
+        headers: {
+            'Accept': 'application/octet-stream'
         }
-        
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        window.URL.revokeObjectURL(url);
-    },
-
-    addFile: (resourceId, data) => {
-        if (data instanceof File) {
-            // Handle file upload
-            const formData = new FormData();
-            formData.append('file', data);
-            return api.post(`/personal-resources/${resourceId}/files`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+    }),
+    getResourceFiles: (resourceId) => api.get(`/personal-resources/${resourceId}/files`),
+    deleteFile: (resourceId, fileId) => api.delete(`/personal-resources/${resourceId}/files/${fileId}`),
+    updateNotes: (resourceId, notes) => api.put(`/personal-resources/${resourceId}/notes`, { notes }),
+    shareResource: (resourceId, userData) => api.post(`/personal-resources/${resourceId}/share`, userData),
+    unshareResource: (resourceId, userId) => api.delete(`/personal-resources/${resourceId}/share/${userId}`),
+    createPersonalResource: (resourceData) => api.post('/personal-resources', resourceData),
+    addFile: (resourceId, fileData) => {
+        const formData = new FormData();
+        if (fileData instanceof File) {
+            formData.append('file', fileData);
         } else {
             // Handle text note
-            return api.post(`/personal-resources/${resourceId}/files`, {
-                name: data.name,
-                type: 'text',
-                content: data.content
-            });
+            formData.append('content', fileData.content);
+            formData.append('name', fileData.name);
+            formData.append('type', fileData.type);
         }
-    },
-
-    deleteFile: (resourceId, fileId) => api.delete(`/personal-resources/${resourceId}/files/${fileId}`),
-
-    // Search and Related Documents
-    searchResources: (query) => api.get('/personal-resources', { params: { search: query } }),
-    getRelatedResources: (resourceId, limit = 5) => api.get(`/personal-resources/${resourceId}/related`, { 
-        params: { limit } 
-    }),
-
-    async updateFile(resourceId, fileId, data) {
-        const response = await api.put(`/personal-resources/${resourceId}/files/${fileId}`, data);
-        return response.data;
+        return api.post(`/personal-resources/${resourceId}/files`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
     }
 };
-
-export const adminApi = {
-    getDashboardStats: () => {
-        return api.get('/admin/dashboard/stats');
-    }
-};
-
-export default api; 

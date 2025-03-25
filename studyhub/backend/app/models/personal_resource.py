@@ -1,3 +1,42 @@
+"""
+Personal Resource Module
+---------------------
+Manages user-specific resources and study materials.
+Contains PersonalResource and ResourceFile models for organizing
+student materials within courses.
+
+PersonalResource Model Features:
+- User-specific resource organization
+- Course-specific resource grouping
+- Resource metadata management
+- Custom settings per resource
+- File management capabilities
+
+ResourceFile Model Features:
+- Multiple content types (text, file, url)
+- File metadata tracking
+- File storage management
+- Content type handling
+
+Content Types:
+- text: Notes and text content
+- file: Uploaded files (PDF, DOC, etc.)
+- url: External resource links
+
+Key Relationships:
+PersonalResource:
+- user: Resource owner
+- course: Associated course
+- files: Resource files
+
+ResourceFile:
+- resource: Parent resource
+- file metadata and content
+
+Note: This module replaces the legacy Resource model,
+providing better organization and user-specific resource management.
+"""
+
 """Personal resources models."""
 from datetime import datetime
 from app import db

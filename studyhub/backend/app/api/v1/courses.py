@@ -1,12 +1,33 @@
 from datetime import datetime
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_file, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from ...models import User, Course, CourseEnrollment, Week, Lecture, Assignment, Question
+from ...models import User, Course, CourseEnrollment, Week, Lecture, Assignment, Question, LectureProgress
 from ...utils.auth import admin_required, student_or_ta_required, ta_required, roles_required
 from ... import db
 import json
+import os
+from werkzeug.utils import secure_filename
+import traceback
 
 courses_bp = Blueprint('courses', __name__)
+
+def allowed_file(filename):
+    """Check if the file extension is allowed"""
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() == 'pdf'
+
+def save_lecture_pdf(file, lecture_id):
+    """Save uploaded PDF file and return the file path"""
+    filename = f"Lecture_{lecture_id}.pdf"
+    
+    # Create upload directory if it doesn't exist
+    upload_dir = current_app.config['UPLOAD_FOLDER']
+    os.makedirs(upload_dir, exist_ok=True)
+    
+    file_path = os.path.join(upload_dir, filename)
+    file.save(file_path)
+    
+    return filename
 
 @courses_bp.route('/', methods=['GET'])
 @jwt_required()
@@ -577,13 +598,53 @@ def get_lecture_content(lecture_id):
                 'success': False,
                 'message': 'Not enrolled in this course'
             }), 403
+
+        # Update lecture progress for the student
+        if current_user.role == 'student':
+            lecture_progress = LectureProgress.query.filter_by(
+                lecture_id=lecture_id,
+                user_id=current_user.id
+            ).first()
+            
+            if not lecture_progress:
+                lecture_progress = LectureProgress(
+                    lecture_id=lecture_id,
+                    user_id=current_user.id,
+                    completed=True,
+                    completed_at=datetime.utcnow()
+                )
+                db.session.add(lecture_progress)
+            else:
+                lecture_progress.completed = True
+                lecture_progress.completed_at = datetime.utcnow()
+            
+            db.session.commit()
+            
+        response_data = lecture.to_dict()
+        
+        # Add content-specific data
+        if lecture.content_type == 'youtube':
+            if not lecture.youtube_url:
+                return jsonify({
+                    'success': False,
+                    'message': 'YouTube URL not found for this lecture'
+                }), 404
+        elif lecture.content_type == 'pdf':
+            if not lecture.file_path:
+                return jsonify({
+                    'success': False,
+                    'message': 'PDF file not found for this lecture'
+                }), 404
             
         return jsonify({
             'success': True,
-            'data': lecture.to_dict()
+            'data': response_data
         }), 200
         
     except Exception as e:
+        import traceback
+        print("Error in get_lecture_content:", str(e))
+        print("Traceback:", traceback.format_exc())
         return jsonify({
             'success': False,
             'message': str(e)
@@ -786,5 +847,259 @@ def enroll_student():
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e), 'message': 'Failed to enroll student'}), 500
+
+@courses_bp.route('/lectures/<int:lecture_id>/progress', methods=['POST'])
+@jwt_required()
+def mark_lecture_completed(lecture_id):
+    """Mark a lecture as completed for the current user"""
+    try:
+        current_user = User.query.get(get_jwt_identity())
+        if not current_user:
+            return jsonify({
+                'success': False,
+                'message': 'User not found'
+            }), 404
+
+        lecture = Lecture.query.get_or_404(lecture_id)
+        
+        # Check if user is enrolled in the course
+        enrollment = CourseEnrollment.query.filter_by(
+            user_id=current_user.id,
+            course_id=lecture.week.course_id,
+            status='active'
+        ).first()
+        
+        if not enrollment:
+            return jsonify({
+                'success': False,
+                'message': 'Not enrolled in this course'
+            }), 403
+
+        # Create or update progress record
+        progress = LectureProgress.query.filter_by(
+            lecture_id=lecture_id,
+            user_id=current_user.id
+        ).first()
+
+        if not progress:
+            progress = LectureProgress(
+                lecture_id=lecture_id,
+                user_id=current_user.id,
+                completed=True,
+                completed_at=datetime.utcnow()
+            )
+            db.session.add(progress)
+        else:
+            progress.completed = True
+            progress.completed_at = datetime.utcnow()
+
+        db.session.commit()
+
+        # Calculate updated progress
+        course = lecture.week.course
+        course_progress = course.calculate_progress(current_user.id)
+        
+        return jsonify({
+            'success': True,
+            'data': {
+                'lecture_progress': progress.to_dict(),
+                'course_progress': course_progress
+            },
+            'message': 'Lecture marked as completed'
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
+
+@courses_bp.route('/<int:course_id>/progress', methods=['GET', 'OPTIONS'])
+@jwt_required()
+def get_course_progress(course_id):
+    """Get course progress for the current user"""
+    # Handle OPTIONS request for CORS
+    if request.method == 'OPTIONS':
+        return '', 200
+        
+    try:
+        current_user = User.query.get(get_jwt_identity())
+        if not current_user:
+            return jsonify({
+                'success': False,
+                'message': 'User not found'
+            }), 404
+
+        course = Course.query.get_or_404(course_id)
+        
+        # Check if user is enrolled in the course
+        enrollment = CourseEnrollment.query.filter_by(
+            user_id=current_user.id,
+            course_id=course_id,
+            status='active'
+        ).first()
+        
+        if not enrollment and current_user.role not in ['admin', 'teacher']:
+            return jsonify({
+                'success': False,
+                'message': 'Not enrolled in this course'
+            }), 403
+
+        progress = course.calculate_progress(current_user.id)
+        
+        return jsonify({
+            'success': True,
+            'data': progress,
+            'message': 'Course progress retrieved successfully'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
+
+@courses_bp.route('/lectures/<int:lecture_id>/pdf', methods=['GET', 'OPTIONS'])
+@jwt_required()
+def get_lecture_pdf(lecture_id):
+    """Get lecture PDF file"""
+    print(f"\n=== PDF Request ===")
+    print(f"Method: {request.method}")
+    print(f"Headers: {dict(request.headers)}")
+    print(f"Lecture ID: {lecture_id}")
+    
+    # Handle OPTIONS request for CORS
+    if request.method == 'OPTIONS':
+        headers = {
+            'Access-Control-Allow-Origin': 'http://127.0.0.1:3000',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Access-Control-Allow-Credentials': 'true'
+        }
+        return '', 200, headers
+        
+    try:
+        # Get lecture
+        lecture = Lecture.query.get_or_404(lecture_id)
+        print(f"Found lecture: {lecture.title}")
+        print(f"Content type: {lecture.content_type}")
+        print(f"File path: {lecture.file_path}")
+        
+        # Check if lecture has PDF content
+        if lecture.content_type != 'pdf' or not lecture.file_path:
+            print("Error: No PDF content found")
+            return jsonify({
+                'success': False,
+                'message': 'PDF not found for this lecture'
+            }), 404
+            
+        # Get full file path
+        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], lecture.file_path)
+        print(f"Full file path: {file_path}")
+        print(f"File exists: {os.path.exists(file_path)}")
+        
+        if not os.path.exists(file_path):
+            print("Error: File not found at path")
+            return jsonify({
+                'success': False,
+                'message': 'PDF file not found on server'
+            }), 404
+            
+        try:
+            # Send file with proper headers for PDF display
+            response = send_file(
+                file_path,
+                mimetype='application/pdf',
+                as_attachment=False,  # This allows the browser to display the PDF
+                download_name=lecture.file_path  # Provide the filename
+            )
+            
+            # Set required headers for PDF display and CORS
+            response.headers['Content-Type'] = 'application/pdf'
+            response.headers['Content-Disposition'] = 'inline'
+            response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:3000'
+            response.headers['Access-Control-Allow-Credentials'] = 'true'
+            response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+            response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+            
+            print("Successfully sending file response")
+            print(f"Response headers: {dict(response.headers)}")
+            return response
+            
+        except Exception as file_error:
+            print(f"Error sending file: {str(file_error)}")
+            print(f"Error type: {type(file_error)}")
+            print(f"Error traceback: {traceback.format_exc()}")
+            return jsonify({
+                'success': False,
+                'message': f'Error serving PDF file: {str(file_error)}'
+            }), 500
+            
+    except Exception as e:
+        print(f"Error in get_lecture_pdf: {str(e)}")
+        print(f"Error type: {type(e)}")
+        print(f"Error traceback: {traceback.format_exc()}")
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
+
+@courses_bp.route('/lectures/<int:lecture_id>/pdf', methods=['POST'])
+@jwt_required()
+@roles_required('admin', 'ta')
+def upload_lecture_pdf(lecture_id):
+    """Upload a PDF file for a lecture"""
+    try:
+        # Get lecture
+        lecture = Lecture.query.get_or_404(lecture_id)
+        
+        # Check if file is provided
+        if 'file' not in request.files:
+            return jsonify({
+                'success': False,
+                'message': 'No file provided'
+            }), 400
+            
+        file = request.files['file']
+        if not file or not allowed_file(file.filename):
+            return jsonify({
+                'success': False,
+                'message': 'Invalid file type. Only PDF files are allowed.'
+            }), 400
+            
+        # Save file and update lecture
+        filename = save_lecture_pdf(file, lecture_id)
+        
+        # Delete old file if exists
+        if lecture.file_path:
+            old_file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], lecture.file_path)
+            try:
+                os.remove(old_file_path)
+            except OSError:
+                pass  # Ignore if file doesn't exist
+        
+        # Update lecture record
+        lecture.content_type = 'pdf'
+        lecture.file_path = filename
+        
+        # Extract text from PDF if possible
+        # TODO: Add PDF text extraction here if needed
+        
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'data': lecture.to_dict(),
+            'message': 'PDF uploaded successfully'
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        print("Error uploading PDF:", str(e))
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
 
 

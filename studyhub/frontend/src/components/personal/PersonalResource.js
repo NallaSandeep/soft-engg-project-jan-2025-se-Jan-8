@@ -19,7 +19,31 @@ const FileItem = ({ file, resourceId, onDelete, onEdit }) => {
     const handleDownload = async () => {
         try {
             setDownloadError(null);
-            await personalApi.downloadFile(resourceId, file.id);
+            const response = await personalApi.downloadFile(resourceId, file.id);
+            
+            if (file.type === 'text') {
+                // For text notes, create blob from the JSON response
+                const blob = new Blob([response.data.data], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = response.data.name;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } else {
+                // For uploaded files, handle the blob response directly
+                const blob = new Blob([response.data], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.name;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }
         } catch (error) {
             setDownloadError('Failed to download file. Please try again.');
             console.error('Download error:', error);
@@ -175,9 +199,19 @@ const AddFileModal = ({ isOpen, onClose, onSubmit }) => {
                             <label className="block text-sm font-medium text-zinc-900 dark:text-white mb-2">File</label>
                             <input
                                 type="file"
-                                onChange={(e) => setSelectedFile(e.target.files[0])}
+                                accept=".txt"
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    if (file && !file.name.toLowerCase().endsWith('.txt')) {
+                                        alert('Only .txt files are allowed');
+                                        e.target.value = '';
+                                        return;
+                                    }
+                                    setSelectedFile(e.target.files[0]);
+                                }}
                                 className="w-full text-zinc-900 dark:text-white"
                             />
+                            <p className="mt-1 text-sm text-zinc-600 dark:text-gray-400">Only .txt files are allowed</p>
                         </div>
                     )}
 
@@ -329,7 +363,7 @@ const PersonalResource = () => {
         try {
             setLoading(true);
             await personalApi.deleteResource(resourceId);
-            navigate('/personal-resources');
+            navigate('/student/personal-resources');
         } catch (err) {
             setError('Failed to delete resource');
             console.error(err);
@@ -401,7 +435,7 @@ const PersonalResource = () => {
         return (
             <div className="text-center py-12">
                 <p className="text-gray-600 dark:text-gray-400 mb-4">Resource not found</p>
-                <Button onClick={() => navigate('/personal-resources')}>Back to Resources</Button>
+                <Button onClick={() => navigate('/student/personal-resources')}>Back to Resources</Button>
             </div>
         );
     }
@@ -410,7 +444,7 @@ const PersonalResource = () => {
         return (
             <div className="text-center py-12">
                 <ErrorAlert message={error} className="mb-4" />
-                <Button onClick={() => navigate('/personal-resources')}>Back to Resources</Button>
+                <Button onClick={() => navigate('/student/personal-resources')}>Back to Resources</Button>
             </div>
         );
     }
@@ -419,7 +453,7 @@ const PersonalResource = () => {
         return (
             <div className="text-center py-12">
                 <p className="text-gray-600 dark:text-gray-400 mb-4">Unable to load resource</p>
-                <Button onClick={() => navigate('/personal-resources')}>Back to Resources</Button>
+                <Button onClick={() => navigate('/student/personal-resources')}>Back to Resources</Button>
             </div>
         );
     }
@@ -429,10 +463,13 @@ const PersonalResource = () => {
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
                     <button
-                        onClick={() => navigate('/personal-resources')}
-                        className="text-zinc-600 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white"
+                        onClick={() => navigate('/student/personal-resources')}
+                        className="flex items-center space-x-2 text-zinc-600 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
                     >
-                        ← Back
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                        </svg>
+                        <span>Back to Resources</span>
                     </button>
                     {isEditMode ? (
                         <div>

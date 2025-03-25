@@ -10,6 +10,8 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import ForgotPassword from './components/auth/ForgotPassword';
 import ResetPassword from './components/auth/ResetPassword';
+import NotFound from './components/errors/NotFound';
+import ServerError from './components/errors/ServerError';
 
 // Student Components
 import StudentDashboard from './components/student/Dashboard';
@@ -69,8 +71,8 @@ const App = () => {
                                 <Route path="/reset-password/:token" element={<ResetPassword />} />
 
                                 {/* Protected Routes */}
-                                <Route element={<PrivateRoute><Layout /></PrivateRoute>}>
-                                    {/* Default redirect */}
+                                <Route element={<Layout />}>
+                                    {/* Default redirect to student dashboard */}
                                     <Route path="/" element={<Navigate to="/student/dashboard" replace />} />
                                     
                                     {/* Redirect old dashboard to student dashboard */}
@@ -81,26 +83,25 @@ const App = () => {
                                         <Route path="dashboard" element={<StudentDashboard />} />
                                         <Route path="courses" element={<StudentCourses />} />
                                         <Route path="courses/:courseId" element={<CourseView />} />
+                                        <Route path="courses/:courseId/lectures/:lectureId" element={<LectureView />} />
+                                        <Route path="courses/:courseId/assignments/:assignmentId" element={<AssignmentView />} />
                                         <Route path="assignments" element={<AssignmentList />} />
+                                        <Route path="personal-resources" element={<PersonalResourcesLanding />} />
+                                        <Route path="personal-resources/:resourceId" element={<PersonalResource />} />
                                     </Route>
 
                                     {/* TA Routes */}
                                     {renderRoutes(taRoutes)}
 
-                                    {/* Course and Assignment Routes */}
-                                    <Route path="/courses/:courseId/lectures/:lectureId" element={<LectureView />} />
-                                    <Route path="/courses/:courseId/assignments/:assignmentId" element={<AssignmentView />} />
+                                    {/* Admin Routes */}
+                                    {renderRoutes(adminRoutes)}
 
-                                    {/* Personal Resources Routes */}
-                                    <Route path="/personal-resources" element={<PersonalResourcesLanding />} />
-                                    <Route path="/personal-resources/:resourceId" element={<PersonalResource />} />
+                                    {/* Catch all route */}
+                                    <Route path="*" element={<Navigate to="/student/dashboard" replace />} />
                                 </Route>
 
-                                {/* Admin Routes */}
-                                {renderRoutes(adminRoutes)}
-
-                                {/* Catch all route */}
-                                <Route path="*" element={<Navigate to="/student/dashboard" replace />} />
+                                <Route path="/500" element={<ServerError />} />
+                                <Route path="*" element={<NotFound />} />
                             </Routes>
                             <ModalContainer />
                         </DropdownProvider>

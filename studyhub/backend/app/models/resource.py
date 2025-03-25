@@ -1,3 +1,26 @@
+"""
+Resource Model Module [NOT USED]
+-----------------------------
+Legacy module for managing course resources.
+This module has been replaced by the PersonalResource model
+for better organization and user-specific resource management.
+
+Original Features:
+- Course resource management
+- File upload handling
+- Resource access control
+- Resource metadata tracking
+
+Key Relationships (Historical):
+- course: Associated course
+- week: Associated week (optional)
+- created_by: Resource uploader
+
+Note: This module is kept for reference but should not be used.
+New development should use the PersonalResource model instead.
+"""
+
+"""NOT USED"""
 from datetime import datetime
 from app import db
 

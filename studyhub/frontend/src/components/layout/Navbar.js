@@ -9,7 +9,8 @@ import {
     ClipboardDocumentListIcon,
     ChartBarIcon,
     UsersIcon,
-    Cog6ToothIcon
+    Cog6ToothIcon,
+    HomeIcon
 } from '@heroicons/react/24/outline';
 
 const Navbar = () => {
@@ -46,7 +47,7 @@ const Navbar = () => {
                     { to: '/student/dashboard', text: 'Dashboard', icon: ChartBarIcon },
                     { to: '/student/courses', text: 'My Courses', icon: BookOpenIcon },
                     { to: '/student/assignments', text: 'Assignments', icon: ClipboardDocumentListIcon },
-                    { to: '/personal-resources', text: 'Personal Resources', icon: AcademicCapIcon }
+                    { to: '/student/personal-resources', text: 'Personal Resources', icon: AcademicCapIcon }
                 ];
             default:
                 return [];

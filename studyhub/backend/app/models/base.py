@@ -1,3 +1,22 @@
+"""
+Base Model Module
+---------------
+This module provides the base model class that all other models inherit from.
+It implements common functionality like timestamps, CRUD operations, and utility methods.
+
+Key Features:
+- Automatic timestamps for created_at and updated_at
+- Common CRUD operations (save, delete, update)
+- Utility methods for retrieving instances
+- SQLAlchemy integration
+
+Usage:
+    class MyModel(BaseModel):
+        __tablename__ = 'my_table'
+        id = db.Column(db.Integer, primary_key=True)
+        # ... other fields ...
+"""
+
 from datetime import datetime
 from .. import db
 

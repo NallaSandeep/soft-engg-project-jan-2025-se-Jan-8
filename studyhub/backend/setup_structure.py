@@ -19,7 +19,10 @@ def setup_structure():
     create_directory('migrations')
     create_directory('tests')
     create_directory('logs')
-    create_directory('uploads')
+    create_directory('uploads')  # This will be created in the backend directory
+    
+    # Create a .gitkeep file in the uploads directory to track it in git
+    create_file('uploads/.gitkeep')
 
     # App subdirectories
     create_directory('app/models')

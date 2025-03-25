@@ -76,12 +76,19 @@ const Dashboard = () => {
                         <Card
                             key={course.id}
                             className="hover:shadow-lg dark:hover:shadow-zinc-900/50 transition-shadow cursor-pointer dark:bg-zinc-800"
-                            onClick={() => navigate(`/courses/${course.id}`)}
+                            onClick={() => navigate(`/student/courses/${course.id}`)}
                         >
                             <div className="p-6">
                                 <h2 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">{course.name}</h2>
                                 <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-4">{course.code}</p>
                                 <p className="text-zinc-500 dark:text-zinc-500">{course.description}</p>
+                                <button
+                                    key={course.id}
+                                    onClick={() => navigate(`/student/courses/${course.id}`)}
+                                    className="text-blue-600 hover:text-blue-800"
+                                >
+                                    View Course →
+                                </button>
                             </div>
                         </Card>
                     ))}
