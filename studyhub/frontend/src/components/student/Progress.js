@@ -186,8 +186,9 @@ const Progress = () => {
                                 <p className="text-sm text-gray-600">{course.code}</p>
                             </div>
                             <button
-                                onClick={() => navigate(`/courses/${course.id}`)}
-                                className="text-blue-600 hover:text-blue-800"
+                                key={course.id}
+                                onClick={() => navigate(`/student/courses/${course.id}`)}
+                                className="w-full p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 hover:border-blue-500 dark:hover:border-blue-500 bg-white dark:bg-zinc-800 transition-colors group"
                             >
                                 View Course →
                             </button>

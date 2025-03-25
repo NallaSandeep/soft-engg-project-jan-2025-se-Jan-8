@@ -9,7 +9,7 @@ import ErrorAlert from '../common/ErrorAlert';
 const ResourceCard = ({ resource, onClick }) => (
     <div 
         onClick={onClick}
-        className="bg-zinc-50 dark:bg-zinc-800 rounded-lg p-6 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors border border-zinc-200 dark:border-zinc-700"
+        className="bg-zinc-50 dark:bg-zinc-800 rounded-lg p-6 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors border border-zinc-200 dark:border-zinc-700 cursor-pointer"
     >
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-2">{resource.name}</h3>
         <p className="text-zinc-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">{resource.description}</p>
@@ -37,7 +37,7 @@ const PersonalResourcesLanding = () => {
     const loadResources = async () => {
         try {
             setLoading(true);
-            const response = await personalApi.getPersonalResources();
+            const response = await personalApi.getResources();
             setResources(response?.data || []);
             setError(null);
         } catch (err) {
@@ -56,7 +56,7 @@ const PersonalResourcesLanding = () => {
     };
 
     const handleResourceClick = (resourceId) => {
-        navigate(`/personal-resources/${resourceId}`);
+        navigate(`/student/personal-resources/${resourceId}`);
     };
 
     if (loading) {

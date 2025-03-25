@@ -17,8 +17,8 @@ class PersonalResourceService:
     @property
     def upload_folder(self):
         """Get the upload folder path from current app config."""
-        folder = current_app.config['UPLOAD_FOLDER']
-        os.makedirs(os.path.join(folder, 'personal_resources'), exist_ok=True)
+        folder = os.path.join(current_app.config['UPLOAD_FOLDER'], 'personal_resources')
+        os.makedirs(folder, exist_ok=True)
         return folder
 
     def get_user_resources(self, user_id: int, course_id: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -42,21 +42,102 @@ class PersonalResourceService:
         db.session.commit()
         return resource
 
-    def update_resource(self, resource_id: int, user_id: int, 
-                       name: Optional[str] = None, description: Optional[str] = None,
-                       settings: Optional[Dict] = None) -> PersonalResource:
-        """Update an existing personal resource."""
+    def handle_file_upload(self, file, resource_id, user_id):
+        """Handle file upload for a resource."""
+        # Verify resource ownership
         resource = PersonalResource.query.filter_by(
             id=resource_id,
             user_id=user_id
         ).first_or_404()
+
+        # Create the resource directory if it doesn't exist
+        resource_dir = os.path.join(self.upload_folder, str(resource_id))
+        os.makedirs(resource_dir, exist_ok=True)
+
+        # Save the file
+        filename = secure_filename(file.filename)
+        # Store only the relative path from the resource directory
+        file_path = os.path.join(str(resource_id), filename)
+        # Full path for saving the file
+        full_path = os.path.join(self.upload_folder, file_path)
+
+        print(f"Saving file to: {full_path}")  # Debug log
+        file.save(full_path)
+
+        # Create file record with the relative path
+        file_record = ResourceFile(
+            resource_id=resource_id,
+            name=filename,
+            file_path=file_path,  # Store relative path
+            file_type='text/plain',
+            type='file'
+        )
         
-        if name:
+        db.session.add(file_record)
+        db.session.commit()
+        
+        print(f"File record created: {file_record.to_dict()}")  # Debug log
+        return file_record
+
+    def add_file(self, resource_id, user_id, file_data):
+        """Add a text note or file to a resource."""
+        # Verify resource ownership
+        resource = PersonalResource.query.filter_by(
+            id=resource_id,
+            user_id=user_id
+        ).first_or_404()
+
+        if isinstance(file_data, dict) and 'content' in file_data:
+            # Handle text note
+            file_record = ResourceFile(
+                resource_id=resource_id,
+                name=file_data['name'],
+                content=file_data['content'],
+                type='text'
+            )
+        else:
+            # Create the resource directory if it doesn't exist
+            resource_dir = os.path.join(self.upload_folder, str(resource_id))
+            os.makedirs(resource_dir, exist_ok=True)
+
+            # Save the file
+            filename = secure_filename(file_data.filename)
+            # Store only the relative path from the resource directory
+            file_path = os.path.join(str(resource_id), filename)
+            # Full path for saving the file
+            full_path = os.path.join(self.upload_folder, file_path)
+
+            print(f"Saving file to: {full_path}")  # Debug log
+            file_data.save(full_path)
+
+            file_record = ResourceFile(
+                resource_id=resource_id,
+                name=filename,
+                file_path=file_path,  # Store relative path
+                file_type='text/plain',
+                type='file'
+            )
+        
+        db.session.add(file_record)
+        db.session.commit()
+        
+        print(f"File record created: {file_record.to_dict()}")  # Debug log
+        return file_record
+
+    def update_resource(self, resource_id: int, user_id: int, name: Optional[str] = None,
+                       description: Optional[str] = None, settings: Optional[Dict] = None) -> PersonalResource:
+        """Update a personal resource."""
+        resource = PersonalResource.query.filter_by(
+            id=resource_id,
+            user_id=user_id
+        ).first_or_404()
+
+        if name is not None:
             resource.name = name
         if description is not None:
             resource.description = description
-        if settings:
-            resource.settings.update(settings)
+        if settings is not None:
+            resource.settings = settings
 
         db.session.commit()
         return resource
@@ -68,39 +149,21 @@ class PersonalResourceService:
             user_id=user_id
         ).first_or_404()
 
-        # Delete physical files
+        # Delete associated files from storage
         for file in resource.files:
-            if file.type == 'file' and file.file_path:
+            if file.file_path:
                 try:
-                    os.remove(os.path.join(self.upload_folder, file.file_path))
-                except OSError:
-                    pass  # Ignore if file doesn't exist
-        
+                    file_path = os.path.join(self.upload_folder, file.file_path)
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                except Exception as e:
+                    print(f"Error deleting file {file.file_path}: {str(e)}")
+
         db.session.delete(resource)
         db.session.commit()
 
-    def add_file(self, resource_id: int, user_id: int, file_data: Dict[str, Any]) -> ResourceFile:
-        """Add a file to a personal resource."""
-        resource = PersonalResource.query.filter_by(
-            id=resource_id,
-            user_id=user_id
-        ).first_or_404()
-        
-        file = ResourceFile(
-            resource_id=resource_id,
-            name=file_data.get('name'),
-            type=file_data.get('type', 'note'),
-            content=file_data.get('content'),
-            file_type=file_data.get('file_type', 'text/plain'),
-            file_size=file_data.get('file_size', 0)
-        )
-        
-        db.session.add(file)
-        db.session.commit()
-        return file
-
     def delete_file(self, resource_id: int, file_id: int, user_id: int) -> None:
-        """Delete a file from a personal resource."""
+        """Delete a file from a resource."""
         resource = PersonalResource.query.filter_by(
             id=resource_id,
             user_id=user_id
@@ -110,43 +173,14 @@ class PersonalResourceService:
             id=file_id,
             resource_id=resource_id
         ).first_or_404()
-        
-        # Delete physical file if it exists
-        if file.type == 'file' and file.file_path:
-            try:
-                os.remove(os.path.join(self.upload_folder, file.file_path))
-            except OSError:
-                pass  # Ignore if file doesn't exist
-        
-        db.session.delete(file)
-        db.session.commit()
 
-    def handle_file_upload(self, file, resource_id: int, user_id: int) -> ResourceFile:
-        """Handle file upload and storage."""
-        resource = PersonalResource.query.filter_by(
-            id=resource_id,
-            user_id=user_id
-        ).first_or_404()
-        
-        filename = secure_filename(file.filename)
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        unique_filename = f"{timestamp}_{filename}"
-        file_path = os.path.join('personal_resources', unique_filename)
-        
-        # Save file
-        os.makedirs(os.path.join(self.upload_folder, 'personal_resources'), exist_ok=True)
-        file.save(os.path.join(self.upload_folder, file_path))
-        
-        # Create file record
-        file_record = ResourceFile(
-            resource_id=resource_id,
-            name=filename,
-            type='file',
-            file_path=file_path,
-            file_type=file.content_type,
-            file_size=os.path.getsize(os.path.join(self.upload_folder, file_path))
-        )
-        
-        db.session.add(file_record)
-        db.session.commit()
-        return file_record 
+        if file.file_path:
+            try:
+                file_path = os.path.join(self.upload_folder, file.file_path)
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            except Exception as e:
+                print(f"Error deleting file {file.file_path}: {str(e)}")
+
+        db.session.delete(file)
+        db.session.commit() 

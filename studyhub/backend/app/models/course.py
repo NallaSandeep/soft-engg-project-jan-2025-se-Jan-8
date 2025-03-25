@@ -1,3 +1,40 @@
+"""
+Course Management Module
+---------------------
+Core module for course management in StudyHub.
+Contains Course and CourseEnrollment models for managing courses and student enrollments.
+
+Course Model Features:
+- Course creation and management
+- Enrollment type control (open, closed, invite_only)
+- Student capacity management
+- Course scheduling (start_date, end_date)
+- Relationships with content (weeks, resources)
+
+CourseEnrollment Model Features:
+- Student and TA enrollment management
+- Enrollment status tracking
+- Role-based enrollment (student, ta)
+- Enrollment history
+
+Key Relationships:
+Course:
+- created_by: Teacher who created the course
+- enrollments: Student/TA enrollments
+- resources: Course materials
+- personal_resources: Student personal materials
+- weeks: Course content organization
+
+CourseEnrollment:
+- course: Associated course
+- user: Enrolled user
+- role: User's role in course
+- status: Enrollment status
+
+Note: These models form the core structure for course organization
+and student participation in the platform.
+"""
+
 from datetime import datetime
 from app import db
 
@@ -42,10 +79,40 @@ class Course(db.Model):
     def __repr__(self):
         return f'<Course {self.code}: {self.name}>'
 
-    def to_dict(self):
+    def calculate_progress(self, user_id):
+        """Calculate overall progress for a specific user in this course"""
+        total_items = 0
+        completed_items = 0
+        week_progress = []
+
+        # Get all weeks
+        weeks = self.weeks.all()
+        
+        # Calculate progress for each week
+        for week in weeks:
+            week_stats = week.calculate_progress(user_id)
+            total_items += week_stats['total_items']
+            completed_items += week_stats['completed_items']
+            week_progress.append({
+                'week_id': week.id,
+                'week_number': week.number,
+                'progress': week_stats
+            })
+
+        # Calculate overall percentage
+        progress_percentage = (completed_items / total_items * 100) if total_items > 0 else 0
+        
+        return {
+            'total_items': total_items,
+            'completed_items': completed_items,
+            'percentage': round(progress_percentage, 2),
+            'weeks': week_progress
+        }
+
+    def to_dict(self, include_progress=False, user_id=None):
         """Convert course to dictionary representation"""
         enrolled_count = self.get_enrolled_count('student')
-        return {
+        data = {
             'id': self.id,
             'code': self.code,
             'name': self.name,
@@ -62,6 +129,12 @@ class Course(db.Model):
             'enrolled_students': enrolled_count,  # Keep for backward compatibility
             'teaching_assistants': self.get_enrolled_count('ta')
         }
+
+        # Add progress information if requested and user_id is provided
+        if include_progress and user_id:
+            data['progress'] = self.calculate_progress(user_id)
+
+        return data
 
     def get_enrolled_count(self, role):
         """Get count of enrolled users by role"""
