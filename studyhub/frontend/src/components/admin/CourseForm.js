@@ -77,8 +77,9 @@ const CourseForm = () => {
             } else {
                 response = await courseApi.createCourse(formData);
             }
+           console.log("response:",response.success);
            
-            if (response.msg === "Course updated successfully") {
+            if (response.success) {
                 toast.success(`Course ${isEditMode ? 'updated' : 'created'} successfully!`);
                 navigate('/admin/courses');
                 

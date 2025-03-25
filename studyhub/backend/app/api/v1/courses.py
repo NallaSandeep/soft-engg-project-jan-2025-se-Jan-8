@@ -163,8 +163,8 @@ def update_course(course_id):
         db.session.commit()
 
         return jsonify({
+            'success': True,
             'msg': 'Course updated successfully',
-            'code': 200
             'course': course.to_dict(),
           
         }), 200
