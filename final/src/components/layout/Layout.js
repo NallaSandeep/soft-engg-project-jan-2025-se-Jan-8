@@ -46,7 +46,7 @@ const Layout = () => {
             <main className="flex-1 container bg-zinc-100 dark:bg-zinc-900 py-4">
                 <Outlet />
             </main>
-            {user === "student" && <Chatbot isOpen={isChatOpen} setIsOpen={setIsChatOpen}/>}
+            {user?.role === "student" && <Chatbot isOpen={isChatOpen} setIsOpen={setIsChatOpen}/>}
             
         </div>
     );
