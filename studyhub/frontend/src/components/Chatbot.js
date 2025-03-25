@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, use } from 'react';
 import { 
   PaperClipIcon, 
   ArrowUpIcon, 
@@ -11,15 +11,20 @@ import {
   BookmarkIcon,
   BookmarkSlashIcon,
   Squares2X2Icon,
+  PlusIcon
 } from '@heroicons/react/24/outline';
+import { chatAPI, messageAPI } from '../services/chatService';
 
 const dummyMessages = [
   { id: 1, text: "Hi! How can I help you today?", isBot: true, time: "10:00 AM" }
 ];
 
 const Chatbot = ({ isOpen, setIsOpen }) => {
+  const [firstLoad, setFirstLoad] = useState(false);
+  const [chatSessionId, setChatSessionId] = useState(null);
   const [files, setFiles] = useState([]);
   const [message, setMessage] = useState('');
+  const [currResponse, setCurrResponse] = useState('');
   const [messages, setMessages] = useState(dummyMessages);
   const [copiedId, setCopiedId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +34,7 @@ const Chatbot = ({ isOpen, setIsOpen }) => {
   const [showReportPrompt, setShowReportPrompt] = useState(false);
   const messagesEndRef = useRef(null);
   const abortControllerRef = useRef(null);
+  const socket = useRef(null);
 
   // Load saved chats from localStorage
   useEffect(() => {
@@ -52,7 +58,30 @@ const Chatbot = ({ isOpen, setIsOpen }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleNewChat = () => {
+    // Create a new chat session
+    chatAPI.createChat().then((response) => {
+      console.log('Chat session created:', response.session_id);
+      setChatSessionId(response.session_id);
+    }).catch((error) => {
+      console.error('Error creating chat session:', error);
+    });
+
+    // Create websocket connection for sending and receiving messages
+    socket.current = messageAPI.createConnection(chatSessionId)
+
+    // const defaultMessage = [
+    //   { id: Date.now(), text: "Hi! How can I help you today?", isBot: true, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+    // ];
+    // setMessages(defaultMessage);
+  };
+
   const toggleChat = () => {
+    if (!firstLoad) {
+      console.log('First load');
+      setFirstLoad(true);
+      handleNewChat();
+    }
     setIsOpen(!isOpen);
     setTimeout(scrollToBottom, 100);
   };
@@ -136,16 +165,32 @@ const Chatbot = ({ isOpen, setIsOpen }) => {
 
     abortControllerRef.current = new AbortController();
 
-    setTimeout(() => {
-      const botMessage = {
-        id: Date.now(),
-        text: "I'm here to help! This is a simulated response.",
-        isBot: true,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages(prev => [...prev, botMessage]);
-      setIsLoading(false);
-    }, 1500);
+    // Send message to the server
+    messageAPI.sendMessage(socket.current, chatSessionId, message)
+    socket.current.onmessage = (event) => {
+      const chunk = JSON.parse(event.data)
+      setCurrResponse((prev) => prev + chunk);
+      console.log('Response:', chunk);
+    }
+    const botMessage = {
+      id: Date.now(),
+      text: currResponse,
+      isBot: true,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    setMessages(prev => [...prev, botMessage]);
+    setIsLoading(false);
+
+    // setTimeout(() => {
+    //   const botMessage = {
+    //     id: Date.now(),
+    //     text: "I'm here to help! This is a simulated response.",
+    //     isBot: true,
+    //     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    //   };
+    //   setMessages(prev => [...prev, botMessage]);
+    //   setIsLoading(false);
+    // }, 1500);
   };
 
   const handleStopResponse = () => {
@@ -200,6 +245,16 @@ const Chatbot = ({ isOpen, setIsOpen }) => {
           <div className="flex justify-between items-center p-4 border-b border-zinc-200 dark:border-zinc-700">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">StudyBot</h3>
             <div className="flex items-center space-x-2">
+              {/* New Chat Button */}
+              <button
+                onClick={handleNewChat}
+                title="Start a New Chat"
+                className="p-2 rounded-lg text-zinc-500 hover:text-blue-500 dark:text-zinc-400 dark:hover:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900"
+              >
+                <PlusIcon className="h-5 w-5" />
+              </button>
+
+              {/* Save Chat Button */}
               <button
                 onClick={() => setShowSavedChats(!showSavedChats)}
                 title="View Saved Chats"
@@ -214,6 +269,7 @@ const Chatbot = ({ isOpen, setIsOpen }) => {
               >
                 <BookmarkIcon className="h-5 w-5" />
               </button>)}
+
               {/* Report Chat */}
               <button
                 onClick={handleReportChat}
@@ -222,6 +278,8 @@ const Chatbot = ({ isOpen, setIsOpen }) => {
                 >
                 <FlagIcon className="h-5 w-5" />
               </button>
+
+              {/* Close Chat Button */}
               <button
                 onClick={toggleChat}
                 title="Close Chat"
