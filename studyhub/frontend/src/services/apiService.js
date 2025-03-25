@@ -245,34 +245,96 @@ export const personalApi = {
     // File Management
     getResourceFiles: (resourceId) => api.get(`/personal-resources/${resourceId}/files`),
     
+    // downloadFile: async (resourceId, fileId) => {
+    //     const response = await api({
+    //         url: `/personal-resources/${resourceId}/files/${fileId}/download`,
+    //         method: 'GET',
+    //         responseType: 'blob'
+    //     });
+        
+    //     // Create a URL for the blob and trigger download
+    //     const url = window.URL.createObjectURL(new Blob([response.data]));
+    //     const link = document.createElement('a');
+    //     link.href = url;
+        
+    //     // Get filename from Content-Disposition header or use a default
+    //     const contentDisposition = response.headers['content-disposition'];
+    //     let filename = 'download';
+    //     if (contentDisposition) {
+    //         const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
+    //         if (matches != null && matches[1]) {
+    //             filename = matches[1].replace(/['"]/g, '');
+    //         }
+    //     }
+        
+    //     link.setAttribute('download', filename);
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     link.remove();
+    //     window.URL.revokeObjectURL(url);
+    // },
     downloadFile: async (resourceId, fileId) => {
-        const response = await api({
-            url: `/personal-resources/${resourceId}/files/${fileId}/download`,
-            method: 'GET',
-            responseType: 'blob'
-        });
-        
-        // Create a URL for the blob and trigger download
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        
-        // Get filename from Content-Disposition header or use a default
-        const contentDisposition = response.headers['content-disposition'];
-        let filename = 'download';
-        if (contentDisposition) {
-            const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
-            if (matches != null && matches[1]) {
-                filename = matches[1].replace(/['"]/g, '');
+        try {
+            const response = await api({
+                url: `/personal-resources/${resourceId}/files/${fileId}/download`,
+                method: 'GET',
+                responseType: 'blob', // Critical for binary files
+            });
+    
+            // Step 1: Determine the filename
+            let filename = 'document'; // Default name
+            const contentDisposition = response.headers['content-disposition'];
+    
+            if (contentDisposition) {
+                // Handle RFC 5987 encoded filenames (e.g., filename*=UTF-8''file.pdf)
+                const utf8FilenameMatch = contentDisposition.match(/filename\*=(?:UTF-8'')?(.+?)(?:;|$)/i);
+                if (utf8FilenameMatch) {
+                    filename = decodeURIComponent(utf8FilenameMatch[1]);
+                } else {
+                    // Fallback to legacy filename (e.g., filename="file.pdf")
+                    const legacyFilenameMatch = contentDisposition.match(/filename="?(.+?)"?(?:;|$)/i);
+                    if (legacyFilenameMatch) {
+                        filename = legacyFilenameMatch[1];
+                    }
+                }
             }
+    
+            // Step 2: Ensure the file has the correct extension
+            const blob = response.data;
+            if (!filename.includes('.')) {
+                // Check Blob type or infer from response headers
+                if (blob.type === 'application/pdf' || response.headers['content-type']?.includes('pdf')) {
+                    filename += '.pdf';
+                } else if (
+                    blob.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+                    response.headers['content-type']?.includes('officedocument.wordprocessingml')
+                ) {
+                    filename += '.docx';
+                }
+            }
+    
+            // Step 3: Trigger the download
+            const blobUrl = window.URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = blobUrl;
+            downloadLink.download = filename; // Force download with the assigned filename
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+    
+            // Cleanup
+            setTimeout(() => {
+                document.body.removeChild(downloadLink);
+                window.URL.revokeObjectURL(blobUrl); // Release memory
+            }, 100);
+    
+        } catch (error) {
+            console.error('Download failed:', error);
+            throw new Error(`Download failed: ${error.message}`);
         }
-        
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        window.URL.revokeObjectURL(url);
     },
+
+
+
 
     addFile: (resourceId, data) => {
         if (data instanceof File) {

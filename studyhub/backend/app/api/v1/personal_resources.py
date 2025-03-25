@@ -181,6 +181,54 @@ def update_resource_file(resource_id, file_id):
     db.session.commit()
     return jsonify(file.to_dict())
 
+# @bp.route('/<int:resource_id>/files/<int:file_id>/download', methods=['GET'])
+# @jwt_required()
+# def download_resource_file(resource_id, file_id):
+#     """Download a resource file."""
+#     user_id = get_jwt_identity()
+    
+#     # Debug logging
+#     print(f"Download request - Resource ID: {resource_id}, File ID: {file_id}, User ID: {user_id}")
+    
+#     # Verify resource ownership
+#     resource = PersonalResource.query.filter_by(
+#         id=resource_id,
+#         user_id=user_id
+#     ).first_or_404()
+    
+#     # Get the file
+#     file = ResourceFile.query.filter_by(
+#         id=file_id,
+#         resource_id=resource_id
+#     ).first_or_404()
+    
+#     # Debug logging
+#     print(f"File record found - Name: {file.name}, Path: {file.file_path}, Type: {file.file_type}")
+    
+#     if not file.file_path:
+#         print("Error: No file path available")
+#         return jsonify({'error': 'No file available'}), 404
+        
+#     file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], file.file_path)
+    
+#     # Debug logging
+#     print(f"Full file path: {file_path}")
+#     print(f"File exists: {os.path.exists(file_path)}")
+        
+#     if not os.path.exists(file_path):
+#         print("Error: File not found at path")
+#         return jsonify({'error': 'File not found'}), 404
+        
+#     try:
+#         return send_file(
+#             file_path,
+#             mimetype=file.file_type,
+#             as_attachment=True,
+#             download_name=file.name
+#         )
+#     except Exception as e:
+#         print(f"Error sending file: {str(e)}")
+#         return jsonify({'error': 'Failed to send file'}), 500 
 @bp.route('/<int:resource_id>/files/<int:file_id>/download', methods=['GET'])
 @jwt_required()
 def download_resource_file(resource_id, file_id):
@@ -188,7 +236,7 @@ def download_resource_file(resource_id, file_id):
     user_id = get_jwt_identity()
     
     # Debug logging
-    print(f"Download request - Resource ID: {resource_id}, File ID: {file_id}, User ID: {user_id}")
+    current_app.logger.info(f"Download request - Resource ID: {resource_id}, File ID: {file_id}, User ID: {user_id}")
     
     # Verify resource ownership
     resource = PersonalResource.query.filter_by(
@@ -202,30 +250,53 @@ def download_resource_file(resource_id, file_id):
         resource_id=resource_id
     ).first_or_404()
     
-    # Debug logging
-    print(f"File record found - Name: {file.name}, Path: {file.file_path}, Type: {file.file_type}")
+    current_app.logger.info(f"File record found - Name: {file.name}, Type: {file.file_type}")
     
     if not file.file_path:
-        print("Error: No file path available")
+        current_app.logger.error("No file path available")
         return jsonify({'error': 'No file available'}), 404
         
-    file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], file.file_path)
+    file_path = os.path.normpath(os.path.join(
+        current_app.config['UPLOAD_FOLDER'], 
+        file.file_path
+    ))
     
-    # Debug logging
-    print(f"Full file path: {file_path}")
-    print(f"File exists: {os.path.exists(file_path)}")
+    current_app.logger.info(f"Full file path: {file_path}")
         
     if not os.path.exists(file_path):
-        print("Error: File not found at path")
+        current_app.logger.error("File not found at path")
         return jsonify({'error': 'File not found'}), 404
-        
+    
+    # PDF-specific validation
+    if file.name.lower().endswith('.pdf'):
+        try:
+            with open(file_path, 'rb') as f:
+                header = f.read(4)
+                if header != b'%PDF':
+                    current_app.logger.error("Invalid PDF signature")
+                    return jsonify({'error': 'Invalid PDF file'}), 400
+        except Exception as e:
+            current_app.logger.error(f"PDF validation error: {str(e)}")
+            return jsonify({'error': 'Invalid PDF file'}), 400
+    
+    # Determine MIME type
+    if file.name.lower().endswith('.pdf'):
+        mimetype = 'application/pdf'
+    elif file.name.lower().endswith(('.doc', '.docx')):
+        mimetype = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    else:
+        mimetype = file.file_type or 'application/octet-stream'
+    
     try:
-        return send_file(
+        response = send_file(
             file_path,
-            mimetype=file.file_type,
+            mimetype=mimetype,
             as_attachment=True,
-            download_name=file.name
+            download_name=file.name,
+            conditional=True
         )
+        response.headers['Cache-Control'] = 'no-store'
+        return response
     except Exception as e:
-        print(f"Error sending file: {str(e)}")
-        return jsonify({'error': 'Failed to send file'}), 500 
+        current_app.logger.error(f"Error sending file: {str(e)}")
+        return jsonify({'error': 'Failed to send file'}), 500
