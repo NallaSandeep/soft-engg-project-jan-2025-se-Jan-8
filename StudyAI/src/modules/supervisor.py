@@ -17,7 +17,6 @@ class Supervisor(BaseAgent):
     def __init__(self):
         """Initialize the supervisor agent."""
         super().__init__()  # Use BaseAgent's default initialization
-        self.system_message = "You are an intelligent academic assistant router."
 
     async def route(self, message: str) -> ROUTES:
         """Route the incoming message to the appropriate agent."""

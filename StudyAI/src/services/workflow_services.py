@@ -2,8 +2,8 @@ import logging
 from langchain_core.messages import HumanMessage, SystemMessage
 from src.core.workflow import create_workflow
 from .basic_services import add_message_to_session
-from typing import Dict, Any, List
-from src.core.state import AgentState
+from typing import Dict, Any, List, AsyncGenerator
+from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 
@@ -72,26 +72,16 @@ async def process_message(thread_id: str, message: str) -> Dict[str, Any]:
         }
 
 
-async def process_message_stream(thread_id: str, message: str):
-    """
-    Process a message through the workflow.
-
-    Args:
-        thread_id (str): Unique identifier for the conversation thread
-        message (str): User message to process
-
-    Returns:
-        Dict: Response from the workflow including messages
-    """
+async def process_message_stream(
+    thread_id: str, message: str, db: Session
+) -> AsyncGenerator[Dict[str, Any], None]:
+    """Process a message through the workflow."""
     try:
         if thread_id not in active_workflows:
             initialize_workflow(thread_id)
 
         workflow = active_workflows.get(thread_id)
         config = {"configurable": {"thread_id": "1"}}
-
-        if message:
-            add_message_to_session(thread_id, "user", message)
 
         human_message = HumanMessage(content=message)
         message = {"messages": [human_message]}
@@ -102,14 +92,19 @@ async def process_message_stream(thread_id: str, message: str):
             stream_mode="values",
         ):
             if "messages" in chunk and chunk["messages"]:
-                for msg in chunk["messages"]:
-                    if hasattr(msg, "content"):
-                        # Save bot's response to session when we get content
-                        add_message_to_session(thread_id, "bot", msg.content)
-                        yield msg
-                    else:
-                        logger.warning("No content in message")
-                        logger.info(chunk)
+                # for msg in chunk["messages"]:
+                #     if hasattr(msg, "content"):
+                #         yield msg
+                #     else:
+                #         logger.warning("No content in message")
+                #         logger.info(chunk)
+                # Get only the last message from the chunk
+                last_message = chunk["messages"][-1]
+                if hasattr(last_message, "content"):
+                    yield last_message
+                else:
+                    logger.warning("No content in last message")
+                    logger.info(chunk)
             else:
                 logger.warning("No messages in response")
                 logger.info(chunk)

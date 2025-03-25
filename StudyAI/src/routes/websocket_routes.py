@@ -13,6 +13,7 @@ from src.services.websocket_services import (
     disconnect,
     process_and_stream_message,
 )
+from src.services.basic_services import add_message_to_session
 import logging
 import json
 from typing import Optional
@@ -69,9 +70,14 @@ async def websocket_stream_endpoint(
                     )
                     continue
 
+                # Add user message to session in the database
+                add_message_to_session(
+                    db, session_id,"user", user_message
+                )  
+
                 # Process message with streaming
                 await process_and_stream_message(
-                    websocket=websocket, session_id=session_id, message=user_message
+                    websocket=websocket, session_id=session_id, message=user_message,db=db
                 )
 
             except json.JSONDecodeError as e:

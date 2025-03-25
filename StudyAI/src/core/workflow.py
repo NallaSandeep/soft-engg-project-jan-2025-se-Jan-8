@@ -1,77 +1,68 @@
-# import sys
-# import os
+import sys
+import os
 
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-import logging
-from langgraph.graph import StateGraph, END, MessagesState
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
+# ..................................................................................................
+
+from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
 from IPython.display import Image, display
 
 from src.modules.supervisor import supervisor_node
 from src.core.state import AgentState
-from langchain_core.messages import SystemMessage, HumanMessage
 from src.modules.faq_agent import rag_agent_node
 from src.modules.course_guide import course_guidance_node
-from src.modules.integrity import integrity_node
+from src.modules.dismiss_node import dismiss_node
+from src.modules.q_type_checker import check_question_type_node
 from pprint import pprint
-from typing import AsyncGenerator
 
 
 # ..................................................................................................
 
 
-async def dismiss_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
-    # Return a dismissive answer if the query is beyond deployed scope.
-    state["messages"].append(
-        SystemMessage(content="Sorry, I cannot help with that question.")
-    )
-    state["current_agent"] = "supervisor"
-    state["next_step"] = END
-    yield state
-
-
 def create_workflow():
-    """Create a workflow graph with integrity checking before routing.
-
-    Flow:
-    1. Integrity check on question
-    2. Supervisor routes based on integrity remarks
-    3. Handler processes (RAG, course_guide, or dismiss)
-    4. End
-    """
+    """Create a workflow graph with integrity checking before routing."""
 
     # Create the graph with our state
     workflow = StateGraph(AgentState)
 
-    # Add nodes for each agent including a new dismiss node
-    # workflow.add_node("integrity", integrity_node)
+    # Add nodes for each agent
+    workflow.add_node("check_question_type", check_question_type_node)
     workflow.add_node("supervisor", supervisor_node)
-    workflow.add_node("rag", rag_agent_node)
-    workflow.add_node("course_guidance", course_guidance_node)
+    workflow.add_node("faq_agent", rag_agent_node)
+    workflow.add_node("course_guide_agent", course_guidance_node)
     workflow.add_node("dismiss", dismiss_node)
 
     # Set entry point to integrity checker
-    # workflow.set_entry_point("integrity")
-    workflow.set_entry_point("supervisor")
+    workflow.set_entry_point("check_question_type")
 
-    # After integrity check, always go to supervisor
-    # workflow.add_edge("integrity", "supervisor")
-
+    # Set conditional node at check_question_type   
+    workflow.add_conditional_edges(
+        "check_question_type",
+        lambda state: state["next_step"],
+        {
+            "supervisor": "supervisor",
+            "dismiss": "dismiss",
+        },
+    )
+    
     # Set up conditional edges from the supervisor node
     workflow.add_conditional_edges(
         "supervisor",
         lambda state: state["next_step"],
         {
-            "rag": "rag",
-            "course_guidance": "course_guidance",
-            "dismiss": "dismiss",
-            "END": END,
+            "faq_agent": "faq_agent",
+            "course_guide": "course_guide_agent",
         },
     )
+    
+    # Add back edges to supervisor after processing
+    workflow.add_edge("faq_agent", "supervisor")
+    workflow.add_edge("course_guide_agent", "supervisor")
 
-    # Add terminal edges: after processing, route back to supervisor
-    workflow.add_edge("rag", END)
-    workflow.add_edge("course_guidance", END)
+    # Add terminal edges: after processing
+    workflow.add_edge("supervisor", END)
     workflow.add_edge("dismiss", END)
 
     return workflow.compile(checkpointer=MemorySaver())
@@ -82,9 +73,9 @@ def create_workflow():
 # THIS CODE PRINTS THE GRAPH
 
 
-# def visualize_workflow(graph):
-#     return display(Image(graph.get_graph().draw_mermaid_png()))
+def visualize_workflow(graph):
+    return display(Image(graph.get_graph().draw_mermaid_png()))
 
 
-# graph = create_workflow()
-# visualize_workflow(graph)
+graph = create_workflow()
+visualize_workflow(graph)

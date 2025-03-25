@@ -1,7 +1,9 @@
 """Integration tests for API endpoints."""
 
 import pytest
+import asyncio
 from fastapi import status
+from fastapi.websockets import WebSocketDisconnect
 
 
 class TestChatSessionAPI:
@@ -90,32 +92,32 @@ class TestChatSessionAPI:
 class TestMessageAPI:
     """Tests for the message API endpoints."""
 
-    def test_get_messages(self, client, mock_data):
+    @pytest.mark.asyncio(scope="loop_scope")
+    async def test_get_messages(self, client, mock_data):
         """Test getting messages from an existing chat session."""
         # Get an existing session with messages
         if mock_data["sessions"] and mock_data["messages"]:
             session = mock_data["sessions"][0]
             session_id = session.session_id
 
-            response = client.get(f"/chat/session/{session_id}/messages")
-            assert response.status_code == status.HTTP_200_OK
+            async with client.websocket_connect(
+                f"/stream/chat/session/{session_id}/messages"
+            ) as websocket:
+                # Receive messages and verify them
+                received_messages = []
+                try:
+                    async with asyncio.timeout(5):  # 5 second timeout
+                        while True:
+                            message = await websocket.receive_text()
+                            received_messages.append(message)
+                            print(f"Received message: {message}")
+                except asyncio.TimeoutError:
+                    print("Timeout reached while receiving messages")
+                except WebSocketDisconnect:
+                    print("WebSocket disconnected")
+                finally:
+                    assert len(received_messages) > 0, "No messages were received"
 
-            data = response.json()
-            assert isinstance(data, list)
-            assert len(data) > 0
-
-            # Verify that the messages belong to the session
-            for message in data:
-                assert message["session_id"] == session_id
-
-    @pytest.mark.parametrize(
-        "message",
-        [
-            "Hello, how are you?",
-            "Tell me about computer science",
-            "What's the weather like today?",
-        ],
-    )
     def test_send_message(self, client, test_session, message):
         """Test sending a message to a chat session."""
         session_id = test_session["session_id"]

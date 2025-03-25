@@ -20,15 +20,15 @@ from app import app
 
 
 # Create an in-memory SQLite database for testing
-TEST_DATABASE_URL = "sqlite:///:memory:"
+TEST_DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(
     TEST_DATABASE_URL,
     connect_args={"check_same_thread": False},
     poolclass=StaticPool,
-    isolation_level="SERIALIZABLE",  # Add isolation level for better concurrency handling
 )
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 
 def create_mock_sessions(db):
@@ -80,7 +80,8 @@ def create_mock_messages(db, sessions):
     print(f"Verified {len(created_messages)} messages in database")
     return created_messages
 
-def create_mock_reports(db, messages):
+
+def create_mock_reports(db, messages, sessions):
     """Create mock reports for some bot messages."""
     reports = []
 
@@ -89,6 +90,12 @@ def create_mock_reports(db, messages):
 
     # Report a couple of messages
     if len(bot_messages) >= 2:
+        report1 = ReportedResponse(
+            message_id=bot_messages[0].message_id,
+            session_id=bot_messages[0].session_id,
+            reason="incorrect_information",
+            status="pending",
+        )
 
         report2 = ReportedResponse(
             message_id=bot_messages[1].message_id,
@@ -97,11 +104,13 @@ def create_mock_reports(db, messages):
             status="reviewed",
         )
 
+        db.add(report1)
         db.add(report2)
-        reports.extend([report2])
+        reports.extend([report1, report2])
 
     db.commit()
     return reports
+
 
 @pytest.fixture(scope="session")
 def event_loop():
@@ -115,12 +124,12 @@ def event_loop():
 def test_db():
     """Create a fresh database for each test with mock data."""
     # Create the tables
+    Base.metadata.drop_all(bind=engine)  # Ensure clean state
     Base.metadata.create_all(bind=engine)
     print("\n🔧 Setting up test database...")
-
-    # Create a new session
-    db = TestingSessionLocal()
-
+    connection = engine.connect()
+    transaction = connection.begin()
+    db = TestingSessionLocal(bind=connection)
     try:
         # Create mock data
         mock_sessions = create_mock_sessions(db)
@@ -161,6 +170,8 @@ def test_db():
         raise
     finally:
         db.close()
+        transaction.rollback()  # Rollback the transaction
+        connection.close()  # Close the connection
         print("\n🧹 Cleaned up test database")
 
 
@@ -201,7 +212,7 @@ def mock_data(test_db):
     """Create and verify mock data with database access."""
     sessions = test_db.query(ChatSession).all()
     messages = test_db.query(Message).all()
-    reports = create_mock_reports(test_db, messages)
+    reports = create_mock_reports(test_db, messages, sessions)  # Add reports
 
     # Verify data integrity
     assert len(sessions) > 0, "No sessions found in mock_data"
