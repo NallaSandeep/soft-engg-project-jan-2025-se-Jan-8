@@ -97,7 +97,7 @@ const EnrollStudents = () => {
     return (
         <div>
             {error && <ErrorDisplay message={error} />}
-            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Enroll Students</h1>
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Enroll</h1>
             <div className="glass-card p-6 mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
