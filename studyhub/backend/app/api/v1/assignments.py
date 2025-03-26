@@ -684,20 +684,57 @@ def submit_assignment(assignment_id):
                 'success': False,
                 'message': 'No answers provided'
             }), 400
-            
+        # and assignment.due_date > datetime.utcnow()    
         # Check for existing submission - only for graded assignments
-        if assignment.type == 'practice'  and assignment.due_date < datetime.utcnow():
-            submission = AssignmentSubmission.query.filter_by(
-                assignment_id=assignment_id,
-                student_id=current_user.id
-            ).first()
+        # if assignment.type != 'practice' and assignment.due_date > datetime.utcnow():
+        #     submission = AssignmentSubmission.query.filter_by(
+        #         assignment_id=assignment_id,
+        #         student_id=current_user.id
+        #     ).first()
             
-            if submission:
+        #     if submission:
+        #         return jsonify({
+        #             'success': False,
+        #             'message': 'You have already submitted this assignment'
+        #         }), 400
+        
+     
+
+        # Updated version with proper date comparison and error handling
+        if assignment.type != 'practice':
+            # Ensure due_date exists and is a datetime object
+            if not assignment.due_date:
                 return jsonify({
                     'success': False,
-                    'message': 'You have already submitted this assignment'
+                    'message': 'This assignment has no due date'
                 }), 400
             
+            # Make sure we're comparing datetime objects
+            current_time = datetime.utcnow()
+            
+            try:
+                # Convert due_date to datetime if it's a date object
+                if isinstance(assignment.due_date, date) and not isinstance(assignment.due_date, datetime):
+                    due_date = datetime.combine(assignment.due_date, datetime.min.time())
+                else:
+                    due_date = assignment.due_date
+                
+                if due_date < current_time:
+                    submission = AssignmentSubmission.query.filter_by(
+                        assignment_id=assignment_id,
+                        student_id=current_user.id
+                    ).first()
+                    
+                    if submission:
+                        return jsonify({
+                            'success': False,
+                            'message': 'You have already submitted this assignment'
+                        }), 400
+            except TypeError as e:
+                return jsonify({
+                    'success': False,
+                    'message': f'Date comparison error: {str(e)}'
+                }), 500
         # Calculate scores and format answers
         total_score = 0
         max_score = 0
