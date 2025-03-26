@@ -1,5 +1,5 @@
 import logging
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from src.core.workflow import create_workflow
 from .basic_services import add_message_to_session
 from typing import Dict, Any, List, AsyncGenerator
@@ -92,19 +92,15 @@ async def process_message_stream(
             stream_mode="values",
         ):
             if "messages" in chunk and chunk["messages"]:
+                # Check if messages is a list and iterate through it
                 for msg in chunk["messages"]:
-                    if hasattr(msg, "content"):
-                        yield msg
-                    else:
-                        logger.warning("No content in message")
-                        logger.info(chunk)
-                # Get only the last message from the chunk
-                # last_message = chunk["messages"][-1]
-                # if hasattr(last_message, "content"):
-                #     yield last_message
-                # else:
-                #     logger.warning("No content in last message")
-                #     logger.info(chunk)
+                    # Check if the individual message is an AIMessage
+                    if isinstance(msg, AIMessage):
+                        if hasattr(msg, "content"):
+                            yield msg
+                        else:
+                            logger.warning("No content in AI message")
+                            logger.info(msg)
             else:
                 logger.warning("No messages in response")
                 logger.info(chunk)

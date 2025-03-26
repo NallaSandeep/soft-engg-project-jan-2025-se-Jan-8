@@ -19,9 +19,7 @@ class Supervisor(BaseAgent):
         """Route the incoming message to the appropriate agent."""
         try:
             if await self._is_complex_query(message):
-                subquestions = await self._break_down_query(message)
-                await self._process_subquestions(subquestions)
-                return "supervisor"  # After processing all subquestions, return to supervisor agent for final synthesis
+                return "supervisor"  # Complex query, route to supervisor
 
             # Regular routing for simple queries
             routing_prompt = self._create_routing_prompt(message)
@@ -46,33 +44,38 @@ class Supervisor(BaseAgent):
         Response:"""
 
         chain = self.create_chain(prompt)
-        response = (await chain.ainvoke({"input": message})).strip().lower()
+        response = (await chain.ainvoke({})).strip().lower()
         return response == "yes"
 
     async def _break_down_query(self, message: str) -> List[str]:
         """Break down a complex query into subquestions."""
-        prompt = """Break down this complex query into simple, atomic subquestions.
+        prompt = f""" Given the different agents capability:
+        - faq_agent: for general FAQs about exam dates, course content, etc.
+        - course_guide: for course/curriculum questions actual content of courses
+        - dismiss: for out-of-scope queries
+        
+        Break down the query into simple subquestions to be handled by different agents (max 3 questions).
+        Each subquestion should be clear and concise, and should not contain any complex or compound questions.
         
         Examples:
         
-        Complex Query: "Compare the machine learning and web development tracks, and tell me which has better job prospects?"
+        Complex Query: "What is the definition of SVD and is it covered in the end term of Maths 2 course?"
         Subquestions:
-        1. What are the main components of the machine learning track?
-        2. What are the main components of the web development track?
-        3. What are the current job market statistics for machine learning positions?
-        4. What are the current job market statistics for web development positions?
+        1. What is the syllabus for Maths 2? Is SVD covered? ( Relevent for FAQ agent to ask)
+        2. What is the definition of SVD? (Relevent for Course guide agent to ask)
+        3. When is the end term for Maths 2? (Relevent for FAQ agent to ask)
+
         
-        Complex Query: "Should I learn Python or JavaScript first, and what projects should I build?"
+        Complex Query: "How NASA's Mars rover works and what are the main use cases of Python and JavaScript?"
         Subquestions:
-        1. What are the main use cases and advantages of Python?
-        2. What are the main use cases and advantages of JavaScript?
-        3. What are beginner-friendly Python projects?
-        4. What are beginner-friendly JavaScript projects?
+        1. What are the main use cases and advantages of Python? (Relevent for Course guide agent to ask)
+        2. What are the main use cases and advantages of JavaScript? (Relevent for Course guide agent to ask)
+        3. How does NASA's Mars rover work? (Not relevant for any agent, heading to dismiss agent)
         
         Now break down this query:
         {message}
         
-        Return only the numbered subquestions."""
+        Return only the numbered subquestions along with relevent agent to ask."""
 
         chain = self.create_chain(prompt)
         response = await chain.ainvoke({})
@@ -83,7 +86,12 @@ class Supervisor(BaseAgent):
         """Process each subquestion and store results in metadata."""
         metadata = {}
         for i, question in enumerate(subquestions):
-            route = await self.route(question)
+            # Prevent infinite recursion by not checking if this is complex
+            routing_prompt = self._create_routing_prompt(question)
+            chain = self.create_chain(routing_prompt)
+            response = await chain.ainvoke({})
+            route = self._parse_routing_response(response)
+
             # Store the subquestion and its route in metadata
             metadata[f"subq_{i}"] = {"question": question, "route": route}
         return metadata
@@ -92,7 +100,7 @@ class Supervisor(BaseAgent):
         return f"""Analyze this query and respond with only one word: faq_agent, course_guide, or dismiss.
         - faq_agent: for general FAQs
         - course_guide: for course/curriculum questions
-        - dismiss: for out-of-scope queries and end the conversation
+        - dismiss: for out-of-scope queries
         
         Query: {message}
         Response:"""
@@ -133,27 +141,23 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
         next_step = await supervisor.route(last_message)
         logging.info(f"Routing to: {next_step}")
 
-        # If it's a complex query, get metadata from subquestions
-        if next_step == "supervisor" and "metadata" not in state:
+        # If it's a complex query, process the subquestions
+        if next_step == "supervisor":
             subquestions = await supervisor._break_down_query(last_message)
             subq_metadata = await supervisor._process_subquestions(subquestions)
             for key, value in subq_metadata.items():
                 state = update_metadata(state, key, value)
 
+        # Update state with routing decision
         state["next_step"] = next_step
         state["current_agent"] = next_step
-        yield state
 
     except ValueError as ve:
         logging.error(f"ValueError in supervisor node: {str(ve)}")
         state["next_step"] = "dismiss"
-        yield state
     except Exception as e:
         logging.error(f"Supervisor node error: {str(e)}")
         state["next_step"] = "dismiss"
-        yield state
     finally:
-        # Ensure the state is updated even if an error occurs
-        state["current_agent"] = "supervisor"
-        state["next_step"] = END
+        # Ensure the state is always yielded
         yield state
