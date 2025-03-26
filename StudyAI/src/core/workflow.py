@@ -37,7 +37,7 @@ def create_workflow():
     # Set entry point to integrity checker
     workflow.set_entry_point("check_question_type")
 
-    # Set conditional node at check_question_type   
+    # Set conditional node at check_question_type
     workflow.add_conditional_edges(
         "check_question_type",
         lambda state: state["next_step"],
@@ -46,7 +46,7 @@ def create_workflow():
             "dismiss": "dismiss",
         },
     )
-    
+
     # Set up conditional edges from the supervisor node
     workflow.add_conditional_edges(
         "supervisor",
@@ -54,15 +54,16 @@ def create_workflow():
         {
             "faq_agent": "faq_agent",
             "course_guide": "course_guide_agent",
+            "dismiss": "dismiss",
+            END: END,
         },
     )
-    
+
     # Add back edges to supervisor after processing
     workflow.add_edge("faq_agent", "supervisor")
     workflow.add_edge("course_guide_agent", "supervisor")
 
     # Add terminal edges: after processing
-    workflow.add_edge("supervisor", END)
     workflow.add_edge("dismiss", END)
 
     return workflow.compile(checkpointer=MemorySaver())

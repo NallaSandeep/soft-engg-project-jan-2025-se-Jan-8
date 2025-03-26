@@ -92,19 +92,19 @@ async def process_message_stream(
             stream_mode="values",
         ):
             if "messages" in chunk and chunk["messages"]:
-                # for msg in chunk["messages"]:
-                #     if hasattr(msg, "content"):
-                #         yield msg
-                #     else:
-                #         logger.warning("No content in message")
-                #         logger.info(chunk)
+                for msg in chunk["messages"]:
+                    if hasattr(msg, "content"):
+                        yield msg
+                    else:
+                        logger.warning("No content in message")
+                        logger.info(chunk)
                 # Get only the last message from the chunk
-                last_message = chunk["messages"][-1]
-                if hasattr(last_message, "content"):
-                    yield last_message
-                else:
-                    logger.warning("No content in last message")
-                    logger.info(chunk)
+                # last_message = chunk["messages"][-1]
+                # if hasattr(last_message, "content"):
+                #     yield last_message
+                # else:
+                #     logger.warning("No content in last message")
+                #     logger.info(chunk)
             else:
                 logger.warning("No messages in response")
                 logger.info(chunk)
