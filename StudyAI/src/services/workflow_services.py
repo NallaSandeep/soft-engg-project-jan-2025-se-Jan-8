@@ -92,15 +92,21 @@ async def process_message_stream(
             stream_mode="values",
         ):
             if "messages" in chunk and chunk["messages"]:
-                # Check if messages is a list and iterate through it
-                for msg in chunk["messages"]:
-                    # Check if the individual message is an AIMessage
-                    if isinstance(msg, AIMessage):
-                        if hasattr(msg, "content"):
-                            yield msg
-                        else:
-                            logger.warning("No content in AI message")
-                            logger.info(msg)
+                # Get only the last AI message with content
+                last_ai_message = next(
+                    (
+                        msg
+                        for msg in reversed(chunk["messages"])
+                        if isinstance(msg, AIMessage) and hasattr(msg, "content")
+                    ),
+                    None,
+                )
+                
+                if last_ai_message:
+                    yield last_ai_message
+                else:
+                    logger.warning("No valid AI message found in chunk")
+                    logger.info(chunk)
             else:
                 logger.warning("No messages in response")
                 logger.info(chunk)
