@@ -40,14 +40,12 @@ def initialize_state() -> AgentState:
         "task_status": TaskStatus.NOT_STARTED,
     }
 
-
 def set_task(state: AgentState, task: str) -> AgentState:
     """Set the current task and update status."""
     new_state = state.copy()
     new_state["current_task"] = task
     new_state["task_status"] = TaskStatus.IN_PROGRESS
     return new_state
-
 
 def update_task_status(state: AgentState, status: TaskStatus) -> AgentState:
     """Update the status of the current task."""
@@ -95,7 +93,6 @@ def add_research_finding(state: AgentState, finding: Dict[str, Any]) -> AgentSta
         ] + [finding]
     return new_state
 
-
 # ....................................................metadata functions.........................................
 
 
@@ -124,7 +121,6 @@ def get_metadata(state: AgentState, key: str, default: Any = None) -> Any:
         return default
 
     return state["metadata"].get(key, default)
-
 
 def get_subquestions(state: AgentState) -> List[Dict[str, Any]]:
     """Get all subquestions and their routes from state metadata."""

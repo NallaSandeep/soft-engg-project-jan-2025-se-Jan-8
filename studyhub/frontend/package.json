@@ -26,6 +26,7 @@
     "react-markdown": "^9.0.3",
     "react-router-dom": "^6.0.0",
     "react-toastify": "^11.0.3",
+    "uuid": "^11.1.0",
     "watch": "^1.0.2"
   },
   "devDependencies": {

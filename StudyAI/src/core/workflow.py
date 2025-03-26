@@ -47,6 +47,16 @@ def create_workflow():
         },
     )
 
+    # Set conditional node at check_question_type   
+    workflow.add_conditional_edges(
+        "check_question_type",
+        lambda state: state["next_step"],
+        {
+            "supervisor": "supervisor",
+            "dismiss": "dismiss",
+        },
+    )
+    
     # Set up conditional edges from the supervisor node
     workflow.add_conditional_edges(
         "supervisor",
@@ -58,6 +68,10 @@ def create_workflow():
             END: END,
         },
     )
+    
+    # Add back edges to supervisor after processing
+    workflow.add_edge("faq_agent", "supervisor")
+    workflow.add_edge("course_guide_agent", "supervisor")
 
     # Add back edges to supervisor after processing
     workflow.add_edge("faq_agent", "supervisor")
