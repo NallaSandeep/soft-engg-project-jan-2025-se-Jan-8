@@ -1,7 +1,7 @@
 """Assignment management endpoints."""
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
-from datetime import datetime
+from datetime import datetime, date
 from ...models import (
     User, Week, Assignment, Question, AssignmentQuestion, 
     CourseEnrollment, AssignmentSubmission
@@ -686,7 +686,7 @@ def submit_assignment(assignment_id):
             }), 400
             
         # Check for existing submission - only for graded assignments
-        if assignment.type != 'practice':
+        if assignment.type == 'practice'  and assignment.due_date < datetime.utcnow():
             submission = AssignmentSubmission.query.filter_by(
                 assignment_id=assignment_id,
                 student_id=current_user.id
