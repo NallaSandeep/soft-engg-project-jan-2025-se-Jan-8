@@ -1,3 +1,29 @@
+"""
+User Model Module
+---------------
+Core module for user management and authentication in StudyHub.
+Handles user accounts, roles, and relationships with other models.
+
+Features:
+- User authentication with password hashing
+- Role-based access control (admin, teacher, student, ta)
+- Email verification system
+- Password reset functionality
+- Relationships with courses, assignments, resources, etc.
+
+Key Relationships:
+- courses_created: Courses created by teachers
+- course_enrollments: Course enrollments for students/TAs
+- resources_uploaded: Resources uploaded by users
+- questions_created: Questions created by teachers/TAs
+- submissions: Assignment submissions by students
+- submissions_graded: Submissions graded by TAs/teachers
+- personal_resources: User's personal study materials
+
+Note: This is a critical model that forms the foundation of user management
+and access control throughout the application.
+"""
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from .base import BaseModel
 from .. import db

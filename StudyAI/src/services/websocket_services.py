@@ -4,6 +4,7 @@ import uuid
 from typing import Dict, Any, Optional
 from fastapi import WebSocket
 from fastapi.websockets import WebSocketState
+from sqlalchemy.orm import Session
 from src.services.workflow_services import process_message_stream
 
 logger = logging.getLogger(__name__)
@@ -68,7 +69,7 @@ def is_connected(websocket: WebSocket) -> bool:
 
 
 async def process_and_stream_message(
-    websocket: WebSocket, session_id: str, message: str
+    websocket: WebSocket, session_id: str, message: str, db: Session
 ) -> None:
     """
     Process a message through the workflow and stream the response chunks.
@@ -90,7 +91,7 @@ async def process_and_stream_message(
         )
 
         # Stream response chunks
-        async for chunk in process_message_stream(session_id, message):
+        async for chunk in process_message_stream(session_id, message, db):
             # Check connection before sending each chunk
             if not is_connected(websocket):
                 logger.warning(

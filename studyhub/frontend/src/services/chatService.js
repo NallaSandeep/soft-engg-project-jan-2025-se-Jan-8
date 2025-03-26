@@ -116,6 +116,7 @@ export const chatAPI = {
 
 export const messageAPI = {
     createConnection: (sessionId) => {
+        console.log(sessionId)
         socket = new WebSocket(`${API_BASE_URL.replace('https', 'wss')}/stream/chat/session/${sessionId}/message`);
 
         socket.onopen = () => console.log('WebSocket Connected');
@@ -129,6 +130,7 @@ export const messageAPI = {
         // socket.onerror = (error) => console.error('WebSocket Error:', error);
     },
     sendMessage: (socket, session_id, message) => {
+        console.log(session_id)
         if (socket  && socket.readyState === WebSocket.OPEN) {
             return socket.send(JSON.stringify({ session_id, message }));
         }

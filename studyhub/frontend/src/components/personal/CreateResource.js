@@ -107,12 +107,12 @@ const CreateResource = ({ onClose, onSuccess }) => {
                             id="courseId"
                             value={courseId}
                             onChange={(e) => setCourseId(e.target.value)}
-                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-800 dark:border-zinc-600 dark:text-white"
                             required
                         >
-                            <option value="">Select a course</option>
+                            <option value="" className="bg-white dark:bg-zinc-800">Select a course</option>
                             {courses.map(course => (
-                                <option key={course.id} value={course.id}>
+                                <option key={course.id} value={course.id} className="bg-white dark:bg-zinc-800">
                                     {course.code} - {course.name}
                                 </option>
                             ))}

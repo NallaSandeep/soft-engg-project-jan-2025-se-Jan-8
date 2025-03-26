@@ -1,3 +1,34 @@
+"""
+Question Bank Module
+-----------------
+Manages the question bank system for assignments.
+Supports multiple question types and automated grading.
+
+Question Model Features:
+- Multiple question types (MCQ, MSQ, NUMERIC, text)
+- Question metadata and content management
+- Points and scoring system
+- Question bank organization by course/week/lecture
+- Automated answer validation
+
+Question Types:
+- MCQ: Single correct answer
+- MSQ: Multiple correct answers
+- NUMERIC: Numerical answer with tolerance
+- TEXT: Free-form text answer
+
+Key Relationships:
+- created_by: Teacher who created the question
+- course: Associated course (optional)
+- week: Associated week (optional)
+- lecture: Associated lecture (optional)
+- assignments: Assignments using this question
+
+Note: This model is central to the assessment system,
+providing reusable questions for both practice and graded assignments.
+The flexible question type system supports various assessment needs.
+"""
+
 from datetime import datetime
 from app import db
 from .base import BaseModel

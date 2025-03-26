@@ -1,3 +1,48 @@
+"""
+Assignment Management Module
+------------------------
+Manages assignments, questions, and submissions in the platform.
+Contains Assignment, AssignmentQuestion, and AssignmentSubmission models.
+
+Assignment Model Features:
+- Supports different assignment types (practice, graded)
+- Manages deadlines and late submissions
+- Calculates total points and grades
+- Handles assignment publication workflow
+
+AssignmentQuestion Model Features:
+- Links questions to assignments
+- Manages question ordering
+- Handles question points and scoring
+- Supports question reuse across assignments
+
+AssignmentSubmission Model Features:
+- Tracks student submissions
+- Handles submission scoring and feedback
+- Manages submission status workflow
+- Supports late submission penalties
+
+Key Relationships:
+Assignment:
+- week: Parent week
+- questions: Assignment questions
+- submissions: Student submissions
+
+AssignmentQuestion:
+- assignment: Parent assignment
+- question: Linked question
+- order: Question sequence
+
+AssignmentSubmission:
+- assignment: Parent assignment
+- student: Submitting student
+- answers: Student responses
+- scores: Question-wise scoring
+
+Note: These models form the core of the assessment system,
+enabling both practice and graded assignments with automated scoring.
+"""
+
 from datetime import datetime
 from app import db
 from .base import BaseModel
@@ -222,7 +267,7 @@ class AssignmentSubmission(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     assignment_id = db.Column(db.Integer, db.ForeignKey('assignments.id', ondelete='CASCADE'), nullable=False)
-    student_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     answers = db.Column(db.JSON, nullable=False)  # Store answers for each question
     score = db.Column(db.Float, nullable=True)  # Total score for the submission
     submitted_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -234,17 +279,17 @@ class AssignmentSubmission(db.Model):
 
     # Relationships
     assignment = db.relationship('Assignment', back_populates='submissions')
-    student = db.relationship('User', back_populates='assignment_submissions')
+    student = db.relationship('User', back_populates='assignment_submissions', foreign_keys=[user_id])
 
     def __repr__(self):
-        return f'<AssignmentSubmission {self.id} by Student {self.student_id}>'
+        return f'<AssignmentSubmission {self.id} by Student {self.user_id}>'
 
     def to_dict(self):
         """Convert submission to dictionary"""
         return {
             'id': self.id,
             'assignment_id': self.assignment_id,
-            'student_id': self.student_id,
+            'user_id': self.user_id,
             'score': self.score,
             'status': self.status,
             'submitted_at': self.submitted_at.isoformat() if self.submitted_at else None,

@@ -1,9 +1,123 @@
-from typing import TypedDict, Annotated, Sequence, Optional, Dict, Any
+from typing import Annotated, Sequence, Optional, Dict, Any, List
+from typing_extensions import TypedDict
 from langchain_core.messages import BaseMessage
 from langgraph.graph import add_messages
+from enum import Enum
+
+
+class ResearchContext(TypedDict):
+    topic: str
+    query: str
+    sources: List[Dict[str, Any]]
+    findings: List[Dict[str, Any]]
+
+
+class TaskStatus(str, Enum):
+    NOT_STARTED = "not_started"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
+    context: Optional[ResearchContext]
     current_agent: str
     next_step: str
-    metadata: Optional[Dict[str, Any]]  # Add metadata field for integrity info
+    metadata: Optional[Dict[str, Any]]
+    task_status: TaskStatus
+
+
+# ...................................................helper functions.........................................
+
+
+def initialize_state() -> AgentState:
+    """Initialize the agent state with default values."""
+    return {
+        "messages": [],
+        "research_context": None,
+        "current_task": "",
+        "task_status": TaskStatus.NOT_STARTED,
+    }
+
+def set_task(state: AgentState, task: str) -> AgentState:
+    """Set the current task and update status."""
+    new_state = state.copy()
+    new_state["current_task"] = task
+    new_state["task_status"] = TaskStatus.IN_PROGRESS
+    return new_state
+
+def update_task_status(state: AgentState, status: TaskStatus) -> AgentState:
+    """Update the status of the current task."""
+    new_state = state.copy()
+    new_state["task_status"] = status
+    return new_state
+
+
+# ...................................................research context functions.........................................
+
+
+def set_research_context(state: AgentState, topic: str, query: str) -> AgentState:
+    """Initialize or update the research context."""
+    new_state = state.copy()
+    if new_state["research_context"] is None:
+        new_state["research_context"] = {
+            "topic": topic,
+            "query": query,
+            "sources": [],
+            "findings": [],
+        }
+    else:
+        new_state["research_context"]["topic"] = topic
+        new_state["research_context"]["query"] = query
+
+    return new_state
+
+
+def add_research_source(state: AgentState, source: Dict[str, Any]) -> AgentState:
+    """Add a research source to the research context."""
+    new_state = state.copy()
+    if new_state["research_context"] is not None:
+        new_state["research_context"]["sources"] = state["research_context"][
+            "sources"
+        ] + [source]
+    return new_state
+
+
+def add_research_finding(state: AgentState, finding: Dict[str, Any]) -> AgentState:
+    """Add a research finding to the research context."""
+    new_state = state.copy()
+    if new_state["research_context"] is not None:
+        new_state["research_context"]["findings"] = state["research_context"][
+            "findings"
+        ] + [finding]
+    return new_state
+
+# ....................................................metadata functions.........................................
+
+
+def update_metadata(state: AgentState, key: str, value: Any) -> AgentState:
+    """
+    Update a specific metadata key-value pair in the state.
+    Args:
+        state: Current agent state
+        key: Metadata key to update
+        value: New value to set
+    Returns:
+        AgentState: Updated state with new metadata
+    """
+    new_state = dict(state)  # Create a new state dict to avoid modifying the original
+    metadata = dict(
+        state.get("metadata", {}) or {}
+    )                        # Create a new metadata dict to avoid modifying the original
+    metadata[key] = value
+    new_state["metadata"] = metadata
+    return new_state
+
+
+def get_metadata(state: AgentState, key: str, default: Any = None) -> Any:
+    """Get a value from the metadata by key."""
+    if state.get("metadata") is None:
+        return default
+
+    return state["metadata"].get(key, default)

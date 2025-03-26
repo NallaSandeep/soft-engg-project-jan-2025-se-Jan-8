@@ -3,7 +3,7 @@
 from .base import BaseModel
 from .user import User
 from .course import Course, CourseEnrollment
-from .course_content import Week, Lecture
+from .course_content import Week, Lecture, LectureProgress
 from .assignment import Assignment, AssignmentSubmission, AssignmentQuestion
 from .question import Question
 from .resource import Resource
@@ -16,6 +16,7 @@ __all__ = [
     'CourseEnrollment',
     'Week',
     'Lecture',
+    'LectureProgress',
     'Assignment',
     'AssignmentSubmission',
     'AssignmentQuestion',

@@ -79,6 +79,10 @@ def list_all_assignments():
         try:
             current_user = User.query.get(get_jwt_identity())
             
+            # Get pagination parameters
+            page = request.args.get('page', 1, type=int)
+            per_page = request.args.get('limit', 10, type=int)  # Default 10 items per page
+            
             # Build query
             query = Assignment.query
 
@@ -113,26 +117,57 @@ def list_all_assignments():
                 search_term = f"%{search}%"
                 query = query.filter(Assignment.title.ilike(search_term))
 
-            # Execute query
-            assignments = query.all()
+            # Add ordering
+            query = query.order_by(Assignment.due_date.asc())
 
-            # Convert to dict with calculated points
-            end_of_year = datetime(datetime.utcnow().year, 12, 31, 23, 59, 59)
+            # Execute paginated query
+            paginated_assignments = query.paginate(page=page, per_page=per_page, error_out=False)
+            
+            # Prepare minimal assignment data without loading all questions
             assignments_data = []
-            for assignment in assignments:
-                assignment_dict = assignment.to_dict()
-                # Calculate total points from questions
-                if assignment.type == 'practice' and (not assignment.due_date or assignment.due_date > end_of_year):
-                    assignment.due_date = end_of_year
-                    db.session.add(assignment)
-                total_points = sum(aq.question.points for aq in assignment.questions.all())
-                assignment_dict['points_possible'] = total_points
+            for assignment in paginated_assignments.items:
+                assignment_dict = {
+                    'id': assignment.id,
+                    'title': assignment.title,
+                    'type': assignment.type,
+                    'due_date': assignment.due_date.isoformat() if assignment.due_date else None,
+                    'is_published': assignment.is_published,
+                    'week': {
+                        'id': assignment.week.id,
+                        'number': assignment.week.number,
+                        'title': assignment.week.title,
+                        'course_id': assignment.week.course_id
+                    },
+                    'points_possible': assignment.points_possible,
+                    'late_submission_penalty': assignment.late_submission_penalty
+                }
+                
+                # Add submission info for students
+                if current_user.role == 'student':
+                    submission = AssignmentSubmission.query.filter_by(
+                        assignment_id=assignment.id,
+                        user_id=current_user.id
+                    ).order_by(AssignmentSubmission.submitted_at.desc()).first()
+                    
+                    if submission:
+                        assignment_dict['submission'] = {
+                            'id': submission.id,
+                            'score': submission.score,
+                            'status': submission.status,
+                            'submitted_at': submission.submitted_at.isoformat() if submission.submitted_at else None
+                        }
+                
                 assignments_data.append(assignment_dict)
 
-            db.session.commit()
             return jsonify({
                 'success': True,
-                'data': assignments_data
+                'data': assignments_data,
+                'pagination': {
+                    'page': page,
+                    'per_page': per_page,
+                    'total': paginated_assignments.total,
+                    'pages': paginated_assignments.pages
+                }
             }), 200
 
         except Exception as e:
@@ -466,7 +501,7 @@ def get_assignment_submissions(assignment_id):
         # Get all submissions for this assignment by this student
         submissions = AssignmentSubmission.query.filter_by(
             assignment_id=assignment_id,
-            student_id=current_user.id
+            user_id=current_user.id
         ).order_by(AssignmentSubmission.submitted_at.desc()).all()
 
         submissions_data = []
@@ -805,7 +840,7 @@ def submit_assignment(assignment_id):
         # Create new submission
         submission = AssignmentSubmission(
             assignment_id=assignment_id,
-            student_id=current_user.id,
+            user_id=current_user.id,
             answers=formatted_answers,
             score=total_score,
             question_scores=question_scores
@@ -923,3 +958,102 @@ def manage_assignment_questions(assignment_id):
             }), 500
             
     return handle_request()
+
+@assignments_bp.route('/<int:assignment_id>/correct-answers', methods=['GET'])
+@jwt_required()
+def get_correct_answers(assignment_id):
+    """Get correct answers for an assignment based on conditions:
+    1. For graded assignments: only after due date
+    2. For practice assignments: only if user has submitted at least once
+    """
+    try:
+        # Get current user and assignment
+        current_user = User.query.get(get_jwt_identity())
+        assignment = Assignment.query.get_or_404(assignment_id)
+
+        # Check if user is enrolled in the course
+        enrollment = CourseEnrollment.query.filter_by(
+            user_id=current_user.id,
+            course_id=assignment.week.course_id,
+            status='active'
+        ).first()
+        
+        if not enrollment:
+            return jsonify({
+                'success': False,
+                'message': 'You are not enrolled in this course'
+            }), 403
+
+        # Check conditions based on assignment type
+        if assignment.type == 'graded':
+            # For graded assignments, check if due date has passed
+            if not assignment.due_date or datetime.utcnow() <= assignment.due_date:
+                return jsonify({
+                    'success': False,
+                    'message': 'Correct answers are only available after the due date'
+                }), 403
+        else:  # practice assignment
+            # Check if user has submitted at least once
+            submission = AssignmentSubmission.query.filter_by(
+                assignment_id=assignment_id,
+                user_id=current_user.id
+            ).first()
+            
+            if not submission:
+                return jsonify({
+                    'success': False,
+                    'message': 'Submit the assignment at least once to view correct answers'
+                }), 403
+
+        # Get questions with correct answers
+        questions_data = []
+        for aq in assignment.questions.order_by(AssignmentQuestion.order):
+            if aq.question:
+                question = aq.question
+                try:
+                    # Parse options from JSON if it's a string
+                    options = json.loads(question.question_options) if isinstance(question.question_options, str) else question.question_options
+                    options = options if isinstance(options, list) else []
+                    
+                    # Parse correct answer based on question type
+                    if isinstance(question.correct_answer, str):
+                        correct_answer = json.loads(question.correct_answer)
+                    else:
+                        correct_answer = question.correct_answer
+
+                    if question.type == 'NUMERIC':
+                        correct_answer = float(correct_answer) if correct_answer else 0
+                    elif question.type == 'MCQ':
+                        correct_answer = int(correct_answer) if correct_answer else 0
+                    elif question.type == 'MSQ':
+                        correct_answer = list(correct_answer) if correct_answer else []
+
+                except (json.JSONDecodeError, TypeError):
+                    options = []
+                    correct_answer = [] if question.type == 'MSQ' else (0 if question.type == 'MCQ' else 0.0)
+
+                question_data = {
+                    'id': question.id,
+                    'title': question.title,
+                    'content': question.content,
+                    'type': question.type,
+                    'points': question.points,
+                    'options': options,
+                    'correct_answer': correct_answer,
+                    'explanation': question.explanation,
+                    'order': aq.order
+                }
+                questions_data.append(question_data)
+
+        return jsonify({
+            'success': True,
+            'data': {
+                'questions': questions_data
+            }
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500

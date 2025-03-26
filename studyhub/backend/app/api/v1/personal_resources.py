@@ -128,14 +128,80 @@ def add_resource_file(resource_id):
     """Add a file to a personal resource."""
     user_id = get_jwt_identity()
     
-    if 'file' in request.files:
-        file = request.files['file']
-        file_record = resource_service.handle_file_upload(file, resource_id, user_id)
-    else:
-        data = request.get_json()
-        file_record = resource_service.add_file(resource_id, user_id, data)
+    # Verify resource ownership
+    resource = PersonalResource.query.filter_by(
+        id=resource_id,
+        user_id=user_id
+    ).first_or_404()
     
-    return jsonify(file_record.to_dict()), 201
+    try:
+        if request.files and 'file' in request.files:
+            # Handle file upload
+            file = request.files['file']
+            if not file.filename:
+                return jsonify({
+                    'success': False,
+                    'message': 'No file selected'
+                }), 400
+            
+            # Validate file type
+            if not file.filename.lower().endswith('.txt'):
+                return jsonify({
+                    'success': False,
+                    'message': 'Only .txt files are allowed'
+                }), 400
+                
+            file_record = resource_service.handle_file_upload(file, resource_id, user_id)
+            return jsonify({
+                'success': True,
+                'data': file_record.to_dict(),
+                'message': 'File added successfully'
+            }), 201
+        
+        # Handle text note
+        if request.form:
+            # Handle form data for text notes
+            content = request.form.get('content')
+            name = request.form.get('name', 'Untitled Note.txt')
+            note_type = request.form.get('type', 'text')
+            
+            if not content:
+                return jsonify({
+                    'success': False,
+                    'message': 'Content is required for text notes'
+                }), 400
+                
+            # Ensure text note name ends with .txt
+            if not name.lower().endswith('.txt'):
+                name = name + '.txt'
+                
+            file_record = resource_service.add_file(
+                resource_id=resource_id,
+                user_id=user_id,
+                file_data={
+                    'name': name,
+                    'content': content,
+                    'type': note_type
+                }
+            )
+            return jsonify({
+                'success': True,
+                'data': file_record.to_dict(),
+                'message': 'Text note added successfully'
+            }), 201
+            
+        return jsonify({
+            'success': False,
+            'message': 'No file or text note data provided'
+        }), 400
+        
+    except Exception as e:
+        print(f"Error adding file: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'Failed to add file',
+            'error': str(e)
+        }), 500
 
 @bp.route('/<int:resource_id>/files/<int:file_id>', methods=['DELETE'])
 @jwt_required()
@@ -203,29 +269,63 @@ def download_resource_file(resource_id, file_id):
     ).first_or_404()
     
     # Debug logging
-    print(f"File record found - Name: {file.name}, Path: {file.file_path}, Type: {file.file_type}")
+    print(f"File record found - Name: {file.name}, Path: {file.file_path}, Type: {file.type}")
     
+    # For text notes, return the content directly
+    if file.type == 'text':
+        return jsonify({
+            'success': True,
+            'data': file.content,
+            'name': file.name
+        })
+    
+    # For uploaded files
     if not file.file_path:
         print("Error: No file path available")
-        return jsonify({'error': 'No file available'}), 404
-        
-    file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], file.file_path)
+        return jsonify({
+            'success': False,
+            'error': 'No file available'
+        }), 404
+    
+    # Construct the full file path using the upload folder from the service
+    file_path = os.path.join(resource_service.upload_folder, file.file_path)
     
     # Debug logging
     print(f"Full file path: {file_path}")
     print(f"File exists: {os.path.exists(file_path)}")
-        
-    if not os.path.exists(file_path):
-        print("Error: File not found at path")
-        return jsonify({'error': 'File not found'}), 404
-        
-    try:
-        return send_file(
-            file_path,
-            mimetype=file.file_type,
-            as_attachment=True,
-            download_name=file.name
-        )
-    except Exception as e:
-        print(f"Error sending file: {str(e)}")
-        return jsonify({'error': 'Failed to send file'}), 500 
+    print(f"Upload folder: {resource_service.upload_folder}")
+    if os.path.exists(os.path.dirname(file_path)):
+        print(f"Directory contents: {os.listdir(os.path.dirname(file_path))}")
+    
+    if os.path.exists(file_path):
+        try:
+            response = send_file(
+                file_path,
+                mimetype='text/plain',
+                as_attachment=True,
+                download_name=file.name
+            )
+            
+            # Add CORS headers
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+            response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
+            
+            return response
+        except Exception as e:
+            print(f"Error sending file: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': f'Failed to send file: {str(e)}'
+            }), 500
+    else:
+        print(f"Error: File not found at path: {file_path}")
+        # Try to list contents of parent directory
+        parent_dir = os.path.dirname(file_path)
+        if os.path.exists(parent_dir):
+            print(f"Contents of {parent_dir}:")
+            print(os.listdir(parent_dir))
+        return jsonify({
+            'success': False,
+            'error': 'File not found'
+        }), 404 

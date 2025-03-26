@@ -1,3 +1,4 @@
+"""NOT USED"""
 """Personal knowledge base models"""
 from datetime import datetime
 from app import db
