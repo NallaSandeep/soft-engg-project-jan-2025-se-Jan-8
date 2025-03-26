@@ -109,7 +109,7 @@ def update_metadata(state: AgentState, key: str, value: Any) -> AgentState:
     new_state = dict(state)  # Create a new state dict to avoid modifying the original
     metadata = dict(
         state.get("metadata", {}) or {}
-    )                        # Create a new metadata dict to avoid modifying the original
+    )  # Create a new metadata dict to avoid modifying the original
     metadata[key] = value
     new_state["metadata"] = metadata
     return new_state
@@ -121,3 +121,25 @@ def get_metadata(state: AgentState, key: str, default: Any = None) -> Any:
         return default
 
     return state["metadata"].get(key, default)
+
+def get_subquestions(state: AgentState) -> List[Dict[str, Any]]:
+    """Get all subquestions and their routes from state metadata."""
+    metadata = state.get("metadata", {})
+    subquestions = []
+    i = 0
+    while f"subq_{i}" in metadata:
+        subquestions.append(metadata[f"subq_{i}"])
+        i += 1
+    return subquestions
+
+
+def clear_subquestions(state: AgentState) -> AgentState:
+    """Clear all subquestion data from state metadata."""
+    new_state = dict(state)
+    metadata = dict(state.get("metadata", {}))
+    i = 0
+    while f"subq_{i}" in metadata:
+        del metadata[f"subq_{i}"]
+        i += 1
+    new_state["metadata"] = metadata
+    return new_state

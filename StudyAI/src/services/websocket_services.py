@@ -1,7 +1,6 @@
 import logging
-import json
-import uuid
-from typing import Dict, Any, Optional
+import asyncio
+from typing import Dict
 from fastapi import WebSocket
 from fastapi.websockets import WebSocketState
 from sqlalchemy.orm import Session
@@ -13,22 +12,16 @@ logger = logging.getLogger(__name__)
 active_connections: Dict[str, WebSocket] = {}
 
 
-async def connect(websocket: WebSocket, session_id: Optional[str] = None) -> str:
+async def connect(websocket: WebSocket, session_id: str) -> str:
     """
     Connect a WebSocket client and return the session ID.
-
     Args:
         websocket (WebSocket): The WebSocket connection
-        session_id (Optional[str]): The session identifier or None to generate a new one
-
+        session_id (str): The session identifier
     Returns:
         str: Session ID for the connection
     """
     await websocket.accept()
-
-    # Generate a new session ID if none is provided
-    if not session_id:
-        session_id = str(uuid.uuid4())
 
     # Store the connection
     active_connections[session_id] = websocket
@@ -46,7 +39,6 @@ async def connect(websocket: WebSocket, session_id: Optional[str] = None) -> str
 def disconnect(session_id: str) -> None:
     """
     Remove a WebSocket client from active connections.
-
     Args:
         session_id (str): The session ID to disconnect
     """
@@ -58,10 +50,8 @@ def disconnect(session_id: str) -> None:
 def is_connected(websocket: WebSocket) -> bool:
     """
     Check if the websocket is still connected.
-
     Args:
         websocket (WebSocket): The WebSocket to check
-
     Returns:
         bool: True if connected, False otherwise
     """
@@ -73,7 +63,6 @@ async def process_and_stream_message(
 ) -> None:
     """
     Process a message through the workflow and stream the response chunks.
-
     Args:
         websocket (WebSocket): The WebSocket connection
         session_id (str): The session identifier
@@ -100,7 +89,6 @@ async def process_and_stream_message(
                 return
 
             if hasattr(chunk, "content") and chunk.content:
-                # Send each chunk as it becomes available
                 await websocket.send_json(
                     {
                         "type": "chunk",
@@ -112,13 +100,9 @@ async def process_and_stream_message(
 
         # Check connection before sending completion
         if is_connected(websocket):
-            # Send completion message
             await websocket.send_json(
                 {"type": "complete", "session_id": session_id, "final": True}
             )
-
-            # Optional: Add artificial delay for smoother streaming
-            # await asyncio.sleep(0.1)
 
     except RuntimeError as e:
         # Handle specific case of already closed connection
@@ -126,7 +110,6 @@ async def process_and_stream_message(
             logger.warning(f"Connection already closed for session {session_id}: {e}")
             disconnect(session_id)
         else:
-            # For other runtime errors
             logger.error(f"Runtime error in streaming: {e}")
             # Only try to send error if still connected
             if is_connected(websocket):
@@ -142,7 +125,6 @@ async def process_and_stream_message(
                     pass
     except Exception as e:
         logger.error(f"Error streaming message: {e}")
-        # Only try to send error if still connected
         if is_connected(websocket):
             try:
                 await websocket.send_json(

@@ -1,22 +1,21 @@
+import json
+import logging
+
 from fastapi import (
     APIRouter,
+    Depends,
     WebSocket,
     WebSocketDisconnect,
-    Depends,
-    Query,
-    HTTPException,
 )
 from sqlalchemy.orm import Session
+
 from src.database import get_db
+from src.services.basic_services import add_message_to_session
 from src.services.websocket_services import (
     connect,
     disconnect,
     process_and_stream_message,
 )
-from src.services.basic_services import add_message_to_session
-import logging
-import json
-from typing import Optional
 
 router = APIRouter(prefix="/stream", tags=["Stream Chat"])
 logger = logging.getLogger(__name__)
@@ -33,10 +32,6 @@ async def websocket_stream_endpoint(
 ):
     """
     WebSocket endpoint for streaming chat responses.
-
-    Establishes a persistent connection allowing for real-time communication.
-    The AI will stream responses token by token as they are generated.
-
     Args:
         websocket (WebSocket): The WebSocket connection
         session_id (str): Session ID for existing conversations
@@ -49,8 +44,7 @@ async def websocket_stream_endpoint(
 
         while True:
             try:
-                # Wait for incoming message
-                data = await websocket.receive_text()
+                data = await websocket.receive_text()  # Wait for incoming message
 
                 # Validate message format
                 if not data:
@@ -72,12 +66,15 @@ async def websocket_stream_endpoint(
 
                 # Add user message to session in the database
                 add_message_to_session(
-                    db, session_id,"user", user_message
-                )  
+                    db, session_id, "user", user_message
+                )
 
                 # Process message with streaming
                 await process_and_stream_message(
-                    websocket=websocket, session_id=session_id, message=user_message,db=db
+                    websocket=websocket,
+                    session_id=session_id,
+                    message=user_message,
+                    db=db,
                 )
 
             except json.JSONDecodeError as e:

@@ -8,8 +8,8 @@ import logging
 
 
 class QuestionType(str, Enum):
-    GENERIC = "Generic",
-    INAPPROPRIATE = "Inappropriate",
+    GENERIC = "Generic"
+    INAPPROPRIATE = "Inappropriate"
     OTHER = "Other"
 
 
@@ -18,11 +18,11 @@ class QuestionTypeCheckerAgent(BaseAgent):
 
     def __init__(self):
         super().__init__()
-        self.system_message = """You are an AI assistant that analyzes student questions for propfanity check.
+        self.system_message = """You are an AI assistant that analyzes student questions for profanity check.
             Your task is to:
             1. Check if the question contains inappropriate content or abusive language.
-            2. Determine if the question is generic questiona like "Hi", "Hello", "How are you?" etc.
-            3. The questions seems to be related to academics or FAQs you don't know then return type as "Other".
+            2. Determine if the question is generic questions like "Hi", "Hello", "How are you?" etc.
+            3. If the question seems to be related to academics or FAQs you don't know then return type as "Other".
 
             Respond in the format:
             TYPE: <Inappropriate| Generic | Other>
@@ -38,8 +38,17 @@ class QuestionTypeCheckerAgent(BaseAgent):
 
         # Parse response
         response_lines = str(response).strip().split("\n")
-        q_type = response_lines[0].split(": ")[1]
-        reason = response_lines[1].split(": ")[1]
+        q_type = None
+        reason = "Unknown reason"
+
+        for line in response_lines:
+            if line.startswith("TYPE:"):
+                q_type = line.split(":", 1)[1].strip()
+            elif line.startswith("REASON:"):
+                reason = line.split(":", 1)[1].strip()
+
+        if not q_type:
+            q_type = "Other"
 
         return {"q_type": q_type, "reason": reason}
 
@@ -67,14 +76,17 @@ async def check_question_type_node(
         # Process the question using the agent
         response = await agent.process_question(last_message)
 
-        if response["q_type"] == QuestionType.INAPPROPRIATE:
+        if response["q_type"] == "Inappropriate":
             state["next_step"] = "dismiss"
-            state["messages"].append(SystemMessage(content=f"{response['q_type']}: {response['reason']}"))
-        elif response["q_type"] == QuestionType.GENERIC:
+            state["messages"].append(
+                SystemMessage(content=f"Inappropriate: {response['reason']}")
+            )
+        elif response["q_type"] == "Generic":
             state["next_step"] = "dismiss"
-            state["messages"].append(SystemMessage(content=f"{response['q_type']}: {response['reason']}"))
+            state["messages"].append(
+                SystemMessage(content=f"Generic: {response['reason']}")
+            )
         else:
-            # Update the state with the other response
             state["next_step"] = "supervisor"
 
     except ValueError as ve:
