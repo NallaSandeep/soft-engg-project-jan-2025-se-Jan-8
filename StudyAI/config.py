@@ -26,22 +26,24 @@ class Config:
     LANGSMITH_API_KEY = os.getenv("LANGSMITH_API_KEY")
 
     # LangSmith Configuration
-    LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT", "Agentic AI")
-    LANGSMITH_TRACING = os.getenv("LANGSMITH_TRACING", "true")
+    LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT")
+    LANGSMITH_TRACING = os.getenv("LANGSMITH_TRACING", "true").lower() == "true"
 
     # SQLAlchemy Configuration
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or "sqlite:///chatbot.db"
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # CORS Configuration
     CORS_ORIGINS: List[str] = os.getenv("CORS_ORIGINS", "*").split(",")
 
     # Rate Limiting Configuration
-    RATE_LIMIT_ENABLED: bool = os.getenv("RATE_LIMIT_ENABLED", "false").lower() == "true"
-    RATE_LIMIT: Optional[str] = os.getenv("RATE_LIMIT", "1000")
-    
+    RATE_LIMIT_ENABLED: bool = (
+        os.getenv("RATE_LIMIT_ENABLED", "false").lower() == "true"
+    )
+    RATE_LIMIT: Optional[str] = os.getenv("RATE_LIMIT")
+
     # Server Configuration
-    HOST = os.getenv("HOST", "127.0.0.1")
+    HOST = os.getenv("HOST")
     PORT = int(os.getenv("PORT", "5010"))
 
     @classmethod

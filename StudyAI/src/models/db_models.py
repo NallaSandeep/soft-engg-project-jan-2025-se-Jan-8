@@ -10,19 +10,21 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = "users"
-    
+
     id = Column(Integer, primary_key=True)
     user_id = Column(String(50), unique=True, default=lambda: str(uuid.uuid4()))
-    metadata = Column(JSON, nullable=True)  # Flexible JSON field for any user metadata
-    
+    user_metadata = Column(
+        JSON, nullable=True
+    )  # Flexible JSON field for any user metadata
+
     def __init__(self, user_id=None, metadata=None):
         self.user_id = user_id or str(uuid.uuid4())
-        self.metadata = metadata or {}
-    
+        self.user_metadata = metadata or {}
+
     def to_dict(self):
         return {
             "user_id": self.user_id,
-            "metadata": self.metadata,
+            "metadata": self.user_metadata,
         }
 
 
@@ -117,6 +119,7 @@ class ReportedResponse(Base):
 # Pydantic models for API
 # .............................................................................................
 
+
 class UserCreate(BaseModel):
     user_id: Optional[str] = None
     metadata: Optional[dict] = None
@@ -125,7 +128,7 @@ class UserCreate(BaseModel):
 class UserResponse(BaseModel):
     user_id: str
     metadata: Optional[dict] = None
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -177,10 +180,8 @@ class ReportResponse(BaseModel):
     reason: Optional[str] = None
     report_timestamp: str
     status: str
-        
-    model_config = ConfigDict(
-        from_attributes = True
-    )
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Replace ReportUpdateStatus with JSONPatch

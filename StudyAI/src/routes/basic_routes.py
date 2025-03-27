@@ -36,10 +36,12 @@ router = APIRouter(prefix="/chat")
     response_model=ChatSessionResponse,
     tags=["Chat Session"],
     summary="Create New Chat Session",
-    description="Creates a new chat session and returns its identifier",
+    description="Creates a new chat session and returns its identifier. If user_id is provided and user doesn't exist, creates new user with metadata.",
 )
-async def create_session(user_id: str = None, db: Session = Depends(get_db)):
-    return create_new_session(db, user_id)
+async def create_session(
+    user_id: str = None, metadata: dict = None, db: Session = Depends(get_db)
+):
+    return create_new_session(db, user_id, metadata)
 
 
 # @router.post(

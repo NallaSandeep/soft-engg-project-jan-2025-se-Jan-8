@@ -14,14 +14,19 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def create_new_session(db: Session, user_id: str = None):
-    """Create a new chat session in the database."""
+def create_new_session(db: Session, user_id: str = None, metadata: dict = None):
+    """Create a new chat session in the database, creating user if they don't exist."""
     try:
         if user_id:
-            # Check if user exists
+            # Check if user exists, if not create new user
             user = db.query(User).filter(User.user_id == user_id).first()
             if not user:
-                raise HTTPException(status_code=404, detail="User not found")
+                user = User(
+                    user_id=user_id, metadata=metadata
+                )  # metadata parameter name kept for API compatibility
+                db.add(user)
+                db.commit()
+                db.refresh(user)
 
         chat_session = ChatSession(user_id=user_id)
         db.add(chat_session)
