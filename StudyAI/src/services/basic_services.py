@@ -5,6 +5,7 @@ from src.models.db_models import (
     ChatSession,
     ReportedResponse,
     JSONPatchOperation,
+    User,
 )
 from typing import List
 import logging
@@ -13,10 +14,16 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def create_new_session(db: Session):
+def create_new_session(db: Session, user_id: str = None):
     """Create a new chat session in the database."""
     try:
-        chat_session = ChatSession()
+        if user_id:
+            # Check if user exists
+            user = db.query(User).filter(User.user_id == user_id).first()
+            if not user:
+                raise HTTPException(status_code=404, detail="User not found")
+
+        chat_session = ChatSession(user_id=user_id)
         db.add(chat_session)
         db.commit()
         db.refresh(chat_session)
@@ -83,10 +90,14 @@ def get_session(db: Session, session_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-def list_sessions(db: Session):
-    """List all chat sessions with their messages from the database."""
+def list_sessions(db: Session, user_id: str = None):
+    """List chat sessions with optional user filter."""
     try:
-        chat_sessions = db.query(ChatSession).all()
+        query = db.query(ChatSession)
+        if user_id:
+            query = query.filter(ChatSession.user_id == user_id)
+
+        chat_sessions = query.all()
         results = []
 
         for chat_session in chat_sessions:

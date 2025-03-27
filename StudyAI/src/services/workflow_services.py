@@ -76,6 +76,7 @@ async def process_message_stream(
     thread_id: str, message: str, db: Session
 ) -> AsyncGenerator[Dict[str, Any], None]:
     """Process a message through the workflow."""
+    final_ai_message = None
     try:
         if thread_id not in active_workflows:
             initialize_workflow(thread_id)
@@ -101,9 +102,9 @@ async def process_message_stream(
                     ),
                     None,
                 )
-                
+
                 if last_ai_message:
-                    yield last_ai_message
+                    final_ai_message = last_ai_message
                 else:
                     logger.warning("No valid AI message found in chunk")
                     logger.info(chunk)
@@ -113,7 +114,16 @@ async def process_message_stream(
 
     except Exception as e:
         logger.error(f"Error processing message in workflow: {e}")
-        yield SystemMessage(content="Error processing stream")
+    finally:
+        if final_ai_message:
+            # Extract content from AIMessage before adding to session
+            message_content = (
+                final_ai_message.content
+                if hasattr(final_ai_message, "content")
+                else str(final_ai_message)
+            )
+            add_message_to_session(db, thread_id, "bot", message_content)
+            yield final_ai_message
 
 
 def get_conversation_history(thread_id: str) -> List[Dict[str, Any]]:

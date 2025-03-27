@@ -22,6 +22,8 @@ from src.models.db_models import (
     ReportCreate,
     ReportResponse,
     ReportPatch,
+    UserCreate,
+    UserResponse,
 )
 from typing import List
 
@@ -36,8 +38,8 @@ router = APIRouter(prefix="/chat")
     summary="Create New Chat Session",
     description="Creates a new chat session and returns its identifier",
 )
-async def create_session(db: Session = Depends(get_db)):
-    return create_new_session(db)
+async def create_session(user_id: str = None, db: Session = Depends(get_db)):
+    return create_new_session(db, user_id)
 
 
 # @router.post(
@@ -74,8 +76,8 @@ async def get_chat_session(session_id: str, db: Session = Depends(get_db)):
     summary="List All Chat Sessions",
     description="Returns a list of all available chat sessions",
 )
-async def get_all_sessions(db: Session = Depends(get_db)):
-    return list_sessions(db)
+async def get_all_sessions(user_id: str = None, db: Session = Depends(get_db)):
+    return list_sessions(db, user_id)
 
 
 @router.patch(

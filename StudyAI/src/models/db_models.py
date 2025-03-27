@@ -1,11 +1,29 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, JSON
+from sqlalchemy.orm import declarative_base, relationship
 from datetime import datetime, timezone
 import uuid
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List, Literal, Any
 
 Base = declarative_base()
+
+
+class User(Base):
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True)
+    user_id = Column(String(50), unique=True, default=lambda: str(uuid.uuid4()))
+    metadata = Column(JSON, nullable=True)  # Flexible JSON field for any user metadata
+    
+    def __init__(self, user_id=None, metadata=None):
+        self.user_id = user_id or str(uuid.uuid4())
+        self.metadata = metadata or {}
+    
+    def to_dict(self):
+        return {
+            "user_id": self.user_id,
+            "metadata": self.metadata,
+        }
 
 
 class Message(Base):
@@ -45,12 +63,14 @@ class ChatSession(Base):
     name = Column(String(100), nullable=True)
     status = Column(String(20), default="active")
     is_bookmarked = Column(Boolean, default=False)
+    user_id = Column(String(50), ForeignKey("users.user_id"), nullable=True)
 
-    def __init__(self, name=None, status="active", is_bookmarked=False):
+    def __init__(self, name=None, status="active", is_bookmarked=False, user_id=None):
         self.session_id = str(uuid.uuid4())
         self.name = name
         self.status = status
         self.is_bookmarked = is_bookmarked
+        self.user_id = user_id
 
     def to_dict(self):
         return {
@@ -59,6 +79,7 @@ class ChatSession(Base):
             "name": self.name,
             "status": self.status,
             "is_bookmarked": self.is_bookmarked,
+            "user_id": self.user_id,
         }
 
 
@@ -96,6 +117,17 @@ class ReportedResponse(Base):
 # Pydantic models for API
 # .............................................................................................
 
+class UserCreate(BaseModel):
+    user_id: Optional[str] = None
+    metadata: Optional[dict] = None
+
+
+class UserResponse(BaseModel):
+    user_id: str
+    metadata: Optional[dict] = None
+    
+    model_config = ConfigDict(from_attributes=True)
+
 
 class MessageCreate(BaseModel):
     message: str
@@ -115,6 +147,7 @@ class ChatSessionResponse(BaseModel):
     name: Optional[str] = None
     status: str
     is_bookmarked: bool
+    user_id: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
 
