@@ -214,12 +214,15 @@ def delete_course(course_id):
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-@courses_bp.route('/<int:course_id>/enroll', methods=['POST'])
-@student_or_ta_required
-def enroll_in_course(course_id):
+@courses_bp.route('/<int:course_id>/enroll/<int:student_id>', methods=['POST'])
+@admin_required
+def enroll_in_course(course_id,student_id):
+
+    
     """Enroll in a course (student/TA only)"""
     try:
         course = Course.query.get(course_id)
+        
         if not course:
             return jsonify({'error': 'Course not found'}), 404
 
@@ -228,7 +231,7 @@ def enroll_in_course(course_id):
         # Check if already enrolled
         existing_enrollment = CourseEnrollment.query.filter_by(
             course_id=course_id,
-            user_id=current_user.id
+            user_id=student_id
         ).first()
         
         if existing_enrollment:
@@ -247,8 +250,9 @@ def enroll_in_course(course_id):
         # Create enrollment
         enrollment = CourseEnrollment(
             course_id=course_id,
-            user_id=current_user.id,
-            role='student' if current_user.role == 'student' else 'ta'
+            user_id=student_id,
+            # role='student' if current_user.role == 'student' else 'ta'
+            role='student'
         )
 
         db.session.add(enrollment)

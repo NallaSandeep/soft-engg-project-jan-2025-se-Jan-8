@@ -44,7 +44,7 @@ def teacher_required(fn):
 
 def ta_required(fn):
     """Decorator to check if the current user is a TA."""
-    return roles_required('ta')(fn)
+    return roles_required('ta','admin')(fn)
 
 def student_or_ta_required(fn):
     """Decorator to check if the current user is a student or TA."""
