@@ -124,12 +124,20 @@ const Chatbot = ({ user, isOpen, setIsOpen }) => {
     }
   };
 
-  const handleReportMessage = (id) => {
+  const handleReportMessage = async (id) => {
     setReportedMessageId(id);
     setTimeout(() => setReportedMessageId(null), 800);
     // Add your report logic here
-    chatAPI.reportMessage(chatSessionID.current, id);
-  };
+      try {
+      chatAPI.reportMessage(chatSessionID.current, id).then(() => {
+        console.log("Chat message reported:", id);
+      }).catch((error) => {
+        console.error(error);
+      })}
+      catch (error) {
+      console.error(error);
+    };
+  }
 
   const handleSaveChat = () => {
     chatAPI.updateChat(chatSessionID.current, {op: "replace", path: "/is_bookmarked", value: true});
