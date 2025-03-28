@@ -21,11 +21,12 @@ class TaskStatus(str, Enum):
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
-    context: Optional[ResearchContext]
+    context: Optional[
+        Dict[str, Any]
+    ]  # Changed from ResearchContext to match actual usage
     current_agent: str
     next_step: str
     metadata: Optional[Dict[str, Any]]
-    task_status: TaskStatus
 
 
 # ...................................................helper functions.........................................
@@ -35,10 +36,12 @@ def initialize_state() -> AgentState:
     """Initialize the agent state with default values."""
     return {
         "messages": [],
-        "research_context": None,
-        "current_task": "",
-        "task_status": TaskStatus.NOT_STARTED,
+        "context": {"topic": "", "query": "", "sources": [], "findings": []},
+        "current_agent": "supervisor",
+        "next_step": "supervisor",
+        "metadata": {},
     }
+
 
 def set_task(state: AgentState, task: str) -> AgentState:
     """Set the current task and update status."""
@@ -46,6 +49,7 @@ def set_task(state: AgentState, task: str) -> AgentState:
     new_state["current_task"] = task
     new_state["task_status"] = TaskStatus.IN_PROGRESS
     return new_state
+
 
 def update_task_status(state: AgentState, status: TaskStatus) -> AgentState:
     """Update the status of the current task."""
@@ -59,39 +63,38 @@ def update_task_status(state: AgentState, status: TaskStatus) -> AgentState:
 
 def set_research_context(state: AgentState, topic: str, query: str) -> AgentState:
     """Initialize or update the research context."""
-    new_state = state.copy()
-    if new_state["research_context"] is None:
-        new_state["research_context"] = {
+    new_state = dict(state)
+    if "context" not in new_state or new_state["context"] is None:
+        new_state["context"] = {
             "topic": topic,
             "query": query,
             "sources": [],
             "findings": [],
         }
     else:
-        new_state["research_context"]["topic"] = topic
-        new_state["research_context"]["query"] = query
+        new_state["context"]["topic"] = topic
+        new_state["context"]["query"] = query
 
     return new_state
 
 
 def add_research_source(state: AgentState, source: Dict[str, Any]) -> AgentState:
     """Add a research source to the research context."""
-    new_state = state.copy()
-    if new_state["research_context"] is not None:
-        new_state["research_context"]["sources"] = state["research_context"][
-            "sources"
-        ] + [source]
+    new_state = dict(state)
+    if new_state.get("context") is not None:
+        sources = new_state["context"].get("sources", [])
+        new_state["context"]["sources"] = sources + [source]
     return new_state
 
 
 def add_research_finding(state: AgentState, finding: Dict[str, Any]) -> AgentState:
     """Add a research finding to the research context."""
-    new_state = state.copy()
-    if new_state["research_context"] is not None:
-        new_state["research_context"]["findings"] = state["research_context"][
-            "findings"
-        ] + [finding]
+    new_state = dict(state)
+    if new_state.get("context") is not None:
+        findings = new_state["context"].get("findings", [])
+        new_state["context"]["findings"] = findings + [finding]
     return new_state
+
 
 # ....................................................metadata functions.........................................
 
@@ -121,6 +124,7 @@ def get_metadata(state: AgentState, key: str, default: Any = None) -> Any:
         return default
 
     return state["metadata"].get(key, default)
+
 
 def get_subquestions(state: AgentState) -> List[Dict[str, Any]]:
     """Get all subquestions and their routes from state metadata."""

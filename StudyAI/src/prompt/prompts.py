@@ -53,8 +53,8 @@ RESPONSE_SYNTHESIS_PROMPT = """You are a helpful AI assistant that synthesizes i
 
 Original query: {original_query}
 
-Information collected from subquestions:
-{subquestion_context}
+Context retrieved from different agents:
+{context}
 
 Based on the information above, provide a comprehensive and coherent response to the original query. 
 Make sure to integrate information from all relevant subquestions and maintain a natural conversational tone.

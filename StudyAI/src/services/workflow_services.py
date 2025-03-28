@@ -77,6 +77,7 @@ async def process_message_stream(
 ) -> AsyncGenerator[Dict[str, Any], None]:
     """Process a message through the workflow."""
     final_ai_message = None
+    message_id = None
     try:
         if thread_id not in active_workflows:
             initialize_workflow(thread_id)
@@ -122,8 +123,16 @@ async def process_message_stream(
                 if hasattr(final_ai_message, "content")
                 else str(final_ai_message)
             )
-            add_message_to_session(db, thread_id, "bot", message_content)
-            yield final_ai_message
+            # Store the message in the database and get the message_id
+            result = add_message_to_session(db, thread_id, "bot", message_content)
+            message_id = result.get("messsage_id") if result else None
+
+            # Yield both the message content and ID
+            yield {
+                "content": message_content,
+                "message_id": message_id,
+                "ai_message": final_ai_message,
+            }
 
 
 def get_conversation_history(thread_id: str) -> List[Dict[str, Any]]:

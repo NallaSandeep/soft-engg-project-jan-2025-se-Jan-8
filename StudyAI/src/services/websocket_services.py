@@ -67,6 +67,7 @@ async def process_and_stream_message(
         websocket (WebSocket): The WebSocket connection
         session_id (str): The session identifier
         message (str): The user message to process
+        db (Session): Database session
     """
     try:
         # Check if websocket is still connected
@@ -80,7 +81,7 @@ async def process_and_stream_message(
         )
 
         # Stream response chunks
-        async for chunk in process_message_stream(session_id, message, db):
+        async for chunk_data in process_message_stream(session_id, message, db):
             # Check connection before sending each chunk
             if not is_connected(websocket):
                 logger.warning(
@@ -88,11 +89,12 @@ async def process_and_stream_message(
                 )
                 return
 
-            if hasattr(chunk, "content") and chunk.content:
+            if chunk_data and "content" in chunk_data:
                 await websocket.send_json(
                     {
                         "type": "chunk",
-                        "content": chunk.content,
+                        "content": chunk_data["content"],
+                        "message_id": chunk_data["message_id"],
                         "session_id": session_id,
                         "final": False,
                     }
