@@ -33,7 +33,7 @@ const Layout = () => {
                 <Outlet />
             </main>
             {user && user.role === 'student' && (
-                <Chatbot isOpen={isChatOpen} setIsOpen={setIsChatOpen} />
+                <Chatbot isOpen={isChatOpen} setIsOpen={setIsChatOpen} user={user} />
             )}
         </div>
     );
