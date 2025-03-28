@@ -23,18 +23,18 @@ def register():
         required_fields = ['username', 'email', 'password', 'role']
         for field in required_fields:
             if not data.get(field):
-                return jsonify({'msg': f'Missing required field: {field}'}), 400
+                return jsonify({'success': False, 'msg': f'Missing required field: {field}'}), 400
 
         # Validate role
         valid_roles = ['student', 'teacher', 'ta']
         if data['role'] not in valid_roles:
-            return jsonify({'msg': f'Invalid role. Must be one of: {", ".join(valid_roles)}'}), 400
+            return jsonify({'success': False, 'msg': f'Invalid role. Must be one of: {", ".join(valid_roles)}'}), 400
 
         # Check if username or email already exists
         if User.query.filter_by(username=data['username']).first():
-            return jsonify({'msg': 'Username already exists'}), 409
+            return jsonify({'success': False, 'msg': 'Username already exists'}), 409
         if User.query.filter_by(email=data['email']).first():
-            return jsonify({'msg': 'Email already exists'}), 409
+            return jsonify({'success': False, 'msg': 'Email already exists'}), 409
 
         # Create new user
         user = User(
@@ -49,6 +49,7 @@ def register():
         user.save()
 
         return jsonify({
+            'success': True,
             'msg': 'User registered successfully',
             'user': {
                 'id': user.id,
@@ -61,7 +62,7 @@ def register():
     except Exception as e:
         db.session.rollback()
         print(f"Error in registration: {str(e)}")
-        return jsonify({'msg': 'Failed to register user'}), 500
+        return jsonify({'success': False, 'msg': 'Failed to register user'}), 500
 
 @auth_bp.route('/login', methods=['POST', 'OPTIONS'])
 def login():

@@ -99,20 +99,13 @@ const EnrollStudents = () => {
             {error && <ErrorDisplay message={error} />}
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Enroll</h1>
             <div className="glass-card p-6 mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                     <FormField
                         label="Course"
                         value={selectedCourse}
                         onChange={(e) => setSelectedCourse(e.target.value)}
                         options={courses}
                         placeholder="Select a course"
-                    />
-                    <FormField
-                        label={selectedRole === 'student' ? 'Student' : 'Teaching Assistant'}
-                        value={selectedStudent}
-                        onChange={(e) => setSelectedStudent(e.target.value)}
-                        options={filteredStudents}
-                        placeholder={`Select a ${selectedRole === 'student' ? 'student' : 'teaching assistant'}`}
                     />
                     <FormField
                         label="Role"
@@ -123,6 +116,13 @@ const EnrollStudents = () => {
                             { id: 'ta', name: 'Teaching Assistant' }
                         ]}
                         placeholder="Select a role"
+                    />
+                    <FormField
+                        label={selectedRole === 'student' ? 'Student' : 'Teaching Assistant'}
+                        value={selectedStudent}
+                        onChange={(e) => setSelectedStudent(e.target.value)}
+                        options={filteredStudents}
+                        placeholder={`Select a ${selectedRole === 'student' ? 'student' : 'teaching assistant'}`}
                     />
                 </div>
                 <div className="mt-6">

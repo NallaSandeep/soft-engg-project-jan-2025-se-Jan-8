@@ -77,21 +77,21 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await authApi.register(userData);
             if (response.success) {
-                localStorage.setItem('token', response.data.access_token);
-                setUser(response.data.user);
-                navigate('/student/dashboard');
+                // localStorage.setItem('token', response.data.access_token);
+                // setUser(response.data.user);
+                // navigate('/login');
                 return { success: true };
             } else {
                 return { 
                     success: false, 
-                    error: response.message || response.error || 'Registration failed' 
+                    error: response.message || response.msg || response.error || 'Registration failed' 
                 };
             }
         } catch (err) {
             console.error('Registration failed:', err);
             return { 
                 success: false, 
-                error: err.message || 'Registration failed' 
+                error: err.message || err.msg || 'Registration failed' 
             };
         }
     };
