@@ -132,6 +132,12 @@ class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class SessionCreate(BaseModel):
+    metadata: Optional[dict] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class MessageCreate(BaseModel):
     message: str
 

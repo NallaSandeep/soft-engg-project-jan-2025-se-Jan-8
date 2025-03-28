@@ -50,6 +50,8 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
                             )
                         )
                         # Clear metadata and context after processing
+                        state["current_agent"] = ""
+                        state["next_step"] = END
                         state["metadata"] = {}
                         state["context"] = {
                             "topic": "",

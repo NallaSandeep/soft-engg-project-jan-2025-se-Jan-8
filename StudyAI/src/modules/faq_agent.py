@@ -37,8 +37,9 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
     """RAG agent node that processes FAQ queries and generates responses."""
     try:
         agent = RagAgent()
-        state["current_agent"] = "faq_agent"  # Set the current agent to rag_agent
-        state["next_step"] = "supervisor"  # Set the next step to rag_agent
+        state["current_agent"] = "faq_agent" 
+        state["next_step"] = "supervisor"  
+        
         last_message = next(
             (
                 msg.content
