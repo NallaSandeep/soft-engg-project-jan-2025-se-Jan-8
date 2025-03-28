@@ -6,7 +6,6 @@ from src.core.state import (
     AgentState,
     update_metadata,
     get_metadata,
-    set_research_context,
 )
 from src.modules.supervisor_class import Supervisor
 
@@ -34,17 +33,46 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
                 "faq_agent",
                 "course_guide",
             ]:
-                # Check if the state has only original query and no subquestions
-                if not any(
+                # Check if we're handling a complex query with subquestions
+                has_subquestions = any(
                     key.startswith("subq_") for key in state.get("metadata", {})
-                ):
+                )
+
+                if not has_subquestions:
+                    # Simple query case - generate final response if original query exists
                     if "original_query" in state.get("metadata", {}):
+                        logging.info("Generating final response for original query.")
                         final_response = await supervisor.generate_final_response(state)
                         # Add response as a message
                         state["messages"].append(
                             AIMessage(
                                 content=final_response,
-                                additional_kwargs={
+                                kwargs={"metadata": state.get("metadata", {})},
+                            )
+                        )
+
+                        # Clear metadata and context after processing
+                        state["current_agent"] = ""
+                        state["next_step"] = END
+                        state["metadata"] = {}
+                        state["context"] = {
+                            "topic": "",
+                            "query": "",
+                            "sources": [],
+                            "findings": [],
+                        }
+                        yield state
+                        return
+                else:
+                    # Complex query case - check if all subquestions are processed
+                    if await supervisor._check_if_all_subquestions_processed(state):
+                        # All subquestions processed, generate final response
+                        final_response = await supervisor.generate_final_response(state)
+                        # Add response as a message
+                        state["messages"].append(
+                            AIMessage(
+                                content=final_response,
+                                kwargs={
                                     "metadata": state.get("metadata", {})
                                 },
                             )
@@ -61,29 +89,27 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
                         }
                         yield state
                         return
-                else:
-                    if await supervisor._check_if_all_subquestions_processed(state):
-                        # Generate final response and clear metadata and context
-                        final_response = await supervisor.generate_final_response(state)
-                        # Add response as a message
-                        state["messages"].append(
-                            AIMessage(
-                                content=final_response,
-                                additional_kwargs={
-                                    "metadata": state.get("metadata", {})
-                                },
-                            )
-                        )
-                        # Clear metadata and context after processing
-                        state["metadata"] = {}
-                        state["context"] = {
-                            "topic": "",
-                            "query": "",
-                            "sources": [],
-                            "findings": [],
-                        }
-                        yield state
-                        return
+                    else:
+                        # Some subquestions still need processing
+                        # Find the next unprocessed subquestion
+                        i = 0
+                        while get_metadata(state, f"subq_{i}") is not None:
+                            subq = get_metadata(state, f"subq_{i}")
+                            if "result" not in subq:
+                                # Route to the appropriate agent for this subquestion
+                                next_step = subq.get("route", "dismiss")
+                                state["current_agent"] = next_step
+                                state["next_step"] = next_step
+
+                                # Set the current subquestion as the active one
+                                state["metadata"]["active_subq_index"] = i
+
+                                # Update the context to include this subquestion
+                                state["context"]["query"] = subq.get("question", "")
+
+                                yield state
+                                return
+                            i += 1
 
             # Get original query
             last_message = next(
@@ -99,7 +125,7 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
                 raise ValueError("No last message found for routing.")
 
             # Store the original query
-            if "original_query" not in state.get("metadata", {}):
+            if "original_query" not in state["metadata"]:
                 state = update_metadata(state, "original_query", last_message)
                 state["context"]["topic"] = "AgentAI"
                 state["context"]["query"] = last_message
@@ -131,8 +157,15 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
                         if "result" not in subq:
                             found_unprocessed = True
                             next_step = subq.get("route", "dismiss")
+                            state["metadata"]["active_subq_index"] = (
+                                i  # Track the active subquestion
+                            )
+                            state["context"]["query"] = subq.get(
+                                "question", ""
+                            )  # Set the context query to the subquestion
                             break
                         i += 1
+
                     if not found_unprocessed:
                         next_step = END
 
@@ -150,9 +183,7 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
         logging.error(f"Supervisor node error: {str(e)}")
         state["next_step"] = "dismiss"
         state["messages"].append(
-            AIMessage(
-                content="Sorry, I encountered an error processing your request."
-            )
+            AIMessage(content="Sorry, I encountered an error processing your request.")
         )
 
     yield state

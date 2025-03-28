@@ -1,279 +1,184 @@
-from typing import Dict, Any, List, Optional, AsyncGenerator
-from src.core.state import AgentState
-from langgraph.graph import END
+from typing import AsyncGenerator, Dict, Any, List
 from src.core.base import BaseAgent
-# from src.db.student_db import StudentDatabase
-from langchain.schema import SystemMessage, AIMessage, HumanMessage
+from src.core.state import AgentState, update_metadata, get_metadata
+from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
+from langgraph.graph import END
 import logging
 
 
 class CourseGuideAgent(BaseAgent):
-    """Course guide agent for course/curriculum questions and exam preparation."""
+    """Agent responsible for handling course-related queries and determining relevant courses."""
 
-    def __init__(self, db_path: str):
-        """Initialize the course guide agent."""
+    def __init__(self):
         super().__init__()
-        self.system_message = """You are an intelligent academic assistant for course guidance. 
-        Help students navigate their course materials and prepare for upcoming exams.
-        Use the specific course information provided in the context to give personalized responses.
-        For exam preparation, focus on the specific exam topics listed in the context."""
-
-        # self.db = StudentDatabase(db_path)
-
-    def enrich_query_with_context(
-        self, message: str, student_id: str
-    ) -> Dict[str, Any]:
-        """Enrich the student's query with course context.
-
-        Args:
-            message: The student's message/query
-            student_id: The student's ID to look up course information
-
-        Returns:
-            Dictionary with enriched context
-        """
-        # Get student information
-        student_data = self.db.get_student_data(student_id)
-        if not student_data:
-            return {"message": message, "context": "No student data found."}
-
-        # Get course information
-        courses = self.db.get_student_courses(student_id)
-
-        # Extract relevant context based on query keywords
-        query_keywords = self._extract_keywords(message.lower())
-        relevant_courses = self._find_relevant_courses(query_keywords, courses)
-
-        # Build context
-        context = {
-            "student": {
-                "name": student_data.get("name", ""),
-                "academic_level": student_data.get("academic_level", ""),
+        # Dummy data for course guide database
+        self.course_guide_db = {
+            "SVD": {
+                "courses": [
+                    {"id": "CS110", "name": "Machine Learning", "confidence": 0.95},
+                    {"id": "CS101", "name": "Linear Algebra", "confidence": 0.85},
+                ],
+                "summary": "Singular Value Decomposition is a matrix factorization technique covered in both ML and Linear Algebra courses.",
             },
-            "enrolled_courses": [
-                {
-                    "id": c.get("id", ""),
-                    "title": c.get("title", ""),
-                    "topics": c.get("topics", []),
-                }
-                for c in courses
-            ],
-            "relevant_courses": relevant_courses,
-            "has_upcoming_exams": any(c.get("upcoming_exam") for c in courses),
+            "SDLC": {
+                "courses": [
+                    {"id": "CS105", "name": "Software Engineering", "confidence": 0.98},
+                    {"id": "CS106", "name": "Software Development", "confidence": 0.90},
+                ],
+                "summary": "Software Development Life Cycle models are extensively covered in Software Engineering courses.",
+            },
+            "prime path": {
+                "courses": [
+                    {"id": "CS105", "name": "Software Engineering", "confidence": 0.92}
+                ],
+                "summary": "Prime path testing is covered in Software Engineering course under software testing module.",
+            },
         }
 
-        return {"message": message, "context": context}
+    async def get_relevant_courses(self, query: str) -> Dict[str, Any]:
+        """Retrieve relevant courses based on the query."""
+        # Simple keyword matching algorithm
+        query_lower = query.lower()
 
-    def _extract_keywords(self, message: str) -> List[str]:
-        """Extract keywords from the message for relevance matching."""
-        # Simple keyword extraction - in production, use NLP techniques
-        common_words = {"the", "a", "an", "in", "for", "to", "and", "or", "but", "of"}
-        words = message.lower().split()
-        return [word for word in words if word not in common_words and len(word) > 2]
+        for keyword, data in self.course_guide_db.items():
+            if keyword.lower() in query_lower:
+                return data
 
-    def _find_relevant_courses(
-        self, keywords: List[str], courses: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
-        """Find courses relevant to the keywords."""
-        relevant_courses = []
+        # Return empty result if no match found
+        return {"courses": [], "summary": "No relevant courses found for your query."}
 
-        for course in courses:
-            score = 0
-            # Check course title
-            title = course.get("title", "").lower()
-            for keyword in keywords:
-                if keyword in title:
-                    score += 3
-
-            # Check course topics
-            topics = " ".join(course.get("topics", [])).lower()
-            for keyword in keywords:
-                if keyword in topics:
-                    score += 2
-
-            # Check exam relevance
-            if "exam" in keywords or "test" in keywords or "quiz" in keywords:
-                if course.get("upcoming_exam"):
-                    score += 3
-
-            if score > 0:
-                relevant_courses.append(
-                    {
-                        "id": course.get("id", ""),
-                        "title": course.get("title", ""),
-                        "topics": course.get("topics", []),
-                        "upcoming_exam": course.get("upcoming_exam"),
-                        "exam_topics": course.get("exam_topics", []),
-                        "relevance_score": score,
-                    }
-                )
-
-        # Sort by relevance
-        return sorted(
-            relevant_courses, key=lambda x: x.get("relevance_score", 0), reverse=True
-        )
-
-    def prepare_exam_guidance(
-        self, student_id: str, course_id: Optional[str] = None
-    ) -> Dict[str, Any]:
-        """Prepare exam guidance for a student.
-
-        Args:
-            student_id: The student ID
-            course_id: Optional specific course ID, if None will include all courses with upcoming exams
-
-        Returns:
-            Dictionary with exam preparation guidance
-        """
-        student_data = self.db.get_student_data(student_id)
-        if not student_data:
-            return {"error": "Student not found"}
-
-        # Get courses with exams
-        courses = self.db.get_student_courses(student_id)
-        exam_courses = []
-
-        for course in courses:
-            if course_id and course.get("id") != course_id:
-                continue
-
-            if course.get("upcoming_exam"):
-                exam_courses.append(
-                    {
-                        "id": course.get("id", ""),
-                        "title": course.get("title", ""),
-                        "exam_date": course.get("upcoming_exam"),
-                        "exam_topics": course.get("exam_topics", []),
-                    }
-                )
-
-        return {
-            "student_name": student_data.get("name", ""),
-            "exam_courses": exam_courses,
-            "has_exams": len(exam_courses) > 0,
+    async def get_course_content(self, course_id: str) -> str:
+        """Retrieve course content based on the course ID."""
+        course_contents = {
+            "CS101": "Linear Algebra covers vector spaces, matrices, eigenvalues and eigenvectors, and factorization methods like SVD.",
+            "CS105": "Software Engineering teaches software development methodologies, testing approaches including path testing, and project management.",
+            "CS106": "Software Development focuses on practical application of SDLC with hands-on projects and coding practices.",
+            "CS110": "Machine Learning covers algorithms like regression, classification, neural networks, and matrix factorization techniques including SVD.",
         }
 
-    async def respond(self, message: str, student_id: str) -> str:
-        """Respond to the incoming message with course guidance.
-
-        Args:
-            message: The student's message/query
-            student_id: The student's ID
-
-        Returns:
-            Response from the agent
-        """
-        # Enrich query with context
-        enriched_context = self.enrich_query_with_context(message, student_id)
-
-        # Check if this is an exam-related query
-        is_exam_query = any(
-            term in message.lower()
-            for term in ["exam", "test", "midterm", "final", "quiz", "preparation"]
+        return course_contents.get(
+            course_id, f"No content available for course {course_id}"
         )
 
-        if is_exam_query:
-            # Add exam guidance
-            exam_guidance = self.prepare_exam_guidance(student_id)
-            enriched_context["exam_guidance"] = exam_guidance
 
-        # Create prompt with context
-        prompt_template = """
-        Context: {context}
-        
-        Student: {message}
-        
-        Important Academic Integrity Guidelines:
-        1. Provide guidance and explanations rather than direct answers
-        2. Encourage critical thinking and understanding
-        3. Remind users to apply their own understanding
-        4. Include appropriate academic integrity disclaimers if the query relates to assignments
-
-        Provide helpful guidance based on the student's enrolled courses and academic needs.
-        """
-
-        chain = self.create_chain(prompt_template)
-        response = chain.invoke({"context": str(enriched_context), "message": message})
-
-        return response
-
-
-async def course_guidance_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
-    """Process node for course guidance in the agent workflow."""
+async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
+    """Course guide node that processes course-related queries"""
     try:
-        # Extract the last message and student_id from metadata
-        last_message = next(
-            (
-                msg.content
-                for msg in reversed(state["messages"])
-                if isinstance(msg, HumanMessage)
-            ),
-            "",
-        )
+        agent = CourseGuideAgent()
 
-        metadata = state.get("metadata", {})
-        student_id = metadata.get("student_id", "")
+        state["current_agent"] = "course_guide"
+        state["next_step"] = "supervisor"
 
-        if not student_id:
-            # No student ID available, add error message and end
+        # Determine if we're processing a subquestion or the original query
+        is_subquestion = False
+        query_to_process = ""
+
+        if "active_subq_index" in state.get("metadata", {}):
+            # We're processing a subquestion from a complex query
+            is_subquestion = True
+            subq_index = state["metadata"]["active_subq_index"]
+            subq = get_metadata(state, f"subq_{subq_index}")
+            if subq and "question" in subq:
+                query_to_process = subq["question"]
+
+        if not query_to_process:
+            # Process the original query or the last human message
+            query_to_process = next(
+                (
+                    msg.content
+                    for msg in reversed(state["messages"])
+                    if isinstance(msg, HumanMessage)
+                ),
+                "",
+            )
+
+        if not query_to_process:
             state["messages"].append(
                 AIMessage(
-                    content="I cannot provide personalized course guidance without student identification."
+                    content="I couldn't process your course-related query. Please try again."
                 )
             )
             state["next_step"] = END
             yield state
             return
 
-        # Initialize agent with database
-        agent = CourseGuideAgent(
-            db_path="path/to/your/db.sqlite"
-        )  # Adjust path as needed
+        # Get relevant courses information
+        course_info = await agent.get_relevant_courses(query_to_process)
 
-        # Enrich query with context
-        enriched_context = agent.enrich_query_with_context(last_message, student_id)
+        # Initialize context structure if it doesn't exist
+        if "context" not in state or state["context"] is None:
+            state["context"] = {
+                "topic": "Course Guide",
+                "query": query_to_process,
+                "sources": [],
+                "findings": [],
+            }
 
-        # Check if this is an exam-related query
-        is_exam_query = any(
-            term in last_message.lower()
-            for term in ["exam", "test", "midterm", "final", "quiz", "preparation"]
-        )
+        if not course_info["courses"]:
+            response_message = "I couldn't find specific courses related to your query. Please try a more specific course-related question or topic."
 
-        if is_exam_query:
-            # Add exam guidance
-            exam_guidance = agent.prepare_exam_guidance(student_id)
-            enriched_context["exam_guidance"] = exam_guidance
-
-        # Create final response prompt
-        final_prompt = f"""You are an academic course guidance assistant. Using the following context, 
-        provide a helpful response while maintaining academic integrity:
-
-        Student Context: {enriched_context}
-        
-        User Question: {last_message}
-
-        Important Academic Integrity Guidelines:
-        1. Provide guidance and explanations rather than direct answers
-        2. Encourage critical thinking and understanding
-        3. Remind users to apply their own understanding
-        4. Include appropriate academic integrity disclaimers if the query relates to assignments
-
-        Provide specific guidance based on the student's enrolled courses, academic needs, and maintaining academic integrity."""
-
-        # Generate final response
-        async for chunk in agent.llm.astream([SystemMessage(content=final_prompt)]):
-            if hasattr(chunk, "content") and chunk.content:
-                state["messages"].append(AIMessage(content=chunk.content))
+            if is_subquestion:
+                # This is a subquestion - mark it as processed with no useful result
+                subq_index = state["metadata"]["active_subq_index"]
+                if f"subq_{subq_index}" in state["metadata"]:
+                    state["metadata"][f"subq_{subq_index}"]["result"] = response_message
+            else:
+                # This is a standalone query - add the message directly
+                state["messages"].append(AIMessage(content=response_message))
                 state["next_step"] = END
-                yield state
-                return
+
+            yield state
+            return
+
+        # Build the response with course information
+        courses_found = course_info["courses"]
+        response_parts = []
+        response_parts.append(course_info["summary"])
+        response_parts.append("\nRelevant courses:")
+
+        course_details = []
+        for course in courses_found:
+            course_content = await agent.get_course_content(course["id"])
+            course_details.append(
+                f"- {course['id']}: {course['name']} (Confidence: {course['confidence']:.2f})"
+            )
+            course_details.append(f"  {course_content}")
+
+        response_parts.extend(course_details)
+        response = "\n".join(response_parts)
+
+        # Create the finding with the expected structure
+        finding = {
+            "query": query_to_process,
+            "content": response,
+            "sources": [{"title": "Course Guide Database"}],
+        }
+
+        # Add to findings list
+        if "findings" not in state["context"]:
+            state["context"]["findings"] = []
+
+        state["context"]["findings"].append(finding)
+
+        # Process result based on whether this is a subquestion or original query
+        if is_subquestion:
+            # Mark the subquestion as processed
+            subq_index = state["metadata"]["active_subq_index"]
+            if f"subq_{subq_index}" in state["metadata"]:
+                state["metadata"][f"subq_{subq_index}"]["result"] = response
+        else:
+            # This is the original query - generate a direct response
+            state["messages"].append(AIMessage(content=response))
+            state["next_step"] = END
 
     except Exception as e:
-        logging.error(f"Course guidance error: {str(e)}")
+        logging.error(f"Course guide agent error: {str(e)}")
         state["messages"].append(
             AIMessage(
-                content="Sorry, I encountered an error while processing your course guidance request."
+                content="I apologize, but I encountered an error while processing your query. "
+                "Please try again or rephrase your question."
             )
         )
         state["next_step"] = END
+    finally:
         yield state

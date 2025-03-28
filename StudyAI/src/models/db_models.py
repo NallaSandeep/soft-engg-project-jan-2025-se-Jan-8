@@ -161,6 +161,12 @@ class ChatSessionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class ChatSessionWithMessagesResponse(ChatSessionResponse):
+    messages: List[MessageResponse] = []
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 # JSON Patch model
 class JSONPatchOperation(BaseModel):
     op: Literal["replace", "add", "remove", "test", "move", "copy"]

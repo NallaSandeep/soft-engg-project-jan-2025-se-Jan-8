@@ -1,9 +1,11 @@
 import logging
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage
+from langchain_google_genai import ChatGoogleGenerativeAI
 from src.core.workflow import create_workflow
 from .basic_services import add_message_to_session
 from typing import Dict, Any, List, AsyncGenerator
 from sqlalchemy.orm import Session
+from config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -33,41 +35,42 @@ def initialize_workflow(thread_id: str) -> bool:
         return False
 
 
-async def process_message(thread_id: str, message: str) -> Dict[str, Any]:
-    """Process message with single response."""
+async def process_message(message: str) -> Dict[str, Any]:
+    """
+    Process message with single response for various tasks like summarization,
+    debugging, or feedback report creation.
+
+    Args:
+        message (str): Raw text message to process
+
+    Returns:
+        Dict[str, Any]: Response from the model with processed content
+    """
     try:
-        if thread_id not in active_workflows:
-            initialize_workflow(thread_id)
+        model = ChatGoogleGenerativeAI(
+            model="gemini-2.0-flash",
+            temperature=0.1,
+            max_output_tokens=256,
+            cache=True,
+            google_api_key=Config.get("GEMINI_API_KEY"),
+        )
 
-        workflow = active_workflows.get(thread_id)
+        # Use raw message directly to allow for task-specific processing
+        response = await model.ainvoke(message)
 
-        config = {"configurable": {"thread_id": "1"}}
-
-        if message:
-            add_message_to_session(thread_id, "user", message)
-
-        human_message = HumanMessage(content=message)
-        message = {"messages": [human_message]}
-
-        state = workflow.invoke(message, config)
-
-        # Get the last message as response
-        last_message = state["messages"][-1]
-
-        if last_message:
-            add_message_to_session(thread_id, "bot", last_message.content)
+        # Extract content from response
+        message_content = (
+            response.content if hasattr(response, "content") else str(response)
+        )
 
         return {
-            "content": last_message.content,
-            "thread_id": thread_id,
-            "message_count": len(state["messages"]),
+            "content": message_content,
         }
 
     except Exception as e:
         logger.error(f"Error processing message in workflow: {e}")
         return {
-            "content": "Error processing message",
-            "thread_id": thread_id,
+            "content": f"Error processing message: {str(e)}",
             "agent": "error",
         }
 

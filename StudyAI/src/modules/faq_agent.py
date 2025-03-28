@@ -1,7 +1,7 @@
 from typing import AsyncGenerator, Dict, Any
 import logging
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
-from src.core.state import AgentState
+from src.core.state import AgentState, update_metadata, get_metadata
 from src.core.base import BaseAgent
 from langgraph.graph import END
 
@@ -10,8 +10,7 @@ class RagAgent(BaseAgent):
     """RAG agent for general FAQs."""
 
     def __init__(self):
-        """Initialize the RAG agent."""
-        super().__init__()  
+        super().__init__()
 
     async def get_relevant_docs(self, query: str) -> str:
         """Retrieve relevant documents from the knowledge base."""
@@ -37,18 +36,34 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
     """RAG agent node that processes FAQ queries and generates responses."""
     try:
         agent = RagAgent()
-        state["current_agent"] = "faq_agent" 
-        state["next_step"] = "supervisor"  
         
-        last_message = next(
-            (
-                msg.content
-                for msg in reversed(state["messages"])
-                if isinstance(msg, HumanMessage)
-            ),
-            "",
-        )
-        if not last_message:
+        state["current_agent"] = "faq_agent"
+        state["next_step"] = "supervisor"
+
+        # Determine if we're processing a subquestion or the original query
+        is_subquestion = False
+        query_to_process = ""
+
+        if "active_subq_index" in state["metadata"]:
+            # We're processing a subquestion from a complex query
+            is_subquestion = True
+            subq_index = state["metadata"]["active_subq_index"]
+            subq = get_metadata(state, f"subq_{subq_index}")
+            if subq and "question" in subq:
+                query_to_process = subq["question"]
+
+        if not query_to_process:
+            # Process the original query or the last human message
+            query_to_process = next(
+                (
+                    msg.content
+                    for msg in reversed(state["messages"])
+                    if isinstance(msg, HumanMessage)
+                ),
+                "",
+            )
+
+        if not query_to_process:
             state["messages"].append(
                 AIMessage(content="I couldn't process your query. Please try again.")
             )
@@ -57,15 +72,20 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
             return
 
         # Get relevant documents
-        context = await agent.get_relevant_docs(last_message)
+        context = await agent.get_relevant_docs(query_to_process)
         if not context or "No relevant documents found" in context:
-            state["messages"].append(
-                AIMessage(
-                    content="I couldn't find specific information about your query. "
-                    "If this is about course content, you might want to ask the course guide agent."
-                )
-            )
-            state["next_step"] = END
+            response_message = "I couldn't find specific information about your query. If this is about course content, you might want to ask the course guide agent."
+
+            if is_subquestion:
+                # This is a subquestion - mark it as processed with no useful result
+                subq_index = state["metadata"]["active_subq_index"]
+                if f"subq_{subq_index}" in state["metadata"]:
+                    state["metadata"][f"subq_{subq_index}"]["result"] = response_message
+            else:
+                # This is a standalone query - add the message directly
+                state["messages"].append(AIMessage(content=response_message))
+                state["next_step"] = END
+
             yield state
             return
 
@@ -73,14 +93,14 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
         if "context" not in state or state["context"] is None:
             state["context"] = {
                 "topic": "FAQ",
-                "query": last_message,
+                "query": query_to_process,
                 "sources": [],
                 "findings": [],
             }
 
         # Create the finding with the expected structure
         finding = {
-            "query": last_message,
+            "query": query_to_process,
             "content": context,
             "sources": [{"title": "FAQ Knowledge Base"}],
         }
@@ -91,29 +111,32 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
 
         state["context"]["findings"].append(finding)
 
-        # Mark processing as complete for subquestion if this is part of a complex query
-        subq_index = None
-        i = 0
-        while state.get("metadata", {}).get(f"subq_{i}") is not None:
-            subq = state["metadata"][f"subq_{i}"]
-            if subq.get("question") == last_message:
-                subq_index = i
-                break
-            i += 1
+        # Process result based on whether this is a subquestion or original query
+        if is_subquestion:
+            # Mark the subquestion as processed
+            subq_index = state["active_subq_index"]
+            if f"subq_{subq_index}" in state["metadata"]:
+                response = f"FAQ agent found: {context.strip()}"
+                state["metadata"][f"subq_{subq_index}"]["result"] = response
+        else:
+            # This is the original query - generate a direct response
+            enriched_response = f"Based on our FAQ knowledge: {context.strip()}"
+            state["messages"].append(AIMessage(content=enriched_response))
+            state["next_step"] = END
 
-        if subq_index is not None:
-            # This is a subquestion, mark it as processed
-            state["metadata"][f"subq_{subq_index}"]["result"] = "Processed by FAQ agent"
-            
     except Exception as e:
         logging.error(f"RAG agent error: {str(e)}")
-        state["messages"].append(
-            AIMessage(
-                content="I apologize, but I encountered an error while processing your query. "
-                "Please try again or rephrase your question."
-            )
-        )
-        state["next_step"] = END
+        error_message = "I apologize, but I encountered an error while processing your query. Please try again or rephrase your question."
+
+        if state.get("active_subq_index") is not None:
+            # Mark the subquestion as errored
+            subq_index = state["active_subq_index"]
+            if f"subq_{subq_index}" in state["metadata"]:
+                state["metadata"][f"subq_{subq_index}"]["result"] = error_message
+        else:
+            # Direct error message for standalone query
+            state["messages"].append(AIMessage(content=error_message))
+            state["next_step"] = END
     finally:
         # Ensure the state is yielded at the end of processing
         yield state

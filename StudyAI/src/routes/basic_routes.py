@@ -18,6 +18,7 @@ from src.models.db_models import (
     MessageCreate,
     MessageResponse,
     ChatSessionResponse,
+    ChatSessionWithMessagesResponse,
     SessionPatch,
     ReportCreate,
     ReportResponse,
@@ -46,22 +47,20 @@ async def create_session(
     return create_new_session(db, user_id, metadata)
 
 
-# @router.post(
-#     "/session/{session_id}/message",
-#     tags=["Chat Session"],
-#     summary="Send Message to Chat Session",
-#     description="Sends a message to the specified chat session and returns the AI response",
-# )
-# async def post_message(
-#     session_id: str, message_data: MessageCreate, db: Session = Depends(get_db)
-# ):
-#     response = await process_message(session_id, message_data.message)
-#     return response
+@router.post(
+    "/message",
+    tags=["Chat Session"],
+    summary="Send Message to Bare LLM",
+    description="Sends a message to get the AI response for tasks like summarization, debugging, or feedback",
+)
+async def post_message(message_data: MessageCreate):
+    response = await process_message(message_data.message)
+    return response
 
 
 @router.get(
     "/session/{session_id}",
-    response_model=ChatSessionResponse,
+    response_model=ChatSessionWithMessagesResponse,
     tags=["Chat Session"],
     summary="Get Chat Session",
     description="Retrieves a specific chat session by its ID including all messages",
@@ -75,7 +74,7 @@ async def get_chat_session(session_id: str, db: Session = Depends(get_db)):
 
 @router.get(
     "/sessions",
-    response_model=List[ChatSessionResponse],
+    response_model=List[ChatSessionWithMessagesResponse],
     tags=["Chat Session"],
     summary="List All Chat Sessions",
     description="Returns a list of all available chat sessions",
