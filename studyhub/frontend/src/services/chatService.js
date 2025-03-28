@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { use } from 'react';
 
-const API_BASE_URL = 'http://127.0.0.1:5000';
+const API_BASE_URL = 'http://127.0.0.1:5010';
 
 // Create axios instance with default config
 const api = axios.create({

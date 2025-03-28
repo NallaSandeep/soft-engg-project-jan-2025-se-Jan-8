@@ -23,7 +23,7 @@ const md = new MarkdownIt();
 //   { id: 1, text: "Hi! How can I help you today?", isBot: true, time: "10:00 AM" }
 // ];
 
-const Chatbot = ({ user, isOpen, setIsOpen }) => {
+const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const [firstLoad, setFirstLoad] = useState(false);
   // const [chatSessionId, setChatSessionId] = useState(null);
   const [message, setMessage] = useState('');
@@ -237,26 +237,21 @@ const Chatbot = ({ user, isOpen, setIsOpen }) => {
     if (showMentions) {
       if (!e.target.value.startsWith('@')) {
         setShowMentions(false);
-      } else {
-        // Check if the input matches any of the valid commands
-        const validCommands = mentionOptions.map(opt => opt.name);
+      }
+      setMentionSearch(e.target.value.slice(1));
+      const validCommands = mentionOptions.map(opt => opt.name);
         for (const cmd of validCommands) {
           if (e.target.value.slice(1).startsWith(cmd)) {
             setMentionSearch(cmd);
-            return;
+            break;
           }
-        }
-        // If no match found, use the text after @
-        setMentionSearch(e.target.value.slice(1));
       }
-    }
+      }
   };
 
   async function handleSubmit() {
     if (!message.trim()) return;
-
-    setShowMentions(false);
-
+    setShowMentions(false);    
     const userMessageId = uuidv4();
     const userMessage = {
       id: userMessageId,
