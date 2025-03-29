@@ -19,13 +19,8 @@ import { v4 as uuidv4 } from 'uuid';
 import MarkdownIt from 'markdown-it';
 const md = new MarkdownIt();
 
-// const dummyMessages = [
-//   { id: 1, text: "Hi! How can I help you today?", isBot: true, time: "10:00 AM" }
-// ];
-
 const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const [firstLoad, setFirstLoad] = useState(false);
-  // const [chatSessionId, setChatSessionId] = useState(null);
   const [message, setMessage] = useState('');
   const [currResponse, setCurrResponse] = useState('');
   const [messages, setMessages] = useState([]);
@@ -44,7 +39,6 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   ]);
   const [mentionSearch, setMentionSearch] = useState('');
   const [isFirstMessage, setIsFirstMessage] = useState(true);
-  // const [personalResources, setPersonalResources] = useState([]);
   const messagesEndRef = useRef(null);
   const abortControllerRef = useRef(null);
   const socket = useRef(null);
@@ -153,23 +147,34 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   };
 
   const handleLoadSavedChat = async (chat) => {
-    return
+    // return
+    socket.current?.close(); // Close existing socket connection if any
+    setMessages([]);
     chatSessionID.current = chat.id;
-    const response = await chatAPI.getChat(chat.id)
-    console.log('Saved chat messages:', response.messages);
-
-    const formattedMessages = response.messages?.map(msg => ({
-      id: message_id.id || uuidv4(),
-      text: msg.isBot ? md.render(msg.text) : msg.text,
-      isBot: msg.user == 'bot',
-      isMarkdown: msg.isBot,
-      time: new Date(msg.timestamp).toLocaleTimeString([], { 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      })
-    }));
-    setMessages(formattedMessages);
-    setShowSavedChats(false);
+    chatAPI.getChat(chat.id).then((response) => {
+      console.log('Loaded chat:', response);
+      const formattedMessages = response.messages?.map(msg => ({
+        id: msg.message_id || uuidv4(),
+        text: msg.sender==='bot' ? md.render(msg.message) : msg.message,
+        o_text: msg.sender==='bot' ? msg.message : msg.message,
+        isBot: msg.sender === 'bot',
+        isMarkdown:msg.sender === 'bot',
+        time: new Date(msg.timestamp).toLocaleTimeString([], { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        })
+      }));
+      console.log('Formatted messages:', formattedMessages);
+      setMessages(formattedMessages);
+      setShowSavedChats(false);
+      setIsFirstMessage(false);
+      setSavedChatId(chat.id);
+      setTimeout(() => setSavedChatId(null), 800);
+      setIsLoading(false);
+    }).catch((error) => {
+      console.error('Error loading chat:', error);
+    });
+    // console.log('Saved chat messages:', response);
 
     // Create WebSocket connection after chatSessionId is set
     socket.current = messageAPI.createConnection(chatSessionID.current);
@@ -277,6 +282,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
     setIsLoading(true);
     socket.current.onmessage = (event) => {
       const response = JSON.parse(event.data);
+      console.log(response)
       if (response.type === 'start') {
         res = '';
       }
@@ -291,6 +297,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
         const botMessage = {
           id: message_id || uuidv4(),
           text: formattedText,
+          o_text: res.trim(),
           isBot: true,
           isMarkdown: true,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -319,7 +326,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   };
 
   const formatMessage = (text) => {
-    return text.split('\n').map((line, i) => (
+    return text?.split('\n').map((line, i) => (
       <React.Fragment key={i}>
         {line}
         {i !== text.split('\n').length - 1 && <br />}
@@ -361,7 +368,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
               <button
                 onClick={() => setShowSavedChats(false)}
                 title="Back to Chat"
-                className="p-2 rounded-lg text-zinc-500 hover:text-zinc-500 dark:text-zinc-400 dark:hover:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="p-2 rounded-lg text-zinc-500 hover:text-zinc-500 dark:text-zinc-400 dark:hover:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
               >
                 <ArrowLeftIcon className="h-5 w-5" />
               </button>
@@ -369,7 +376,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
               <button
                 onClick={handleNewChat}
                 title="Start a New Chat"
-                className="p-2 rounded-lg text-zinc-500 hover:text-blue-500 dark:text-zinc-400 dark:hover:text-blue-400 hover:bg-blue-100/40 dark:hover:bg-blue-900/30"
+                className="p-2 rounded-lg text-zinc-500 hover:text-zinc-500 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-100 hover:text-black dark:hover:bg-zinc-800/50"
               >
                 <PlusIcon className="h-5 w-5" />
               </button>
@@ -385,7 +392,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
             <button
               onClick={handleShowSavedChats}
               title="View Saved Chats"
-              className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700"
+              className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
             >
               <Squares2X2Icon className="h-5 w-5" />
             </button>
@@ -395,7 +402,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
               <button
                 onClick={handleSaveChat}
                 title="Bookmark Chat"
-                className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
               >
                 {savedChatId ? (
                   <CheckIcon className="h-5 w-5 text-zinc-500 animate-fade-in" />
@@ -408,7 +415,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
             <button
               onClick={toggleChat}
               title="Close Chat"
-              className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700"
+              className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800/50"
             >
               <XMarkIcon className="h-5 w-5" />
             </button>
@@ -507,7 +514,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                   {msg.isMarkdown ? (
                     <div 
                       dangerouslySetInnerHTML={{ __html: msg.text }}
-                      className="prose prose-sm dark:prose-invert max-w-none"
+                      className="prose prose-sm dark:prose-invert max-w-none overflow-x-auto"
                     />
                   ) : (
                     formatMessage(msg.text)
@@ -521,7 +528,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                   {msg.isBot && (
                     <div className="flex items-center space-x-2 ml-2">
                       <button
-                        onClick={() => handleCopy(msg.text, msg.id)}
+                        onClick={() => handleCopy(msg.o_text, msg.id)}
                         className="p-1 rounded text-zinc-400 hover:text-blue-500 dark:text-zinc-400 dark:hover:text-blue-400 relative"
                         title="Copy Message"
                       >
@@ -577,7 +584,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                   onChange={handleMessageChange}
                   onKeyDown={handleKeyDown}
                   placeholder="Type your message..."
-                  className="text-sm rounded-sm w-full flex-1 bg-zinc-100 dark:bg-zinc-800 p-3 pr-24 max-h-32 focus:outline-none focus:border-1 focus:border-zinc-300 text-zinc-900 dark:text-zinc-100 resize-none"
+                  className="text-sm rounded-sm w-full flex-1 bg-zinc-100 dark:bg-zinc-800 p-3 pr-24 max-h-32 text-zinc-900 dark:text-zinc-100 resize-none focus:ring-1 focus:ring-zinc-400 focus:outline-none dark:focus:ring-zinc-500 ring-1 ring-zinc-300 dark:ring-zinc-700"
                   rows={2}
                 />
 
@@ -592,7 +599,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                   className={`p-2 rounded-lg ${
                     !message.trim()
                       ? 'text-zinc-400 dark:text-zinc-500 cursor-not-allowed'
-                      : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'
+                      : 'text-blue-600 dark:text-blue-400 hover:bg-blue-200/50 dark:hover:bg-blue-800/30'
                   }`}
                 >
                   <ArrowUpIcon className="h-5 w-5" />

@@ -245,3 +245,28 @@ input[type="password"]::placeholder {
 .animate-fade-in {
   animation: fade-in 0.2s ease-out;
 }
+
+/* Add smooth transition for resize */
+.resize-transition {
+  transition: width 0ms;
+}
+
+/* Disable text selection while resizing */
+.resize-active {
+  user-select: none;
+}
+
+/* Style the resize handle */
+.resize-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: ew-resize;
+  background-color: transparent;
+}
+
+.resize-handle:hover {
+  background-color: rgba(59, 130, 246, 0.5);
+}
