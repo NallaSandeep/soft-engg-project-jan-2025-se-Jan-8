@@ -1,21 +1,21 @@
 # Core Web Framework and Dependencies
-fastapi>=0.109.0
-uvicorn>=0.27.0
-pydantic>=2.5.0
-pydantic-settings>=2.1.0
-python-dotenv>=1.0.0
-python-jose[cryptography]>=3.3.0
-python-multipart>=0.0.6
-aiofiles>=23.2.1
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.4.2
+python-dotenv==1.0.0
+python-multipart
+aiofiles
+httpx==0.25.1
+psutil>=5.9.0
 
 # Vector Database and Embeddings
-chromadb>=0.4.22
-sentence-transformers==2.2.2
-torch>=2.0.0
+chromadb==0.4.22
+sentence-transformers==2.3.0
+torch>=2.2.0
+numpy==1.26.0
 transformers==4.35.2
 huggingface-hub==0.19.4
-langchain>=0.1.0
+langchain
 
-# Document Processing
-PyPDF2>=3.0.0
-docx2txt>=0.8 
+# Utilities
+pytest==7.4.3 

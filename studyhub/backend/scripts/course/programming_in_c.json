@@ -1,0 +1,1060 @@
+{
+  "course": {
+    "course_id": 1,
+    "code": "C101",
+    "title": "**Programming in C**",
+    "description": "**This course provides a comprehensive introduction to the C programming language, covering fundamental programming concepts and practical coding techniques in C.** Students will learn about C's history and characteristics, data types, control structures, functions, pointers, and memory management. Through hands-on examples and assignments, the course emphasizes problem-solving and efficient coding practices in C. By the end of the course, students will be able to write, compile, and debug C programs for a variety of applications [1].",
+    "instructor_id": 201,
+    "credits": 3,
+    "department": "Computer Science",
+    "image_url": "/images/c_programming_cover.png",
+    "prerequisites": [
+      "CS101 - Introduction to Programming"
+    ],
+    "LLM_Summary": {
+      "summary": "**This course offers an in-depth introduction to C programming, from basic syntax and data types to advanced topics like pointers and file handling.** Students gain practical coding experience and an understanding of how to write efficient, modular programs in C [1].",
+      "concepts_covered": [
+        "C language history and features",
+        "Basic syntax and data types",
+        "Control flow (conditionals and loops)",
+        "Functions and modular programming",
+        "Pointers and memory management",
+        "File I/O operations"
+      ],
+      "concepts_not_covered": [
+        "Object-oriented programming (C++ OOP concepts)",
+        "High-level data structures beyond standard libraries",
+        "Graphical user interface programming",
+        "Network programming in C"
+      ]
+    }
+  },
+  "weeks": [
+    {
+      "week_id": 1,
+      "course_id": 1,
+      "order": 1,
+      "title": "**Week 1: Introduction and C Program Structure**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 2,
+      "course_id": 1,
+      "order": 2,
+      "title": "**Week 2: Data Types, Constants, and Operators**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 3,
+      "course_id": 1,
+      "order": 3,
+      "title": "**Week 3: Control Flow (Conditionals and Loops)**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 4,
+      "course_id": 1,
+      "order": 4,
+      "title": "**Week 4: Arrays and Multidimensional Arrays**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 5,
+      "course_id": 1,
+      "order": 5,
+      "title": "**Week 5: Strings and Basic Functions**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 6,
+      "course_id": 1,
+      "order": 6,
+      "title": "**Week 6: Advanced Functions and Storage Classes**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 7,
+      "course_id": 1,
+      "order": 7,
+      "title": "**Week 7: Introduction to Pointers**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 8,
+      "course_id": 1,
+      "order": 8,
+      "title": "**Week 8: Advanced Pointer Concepts**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 9,
+      "course_id": 1,
+      "order": 9,
+      "title": "**Week 9: Structures in C**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 10,
+      "course_id": 1,
+      "order": 10,
+      "title": "**Week 10: Unions and Dynamic Memory**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 11,
+      "course_id": 1,
+      "order": 11,
+      "title": "**Week 11: Dynamic Memory & File Handling (Intro)**",
+      "estimated_hours": 20
+    },
+    {
+      "week_id": 12,
+      "course_id": 1,
+      "order": 12,
+      "title": "**Week 12: File I/O in C (Continued)**",
+      "estimated_hours": 20
+    }
+  ],
+  "lectures": [
+    {
+      "lecture_id": 1,
+      "week_id": 1,
+      "order": 1,
+      "title": "Introduction to C",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=rLf3jnHxSmU",
+      "content_transcript": "**C is a programming language developed at AT&T's Bell Laboratories in 1972 by Dennis Ritchie.** It is powerful, efficient, and widely used for system and application programming. This lecture introduces the C language and discusses its historical context and key characteristics.",
+      "resource_url": "https://ocw.mit.edu/courses/6-087-practical-programming-in-c-january-iap-2010/b7f13dd2771c6e8557e0877457d07543_MIT6_087IAP10_lec01.pdf",
+      "content_extract": null,
+      "duration_minutes": 45,
+      "keywords": [
+        "C language",
+        "history",
+        "features"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture provides an introduction to the C programming language, including its history, characteristics, and importance.**",
+        "concepts_covered": [
+          "Origin of C language",
+          "Key features of C"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "introduction",
+        "fundamentals"
+      ]
+    },
+    {
+      "lecture_id": 2,
+      "week_id": 1,
+      "order": 2,
+      "title": "Structure of C Program and Compilation Process",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=dovZX9H0B3M",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 60,
+      "keywords": [
+        "program structure",
+        "compilation",
+        "execution"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture explains the structure of a C program and the process of compilation and execution in C.**",
+        "concepts_covered": [
+          "Basic structure of a C program",
+          "Stages of C compilation"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "basics"
+      ]
+    },
+    {
+      "lecture_id": 3,
+      "week_id": 1,
+      "order": 3,
+      "title": "Character Set, Identifiers, and Keywords",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=00Z3X6V_S90",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 50,
+      "keywords": [
+        "characters",
+        "identifiers",
+        "keywords"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture discusses the basic building blocks of C code, such as the character set, identifiers, and keywords.**",
+        "concepts_covered": [
+          "Valid characters in C",
+          "Naming rules for identifiers",
+          "Keyword definitions"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "syntax"
+      ]
+    },
+    {
+      "lecture_id": 4,
+      "week_id": 2,
+      "order": 1,
+      "title": "Constants and Variables in C",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=fhOUpJ3l5AY",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 45,
+      "keywords": [
+        "constants",
+        "variables",
+        "data types"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture introduces constants and variables in C, explaining how data is stored and defined in programs.**",
+        "concepts_covered": [
+          "Literal constants",
+          "Variable declaration and initialization",
+          "Basic data types"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "basics"
+      ]
+    },
+    {
+      "lecture_id": 5,
+      "week_id": 2,
+      "order": 2,
+      "title": "Expressions and Operators",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=Ja6QcGLYrfg",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 50,
+      "keywords": [
+        "expressions",
+        "operators",
+        "evaluation"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture covers how expressions are formed in C and details the various operators used to manipulate data.**",
+        "concepts_covered": [
+          "Operator types (arithmetic, relational, logical)",
+          "Operator precedence and associativity"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "basics"
+      ]
+    },
+    {
+      "lecture_id": 6,
+      "week_id": 2,
+      "order": 3,
+      "title": "Operators (Continued)",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=ZqxvRc6wPyw",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 50,
+      "keywords": [
+        "bitwise operators",
+        "logical operators",
+        "precedence"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture continues exploring C operators, including relational, logical, and bitwise operations.**",
+        "concepts_covered": [
+          "Logical vs bitwise operators",
+          "Conditional (ternary) operator"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "operators"
+      ]
+    },
+    {
+      "lecture_id": 7,
+      "week_id": 3,
+      "order": 1,
+      "title": "Loops in C: while and do-while",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=62PCJHGy6o4",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 55,
+      "keywords": [
+        "while loop",
+        "do-while loop",
+        "loop control"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture introduces loops in C, focusing on entry-controlled and exit-controlled loops (while and do-while).**",
+        "concepts_covered": [
+          "Syntax of while loop",
+          "Syntax of do-while loop",
+          "Loop termination conditions"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "loops"
+      ]
+    },
+    {
+      "lecture_id": 8,
+      "week_id": 3,
+      "order": 2,
+      "title": "For Loop and Loop Control (break/continue)",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=DpPf9XskST8",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 50,
+      "keywords": [
+        "for loop",
+        "break",
+        "continue"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture discusses the for loop in C and demonstrates how to use break and continue statements for loop control.**",
+        "concepts_covered": [
+          "Syntax of for loop",
+          "Using break to exit loops",
+          "Using continue to skip iterations"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "loops"
+      ]
+    },
+    {
+      "lecture_id": 9,
+      "week_id": 3,
+      "order": 3,
+      "title": "Control Statements: if/else and switch",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=K8mntKyBJGc",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 60,
+      "keywords": [
+        "if/else",
+        "switch-case",
+        "conditional"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture explains decision-making in C using control statements like if, if-else, and switch-case structures.**",
+        "concepts_covered": [
+          "Simple if and if-else usage",
+          "Multiple conditions (else-if ladder)",
+          "Switch-case syntax and use"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "conditionals"
+      ]
+    },
+    {
+      "lecture_id": 10,
+      "week_id": 4,
+      "order": 1,
+      "title": "Nesting of if-else and else-if Ladder",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=ZqxvRc6wPyw",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 60,
+      "keywords": [
+        "nested if",
+        "else-if ladder"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture explores complex conditional logic by using nested if-else statements and else-if ladders in C.**",
+        "concepts_covered": [
+          "Nested if-else structures",
+          "Comparing else-if vs switch-case"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "conditionals"
+      ]
+    },
+    {
+      "lecture_id": 11,
+      "week_id": 4,
+      "order": 2,
+      "title": "Arrays in C",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=ldUu7ldlPt0",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 55,
+      "keywords": [
+        "arrays",
+        "indexing",
+        "memory"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture introduces arrays in C, demonstrating how to declare, initialize, and use one-dimensional arrays.**",
+        "concepts_covered": [
+          "Array declaration syntax",
+          "Array initialization",
+          "Accessing array elements"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "arrays"
+      ]
+    },
+    {
+      "lecture_id": 12,
+      "week_id": 4,
+      "order": 3,
+      "title": "Two-Dimensional Arrays",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=PL9ooVrP1hQOFrNo8jK9Yb2g2eMHz7hTu9",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 55,
+      "keywords": [
+        "2D arrays",
+        "matrix",
+        "multidimensional"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture extends array concepts to multi-dimensional arrays, particularly focusing on two-dimensional arrays.**",
+        "concepts_covered": [
+          "Declaring 2D arrays",
+          "Nested loops for matrix operations"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "arrays"
+      ]
+    },
+    {
+      "lecture_id": 13,
+      "week_id": 5,
+      "order": 1,
+      "title": "String Library Functions",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=E8AXzWHz3p8",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 50,
+      "keywords": [
+        "strings",
+        "string.h",
+        "functions"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture covers strings in C and common library functions for string handling (from <string.h>).**",
+        "concepts_covered": [
+          "Defining and initializing strings",
+          "Using functions like strcpy, strcat, strcmp"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "strings"
+      ]
+    },
+    {
+      "lecture_id": 14,
+      "week_id": 5,
+      "order": 2,
+      "title": "Introduction to Functions in C",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=UMITk-ikuf4",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 50,
+      "keywords": [
+        "functions",
+        "declaration",
+        "definition"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture introduces functions in C and their categories, including built-in vs. user-defined functions.**",
+        "concepts_covered": [
+          "What is a function?",
+          "Standard library functions vs user-defined"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "functions"
+      ]
+    },
+    {
+      "lecture_id": 15,
+      "week_id": 5,
+      "order": 3,
+      "title": "Categories of Functions (cont.)",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=DZdsxTrrn24",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 45,
+      "keywords": [
+        "function types",
+        "arguments",
+        "return values"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture continues with function types in C, examining various combinations of arguments and return values.**",
+        "concepts_covered": [
+          "Function with no args and no return",
+          "Function with args and return value"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "functions"
+      ]
+    },
+    {
+      "lecture_id": 16,
+      "week_id": 6,
+      "order": 1,
+      "title": "Actual vs Formal Arguments; Call by Value vs Reference",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=9vq4Xr_6wHA",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 40,
+      "keywords": [
+        "parameters",
+        "call by value",
+        "call by reference"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture explains function parameters in C, differentiating between actual and formal arguments, and clarifies call by value vs call by reference.**",
+        "concepts_covered": [
+          "Definition of actual vs formal parameters",
+          "Effects of call by value (copies) vs pointer-based reference"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "functions"
+      ]
+    },
+    {
+      "lecture_id": 17,
+      "week_id": 6,
+      "order": 2,
+      "title": "Local, Global, and Static Variables",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=72KzK0N96rM",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 35,
+      "keywords": [
+        "scope",
+        "local vs global",
+        "static"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture discusses variable scope in C, comparing local and global variables and explaining static storage duration.**",
+        "concepts_covered": [
+          "Lifetime of local vs global variables",
+          "Use of static keyword"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "variables"
+      ]
+    },
+    {
+      "lecture_id": 18,
+      "week_id": 6,
+      "order": 3,
+      "title": "Monolithic vs Modular Programming; Storage Classes",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=5_Sx4PpgJ7U",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 40,
+      "keywords": [
+        "modular design",
+        "storage class",
+        "auto/extern"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture contrasts monolithic and modular programming approaches and details C storage classes (auto, extern, static, register).**",
+        "concepts_covered": [
+          "Benefits of modular programming",
+          "Storage class specifiers and their scope"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "structure"
+      ]
+    },
+    {
+      "lecture_id": 19,
+      "week_id": 7,
+      "order": 1,
+      "title": "Introduction to Pointers",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=h-HBipu_1P0",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 50,
+      "keywords": [
+        "pointers",
+        "addresses",
+        "indirection"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture introduces pointers in C, explaining how pointers store memory addresses and basic pointer operations.**",
+        "concepts_covered": [
+          "Declaring pointer variables",
+          "Dereferencing a pointer"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "pointers"
+      ]
+    },
+    {
+      "lecture_id": 20,
+      "week_id": 7,
+      "order": 2,
+      "title": "Pointer Arithmetic and Comparison",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=JPT3bFIwJYA",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 50,
+      "keywords": [
+        "pointer arithmetic",
+        "pointer comparison"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture covers pointer arithmetic in C, including incrementing pointers and comparing pointer addresses.**",
+        "concepts_covered": [
+          "Incrementing/decrementing pointers",
+          "Comparing two pointer values"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "pointers"
+      ]
+    },
+    {
+      "lecture_id": 21,
+      "week_id": 7,
+      "order": 3,
+      "title": "Pointer Precedence and Usage in Expressions",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=UMITk-ikuf4",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 45,
+      "keywords": [
+        "pointer operators",
+        "precedence",
+        "expressions"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture discusses the precedence of pointer operators and further explores pointer comparisons and usage in expressions.**",
+        "concepts_covered": [
+          "Precedence of * (dereference) vs & (address-of)",
+          "Pointers in conditional expressions"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "pointers"
+      ]
+    },
+    {
+      "lecture_id": 22,
+      "week_id": 8,
+      "order": 1,
+      "title": "Pointer to Pointer and Pointer to Structure",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=vyG1JLMqSB0",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 45,
+      "keywords": [
+        "double pointer",
+        "pointer to struct"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture explores advanced pointer concepts in C, such as pointers to pointers (double pointers) and pointers to structures.**",
+        "concepts_covered": [
+          "Declaring and using double pointers",
+          "Accessing struct members via pointers"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "pointers"
+      ]
+    },
+    {
+      "lecture_id": 23,
+      "week_id": 8,
+      "order": 2,
+      "title": "Pointer Initialization and Array Access via Pointers",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=39kL5im0Q8Q",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 50,
+      "keywords": [
+        "pointer init",
+        "pointers and arrays"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture demonstrates how to properly initialize pointers and use them to access elements, especially in arrays.**",
+        "concepts_covered": [
+          "Initializing pointers to NULL",
+          "Pointer arithmetic to traverse arrays"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "pointers"
+      ]
+    },
+    {
+      "lecture_id": 24,
+      "week_id": 9,
+      "order": 1,
+      "title": "Memory Layout: Size of Structure, Array vs Structure",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=s6FhG--P7z0",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 50,
+      "keywords": [
+        "struct size",
+        "array vs struct"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture examines how structures are stored in memory, comparing the memory layout of structures vs arrays and understanding sizeof outcomes.**",
+        "concepts_covered": [
+          "Padding and alignment in structs",
+          "Comparing sizeof(struct) vs combined sizeof members"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "structures"
+      ]
+    },
+    {
+      "lecture_id": 25,
+      "week_id": 9,
+      "order": 2,
+      "title": "Passing Structures to Functions; Nested Structures",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=Oz3W-LKfafE",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 40,
+      "keywords": [
+        "struct to function",
+        "nested struct"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture shows how structures can be passed to functions and introduces nested structures (structures within structures).**",
+        "concepts_covered": [
+          "Passing struct by value vs pointer",
+          "Defining structs inside other structs"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "structures"
+      ]
+    },
+    {
+      "lecture_id": 26,
+      "week_id": 10,
+      "order": 1,
+      "title": "Introduction to Unions in C",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=RRnF0R3FZu4",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 30,
+      "keywords": [
+        "union",
+        "union vs struct"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture introduces the concept of unions in C, showing how a union allows multiple data types in the same memory location and how it differs from structures.**",
+        "concepts_covered": [
+          "Syntax of union declaration",
+          "Difference between unions and structs"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "unions"
+      ]
+    },
+    {
+      "lecture_id": 27,
+      "week_id": 10,
+      "order": 2,
+      "title": "Nested Unions and Dynamic Memory Allocation (Intro)",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=0KWRVgOgjSc",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 30,
+      "keywords": [
+        "union in union",
+        "malloc",
+        "calloc"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture covers advanced uses of unions (including nested unions) and begins the discussion on dynamic memory allocation (malloc, calloc).**",
+        "concepts_covered": [
+          "Defining a union within a struct/union",
+          "Using malloc and calloc functions"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "unions"
+      ]
+    },
+    {
+      "lecture_id": 28,
+      "week_id": 11,
+      "order": 1,
+      "title": "Dynamic Memory Allocation (Continued)",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=0KWRVgOgjSc",
+      "content_transcript": null,
+      "resource_url": "https://www.vssut.ac.in/lecture_notes/lecture1424354156.pdf",
+      "content_extract": null,
+      "duration_minutes": 35,
+      "keywords": [
+        "realloc",
+        "free",
+        "memory management"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture continues with dynamic memory allocation in C, focusing on reallocating and freeing memory.**",
+        "concepts_covered": [
+          "Using realloc to resize memory",
+          "Properly freeing allocated memory"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "memory"
+      ]
+    },
+    {
+      "lecture_id": 29,
+      "week_id": 11,
+      "order": 2,
+      "title": "Dynamic Arrays and File Handling Introduction",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=UzeVYXiI-9I",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 40,
+      "keywords": [
+        "dynamic array",
+        "file I/O intro"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture applies dynamic memory concepts to create dynamic arrays and introduces file handling in C.**",
+        "concepts_covered": [
+          "Allocating arrays at runtime",
+          "Opening and closing files"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "memory",
+        "files"
+      ]
+    },
+    {
+      "lecture_id": 30,
+      "week_id": 12,
+      "order": 1,
+      "title": "File Operations in C",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=ZMq8AnQquv8",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 30,
+      "keywords": [
+        "file read/write",
+        "fopen/fclose"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture details file operations in C, including reading from and writing to files using standard library functions.**",
+        "concepts_covered": [
+          "Using fopen, fclose, fprintf, fscanf",
+          "Handling text vs binary files"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "files"
+      ]
+    },
+    {
+      "lecture_id": 31,
+      "week_id": 12,
+      "order": 2,
+      "title": "File Handling with Strings",
+      "resource_type": "transcript",
+      "video_url": "https://www.youtube.com/watch?v=ybV6W8BAK7A",
+      "content_transcript": null,
+      "resource_url": "https://www.pasc.edu.in/wp-content/uploads/2020/06/CProgramming.pdf",
+      "content_extract": null,
+      "duration_minutes": 30,
+      "keywords": [
+        "fgets/fputs",
+        "text files",
+        "string I/O"
+      ],
+      "LLM_Summary": {
+        "summary": "**This lecture focuses on handling strings with file I/O in C, for example reading and writing text data to files.**",
+        "concepts_covered": [
+          "Using fgets and fputs for file input/output",
+          "Line-based file processing"
+        ]
+      },
+      "status": "active",
+      "tags": [
+        "files"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question_id": 1001,
+      "content": "**Which of the following is NOT a feature of the C programming language?**",
+      "type": "MCQ",
+      "question_options": [
+        "Portability",
+        "Object-oriented paradigm",
+        "Low-level memory access",
+        "Efficiency and performance"
+      ],
+      "correct_answer": 2,
+      "points": 10,
+      "explanation": "**C is not an object-oriented language; it supports procedural programming.** C provides portability, low-level memory access, and is known for efficiency, but it does not have built-in object-oriented features.",
+      "course_id": 1,
+      "week_id": 1,
+      "lecture_id": 1,
+      "status": "active",
+      "tags": [
+        "basics",
+        "features"
+      ]
+    }
+  ],
+  "assignments": [
+    {
+      "assignment_id": 1001,
+      "week_id": 1,
+      "title": "**Intro to C Programming Assignment**",
+      "description": "**Practice basic C syntax, data types, and I/O operations through simple programs.**",
+      "type": "practice",
+      "due_date": "2025-04-05",
+      "start_date": "2025-03-29",
+      "is_published": true,
+      "question_ids": [
+        1001
+      ]
+    }
+  ],
+  "personal_resources": [
+    {
+      "resource_id": 1001,
+      "name": "**C Programming Study Notes**",
+      "description": "**Comprehensive study notes for Programming in C course**",
+      "course_id": 1,
+      "user_id": 3001,
+      "is_active": true,
+      "LLM_Summary": {
+        "summary": "**Detailed notes covering C programming basics, including syntax, control structures, data types, pointers, and examples.**",
+        "concepts_covered": [
+          "C syntax and semantics",
+          "Examples of control structures",
+          "Common programming patterns"
+        ],
+        "concepts_not_covered": [
+          "Advanced system programming topics",
+          "C++ specific features"
+        ]
+      }
+    }
+  ],
+  "personal_resource_files": [
+    {
+      "file_id": 1001,
+      "resource_id": 1001,
+      "name": "C_Tutorial.pdf",
+      "type": "document",
+      "content": null,
+      "file_path": "/resources/c_programming_tutorial.pdf",
+      "file_type": "application/pdf",
+      "file_size": 524288
+    }
+  ]
+}

@@ -1,1 +1,3 @@
-"""Utility functions package""" 
+"""
+Utility functions for StudyIndexerNew
+""" 
