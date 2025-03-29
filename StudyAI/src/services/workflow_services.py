@@ -47,11 +47,14 @@ async def process_message(message: str) -> Dict[str, Any]:
         Dict[str, Any]: Response from the model with processed content
     """
     try:
+        # Only enable cache if it has been properly initialized
+        use_cache = Config.get("ENABLE_LANGCHAIN_CACHE", False)
+
         model = ChatGoogleGenerativeAI(
             model="gemini-2.0-flash",
             temperature=0.1,
             max_output_tokens=256,
-            cache=True,
+            cache=use_cache,
             google_api_key=Config.get("GEMINI_API_KEY"),
         )
 

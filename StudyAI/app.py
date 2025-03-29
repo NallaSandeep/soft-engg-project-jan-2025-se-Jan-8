@@ -16,6 +16,10 @@ import time
 import uvicorn
 from contextlib import asynccontextmanager
 
+# Import LangChain cache modules
+from langchain_community.cache import InMemoryCache
+from langchain.globals import set_llm_cache
+
 from src.routes.basic_routes import router as chatbot_router
 from src.routes.websocket_routes import router as websocket_router
 from src.models.db_models import Base
@@ -33,6 +37,15 @@ async def lifespan(app: FastAPI):
     if not all(config_status.values()):
         missing_vars = [var for var, status in config_status.items() if not status]
         logger.warning(f"Missing configuration: {missing_vars}")
+
+    # Initialize LangChain cache if enabled
+    if Config.ENABLE_LANGCHAIN_CACHE:
+        try:
+            set_llm_cache(InMemoryCache())
+            logger.info("LangChain cache initialized with InMemoryCache")
+        except Exception as e:
+            logger.warning(f"Failed to initialize LangChain cache: {e}")
+
     logger.info("StudyAI API started successfully")
 
     yield  # Application runs here

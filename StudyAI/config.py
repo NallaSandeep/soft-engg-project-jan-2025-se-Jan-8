@@ -29,6 +29,11 @@ class Config:
     LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT")
     LANGSMITH_TRACING = os.getenv("LANGSMITH_TRACING", "true").lower() == "true"
 
+    # LangChain Configuration
+    ENABLE_LANGCHAIN_CACHE = (
+        os.getenv("ENABLE_LANGCHAIN_CACHE", "true").lower() == "true"
+    )
+
     # SQLAlchemy Configuration
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
