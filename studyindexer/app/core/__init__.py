@@ -1,3 +1,3 @@
 """
-Core package
+Core module for StudyIndexerNew
 """ 

@@ -1,0 +1,646 @@
+{
+  "course_id": 101,
+  "code": "JAVA101",
+  "description": "This course is a comprehensive introduction to Java programming for beginners and those with basic programming knowledge. Over 8 weeks, it covers fundamental and intermediate topics including Java syntax, data types, control structures, object-oriented programming principles (classes, inheritance, polymorphism, interfaces), exception handling, collections, and file I/O. Through detailed lectures, examples, and assignments, students will build a strong foundation in Java and gain the skills to develop basic Java applications.",
+  "credits": 3,
+  "department": "Computer Science",
+  "image_url": "https://images.pexels.com/photos/31340381/pexels-photo-31340381.jpeg?cs=srgb&dl=pexels-aziza-mohammed-903013688-31340381.jpg&fm=jpg",
+  "LLM_Summary": {
+    "concepts_covered": [
+      "Java installation and environment setup",
+      "Basic Java syntax and program structure",
+      "Primitive data types and variable declaration",
+      "Operators and expressions in Java",
+      "Conditional statements (if/else and switch)",
+      "Loop constructs (for, while, do-while)",
+      "Defining and calling methods",
+      "Array declaration and manipulation",
+      "String handling and operations",
+      "Class definition and object instantiation",
+      "Constructors and object initialization",
+      "Encapsulation and access modifiers",
+      "Inheritance and subclassing",
+      "Polymorphism and method overriding",
+      "Interfaces and abstract classes",
+      "Exception handling (try-catch-finally)",
+      "Throwing exceptions and custom exceptions",
+      "Java Collections (List, Set, Map)",
+      "File input/output (reading and writing files)",
+      "Basic serialization of objects"
+    ],
+    "concepts_not_covered": [
+      "Graphical User Interface (GUI) development (Swing/JavaFX)",
+      "Multithreading and concurrency",
+      "Networking and web development",
+      "Database connectivity (JDBC)",
+      "Advanced data structures or algorithms",
+      "Lambda expressions and Stream API",
+      "Generics in depth beyond collections usage",
+      "Annotations and reflection",
+      "Detailed JVM internals or performance tuning",
+      "Microservices or frameworks"
+    ]
+  },
+  "weeks": [
+    {
+      "week_id": 1,
+      "week_title": "Introduction to Java and Basic Concepts",
+      "lectures": [
+        {
+          "lecture_id": 1,
+          "lecture_title": "Introduction to Java and Environment Setup",
+          "content_transcript": "Welcome to the course! In this first lecture, we introduce Java and walk through setting up your development environment. **Java** is a high-level, object-oriented programming language that was first released by Sun Microsystems in 1995. One of Java’s key features is its platform independence – Java code is compiled into **bytecode** that runs on any system with a Java Virtual Machine (JVM). This “write once, run anywhere” capability makes Java popular for building cross-platform applications ranging from desktop software to Android apps and enterprise servers.\n\nBefore we can write Java programs, we need to install the **Java Development Kit (JDK)**, which includes the Java compiler and necessary tools. To set up Java on your machine, download the latest JDK from Oracle’s official website (or an open-source distribution like OpenJDK) for your operating system. Run the installer, which will guide you through the installation steps. On Windows, the default installation will place Java in a directory like `C:\\Program Files\\Java\\`. It's recommended to also set the `JAVA_HOME` environment variable to the JDK’s installation path and update the PATH variable to include the `bin` directory of the JDK (this allows you to run `javac` and `java` from the command line). On macOS/Linux, installing the JDK and updating the PATH (often by editing your shell configuration) accomplishes a similar setup.\n\nAfter installation, verify that Java is installed correctly by opening a terminal or command prompt and typing `java -version`. You should see Java’s version information printed, confirming that the JVM is accessible. Additionally, check `javac -version` to ensure the Java compiler is set up.\n\nWith Java installed, we can use a simple text editor or an Integrated Development Environment (**IDE**) to write code. Beginners often start with IDEs like **Eclipse**, **IntelliJ IDEA**, or **NetBeans** for convenience, as they provide features like syntax highlighting and debugging. However, you can also write Java code in a plain text editor (like Notepad++ or VS Code) and compile/run it via the terminal. In this course, we will keep things simple initially and use a basic text editor plus the command-line tools to understand what happens under the hood.\n\nNow that our environment is ready, we can proceed to create our first Java program. Typically, a basic Java program consists of a class with a `main` method. In the next lecture, we will write the classic \"Hello World\" program to test our setup. This will demonstrate Java’s basic syntax and show that our JDK installation is working correctly.\n\nBy the end of this lecture, you should have Java installed and configured on your system. You’ve learned why Java is widely used and how the JDK and JVM allow Java applications to run on different platforms. With a proper development environment in place, you’re all set to start writing and running Java code!",
+          "LLM_Summary": "Introduces Java's history and key features (like platform independence with the JVM), and guides students through installing the JDK and setting up the development environment (setting PATH and JAVA_HOME). The lecture ensures students can verify their Java installation and explains the structure of a basic Java program.",
+          "keywords": [
+            "Java",
+            "JDK installation",
+            "JVM",
+            "Environment Setup",
+            "Platform Independence"
+          ],
+          "tags": [
+            "Java Basics",
+            "Setup"
+          ],
+          "duration_minutes": 10,
+          "video_url": "https://www.youtube.com/watch?v=WRISYpKhIrc",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_environment_setup.pdf"
+        },
+        {
+          "lecture_id": 2,
+          "lecture_title": "Java Basic Syntax and Hello World",
+          "content_transcript": "In this lecture, we explore the basic syntax of Java by creating and running our first program: **Hello World**. Java’s syntax has some similarities to languages like C and C++, using curly braces to define code blocks and semicolons to terminate statements. Every Java program is organized into **classes**, and the entry point of any Java application is the `main` method.\n\nLet’s walk through a simple example. Open a text editor and type the following code:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code defines a class named `HelloWorld`. The class name must match the filename (so we’ll save this file as **HelloWorld.java**). Inside the class, we declare the `main` method with the signature `public static void main(String[] args)`. This method is special – it’s where the JVM starts execution of a Java program. The `main` method takes an array of `String` (named `args`) as parameters, which can be used for command-line arguments.\n\nIn our `main` method, there is a single statement:\n```java\nSystem.out.println(\"Hello, World!\");\n```\nThis line uses Java’s standard output stream (`System.out`) to print the text \"Hello, World!\" to the console, followed by a newline. A few things to notice about Java syntax here:\n- **Statements** end with a semicolon (`;`).\n- We call a method (`println`) on an object (`System.out`). The dot (`.`) operator is used to access methods and properties.\n- String literals are enclosed in double quotes.\n\nJava is case-sensitive and has specific conventions: for instance, class names typically start with a capital letter. The keywords `public` and `static` in the `main` method definition are reserved words in Java. `public` means the method can be called from anywhere, and `static` means it belongs to the class rather than an instance of the class (so it can be invoked without creating an object). We’ll discuss these concepts more later, but for now just remember this method signature exactly as written for the main method.\n\nAfter writing the code, let’s compile and run it:\n1. **Compile**: In your terminal, navigate to the directory containing `HelloWorld.java` and run the compiler:\n```\njavac HelloWorld.java\n```\nIf there are no syntax errors, this will produce a `HelloWorld.class` file (Java bytecode).\n2. **Run**: Execute the program using the Java interpreter:\n```\njava HelloWorld\n```\n(Note: use the class name without the `.class` or `.java` extension.)\n\nYou should see the output:\n```\nHello, World!\n```\nCongratulations – you’ve just run your first Java program! We used this simple example to illustrate Java’s file structure, the requirement that the filename matches the class, and the basic syntax for methods and statements.\n\nIn summary, this lecture covered how to structure a basic Java program and use the `main` method and `System.out.println` for output. These fundamentals are the building blocks for all Java applications. With \"Hello World\" successfully running, you’ve verified that your development environment is working and you understand Java’s basic program structure and syntax.",
+          "LLM_Summary": "Explains the fundamental structure of a Java program, including the use of classes, the `main` method, and statement syntax. Students learn to write a \"Hello World\" program, compile it with `javac`, and run it with `java`, understanding how Java source code is turned into bytecode and executed.",
+          "keywords": [
+            "Syntax",
+            "Hello World",
+            "main method",
+            "System.out.println",
+            "Compilation"
+          ],
+          "tags": [
+            "Java Basics",
+            "Syntax"
+          ],
+          "duration_minutes": 7,
+          "video_url": "https://www.youtube.com/watch?v=tSqNBjGacYk",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_basic_syntax.pdf"
+        },
+        {
+          "lecture_id": 3,
+          "lecture_title": "Variables and Data Types in Java",
+          "content_transcript": "In this lecture, we discuss **variables** and **data types** in Java. Variables are containers for storing data values. In Java, every variable has a specific data type that determines the size and layout of its memory, the range of values it can hold, and the operations that can be performed on it. Java is a **statically-typed** language, which means you must declare the type of a variable when you create it, and that type is fixed (the variable can only hold values of that type or a compatible type).\n\n**Primitive Data Types:** Java has eight built-in primitive types:\n- **byte** (8-bit integer),\n- **short** (16-bit integer),\n- **int** (32-bit integer, commonly used for whole numbers),\n- **long** (64-bit integer, for large whole numbers),\n- **float** (32-bit single-precision floating point),\n- **double** (64-bit double-precision floating point, for decimal numbers),\n- **char** (16-bit Unicode character),\n- **boolean** (truth values `true` or `false`).\n\nEach primitive type has a default range. For example, an `int` can typically range from -2,147,483,648 to 2,147,483,647. When choosing a type, pick one appropriate for the data (e.g., use `int` for counts, `double` for precise decimal values, `boolean` for yes/no conditions).\n\nTo declare a variable, you specify the type followed by the variable name. For instance:\n```java\nint count;\ndouble price;\nchar initial;\nboolean isValid;\n```\nHere, we declared an integer variable `count`, a double `price`, a character `initial`, and a boolean `isValid`. At this point, these variables are declared but not initialized (except for class member variables which would get default values, but local variables must be assigned before use). Let's assign values:\n```java\ncount = 10;\nprice = 19.99;\ninitial = 'A';\nisValid = true;\n```\nWe can also declare and initialize in one line, e.g., `int sum = 0;`.\n\n**Literals** in code have types too. e.g., `10` is an int literal, `19.99` is a double literal, `'A'` is a char literal, and `true` is a boolean literal. Java will throw an error if you try to assign a value to a variable of an incompatible type without casting (for example, `int count = 19.99;` would fail because 19.99 is a double, not an int).\n\nJava also has **reference types** (objects), but those are not among the eight primitives. A very common reference type is `String`. `String` holds sequences of characters and is not a primitive; it's a class in Java (we'll dive deeper into classes soon). For now, you can treat `String` as a built-in type for text. Example: `String message = \"Hello\";`. Here `message` is a reference to a `String` object containing \"Hello\".\n\nWe should also mention **constants**: if you want a variable whose value never changes, you can declare it `final`. For example, `final double PI = 3.14159;` creates a constant.\n\nIn summary, this lecture covered how to declare variables in Java, the fundamental data types and their purpose, and how values and types must match. We saw examples of assigning values to variables and noted Java’s requirement for explicit types and conversion. Understanding data types is crucial because it helps you choose the right type for your data and avoid errors in calculations and logic.",
+          "LLM_Summary": "Covers Java's primitive data types (int, double, boolean, etc.) and how to declare variables. Students learn about type constraints, default values, and the difference between primitive types and reference types (like String). Covers literal values and the importance of matching types or using casting when necessary.",
+          "keywords": [
+            "Variables",
+            "Primitive Types",
+            "Reference Types",
+            "Declaration",
+            "Literals"
+          ],
+          "tags": [
+            "Java Basics",
+            "Data Types"
+          ],
+          "duration_minutes": 12,
+          "video_url": "https://www.youtube.com/watch?v=Le25I331_yU",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_basic_datatypes.pdf"
+        }
+      ]
+    },
+    {
+      "week_id": 2,
+      "week_title": "Control Flow in Java",
+      "lectures": [
+        {
+          "lecture_id": 4,
+          "lecture_title": "Operators in Java",
+          "content_transcript": "In Java, **operators** are special symbols that perform operations on operands (which can be variables or values). In this lecture, we explore different categories of operators in Java and how to use them.\n\n**1. Arithmetic Operators:** These are used to perform common mathematical operations:\n- `+` (addition), `-` (subtraction), `*` (multiplication), `/` (division), `%` (modulus or remainder).\nFor example: `int a = 10, b = 3;` then `a + b` is 13, `a - b` is 7, `a * b` is 30, `a / b` is 3 (integer division truncates the decimal part), and `a % b` is 1 (the remainder of 10 divided by 3). If you need precise division and decimals, ensure one operand is a double or float (e.g., `10.0 / 3` gives approximately 3.333).\n\n**2. Assignment Operators:** The basic assignment operator is `=`, which assigns the value on the right to the variable on the left (e.g., `int x = 5;`). Java also provides compound assignment operators that combine arithmetic with assignment:\n- `+=`, `-=`, `*=`, `/=`, `%=`.\nFor example: `x += 3;` is equivalent to `x = x + 3;`. If `x` was 5, it becomes 8 after this statement.\n\n**3. Increment and Decrement:** `++` and `--` are unary operators to add or subtract 1:\n- `x++` (post-increment) increases x by 1 but returns the old value.\n- `++x` (pre-increment) increases x by 1 and returns the new value.\nSimilarly, `x--` and `--x` decrement by 1. These are commonly used in loops and can affect the order of operations if used within expressions.\n\n**4. Comparison (Relational) Operators:** These operators compare two values and yield a boolean result (`true` or `false`):\n- `==` (equals),\n- `!=` (not equals),\n- `>` (greater than),\n- `<` (less than),\n- `>=` (greater or equal),\n- `<=` (less or equal).\nExample: `5 < 10` yields `true`, while `5 == 10` yields `false`. Note that `==` is used for primitive value comparison; when comparing objects (like Strings), we often use methods like `.equals()` – more on that in a future lecture.\n\n**5. Logical Operators:** Used to combine boolean values:\n- `&&` (logical AND) returns true if both operands are true.\n- `||` (logical OR) returns true if at least one operand is true.\n- `!` (logical NOT) negates a boolean value (turns true to false, or false to true).\nFor instance, if `a > 0 && b > 0` is an expression, it will be true only if both `a` and `b` are positive. The logical operators follow short-circuit rules: in an AND (`&&`) if the first operand is false, Java doesn’t evaluate the second (because the result will certainly be false). In an OR (`||`), if the first operand is true, the second is not evaluated (result is true regardless).\n\n**6. Other Operators:** \n- The **ternary operator** `?:` is a concise conditional. It has the form `condition ? value_if_true : value_if_false`. For example: `int max = (a > b) ? a : b;` will assign `max` to `a` if a is greater than b, otherwise to `b`.\n- **Bitwise operators** (`&`, `|`, `^`, `~`, `<<`, `>>`) exist as well, but are used for manipulating data at the bit level (less common in everyday programming, and thus beyond our current scope).\n\nThrough examples, we can illustrate usage:\n```java\nint x = 5;\nint y = 8;\nint sum = x + y;           // 13\nboolean compare = x < y;   // true, because 5 < 8\nx *= 2;                    // x is now 10 (same as x = x * 2)\nboolean test = (x > y) && (y % 2 == 0); // true if x is greater than y AND y is even\n```\nBy mastering these operators, you can perform calculations, make comparisons, and build complex logical conditions in your Java programs. Operators form the core of expressions and allow you to manipulate data and control program flow, as we’ll see when we get into conditional statements next.",
+          "LLM_Summary": "Describes various operators in Java such as arithmetic operators for math calculations, assignment and compound assignment, comparison (relational) operators for conditions, and logical operators (AND, OR, NOT) for combining boolean expressions. Also touches on increment/decrement (`++`/`--`) and introduces the ternary conditional operator. Emphasizes correct usage and operator precedence in expressions.",
+          "keywords": [
+            "Arithmetic operators",
+            "Logical operators",
+            "Comparison",
+            "Increment/Decrement",
+            "Ternary"
+          ],
+          "tags": [
+            "Java Basics",
+            "Operators"
+          ],
+          "duration_minutes": 9,
+          "video_url": "https://www.youtube.com/watch?v=o8N4GHho03U",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_basic_operators.pdf"
+        },
+        {
+          "lecture_id": 5,
+          "lecture_title": "Conditional Statements (if-else, switch)",
+          "content_transcript": "In this lecture, we cover **conditional statements** in Java, which allow your program to make decisions and execute different code paths based on certain conditions. The primary conditional structures are the `if-else` chain and the `switch` statement.\n\n**if-else Statements:**\nThe `if` statement evaluates a boolean expression and executes a block of code if the expression is true. Optionally, an `else` block can provide code to execute when the condition is false. For example:\n```java\nint number = 5;\nif (number % 2 == 0) {\n    System.out.println(\"Even number\");\n} else {\n    System.out.println(\"Odd number\");\n}\n```\nHere, `number % 2 == 0` is the condition (checking if number is divisible by 2). If this condition is `true`, the first `println` executes; if `false`, the code in the `else` block runs. You can chain multiple conditions using `else if`. For example:\n```java\nint score = 85;\nif (score >= 90) {\n    System.out.println(\"Grade: A\");\n} else if (score >= 80) {\n    System.out.println(\"Grade: B\");\n} else {\n    System.out.println(\"Grade: C or below\");\n}\n```\nConditions are checked in order; the first one that is true will execute its block and skip the rest.\n\nKey points:\n- Use parentheses around conditions (e.g., `(score >= 90)`).\n- Use curly braces `{}` to define the blocks for `if`, `else if`, and `else` (even for single statements, using braces is good practice to avoid errors).\n- The conditions should be boolean expressions (using comparison operators like `==, !=, >, <, >=, <=` or boolean variables/expressions).\n\n**switch Statement:**\nA `switch` statement is a convenient way to compare a single value against several constant alternatives. It can make code clearer when there are many discrete values to check. Example:\n```java\nint day = 3;\nswitch (day) {\n    case 1:\n        System.out.println(\"Monday\");\n        break;\n    case 2:\n        System.out.println(\"Tuesday\");\n        break;\n    case 3:\n        System.out.println(\"Wednesday\");\n        break;\n    default:\n        System.out.println(\"Another day\");\n}\n```\nIn this example, `day` is evaluated. If it's `1`, \"Monday\" prints; if `2`, \"Tuesday\"; if `3`, \"Wednesday\". The `default` case runs if none of the above cases match. Each case ends with a `break` statement to prevent \"fall-through\" (without `break`, execution would continue into the next case’s block, which is rarely desired unless you intentionally want multiple cases to execute the same block).\n\nModern switch statements (from Java 14+ with the new switch expression syntax) can return values or use arrow labels, but in this course we stick to the classic form for compatibility and clarity.\n\nIn summary, `if-else` is used for conditional branching when dealing with ranges or complex conditions, whereas `switch` is useful when one variable or expression needs to be compared against a list of discrete values. Both constructs enable your Java program to react differently based on input or state, which is fundamental for implementing decision logic in code.",
+          "LLM_Summary": "Teaches how to use `if`, `else if`, and `else` to execute code based on conditions. Explains boolean conditions and block execution. Also introduces the `switch` statement for multi-branch selection based on a single value, including the use of case labels, `break`, and `default`. Students learn to choose between if-else chains and switch depending on the scenario.",
+          "keywords": [
+            "if-else",
+            "switch",
+            "conditional logic",
+            "branching",
+            "case/break"
+          ],
+          "tags": [
+            "Control Flow",
+            "Basics"
+          ],
+          "duration_minutes": 8,
+          "video_url": "https://www.youtube.com/watch?v=_2puxOw8TLM",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_decision_making.pdf"
+        },
+        {
+          "lecture_id": 6,
+          "lecture_title": "Loops in Java (for, while, do-while)",
+          "content_transcript": "In this lecture, we focus on **loops** in Java, which allow repeated execution of a block of code. Java provides three primary looping constructs: `for`, `while`, and `do-while`. Loops are fundamental when you need to perform repetitive tasks like iterating over arrays or running a block of code until a condition is met.\n\n**while Loop:**\nA `while` loop repeatedly executes a block of code as long as its condition remains true. It checks the condition before each iteration (including the first). For example:\n```java\nint count = 1;\nwhile (count <= 5) {\n    System.out.println(\"Count is: \" + count);\n    count++;\n}\n```\nThis loop will print the count from 1 through 5. The variable `count` is incremented each time, and the loop condition `count <= 5` controls how many times the loop runs. If the condition is false at the start, the loop body won’t execute at all.\n\n**do-while Loop:**\nA `do-while` is similar to a `while` loop, but it guarantees at least one execution of the loop body because the condition is checked at the end of each loop iteration. Syntax:\n```java\nint x = 1;\ndo {\n    System.out.println(\"x is: \" + x);\n    x++;\n} while (x < 1);\n```\nIn this case, even though `x` is 1 and the condition `(x < 1)` is false from the start, the message will print once. `do-while` is useful when you want the loop to run at least once regardless of the condition (like prompting user input until they enter valid data, where you want to show the prompt at least one time).\n\n**for Loop:**\nThe `for` loop is often used when you know in advance how many times you need to iterate. It has a convenient syntax that packages the loop control (initialization, condition, and update) in one line. Example:\n```java\nfor (int i = 0; i < 5; i++) {\n    System.out.println(\"i is: \" + i);\n}\n```\nThis loop will execute 5 times with `i` taking values 0,1,2,3,4. The parts of a `for` loop are:\n- Initialization: `int i = 0` (executes once at the start).\n- Condition check: `i < 5` (checked before each iteration, loop runs if true).\n- Update: `i++` (executes at end of each iteration to update loop variable).\nThe `for` loop above is functionally equivalent to the earlier `while` example for printing count.\n\n**Enhanced for Loop (for-each):**\nJava also provides an enhanced for loop to iterate over arrays or collections without indexing. For example, if we have an array `int[] numbers = {10, 20, 30};`, we can loop:\n```java\nfor (int num : numbers) {\n    System.out.println(num);\n}\n```\nThis will print each element in the array. It's a simplified syntax when you just need to use each element directly.\n\n**Loop Control:**\nInside loops, you can use `break` to exit the loop immediately, or `continue` to skip to the next iteration (skipping any remaining code in the loop body for the current iteration).\n\nBy understanding and using these loops, you can handle repetitive tasks efficiently. Loops combined with conditionals allow complex logic, like searching through data, accumulating sums, or repeating operations until certain criteria are satisfied.",
+          "LLM_Summary": "Introduces loops that repeat code: `while` loops (condition-checked first), `do-while` loops (condition-checked after one run), and `for` loops with their typical structure. Explains how to use loops to iterate a fixed number of times or until a condition is met, and demonstrates the enhanced for-loop for arrays. Also mentions loop control statements like `break` and `continue`.",
+          "keywords": [
+            "for loop",
+            "while loop",
+            "do-while",
+            "iteration",
+            "loop control"
+          ],
+          "tags": [
+            "Control Flow",
+            "Loops"
+          ],
+          "duration_minutes": 11,
+          "video_url": "https://www.youtube.com/watch?v=H6fI2vm5e1M",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_loop_control.pdf"
+        }
+      ]
+    },
+    {
+      "week_id": 3,
+      "week_title": "Methods, Arrays, and Strings",
+      "lectures": [
+        {
+          "lecture_id": 7,
+          "lecture_title": "Methods and Functions in Java",
+          "content_transcript": "This lecture introduces **methods** (also known as functions in other languages) in Java. Methods allow you to encapsulate reusable pieces of code and give a name to a set of actions. By using methods, you can organize your program into logical chunks, avoid repetition, and make code more readable.\n\n**Defining a Method:**\nA method definition in Java includes:\n- An access modifier (like `public` or `private`),\n- An optional `static` keyword (more on that soon),\n- The return type (or `void` if it returns nothing),\n- The method name,\n- Parameters in parentheses,\n- The method body in curly braces.\n\nExample of a simple method:\n```java\npublic static int add(int a, int b) {\n    int sum = a + b;\n    return sum;\n}\n```\nThis defines a method named `add` that takes two integers `a` and `b` and returns their sum as an `int`. Because it's declared `public static`, you can call it from anywhere (public) and without creating an object (static, since it belongs to the class rather than an instance). The `return` statement sends back a value to the caller. If a method is `void`, it means it doesn't return any value; you’d omit the return or just use `return;` to exit early.\n\n**Calling a Method:**\nTo use a method, you \"call\" it by using its name and providing arguments for its parameters. For instance:\n```java\nint result = add(5, 7);\nSystem.out.println(result); // prints 12\n```\nHere we called `add(5, 7)` which returned 12, and we stored it in `result`. If `add` were not `static`, we would need an object of the class to call it (e.g., `MyClass obj = new MyClass(); obj.add(5,7);`) – we'll clarify static versus instance methods when we cover classes and objects.\n\n**Parameters and Arguments:**\nParameters (like `int a` and `int b` above) are variables that receive the values you pass into the method. When calling, the actual values you pass (`5` and `7` in the example) are called arguments. Java uses **pass-by-value** for parameters, meaning the method gets a copy of primitive values. For objects, the reference is passed by value (so the reference is copied, but it still refers to the same object; modifications to the object will persist outside, but reassigning the parameter won’t affect the original reference).\n\n**Return Values:**\nIf a method has a return type (non-void), it should end with a `return` statement returning a value of that type. If a method doesn’t need to return anything, declare it as `void`. For example:\n```java\npublic void printHello(String name) {\n    System.out.println(\"Hello, \" + name);\n    // no return needed since it's void\n}\n```\nWhen calling `printHello(\"Alice\");`, it will print the greeting but not return any value.\n\n**Method Overloading:**\nJava allows multiple methods with the same name in the same class as long as their parameter lists are different. This is called method overloading. For instance:\n```java\npublic static int add(int a, int b) { ... }\npublic static double add(double a, double b) { ... }\n```\nThe above is two `add` methods – one for ints, one for doubles.\n\nUsing methods, you can structure your code better. Methods should ideally perform a single task (following the single responsibility principle). As we proceed, we’ll create classes with multiple methods to model behavior logically and use methods to avoid repeating code.",
+          "LLM_Summary": "Discusses defining reusable code blocks as methods, covering method signatures (access modifiers, return types, name, parameters) and how to call methods. Students learn about passing arguments, return values, and how methods can be overloaded. The concept of static methods vs instance methods is introduced at a basic level.",
+          "keywords": [
+            "Methods",
+            "Parameters",
+            "Return value",
+            "Static",
+            "Overloading"
+          ],
+          "tags": [
+            "Fundamentals",
+            "Functions"
+          ],
+          "duration_minutes": 14,
+          "video_url": "https://www.youtube.com/watch?v=vvanI8NRlSI",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_methods.pdf"
+        },
+        {
+          "lecture_id": 8,
+          "lecture_title": "Arrays in Java",
+          "content_transcript": "In this lecture, we delve into **arrays** in Java, which are used to store multiple values of the same type in a single data structure. An array can be thought of as a contiguous block of memory that holds a fixed number of elements, accessible by an index.\n\n**Declaring and Initializing Arrays:**\nTo declare an array, you specify the type of its elements followed by square brackets. For example:\n```java\nint[] numbers;\n```\nThis declares a variable `numbers` that can hold an array of integers. At this point, it's just a declaration (no array is created yet). To create an array (allocate memory for it), use the `new` keyword:\n```java\nnumbers = new int[5];\n```\nThis creates an array of 5 integers. All elements are initially set to a default (0 for numeric types, false for boolean, '\\u0000' for char, null for object references). You can also declare and allocate in one line:\n```java\nint[] numbers = new int[5];\n```\nAlternatively, you can initialize an array with values at the time of declaration using an array literal:\n```java\nint[] primes = {2, 3, 5, 7, 11};\n```\nThis creates an int array of length 5 with those initial values.\n\n**Accessing Elements:**\nArray elements are accessed by index, with 0 being the first index and (length-1) being the last index. Example:\n```java\nnumbers[0] = 10;\nnumbers[1] = 20;\nint first = numbers[0];\nint second = numbers[1];\nSystem.out.println(first + \", \" + second); // Output: 10, 20\n```\nIf you try to access an index outside the range (0 to length-1), Java throws an `ArrayIndexOutOfBoundsException`.\n\n**Array Length:**\nEach array in Java has a property `length` (note: it's a property, not a method, so no parentheses). It gives the number of elements. In our `numbers` example, `numbers.length` would be 5. This is useful for loop boundaries:\n```java\nfor (int i = 0; i < numbers.length; i++) {\n    System.out.println(numbers[i]);\n}\n```\nThis loop goes through each index of the array.\n\n**Processing Arrays:**\nCommon operations include:\n- Iterating (using loops or the enhanced for-loop) to compute sums, find min/max, etc.\n- Copying or resizing (though arrays have fixed size, resizing typically means creating a new larger array and copying elements or using dynamic structures like ArrayList).\n- Sorting (using `Arrays.sort(array)` from `java.util.Arrays` class).\nJava arrays are **static in size** (cannot grow or shrink once created). If you need a dynamically sized collection, Java’s Collections Framework (like ArrayList) is used – which we’ll cover later. But understanding arrays is fundamental since ArrayList internally uses an array and arrays are efficient for fixed-size data.\n\n**Multidimensional Arrays:**\nJava supports arrays of arrays (e.g., 2D arrays). For example: \n```java\nint[][] matrix = new int[3][4];\n```\nThis creates a 3x4 matrix of ints (3 rows, 4 columns). You can access elements with `matrix[row][col]`.\n\nIn summary, arrays provide a way to group related data and are indexed for quick random access. They are useful when you know the number of elements in advance or dealing with fixed-size collections of primitives or objects. We'll often use arrays to pass groups of values to methods or to store results from computations.",
+          "LLM_Summary": "Explains how to use arrays to store multiple values of the same type. Covers array declaration, allocation with a fixed size, and initialization with literals. Students learn to access array elements by index, iterate over arrays with loops, and understand the `length` property. Also touches on multi-dimensional arrays as arrays of arrays.",
+          "keywords": [
+            "Arrays",
+            "Indexing",
+            "length",
+            "Iteration",
+            "Multidimensional"
+          ],
+          "tags": [
+            "Data Structures",
+            "Arrays"
+          ],
+          "duration_minutes": 10,
+          "video_url": "https://www.youtube.com/watch?v=_Wf2rbL9wQU",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_arrays.pdf"
+        },
+        {
+          "lecture_id": 9,
+          "lecture_title": "Strings in Java",
+          "content_transcript": "This lecture focuses on **Strings** in Java, which represent sequences of characters (text). In Java, `String` is a widely used class (not a primitive type) and has special support in the language, making it easy to create and use string literals.\n\n**Creating Strings:**\nThe simplest way to create a string is by using a string literal in double quotes:\n```java\nString greeting = \"Hello, world!\";\n```\nHere, \"Hello, world!\" is a `String` object. Strings in Java are **immutable**, meaning once created, their content cannot be changed. For example, calling methods on `greeting` that modify the content will actually create new String objects rather than altering the original.\n\nYou can also create strings using the `new` keyword, e.g., `new String(\"Hello\")`, but that is generally unnecessary; using literals or concatenation is more common.\n\n**String Concatenation:**\nJava allows concatenation of strings using the `+` operator. Example:\n```java\nString name = \"Alice\";\nString message = \"Hello, \" + name + \"!\";\nSystem.out.println(message);\n```\nThis will output: `Hello, Alice!`. The `+` operator concatenates the strings (and if one operand is a string and the other is not, the other is converted to string). For instance, ` \"Age: \" + 30` yields `\"Age: 30\"`.\n\n**Common String Methods:**\nThe `String` class provides many useful methods:\n- `length()`: returns the number of characters in the string. e.g., `\"Hello\".length()` returns 5.\n- `charAt(index)`: returns the character at the given index (0-based). `\"Hello\".charAt(1)` returns 'e'.\n- `substring(beginIndex, endIndex)`: returns a new string that is a substring of the original, from beginIndex (inclusive) to endIndex (exclusive). E.g., `\"Hello\".substring(1, 4)` yields \"ell\".\n- `toUpperCase()` / `toLowerCase()`: returns a new string with all characters in upper or lower case.\n- `trim()`: returns a new string with leading and trailing whitespace removed.\n- `equals(str)`: compares two strings for exact content equality. (Important: Use `equals()` to compare strings, not `==`. The `==` operator checks if two references point to the same object, not if two distinct strings have the same content.)\n- `contains(str)`: checks if a string contains a sequence of characters, returning boolean.\n- `indexOf(str)` / `lastIndexOf(str)`: find the position of a substring or character.\nExample usage: \n```java\nString text = \"Java programming\";\nboolean hasJava = text.contains(\"Java\"); // true\nint index = text.indexOf(\"prog\"); // 5 (assuming 0-based indexing, \"prog\" starts at index 5)\n```\n\n**Immutability and StringBuilder:**\nBecause Strings are immutable, heavy concatenation in loops can be inefficient (it creates many temporary strings). Java provides `StringBuilder` (and `StringBuffer`) classes for building strings efficiently when you need to modify or append in loops. Example:\n```java\nStringBuilder sb = new StringBuilder();\nsb.append(\"Hello\");\nsb.append(\" World\");\nString result = sb.toString(); // \"Hello World\"\n```\nBut for moderate use, the `+` operator is fine and is compiled to use a StringBuilder behind the scenes.\n\nStrings are crucial for input/output, displaying messages, and many operations in programming. Understanding how to manipulate them with the provided methods will let you parse text, format output, and handle user input effectively in Java programs.",
+          "LLM_Summary": "Focuses on the String class for text handling. Explains that Strings are objects and immutable. Students learn common operations: concatenation using `+`, finding length, extracting substrings, changing case, and comparing strings properly with `equals`. Also mentions performance considerations and the use of StringBuilder for heavy string manipulation.",
+          "keywords": [
+            "String class",
+            "Immutable",
+            "Concatenation",
+            "String methods",
+            "equals()"
+          ],
+          "tags": [
+            "Data Types",
+            "Strings"
+          ],
+          "duration_minutes": 10,
+          "video_url": "https://www.youtube.com/watch?v=yMkFYxrDL2M",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_strings.pdf"
+        }
+      ]
+    },
+    {
+      "week_id": 4,
+      "week_title": "Object-Oriented Programming Basics",
+      "lectures": [
+        {
+          "lecture_id": 10,
+          "lecture_title": "Classes and Objects in Java",
+          "content_transcript": "Now we begin our journey into **Object-Oriented Programming (OOP)** with Java by discussing classes and objects. A **class** is like a blueprint or template that defines what an object will look like (its data) and what it can do (its behavior). An **object** is an instance of a class; it's a concrete entity created based on the class blueprint.\n\n**Defining a Class:**\nIn Java, you define a class using the `class` keyword:\n```java\npublic class Person {\n    // fields (attributes)\n    String name;\n    int age;\n    \n    // methods (behavior)\n    void sayHello() {\n        System.out.println(\"Hello, my name is \" + name);\n    }\n}\n```\nHere, `Person` is a class with two fields (`name` and `age`) and one method (`sayHello`). Fields (or member variables) hold the state of an object (each Person will have its own name and age). Methods define behaviors (each Person can introduce themselves).\n\nBy default, if not initialized, instance fields have default values (0 for numbers, false for boolean, null for object references like String). Often you'll assign them via constructors or methods.\n\n**Creating Objects:**\nTo create an object (an instance of a class), use the `new` keyword followed by a call to a constructor:\n```java\nPerson p1 = new Person();\n```\n`new Person()` creates a new Person object and calls the `Person` class's constructor (a special method to initialize new objects; if not explicitly defined, Java provides a default no-arg constructor). The variable `p1` holds a reference to this object. We can create multiple instances:\n```java\nPerson p2 = new Person();\n```\nNow `p1` and `p2` are distinct objects, each with its own `name` and `age` fields.\n\n**Accessing Fields and Methods:**\nUse the dot `.` operator on an object reference to access its fields or call its methods:\n```java\np1.name = \"Alice\";\np1.age = 30;\np1.sayHello(); // prints: Hello, my name is Alice\np2.name = \"Bob\";\np2.age = 25;\np2.sayHello(); // prints: Hello, my name is Bob\n```\nEach object keeps track of its own data – `p1` has name Alice, `p2` has name Bob.\n\n**this Keyword:**\nInside class methods, `this` refers to the current object (the instance whose method is being called). It's often used if you have local variables shadowing field names or to pass the current object to another method.\n\n**Encapsulation:**\nAlthough the example shows public fields, a best practice is to keep data (fields) private and provide public methods (getters/setters) to access or modify them. This way you control how the data is changed (this is encapsulation – one of the OOP principles, which we will discuss more in the next lecture).\n\n**Static vs Instance:**\nFields and methods without the `static` keyword belong to objects (instances). Each object has its own copy of instance fields. Methods operate on a specific object’s data. If a field or method is declared `static`, it belongs to the class itself, not any particular instance. For example, a `static int count` in Person class could track how many Person objects have been created (common for all). We’d access it as `Person.count`.\n\nIn summary, classes allow us to model real-world entities in code by combining state and behavior. Creating objects from these classes enables us to work with multiple instances that carry their own state. This is the core of Java’s object-oriented nature, allowing us to design modular, reusable code. Subsequent lectures will cover object construction details and OOP concepts like inheritance and polymorphism, which build on this foundation.",
+          "LLM_Summary": "Introduces the core OOP concepts of defining classes with fields and methods, and creating objects (instances). Uses examples to show how objects have their own state (field values) and behavior (methods). Covers how to instantiate objects with `new`, access members with the dot operator, and the meaning of `this`. Lays groundwork for encapsulation and other OOP principles.",
+          "keywords": [
+            "Class definition",
+            "Object instance",
+            "Fields and methods",
+            "this keyword",
+            "Instantiation"
+          ],
+          "tags": [
+            "OOP",
+            "Classes"
+          ],
+          "duration_minutes": 10,
+          "video_url": "https://www.youtube.com/watch?v=IUqKuGNasdM",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_object_classes.pdf"
+        },
+        {
+          "lecture_id": 11,
+          "lecture_title": "Constructors and Initialization",
+          "content_transcript": "In this lecture, we focus on **constructors**, which are special methods in a class used to initialize new objects. A constructor has the same name as the class and no return type (not even void). It gets called automatically when you use `new` to create an object.\n\n**Default Constructor:**\nIf you don’t explicitly define any constructor, Java provides a default no-argument constructor (one that takes no parameters) that initializes object fields to default values (0, null, etc.). For example, with our `Person` class previously, we could call `new Person()` even without defining a constructor, and it would work (name would be null, age 0 by default).\n\n**User-Defined Constructors:**\nYou can define your own constructors to set up initial state:\n```java\npublic class Person {\n    String name;\n    int age;\n    // Constructor\n    public Person(String name, int age) {\n        this.name = name;\n        this.age = age;\n    }\n}\n```\nHere, we defined a constructor that takes a `name` and `age` and uses them to initialize the object’s fields. Note the use of `this.name` – it refers to the `name` field of the current object, distinguishing it from the constructor parameter `name`. Now, to create a Person, you must provide those two arguments:\n```java\nPerson p = new Person(\"Alice\", 30);\n```\nThis calls our constructor, creating a Person with name \"Alice\" and age 30.\n\nIf you define any constructor, the default no-arg constructor is no longer provided unless you explicitly write one. If your class needs a no-argument constructor and other constructors, you must implement it yourself.\n\n**Overloading Constructors:**\nLike methods, constructors can be overloaded (multiple constructors with different parameter lists):\n```java\npublic Person() {\n    // a no-arg constructor that sets default values\n    this.name = \"Unknown\";\n    this.age = 0;\n}\npublic Person(String name) {\n    this.name = name;\n    this.age = 0;\n}\npublic Person(String name, int age) {\n    this.name = name;\n    this.age = age;\n}\n```\nThis gives flexibility to create a Person in different ways (with no info, with just name, or with name and age). Often, one constructor can call another to reuse code using `this(...)` syntax (must be the first line in the constructor). For example, `Person(String name) { this(name, 0); }` would call the two-argument constructor with age defaulting to 0.\n\n**Constructor vs Method:**\n- Constructors have no return type and use the class name, and are invoked with `new`.\n- You cannot call a constructor on an existing object (they’re only for initialization at creation).\n- If there are initialization steps needed whenever an object is created (like setting up certain fields or asserting invariants), the constructor is the place to do it.\n\n**Example Use Case:**\nImagine a `Circle` class:\n```java\nclass Circle {\n    double radius;\n    public Circle(double r) {\n        radius = r;\n    }\n}\n```\nWhen you do `Circle c = new Circle(5.0);`, it ensures every Circle has a radius set upon creation, thus avoiding having an object in an uninitialized state.\n\nConstructors are fundamental for establishing a valid state for objects as soon as they are created. They improve code clarity by bundling initialization logic, and through overloading, allow different ways to instantiate objects based on available information.",
+          "LLM_Summary": "Details how constructors initialize new objects. Students learn to write constructors (with and without parameters), understand default constructors, and how to overload constructors for flexibility. Explains that constructors have the same name as the class and no return type, and how they ensure an object starts in a valid state. Demonstrates use of `this()` to call other constructors.",
+          "keywords": [
+            "Constructor",
+            "Initialization",
+            "Overloaded constructors",
+            "this()",
+            "Default constructor"
+          ],
+          "tags": [
+            "OOP",
+            "Classes"
+          ],
+          "duration_minutes": 10,
+          "video_url": "https://www.youtube.com/watch?v=ZD7CB6wKg8A",
+          "resource_url": "https://dspmuranchi.ac.in/pdf/Blog/Constructor%20and%20its%20types.pdf"
+        },
+        {
+          "lecture_id": 12,
+          "lecture_title": "Encapsulation and Access Modifiers",
+          "content_transcript": "This lecture covers **encapsulation** and **access modifiers** in Java. Encapsulation is the object-oriented principle of bundling data (fields) and methods that operate on that data within one unit (class), and restricting access to the inner workings of that class from the outside world. This is often achieved using access modifiers to control visibility.\n\n**Access Modifiers:**\nJava provides four levels of access control for classes, variables, and methods:\n- `public`: Accessible from anywhere.\n- `protected`: Accessible within the same package, and also in subclasses (even if those subclasses are in different packages).\n- (default) Package-private (no explicit modifier): Accessible only within the same package (sometimes called \"friendly\" access). If you don't specify public/protected/private on a class member, it defaults to package-private.\n- `private`: Accessible only within the class it’s declared in.\n\nWhen designing classes:\n- Typically, fields (attributes) are made `private` to hide the class’s internal state from outside direct access.\n- Methods that are intended to be used by other classes (the public API of the class) are made `public`.\n- Helper methods used internally can be `private` (so other classes cannot call them).\n- `protected` is used mostly in the context of inheritance (allowing subclasses to use certain members).\n\n**Getters and Setters:**\nTo allow controlled access to private fields, classes often provide public methods to get and set their values. For example:\n```java\npublic class Person {\n    private String name;\n    private int age;\n    \n    public String getName() {\n        return name;\n    }\n    public void setName(String name) {\n        this.name = name;\n    }\n    public int getAge() {\n        return age;\n    }\n    public void setAge(int age) {\n        if (age >= 0) {\n            this.age = age;\n        }\n    }\n}\n```\nHere, `name` and `age` are private. Other classes cannot do `person.name = ...` directly. Instead, they use `person.setName(\"Alice\")` and `person.getName()`. This indirection allows validation or logic (notice in `setAge`, we check the age is non-negative before setting). This is encapsulation: the `Person` class controls how its data is modified.\n\n**Why Encapsulate?**\nEncapsulation provides several benefits:\n- **Data Integrity**: By restricting direct access, you can prevent objects from being put into an invalid state (like negative age).\n- **Implementation Hiding**: Users of a class do not need to know how something is done; they just call public methods. The internal implementation can change without affecting outside code, as long as the interface (public methods) remains the same.\n- **Modularity**: It separates the interface (what operations are available) from implementation (how those operations are carried out).\n\n**Classes and Access:**\n- Top-level classes in Java can only be `public` or package-private (you cannot have a private top-level class).\n- If a class is `public`, it must be in a file with the same name.\n- Inner classes (classes defined within another class) can have private or protected as well.\n\n**Example:**\nIf we have a `BankAccount` class with a private `balance` field, we might have `public void deposit(double amount)` and `public void withdraw(double amount)` methods. Those methods ensure, for example, you cannot withdraw more than the balance and cannot deposit negative amounts. Code outside the class cannot directly change the balance; it must go through these methods.\n\nIn summary, by using private fields and providing public (or protected) methods to access them, you achieve encapsulation. This leads to robust, maintainable code where objects safeguard their own state and expose a clean interface to other parts of a program.",
+          "LLM_Summary": "Explains encapsulation and why we make class fields private. Students learn about access modifiers (private, public, protected, default) and how to use getters and setters to control access to an object's data. Shows how encapsulation protects the integrity of an object's state and hides the implementation details from other classes.",
+          "keywords": [
+            "Encapsulation",
+            "Access Modifiers",
+            "private fields",
+            "getters/setters",
+            "information hiding"
+          ],
+          "tags": [
+            "OOP",
+            "Principles"
+          ],
+          "duration_minutes": 9,
+          "video_url": "https://www.youtube.com/watch?v=ykbvimqlJAA",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_encapsulation.pdf"
+        }
+      ]
+    },
+    {
+      "week_id": 5,
+      "week_title": "Advanced OOP Concepts",
+      "lectures": [
+        {
+          "lecture_id": 13,
+          "lecture_title": "Inheritance in Java",
+          "content_transcript": "In this lecture, we explore **inheritance**, a core concept of OOP that allows one class to inherit properties and methods from another. Inheritance promotes code reuse and establishes an \"is-a\" relationship between classes.\n\n**Extending a Class:**\nIn Java, you use the `extends` keyword to create a subclass (child class) that inherits from a superclass (parent class). Example:\n```java\nclass Animal {\n    String name;\n    void eat() {\n        System.out.println(\"Eating\");\n    }\n}\nclass Dog extends Animal {\n    void bark() {\n        System.out.println(\"Woof!\");\n    }\n}\n```\nHere, `Dog` is a subclass of `Animal`. That means `Dog` automatically has all the fields and methods of `Animal` (like `name` and `eat()`) without having to redefine them. You can do:\n```java\nDog d = new Dog();\nd.name = \"Buddy\";\nd.eat();  // inherited method\nd.bark(); // subclass's own method\n```\n`Dog` inherits `eat()` from `Animal` and also has its own method `bark()`.\n\n**Superclass and Subclass:**\n- The superclass (Animal) is more general. Subclasses (Dog, Cat, etc.) are more specific forms of that class.\n- A subclass can add new fields/methods (like `bark`), and it can also override methods of the superclass (we'll discuss overriding in the polymorphism lecture, but essentially a subclass can provide a specific implementation for a method that the parent has).\n\n**Constructors in Inheritance:**\nA subclass does not inherit the constructors of its parent, but it calls one of the parent’s constructors as part of its own construction process. By default, the parent’s no-arg constructor is called implicitly. If the parent doesn't have a no-arg constructor, the subclass must explicitly call a parent constructor using `super(...)` as the first line in its constructor. Example:\n```java\nclass Animal {\n    Animal(String name) { ... }\n}\nclass Dog extends Animal {\n    Dog(String name) {\n        super(name); // calling Animal's constructor to set name\n    }\n}\n```\nIf you don’t call `super(...)`, Java will try to call `super()` with no args by default.\n\n**Access and Inheritance:**\n- Public and protected members of the superclass are accessible in the subclass (protected is accessible as if it were package-private plus in subclasses).\n- Private members are not accessible directly; a subclass must use public/protected getters/setters or other methods to interact with the superclass’s private data.\n- Package-private members are accessible if subclass is in the same package.\n\n**The Object Class:**\nAll classes in Java implicitly extend `java.lang.Object` if they don't explicitly extend another class. `Object` is the root of the class hierarchy, providing basic methods like `toString()`, `equals()`, and `hashCode()` which can be overridden in your classes.\n\n**Inheritance Hierarchies:**\nA class can directly extend only one class (Java doesn’t support multiple inheritance of classes), but inheritance chains can form. e.g., `class Puppy extends Dog` means Puppy inherits from Dog, which inherits from Animal, so Puppy has all Animal and Dog features.\nUse inheritance when there is a clear hierarchical relationship (is-a). For instance, a `Car` is a `Vehicle`, a `Manager` is an `Employee`, etc. This allows using a subclass wherever the superclass is expected (a key part of polymorphism, coming next).\n\n**Benefits:**\n- Code reuse: define common attributes/methods in a base class and reuse them in derived classes.\n- Polymorphism: treat subclass instances as instances of the superclass for general code.\n\nWe should be mindful to use inheritance when it logically makes sense. If a relationship is more \"has-a\" (composition) than \"is-a\", it might be better to use fields rather than inheritance. But when properly used, inheritance makes our code more organized and avoids duplication.",
+          "LLM_Summary": "Introduces inheritance, where a subclass extends a superclass and inherits its attributes and behaviors. Students see how to use `extends` to create a subclass, how the subclass can add its own features or override methods. Discusses the 'is-a' relationship and how inheritance promotes code reuse. Also touches on how constructors work in inheritance and the concept of the Object superclass.",
+          "keywords": [
+            "Inheritance",
+            "extends",
+            "Subclass/Superclass",
+            "Code reuse",
+            "super"
+          ],
+          "tags": [
+            "OOP",
+            "Inheritance"
+          ],
+          "duration_minutes": 12,
+          "video_url": "https://www.youtube.com/watch?v=Zs342ePFvRI",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_inheritance.pdf"
+        },
+        {
+          "lecture_id": 14,
+          "lecture_title": "Polymorphism and Overriding",
+          "content_transcript": "Continuing with OOP, this lecture covers **polymorphism**, which literally means \"many forms\". In Java, polymorphism allows a subclass object to be treated as an object of its superclass, and the behavior can vary based on the actual object type at runtime. This is a key benefit of inheritance.\n\n**Upcasting (Treating a subclass as a superclass):**\nIf `Dog` extends `Animal`, a `Dog` is-an `Animal`. Therefore, you can do:\n```java\nAnimal myPet = new Dog();\nmyPet.eat(); // which implementation of eat() runs?\n```\nHere, `myPet` is declared as type `Animal`, but at runtime it refers to a `Dog` object. This is called upcasting. You can only call methods that are defined in `Animal` via `myPet`. In this case, `eat()` is available (assuming Animal defines eat), and `bark()` is not (because `bark` is only in Dog).\n\nThe magic is that if `Dog` overrides the `eat()` method, the `Dog`’s version will execute, even though `myPet` is of type `Animal`. This is runtime polymorphism: the JVM dispatches the call to the actual object's method.\n\n**Method Overriding:**\nFor polymorphism to be useful, subclasses override methods of the superclass to provide specialized behavior. Example:\n```java\nclass Animal {\n    void eat() {\n        System.out.println(\"The animal eats.\");\n    }\n}\nclass Dog extends Animal {\n    @Override\n    void eat() {\n        System.out.println(\"The dog crunches kibble.\");\n    }\n}\nclass Cat extends Animal {\n    @Override\n    void eat() {\n        System.out.println(\"The cat eats fish.\");\n    }\n}\n```\nNow:\n```java\nAnimal a1 = new Dog();\nAnimal a2 = new Cat();\na1.eat(); // prints dog-specific message\na2.eat(); // prints cat-specific message\n```\nEven though `a1` and `a2` are both typed as `Animal`, the output differs because the actual objects are different subclasses with their own `eat()` implementations. This is polymorphic behavior.\n\nThe `@Override` annotation is optional but recommended, as it tells the compiler you intend to override a method from the superclass (and it will error if you don’t match the signature correctly).\n\n**Polymorphism in Practice:**\nPolymorphism is extremely useful. For example, you might have a method that takes an `Animal`:\n```java\nvoid feedAnimal(Animal animal) {\n    animal.eat();\n}\n```\nYou can pass any subclass of Animal to this method (Dog, Cat, etc.), and the correct `eat()` is called. The code inside `feedAnimal` doesn’t need to know which specific animal it’s feeding, just that it’s an Animal that can eat.\n\n**The `instanceof` Operator and Casting:**\nSometimes you have a superclass reference and need to know or use the subclass. The `instanceof` operator checks an object’s type:\n```java\nif (myPet instanceof Dog) {\n    Dog dog = (Dog) myPet;\n    dog.bark();\n}\n```\nHere we first ensure `myPet` really is a Dog, then cast the `Animal` reference back to `Dog` to call `bark()`. However, overuse of `instanceof` can indicate a design that isn’t fully leveraging polymorphism; often you can design methods that avoid needing to know the exact type.\n\n**Polymorphism and Design:**\nPolymorphism, along with inheritance and interfaces, allows us to write flexible and extensible code. For instance, adding a new subclass (say, `Bird extends Animal`) that overrides `eat()` would automatically work with existing code like `feedAnimal` without modifications.\n\nIn summary, polymorphism lets one interface (like a reference of type Animal) be used with different actual underlying forms (Dog, Cat, etc.), and the appropriate behavior is chosen at runtime. This leads to code that is easier to maintain and extend.",
+          "LLM_Summary": "Covers how objects of a subclass can be treated as objects of a superclass type, enabling one interface to handle different underlying forms. Demonstrates method overriding and how the JVM calls the appropriate overridden method at runtime. Students learn about using superclass references to refer to subclass objects, the use of `instanceof` and casting when needed, and the benefits of designing code to interfaces/superclasses.",
+          "keywords": [
+            "Polymorphism",
+            "Method overriding",
+            "Dynamic binding",
+            "instanceof",
+            "Upcasting"
+          ],
+          "tags": [
+            "OOP",
+            "Polymorphism"
+          ],
+          "duration_minutes": 7,
+          "video_url": "https://www.youtube.com/watch?v=jhDUxynEQRI",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_polymorphism.pdf"
+        },
+        {
+          "lecture_id": 15,
+          "lecture_title": "Interfaces and Abstract Classes",
+          "content_transcript": "In this lecture, we cover **interfaces** and **abstract classes**, which are ways to define abstract types in Java. Both are used to achieve abstraction (defining what something does without necessarily specifying how) and to design for multiple implementations.\n\n**Abstract Classes:**\nAn abstract class is a class that cannot be instantiated on its own (you cannot do `new AbstractClass()`). It's meant to be extended by other classes. Abstract classes can have abstract methods (methods without a body, just a signature), as well as regular methods with implementations, and fields.\n```java\nabstract class Shape {\n    String color;\n    // abstract method (no body)\n    abstract double area();\n    // concrete method\n    void setColor(String color) {\n        this.color = color;\n    }\n}\n```\nHere, `Shape` defines an abstract method `area()` – meaning every specific shape must provide its own implementation of calculating area. A subclass (like Circle or Rectangle) must override all abstract methods or itself be declared abstract.\n\nExample subclass:\n```java\nclass Circle extends Shape {\n    double radius;\n    Circle(double r) { this.radius = r; }\n    @Override\n    double area() {\n        return Math.PI * radius * radius;\n    }\n}\n```\nNow `Circle` can be instantiated, and when `area()` is called on a Circle object, it runs the implementation provided by Circle.\n\nAbstract classes are useful when you want to share some code among related classes (like `setColor` is shared by all shapes) but also enforce certain methods to be implemented by subclasses.\n\n**Interfaces:**\nAn interface in Java is a purely abstract type (especially before Java 8; from Java 8 onward, interfaces can have default and static methods with implementations, but we’ll consider the basic concept). An interface only declares method signatures (and static/final constants). Classes can implement interfaces, meaning they agree to fulfill the contract defined by the interface.\n\nExample:\n```java\ninterface Movable {\n    void move(int distance);\n}\n```\nThis interface declares a method `move`. It has no implementation. Now any class that `implements Movable` must provide a concrete `move(int)` method:\n```java\nclass Car implements Movable {\n    public void move(int distance) {\n        System.out.println(\"Car moves \" + distance + \" meters\");\n    }\n}\nclass Person implements Movable {\n    public void move(int distance) {\n        System.out.println(\"Person walks \" + distance + \" meters\");\n    }\n}\n```\nBoth `Car` and `Person` implement `Movable` but in potentially different ways. Interface methods are implicitly public and abstract (so we write `public void move(int distance)` in implementation). A class can implement multiple interfaces (Java allows a form of multiple inheritance via interfaces, since it doesn’t allow multiple class inheritance). For example, `class Airplane implements Movable, Flyable` (if we had a Flyable interface).\n\n**Interface vs Abstract Class:**\n- Use an interface when you want to define a role that can be adopted by potentially unrelated classes (e.g., Movable could be applied to vehicles, people, animals, etc., which don’t share a class hierarchy).\n- Use an abstract class when you have a clear hierarchical relationship and some common implementation to share, but the base class itself is too general to instantiate.\n- A class can implement many interfaces but can extend only one class (abstract or not).\n- Interfaces provide more flexibility in designing APIs, and they are central to some design patterns and frameworks (e.g., Java’s Collections use interfaces like List, Set, Map extensively).\n\n**Default Methods in Interfaces (Java 8+):**\nModern Java allows interfaces to have default implementations for methods. This helps in evolving interfaces without breaking existing implementations, but conceptually interfaces are still mainly about the \"what\" and not the \"how\" (with default methods being a convenience).\n\nIn summary, both abstract classes and interfaces let you define abstract behaviors. Abstract classes allow partial implementation and a class hierarchy, while interfaces provide a way to enforce that different classes (not necessarily related) share certain behaviors. You’ll often use interfaces in Java to define capabilities and abstract classes for base classes with common code.",
+          "LLM_Summary": "Discusses how interfaces define a contract (methods without bodies) that classes can implement. Students learn to use `interface` keyword, implement multiple interfaces, and see examples like a `Movable` interface. Also explains abstract classes vs interfaces, outlining when to use each. Mentions that interfaces in newer Java can have default methods, but focuses on basic usage.",
+          "keywords": [
+            "Interface",
+            "implements",
+            "Abstract class",
+            "Multiple inheritance",
+            "Contract"
+          ],
+          "tags": [
+            "OOP",
+            "Abstraction"
+          ],
+          "duration_minutes": 15,
+          "video_url": "https://www.youtube.com/watch?v=JFuMei9Wwk4",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_interfaces.pdf"
+        }
+      ]
+    },
+    {
+      "week_id": 6,
+      "week_title": "Exception Handling in Java",
+      "lectures": [
+        {
+          "lecture_id": 16,
+          "lecture_title": "Exception Handling Basics",
+          "content_transcript": "This lecture introduces **exception handling** in Java. Exceptions are events that occur during execution that disrupt the normal flow of the program (like errors or unusual conditions). Java uses exceptions to handle errors or other exceptional events in a controlled way, allowing you to catch and respond to them rather than crashing the program.\n\n**What is an Exception?**\nIn Java, exceptions are represented by objects of the class `java.lang.Exception` (or its subclasses). Common examples include `NullPointerException`, `ArrayIndexOutOfBoundsException`, `IOException`, etc. There's also `Error` (representing serious issues like OutOfMemoryError), but we focus on Exception for typical error handling.\n\n**try-catch Block:**\nTo handle exceptions, you use a `try-catch` structure. Code that might throw an exception is placed inside a `try` block, and `catch` blocks are provided to handle specific exceptions:\n```java\ntry {\n    // code that might throw an exception\n    int result = 10 / 0;\n    System.out.println(\"Result is \" + result);\n} catch (ArithmeticException e) {\n    System.out.println(\"An error occurred: \" + e.getMessage());\n}\n```\nIn this example, dividing by zero will throw an `ArithmeticException`. When that happens, execution jumps to the matching `catch` block. The `catch` block declares what type of exception it can handle (`ArithmeticException e` catches that type) and provides a block to execute when that exception occurs. The program doesn’t crash; instead, it prints the error message and continues after the catch.\n\n**The Exception Object:**\nIn the catch, `e` is an exception object. You can call methods like `e.getMessage()` or `e.printStackTrace()`. `getMessage()` gives a brief description, and `printStackTrace()` prints the call stack at the point of exception (useful for debugging).\n\n**Multiple Catch Blocks:**\nYou can catch different exceptions separately:\n```java\ntry {\n    // code that may throw multiple types of exceptions\n    String text = null;\n    System.out.println(text.length()); // could throw NullPointerException\n    int num = Integer.parseInt(\"abc\"); // could throw NumberFormatException\n} catch (NullPointerException e) {\n    System.out.println(\"Null pointer error: \" + e);\n} catch (NumberFormatException e) {\n    System.out.println(\"Number format error: \" + e);\n}\n```\nEach catch handles a different type. Catches are checked in order; the first one whose exception type matches the thrown exception is executed. Note: Exceptions have a class hierarchy, so if you catch a superclass (like Exception), it would also catch subclasses unless a more specific catch came first.\n\n**finally Block:**\nOptionally, a `finally` block can follow catch blocks. Code in `finally` runs regardless of whether an exception was thrown or caught. It's typically used for cleanup (closing files, releasing resources):\n```java\ntry {\n    // open file and process\n} catch (IOException e) {\n    // handle file-related exception\n} finally {\n    // close file (this runs whether or not an exception occurred)\n}\n```\n\n**Checked vs Unchecked Exceptions:**\nIn Java, exceptions are categorized:\n- **Unchecked exceptions**: Runtime exceptions (subclass of `RuntimeException`) and `Error`. These do not need to be declared or caught explicitly (e.g., NullPointerException). They often indicate programming logic errors.\n- **Checked exceptions**: All other subclasses of Exception (like IOException, SQLException). The compiler forces you to either catch them or declare them in the method signature (using `throws`). They represent expected error conditions that are outside your program’s control (like file not found, network issues).\n\nWe'll discuss throwing exceptions and the `throws` keyword in the next lecture. For now, know that `try-catch` is how you catch exceptions that might happen, allowing you to handle errors gracefully and keep the program running or at least shut down cleanly with a message instead of a hard crash (stack trace).\n\nUsing exceptions properly leads to more robust programs that can handle unexpected situations (like invalid input or unavailable resources) without terminating unexpectedly.",
+          "LLM_Summary": "Introduces the concept of exceptions and the try-catch mechanism. Students learn how to wrap risky code in a try block and catch specific exceptions to handle errors (like handling arithmetic errors or null pointers). Also explains the optional finally block for cleanup and the difference between checked and unchecked exceptions in Java's exception hierarchy.",
+          "keywords": [
+            "Exceptions",
+            "try-catch",
+            "finally",
+            "Exception handling",
+            "Checked vs unchecked"
+          ],
+          "tags": [
+            "Error Handling",
+            "Exceptions"
+          ],
+          "duration_minutes": 8,
+          "video_url": "https://www.youtube.com/watch?v=u1PROb-aRUI",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_exceptions.pdf"
+        },
+        {
+          "lecture_id": 17,
+          "lecture_title": "Advanced Exception Handling",
+          "content_transcript": "Building on exception handling, this lecture covers advanced concepts: the `throw` statement, the `throws` clause, and creating custom exceptions.\n\n**Throwing Exceptions:**\nSometimes you might want to manually trigger an exception (for example, if a certain invalid condition arises in your code). You can do this with the `throw` keyword. For example:\n```java\nif (value < 0) {\n    throw new IllegalArgumentException(\"Value cannot be negative\");\n}\n```\nThis creates a new `IllegalArgumentException` (a runtime exception) and throws it. When thrown, normal execution stops and the exception will propagate up the call stack until caught by a catch block. You can throw either checked or unchecked exceptions, but with checked exceptions, you need to declare them with `throws` (see below).\n\n**The throws Clause:**\nWhen a method can throw (propagate) a checked exception that it doesn’t handle internally, it must declare that exception in its signature using `throws`. Example:\n```java\nvoid readFile(String path) throws IOException {\n    // code that might throw IOException\n    FileReader fr = new FileReader(path);\n}\n```\nHere, `readFile` calls `FileReader` which might throw an `IOException`. Instead of catching it inside, this method declares `throws IOException`. This means whoever calls `readFile` must handle or further declare the IOException. Unchecked exceptions (subclasses of RuntimeException) don’t need to be declared or caught – they can be thrown without the `throws` clause, but documenting them is still good practice.\n\n**Propagation:**\nIf an exception isn’t caught in a method, it propagates back to the caller. This continues up the call stack. If it’s never caught, it reaches the JVM, which will typically print a stack trace and terminate the program.\n\n**Custom Exceptions:**\nJava allows you to define your own exception classes (usually extending `Exception` or `RuntimeException`). This can make error handling more meaningful in your application domain.\nFor instance:\n```java\nclass InsufficientFundsException extends Exception {\n    public InsufficientFundsException(String message) {\n        super(message);\n    }\n}\n```\nThis defines a checked exception (because it extends Exception but not RuntimeException). You might use it in a BankAccount class:\n```java\nvoid withdraw(double amount) throws InsufficientFundsException {\n    if (amount > balance) {\n        throw new InsufficientFundsException(\"Not enough balance\");\n    }\n    balance -= amount;\n}\n```\nNow callers of `withdraw` must handle InsufficientFundsException (because it’s checked).\n\nIf you want your custom exception to be unchecked, extend RuntimeException instead:\n```java\nclass DataFormatException extends RuntimeException { ... }\n```\nBy extending RuntimeException, you don’t need to declare it with throws or catch it explicitly.\n\n**Best Practices:**\n- Use exceptions for exceptional conditions (not for regular control flow).\n- Throw specific exceptions that accurately describe the problem (e.g., throw FileNotFoundException instead of a generic Exception when appropriate).\n- Catch exceptions at a level where you can either recover from them or at least log them and provide a user-friendly message.\n- Clean up resources in finally blocks or use try-with-resources (a Java feature where resources like streams can be opened in parentheses `try(Resource r = ...) { }` and will auto-close).\n\nBy mastering throw, throws, and custom exceptions, you can design methods that communicate errors to callers in a clear way and enforce handling of those errors. This leads to more reliable programs that gracefully handle error conditions and make debugging easier when things go wrong.",
+          "LLM_Summary": "Covers more advanced exception topics such as using `throw` to manually trigger exceptions and declaring exceptions with the `throws` keyword in method signatures. Shows how to create custom exception classes for specific error conditions. Emphasizes proper error propagation and when to use checked vs unchecked for custom exceptions.",
+          "keywords": [
+            "throw",
+            "throws",
+            "Custom exceptions",
+            "Exception propagation",
+            "Error handling"
+          ],
+          "tags": [
+            "Error Handling",
+            "Exceptions"
+          ],
+          "duration_minutes": 12,
+          "video_url": "https://www.youtube.com/watch?v=OIozDnGYqIU",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_exceptions.pdf"
+        }
+      ]
+    },
+    {
+      "week_id": 7,
+      "week_title": "Collections Framework in Java",
+      "lectures": [
+        {
+          "lecture_id": 18,
+          "lecture_title": "Collections and ArrayList",
+          "content_transcript": "Now we move into the **Collections Framework** in Java, starting with the `List` interface and its popular implementation `ArrayList`. The Collections Framework provides dynamic data structures that can grow or shrink and come with useful methods for managing collections of objects.\n\n**ArrayList Overview:**\n`ArrayList<E>` (in `java.util`) is a resizable array implementation of the `List<E>` interface. It can hold elements of type E (generics allow type safety, e.g., `ArrayList<String>` holds Strings). Unlike arrays, an ArrayList can change size dynamically as you add or remove elements.\n\n**Creating an ArrayList:**\n```java\nimport java.util.ArrayList;\n...\nArrayList<String> names = new ArrayList<>();\n```\nThe `<>` is the diamond operator (Java 7+) which infers the type from the variable declaration (so we don't repeat `<String>` on the right side). Initially, `names` is empty (`names.size()` is 0).\n\n**Adding Elements:**\nUse `add` method:\n```java\nnames.add(\"Alice\");\nnames.add(\"Bob\");\nnames.add(\"Charlie\");\n```\nNow the list contains [\"Alice\", \"Bob\", \"Charlie\"] in that order, and size() would return 3. By default, `add` appends to the end. You can also insert at a specific index with `add(index, element)`.\n\n**Accessing Elements:**\nTo retrieve or modify elements, use `get(index)` and `set(index, value)`:\n```java\nString first = names.get(0);    // \"Alice\"\nnames.set(1, \"Bobby\");          // replace \"Bob\" with \"Bobby\"\n```\nArrayList uses zero-based indexing like arrays. If you try to get or set an index that’s out of bounds (less than 0 or >= size), it throws IndexOutOfBoundsException.\n\n**Iterating Over List:**\nYou can loop through ArrayList elements using:\n- Index-based loop: \n```java\nfor (int i = 0; i < names.size(); i++) {\n    System.out.println(names.get(i));\n}\n```\n- Enhanced for-loop:\n```java\nfor (String name : names) {\n    System.out.println(name);\n}\n```\n- Using an Iterator (from `names.iterator()`, though for ArrayList the above loops suffice).\n\n**Removing Elements:**\nUse `remove` method:\n```java\nnames.remove(\"Charlie\"); // removes by value (the first occurrence of \"Charlie\")\nnames.remove(0);         // removes by index (removes the first element)\n```\nAfter removal, the list size decreases and elements to the right shift left to fill the gap.\n\n**Other Useful List Methods:**\n- `isEmpty()` – checks if list is empty.\n- `contains(Object o)` – checks if an element exists.\n- `indexOf(Object o)` / `lastIndexOf(Object o)` – find positions.\n- `clear()` – remove all elements.\n- `toArray()` – convert to an array.\n- `Collections.sort(list)` – you can sort a list of Comparable elements (like Strings or Integers) using the Collections utility class.\n\n**List vs Array:**\nUnder the hood, ArrayList uses an array. It automatically resizes (usually doubling capacity when needed). This means adding (amortized) and accessing by index are fast (O(1)), but inserting or removing from the middle can be slower (O(n)) due to shifting elements. But the convenience and dynamic sizing usually outweigh these concerns for many use cases.\n\n**Other List Implementations:**\n`LinkedList` is another List type (with different performance characteristics, better at adding/removing from ends). But ArrayList is generally a good default List.\n\n**Generics Note:**\nWe specify `<String>` so our list is type-safe – we can’t accidentally add a non-String, and when we get elements, they’re already Strings (no casting needed). Always use generics for type safety.\n\nIn summary, ArrayList provides a dynamic, easy-to-use replacement for arrays when you need a collection that can change in size or when you want helpful methods for manipulation. It's part of the broader Collections Framework which includes Sets and Maps, to be discussed next.",
+          "LLM_Summary": "Introduces the Collections Framework, focusing on the List interface and ArrayList implementation. Students learn how to create an ArrayList, add/remove elements, access elements by index, and iterate over the list. Highlights dynamic resizing compared to arrays and use of generics (e.g., ArrayList<String>) to ensure type safety.",
+          "keywords": [
+            "ArrayList",
+            "List",
+            "Dynamic array",
+            "Iteration",
+            "Generics"
+          ],
+          "tags": [
+            "Collections",
+            "List"
+          ],
+          "duration_minutes": 13,
+          "video_url": "https://www.youtube.com/watch?v=gmm7062i-tI",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_collections.pdf"
+        },
+        {
+          "lecture_id": 19,
+          "lecture_title": "Sets and Iterators in Java",
+          "content_transcript": "In this lecture, we explore the `Set` interface in Java and specifically the `HashSet` implementation, as well as touching on how to iterate through collections with an `Iterator`.\n\n**Set Interface:**\nA `Set<E>` in Java is a collection that cannot contain duplicate elements. It's useful when you want to maintain a collection of unique items, or quickly test membership (i.e., \"is X in the set?\").\n\n**HashSet:**\n`HashSet<E>` is a commonly used implementation of Set, backed by a hash table. It does not maintain any particular order of elements (not sorted, not insertion order; it's effectively unordered). Its operations like `add`, `remove`, `contains` typically run in average constant time O(1).\n\nExample usage:\n```java\nimport java.util.HashSet;\n...\nHashSet<String> fruits = new HashSet<>();\nfruits.add(\"Apple\");\nfruits.add(\"Banana\");\nfruits.add(\"Cherry\");\nfruits.add(\"Apple\"); // duplicate add\nSystem.out.println(fruits);\n```\nAfter these operations, the set `fruits` will contain \"Apple\", \"Banana\", \"Cherry\". Adding \"Apple\" a second time has no effect because it was already in the set. When you print a HashSet, you might see the elements in some arbitrary order (e.g., [Banana, Cherry, Apple]).\n\nCommon HashSet methods:\n- `add(element)` – adds if not already present (returns boolean indicating if the set changed).\n- `contains(element)` – returns true if the element is in the set.\n- `remove(element)` – removes that element if present.\n- `size()` – number of elements.\n- `isEmpty()` – checks if empty.\n- `clear()` – removes all elements.\n\n**Iteration with Iterator:**\nWhile we can use enhanced for-loop to iterate through a Set:\n```java\nfor (String f : fruits) {\n    System.out.println(f);\n}\n```\nSometimes you want more control, or to remove elements while iterating. That's where the `Iterator<E>` interface comes in. You can get an iterator from any Collection by calling `iterator()`. Example:\n```java\nIterator<String> it = fruits.iterator();\nwhile (it.hasNext()) {\n    String f = it.next();\n    System.out.println(f);\n    if (f.startsWith(\"B\")) {\n        it.remove(); // remove elements that start with B (e.g., Banana)\n    }\n}\n```\nThe Iterator has three main methods:\n- `hasNext()` – returns true if there are more elements to iterate.\n- `next()` – returns the next element and advances the iterator.\n- `remove()` – removes the last element returned by `next()`. (Important: this is the only safe way to remove from a collection while iterating; removing directly in a for-each loop can cause concurrency issues.)\n\nAfter the loop above, any fruit starting with B would be removed from the set.\n\n**Other Set Implementations:**\n- `LinkedHashSet`: like HashSet but maintains insertion order.\n- `TreeSet`: implements `SortedSet`, keeps elements sorted according to their natural order or a provided Comparator (uses a tree data structure; lookup/add/remove are O(log n)).\n\n**When to use Set:**\nUse a Set when you want to avoid duplicates or when order doesn’t matter and you want efficient membership checks. For example, tracking a collection of unique IDs, or unique words in a document, etc.\n\nIn summary, sets provide an unordered collection of unique elements, and HashSet is the go-to implementation for general use. Iterators offer a universal way to traverse any collection and perform operations like removal safely during iteration. Next, we'll move to the `Map` interface, which handles key-value pairs.",
+          "LLM_Summary": "Explores the Set interface using HashSet, emphasizing that sets contain unique elements and have no defined order. Students learn to add, remove, and check membership in a HashSet. Also introduces the Iterator interface to traverse collections, demonstrating its use and the ability to remove elements safely during iteration.",
+          "keywords": [
+            "Set",
+            "HashSet",
+            "Unique elements",
+            "Iterator",
+            "Iteration"
+          ],
+          "tags": [
+            "Collections",
+            "Set"
+          ],
+          "duration_minutes": 14,
+          "video_url": "https://www.youtube.com/watch?v=QvHBHuuddYk",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_collections.pdf"
+        },
+        {
+          "lecture_id": 20,
+          "lecture_title": "Maps and HashMap in Java",
+          "content_transcript": "In this lecture, we discuss the `Map` interface in Java, which represents a collection of key-value pairs, and in particular the `HashMap` implementation.\n\n**Map Interface:**\nA `Map<K, V>` maps keys of type K to values of type V. Each key is unique (no duplicates), and each key maps to at most one value. It’s like a dictionary or lookup table: given a key, you can efficiently find the associated value.\n\n**HashMap:**\n`HashMap<K, V>` (in `java.util`) is a hash table based implementation of Map. It allows `null` values and one `null` key, and does not maintain order of entries. Operations like `get` and `put` are generally O(1) average.\n\nExample:\n```java\nimport java.util.HashMap;\n...\nHashMap<String, Integer> ages = new HashMap<>();\nages.put(\"Alice\", 30);\nages.put(\"Bob\", 25);\nages.put(\"Charlie\", 35);\n```\nHere, keys are names (String) and values are ages (Integer). We added three entries.\n\n**Basic Map Operations:**\n- `put(key, value)`: Insert or update an entry. If the key doesn’t exist, it adds a new entry. If it exists, it replaces the old value with the new one.\n```java\nages.put(\"Bob\", 26); // Bob's age updated to 26\n```\n- `get(key)`: Retrieve the value for a key, or null if the key is not present.\n```java\nint aliceAge = ages.get(\"Alice\"); // 30\nInteger unknown = ages.get(\"Dave\"); // null (Dave not in map)\n```\n- `containsKey(key)`: Check if a key exists in the map. Similarly `containsValue(value)` checks if any key maps to a given value (less commonly used).\n- `remove(key)`: Remove the entry for the given key.\n```java\nages.remove(\"Charlie\"); // removes Charlie from the map\n```\n- `size()`: Number of key-value pairs.\n- `isEmpty()`: Checks if map has no entries.\n- `clear()`: Remove all entries.\n\n**Iterating Over a Map:**\nThere are multiple ways:\n- Using keySet:\n```java\nfor (String name : ages.keySet()) {\n    System.out.println(name + \" -> \" + ages.get(name));\n}\n```\n`keySet()` returns a Set of all keys.\n- Using entrySet:\n```java\nfor (Map.Entry<String, Integer> entry : ages.entrySet()) {\n    System.out.println(entry.getKey() + \" -> \" + entry.getValue());\n}\n```\n`entrySet()` returns a Set of Map.Entry objects, each representing a key-value pair, with `getKey()` and `getValue()` methods.\n- Using values() to iterate values if needed.\n\n**Example Use Case:**\nMaps are great for fast lookups. E.g., counting occurrences:\n```java\nHashMap<String, Integer> wordCount = new HashMap<>();\nfor (String word : words) {\n    if (wordCount.containsKey(word)) {\n        wordCount.put(word, wordCount.get(word) + 1);\n    } else {\n        wordCount.put(word, 1);\n    }\n}\n```\nThis counts how often each word appears in a list.\n\n**Other Map Implementations:**\n- `LinkedHashMap`: maintains insertion order (useful when you need predictable iteration order).\n- `TreeMap`: keeps keys sorted (implements `NavigableMap`/`SortedMap`).\n- `Hashtable`: legacy synchronized version (less used now; ConcurrentHashMap for thread-safe needs).\n\n**Note on HashMap vs HashSet:**\nA HashSet is essentially a HashMap with dummy values (only keys matter). In fact, HashSet is implemented internally using a HashMap.\n\nUsing maps lets you handle complex associations, like dictionary data, caches, or any scenario where you want to retrieve a value by a key quickly.\n\nIn summary, HashMap provides an efficient, flexible way to store and retrieve data based on keys. It’s one of the most commonly used data structures for real-world programming tasks, enabling quick data lookups and organization by keys.",
+          "LLM_Summary": "Discusses key-value data structures via the Map interface and HashMap implementation. Students learn to put, get, and remove entries in a HashMap, and to iterate over entries using keySet or entrySet. Explains how HashMap allows fast lookup by key and common use cases for dictionaries. Also touches on alternative map implementations like TreeMap or LinkedHashMap.",
+          "keywords": [
+            "Map",
+            "HashMap",
+            "Key-Value pairs",
+            "Lookup",
+            "Dictionary"
+          ],
+          "tags": [
+            "Collections",
+            "Map"
+          ],
+          "duration_minutes": 15,
+          "video_url": "https://www.youtube.com/watch?v=H62Jfv1DJlU",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_collections.pdf"
+        }
+      ]
+    },
+    {
+      "week_id": 8,
+      "week_title": "File I/O and Conclusion",
+      "lectures": [
+        {
+          "lecture_id": 21,
+          "lecture_title": "File Handling Basics (Text Files)",
+          "content_transcript": "This lecture covers basic file input and output (I/O) in Java, focusing on reading from and writing to text files. Java provides classes in the `java.io` and `java.nio` packages to handle file operations.\n\n**Reading a Text File:**\nOne common approach to read text is using `BufferedReader` combined with `FileReader`:\n```java\nimport java.io.*;\n...\ntry (BufferedReader br = new BufferedReader(new FileReader(\"input.txt\"))) {\n    String line;\n    while ((line = br.readLine()) != null) {\n        System.out.println(line);\n    }\n} catch (IOException e) {\n    e.printStackTrace();\n}\n```\nExplanation:\n- `FileReader` opens the file \"input.txt\" for reading (assuming it exists in the working directory).\n- `BufferedReader` wraps around FileReader to efficiently read text by buffering.\n- `br.readLine()` reads one line at a time (excluding the newline character).\n- We loop until `readLine()` returns null, which indicates end-of-file.\n- We handle exceptions with try-catch (here using try-with-resources syntax `try(...)` which automatically closes `br` at end of try block or on exception).\nAlternatively, one can use `Scanner`:\n```java\ntry (Scanner scanner = new Scanner(new File(\"input.txt\"))) {\n    while (scanner.hasNextLine()) {\n        String line = scanner.nextLine();\n        System.out.println(line);\n    }\n} catch (FileNotFoundException e) {\n    e.printStackTrace();\n}\n```\nScanner is convenient for reading text and parsing, but BufferedReader is often faster for just reading lines.\n\n**Writing to a Text File:**\nTo write text, you can use `BufferedWriter` and `FileWriter` or `PrintWriter`:\n```java\ntry (BufferedWriter bw = new BufferedWriter(new FileWriter(\"output.txt\"))) {\n    bw.write(\"Hello, world!\");\n    bw.newLine();\n    bw.write(\"This is a new line.\");\n} catch (IOException e) {\n    e.printStackTrace();\n}\n```\nThis will create \"output.txt\" (or overwrite it if it exists) and write two lines. \n- `bw.write(String)` writes a string (no newline unless you add it),\n- `bw.newLine()` writes the system line separator.\nUsing `PrintWriter`:\n```java\ntry (PrintWriter pw = new PrintWriter(\"output.txt\")) {\n    pw.println(\"Hello, world!\");\n    pw.println(\"This is a new line.\");\n} catch (IOException e) {\n    e.printStackTrace();\n}\n```\n`PrintWriter` has convenient `println` and `printf` methods. It also handles its own buffering.\n\n**Paths and Directories:**\nFile paths can be absolute or relative. \"input.txt\" refers to a file in the current working directory. You can also specify a full path like \"C:\\\\data\\\\input.txt\" on Windows or \"/home/user/data/input.txt\" on Linux/Mac.\nTo ensure cross-platform paths, you can use `File.separator` or better, `Paths` from `java.nio.file`:\n```java\nPath path = Paths.get(\"data\", \"input.txt\"); // constructs path \"data/input.txt\"\n```\nThen use `path.toFile()` or `Files.newBufferedReader(path)` etc.\n\n**Exception Handling:**\nNotice that file operations throw `IOException` (checked exception). That's why we have to catch or declare it. It's important to handle exceptions for file I/O because files may not exist or be readable/writable, or other I/O errors (like lack of permissions or disk full) can occur.\n\n**try-with-resources:**\nWe used `try (Resource res = ...) { ... }` which automatically closes the resource at the end of the try block. This is the preferred way to manage I/O streams because it ensures the file is closed even if an exception occurs, preventing resource leaks.\n\nBy mastering reading and writing text files, you can handle tasks like reading configuration files, processing data from disk, or saving program output. In the next lecture, we will look at handling binary files and object serialization for saving more complex data.",
+          "LLM_Summary": "Covers reading from and writing to text files using classes like FileReader, BufferedReader, FileWriter, and BufferedWriter/PrintWriter. Demonstrates how to read files line by line and how to write lines to a file, handling IOExceptions properly. Introduces the concept of file paths and using try-with-resources for automatic closing of files.",
+          "keywords": [
+            "FileReader",
+            "BufferedReader",
+            "FileWriter",
+            "PrintWriter",
+            "IOException"
+          ],
+          "tags": [
+            "File I/O",
+            "Text Files"
+          ],
+          "duration_minutes": 12,
+          "video_url": "https://www.youtube.com/watch?v=ScUJx4aWRi0",
+          "resource_url": "https://www.tutorialspoint.com/java/pdf/java_files_io.pdf"
+        },
+        {
+          "lecture_id": 22,
+          "lecture_title": "Advanced File Handling (Binary Files & Serialization)",
+          "content_transcript": "In this final lecture, we discuss advanced file handling: working with binary files and an introduction to object serialization (writing objects to files).\n\n**Binary File I/O:**\nText files store data as readable characters, whereas binary files store data in binary format (non-readable). To work with binary files (e.g., images, audio, or any file where you need to write/read raw bytes), you use streams like `FileInputStream` and `FileOutputStream`:\n```java\ntry (FileInputStream fis = new FileInputStream(\"input.bin\");\n     FileOutputStream fos = new FileOutputStream(\"output.bin\")) {\n    int byteData;\n    while ((byteData = fis.read()) != -1) {\n        fos.write(byteData);\n    }\n} catch (IOException e) {\n    e.printStackTrace();\n}\n```\nThis code copies a binary file. `fis.read()` reads a byte (returns -1 at EOF). `fos.write(int)` writes a byte. You can also read/write in chunks (byte array) for efficiency:\n```java\nbyte[] buffer = new byte[1024];\nint bytesRead;\nwhile ((bytesRead = fis.read(buffer)) != -1) {\n    fos.write(buffer, 0, bytesRead);\n}\n```\nThis reads up to 1024 bytes at a time into buffer and writes them out, which is faster than one byte at a time.\n\n**Data Streams:**\nJava offers `DataInputStream`/`DataOutputStream` on top of File streams to read/write primitive data types in binary form. E.g., writing an int or double in binary (not as text). Example:\n```java\ntry (DataOutputStream dos = new DataOutputStream(new FileOutputStream(\"data.bin\"))) {\n    dos.writeInt(123);\n    dos.writeDouble(45.67);\n} \n```\nAnd correspondingly, use DataInputStream to read those back.\n\n**Object Serialization:**\nSerialization is the process of converting an object into a sequence of bytes so it can be saved to a file or sent over a network, and then reconstructing it later (deserialization). In Java, this is done through the `ObjectOutputStream` and `ObjectInputStream` classes, combined with the `Serializable` interface.\n\nTo make a class serializable, it must implement `java.io.Serializable` (which is a marker interface, no methods to implement, just a tag). Example:\n```java\nclass Person implements Serializable {\n    String name;\n    int age;\n    // constructor and other methods...\n}\n```\nNow you can serialize Person objects:\n```java\nPerson p = new Person(\"Alice\", 30);\ntry (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(\"person.dat\"))) {\n    oos.writeObject(p);\n} catch (IOException e) { e.printStackTrace(); }\n```\nThis writes the object’s state to \"person.dat\". To read it back:\n```java\ntry (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(\"person.dat\"))) {\n    Person savedPerson = (Person) ois.readObject();\n    System.out.println(savedPerson.name + \" - \" + savedPerson.age);\n} catch (IOException | ClassNotFoundException e) {\n    e.printStackTrace();\n}\n```\nWe cast the returned `Object` to `Person`. Note that `readObject()` can throw `ClassNotFoundException` if the class definition is not found (which is why we catch it).\n\nImportant considerations for serialization:\n- Mark transient fields for anything you don't want to serialize (using `transient` keyword).\n- Maintain a stable class definition (a field called serialVersionUID can be used for version control of serialized objects).\n\n**Use Cases:**\nBinary I/O is useful for copying files, reading/writing images or proprietary file formats. Serialization is useful to persist object state (like saving program state to file) or sending objects over network streams (like RMI or socket programming). However, for long-term storage or interoperability, formats like JSON or databases are often used instead of raw Java serialization.\n\nWith this, we've covered a breadth of Java programming topics from basics to intermediate features. You’re now equipped to write simple to moderately complex Java applications, read/write files, use data structures, and apply OOP concepts. Happy coding!",
+          "LLM_Summary": "Delves into binary file operations using FileInputStream and FileOutputStream to read and write raw bytes. Introduces object serialization via ObjectOutputStream and ObjectInputStream, explaining how to save and load entire objects to/from files (after making them Serializable). Students learn about use cases for binary I/O and serialization, and cautions like serialVersionUID for versioning.",
+          "keywords": [
+            "Binary files",
+            "FileInputStream",
+            "ObjectOutputStream",
+            "Serialization",
+            "Serializable"
+          ],
+          "tags": [
+            "File I/O",
+            "Binary Files"
+          ],
+          "duration_minutes": 10,
+          "video_url": "https://www.youtube.com/watch?v=DfbFTVNfkeI",
+          "resource_url": "https://greenteapress.com/thinkjava6/thinkjava.pdf"
+        }
+      ]
+    }
+  ],
+  "sample_questions": [
+    {
+      "question_id": 1,
+      "question_type": "MCQ",
+      "question_text": "Which of the following is NOT a primitive data type in Java?",
+      "options": [
+        "int",
+        "boolean",
+        "String",
+        "double"
+      ],
+      "answer": "String"
+    },
+    {
+      "question_id": 2,
+      "question_type": "MCQ",
+      "question_text": "What is the correct signature of the main method in a Java program?",
+      "options": [
+        "public static void main(String args)",
+        "public void main(String[] args)",
+        "public static void main(String[] args)",
+        "static public int main(String[] args)"
+      ],
+      "answer": "public static void main(String[] args)"
+    },
+    {
+      "question_id": 3,
+      "question_type": "MSQ",
+      "question_text": "Which of the following are valid loop constructs in Java? (Select all that apply)",
+      "options": [
+        "for loop",
+        "while loop",
+        "foreach loop (using : syntax)",
+        "repeat-until loop"
+      ],
+      "answer": [
+        "for loop",
+        "while loop",
+        "foreach loop (using : syntax)"
+      ]
+    },
+    {
+      "question_id": 4,
+      "question_type": "MSQ",
+      "question_text": "In Java inheritance, which of the following statements are true? (Select all that apply)",
+      "options": [
+        "A subclass inherits private fields from its superclass.",
+        "A subclass can override methods of its superclass.",
+        "Java supports multiple inheritance of classes.",
+        "All classes in Java inherit from java.lang.Object."
+      ],
+      "answer": [
+        "A subclass can override methods of its superclass.",
+        "All classes in Java inherit from java.lang.Object."
+      ]
+    },
+    {
+      "question_id": 5,
+      "question_type": "Numeric",
+      "question_text": "How many bytes does an 'int' type occupy in Java?",
+      "answer": 4
+    },
+    {
+      "question_id": 6,
+      "question_type": "Numeric",
+      "question_text": "If an array in Java has 10 elements, what is the index of the last element?",
+      "answer": 9
+    }
+  ],
+  "assignments": [
+    {
+      "assignment_id": 1,
+      "title": "Loops and Conditionals Practice - Number Guesser",
+      "description": "Write a Java program that generates a random number between 1 and 100 (you can use `Math.random()` or `Random` class) and then prompts the user to guess the number. Use a loop to allow the user to keep guessing until they find the number, and use conditional statements to give feedback: inform the user if their guess is too high, too low, or correct. When the user guesses correctly, exit the loop and display a congratulations message with the number of attempts taken. This assignment will test your understanding of loop constructs (like a `while` or `do-while` loop) and conditional branching with if/else. Make sure to also handle invalid inputs (e.g., if the user enters a number outside 1-100, prompt them again without counting an attempt)."
+    },
+    {
+      "assignment_id": 2,
+      "title": "Object-Oriented Design - Bank Account Class",
+      "description": "Design a class `BankAccount` that represents a simple bank account. The class should have private fields for `accountNumber` (String or int), `accountHolderName` (String), and `balance` (double). Include the following: \n- A constructor to initialize the account with an account number, holder name, and an initial balance.\n- Methods `deposit(double amount)` and `withdraw(double amount)` that add or subtract from the balance. `withdraw` should check for sufficient funds and return a boolean or print a warning if the balance is insufficient.\n- Getter methods for retrieving the account details (account number, holder name, balance). No setters for account number or name (assume they don't change), but allow balance to change via deposit/withdraw.\nWrite a test class with a `main` method to create a BankAccount object, perform some deposits and withdrawals, and print out transactions and final balance. This assignment practices class creation, encapsulation (private fields, public methods), and basic method logic."
+    },
+    {
+      "assignment_id": 3,
+      "title": "File I/O and Collections - Word Count",
+      "description": "Build a small program that reads a text file and counts the frequency of each word in the file. \nSteps to follow:\n1. Use `BufferedReader` or `Scanner` to read from a text file (you can create a sample text file with a few lines of text). Read it line by line.\n2. For each line, split it into words (you might use `String.split()` with a regex like `\"\\W+\"` to split on non-word characters). Convert words to lowercase to count them case-insensitively.\n3. Use a `HashMap<String, Integer>` to tally counts. For each word, increment its count in the map.\n4. After processing the file, print out each unique word and its count.\nMake sure to handle exceptions (e.g., file not found) using try-catch. This assignment will solidify your understanding of file reading and the use of collections to aggregate data."
+    }
+  ],
+  "personal_resources": [
+    {
+      "resource_id": 1,
+      "title": "Think Java: How to Think Like a Computer Scientist",
+      "description": "An excellent free textbook by Allen B. Downey and Chris Mayfield that introduces Java programming with a focus on fundamental concepts and problem solving.",
+      "url": "https://greenteapress.com/thinkjava6/thinkjava.pdf"
+    },
+    {
+      "resource_id": 2,
+      "title": "Official Java Tutorials (Oracle)",
+      "description": "Oracle's official online Java tutorial covering the basics to advanced topics with examples and explanations, which can be used as supplementary reading and reference.",
+      "url": "https://docs.oracle.com/javase/tutorial/"
+    }
+  ],
+  "personal_resource_files": [
+    {
+      "file_id": 1,
+      "title": "Think Java Book (PDF)",
+      "url": "https://greenteapress.com/thinkjava6/thinkjava.pdf"
+    },
+    {
+      "file_id": 2,
+      "title": "Java Quick Guide (PDF)",
+      "url": "https://www.tutorialspoint.com/java/pdf/java_quick_guide.pdf"
+    }
+  ]
+}

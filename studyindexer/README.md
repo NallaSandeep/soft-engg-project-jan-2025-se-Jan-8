@@ -2,165 +2,140 @@
 
 ## Overview
 
-StudyIndexer is a document processing and indexing service that enables efficient search and retrieval of academic materials. It provides vector-based search capabilities and manages document collections for the StudyHub platform.
+StudyIndexer is a Retrieval Augmented Generation (RAG) backend for the StudyHub learning platform. It provides vector-based search capabilities for course content, personal resources, and academic integrity checking using embedding models and vector databases.
 
-## Prerequisites
+## Key Features
 
-- Python 3.x
-- WSL (Windows Subsystem for Linux) or Linux environment
-- Virtual environment support
-- 4GB+ RAM (for ML models)
+- **Course Content Retrieval**: Semantic search for course materials
+- **Personal Resource Management**: Student-specific resource indexing and retrieval
+- **Academic Integrity Checking**: Detection of potential violations in submissions
+- **Course Selection**: Identifying relevant courses for student queries
+- **Sync Tools**: Scripts for synchronizing with StudyHub database
 
-## Key Components
+## Architecture
 
-- **ChromaDB**: Vector database (port 8000)
-- **FastAPI**: REST API server (port 8081)
-- **ML Model**: all-MiniLM-L6-v2 for document embedding
+The system uses:
+- **FastAPI** for API development
+- **ChromaDB** for vector database storage
+- **Sentence-Transformers** for embedding generation
+- **Pydantic** for data validation
 
-## API Tools
+## Installation
 
-The StudyIndexer provides three ways to interact with the API:
+### Prerequisites
 
-1. **API Explorer** (http://127.0.0.1:8081/explorer)
-   - Custom-built interactive testing interface
-   - Features:
-     - Document Management
-       - Upload new documents with metadata
-       - List and manage existing documents
-       - Track document processing status
-       - View parent-child document relationships
-     - Search Capabilities
-       - Text-based search with filters
-       - Similarity search between documents
-     - Authentication Support
-       - JWT token-based authentication
-       - Role-based access control
-     - Visual Features
-       - Tabular views for document lists
-       - JSON/Table view toggle
-       - Intuitive form-based input
-     - Administrative Functions
-       - System statistics
-       - Collection management
-       - User access control
+- Python 3.9+
+- ChromaDB
+- Required Python packages (see `requirements.txt`)
 
-2. **Swagger UI** (http://127.0.0.1:8081/docs)
-   - OpenAPI documentation and testing interface
-   - Features:
-     - Complete API documentation
-     - Request/response examples
-     - Interactive testing
-     - Schema definitions
+### Setup
 
-3. **ReDoc** (http://127.0.0.1:8081/redoc)
-   - Alternative API documentation viewer
-   - Features:
-     - Clean, organized documentation
-     - Search functionality
-     - Mobile-friendly view
-
-## Setup Instructions
-
-1. Create and activate a virtual environment:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # Linux/WSL
-   ```
+1. Clone the repository:
+```bash
+git clone https://github.com/your-repo/StudyIndexer.git
+cd StudyIndexer
+```
 
 2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-3. Start the services:
-   ```bash
-   python manage_services.py start
-   ```
+3. Setup environment variables (create `.env` file):
+```
+PORT=8081
+CHROMA_PORT=8000
+CHROMA_PERSIST_DIR=./data/chroma
+DEBUG=true
+```
 
-4. Verify services are running:
-   ```bash
-   python manage_services.py status
-   ```
-
-## Service Management
-
-### Starting Services
+4. Start the services:
 ```bash
 python manage_services.py start
 ```
-- Starts ChromaDB and FastAPI services
-- Initializes ML components
-- Creates necessary collections
 
-### Checking Status
-```bash
-python manage_services.py status
+## API Documentation
+
+The API documentation is available at `/docs` when running the server:
+
 ```
-- Verifies health of all services
-- Checks ChromaDB and FastAPI endpoints
-
-### Service Information
-```bash
-python manage_services.py info
+http://localhost:8081/docs
 ```
-Displays detailed information about:
-- Service configurations
-- Environment variables
-- Current status
-- Available API endpoints and tools
-- Gracefully stops all running services
 
-## Service Architecture
+### Main API Endpoints
 
-- **ChromaDB Service**
-  - Port: 8000
-  - Purpose: Vector database for document embeddings
-  - Health check: `/api/v2/heartbeat`
+- **CourseSelector API**: `/api/v1/course-selector/search`
+- **CourseContent API**: `/api/v1/course-content/search`
+- **PersonalResource API**: `/api/v1/personal-resource/*`
+- **IntegrityCheck API**: `/api/v1/integrity-check/*`
 
-- **FastAPI Service**
-  - Port: 8081
-  - Purpose: REST API for document processing
-  - Health check: `/api/health`
+## Integration with StudyHub
 
-## Troubleshooting
+StudyIndexer is designed to integrate with StudyHub through:
 
-1. **Service Startup Issues**
-   - Initial health checks may fail as services take time to start
-   - Wait 30 seconds and run `manage_services.py status` to verify
-   - Check logs in `logs/` directory for specific errors
-
-2. **ChromaDB Issues**
-   - Ensure port 8000 is available
-   - Check ChromaDB logs for initialization errors
-   - Verify data directory permissions
-
-3. **FastAPI Issues**
-   - Ensure port 8081 is available
-   - Check application logs for startup errors
-   - Verify ML model initialization
-
-4. **Common Solutions**
-   - Restart services: `python manage_services.py restart`
-   - Clear ChromaDB cache if needed
-   - Check system resources (RAM, CPU)
-
-## Environment Variables
-
-Create a `.env` file with:
-```
-CHROMA_PORT=8000
-FASTAPI_PORT=8081
-LOG_LEVEL=INFO
-ENVIRONMENT=development
-```
+1. **Automatic Sync**: During database initialization via `init_db.py`
+2. **Manual Sync**: Through dedicated scripts:
+   - `sync_resources.py`: Sync personal resources
+   - `sync_assignments.py`: Sync graded assignments
 
 ## Development
 
-### API Documentation
-- Swagger UI: http://localhost:8081/docs
-- ReDoc: http://localhost:8081/redoc
+### Service Management
 
-### Testing
+The `manage_services.py` script provides commands for managing the services:
+
 ```bash
-pytest tests/
+# Start all services
+python manage_services.py start
+
+# Stop all services
+python manage_services.py stop
+
+# Restart services
+python manage_services.py restart
+
+# Check status
+python manage_services.py status
+
+# Show information
+python manage_services.py info
+
+# Start FastAPI in debug mode
+python manage_services.py debug-fastapi
 ```
+
+### Project Structure
+
+```
+StudyIndexer/
+├── app/
+│   ├── api/              # API endpoints
+│   ├── models/           # Pydantic models
+│   ├── services/         # Business logic
+│   └── utils/            # Utility functions
+├── data/                 # Data storage
+│   └── chroma/           # ChromaDB persistence
+├── docs/                 # Documentation
+├── tests/                # Unit and integration tests
+├── main.py               # Application entry point
+├── manage_services.py    # Service management script
+└── requirements.txt      # Python dependencies
+```
+
+## Documentation
+
+For detailed documentation, see:
+- [Features Documentation](docs/FEATURES.md)
+- [API Specifications](docs/API-SPECS.md)
+- [Implemented APIs](docs/implemented_apis.md)
+- [IntegrityCheck API Samples](docs/IntegrityCheck_API_Samples.md)
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgements
+
+- StudyHub development team
+- ChromaDB for vector search capabilities
+- Sentence-Transformers for embedding models 
