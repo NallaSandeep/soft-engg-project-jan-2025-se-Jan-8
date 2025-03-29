@@ -28,6 +28,8 @@ from config import Config
 
 logger = logging.getLogger(__name__)
 
+# ...............................................................................................
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -54,6 +56,9 @@ async def lifespan(app: FastAPI):
     logger.info("StudyAI API shutting down")
     await disconnect_all_clients() 
     logger.info("WebSocket connections closed")
+
+# .......................................................................................................
+
 
 
 def create_application() -> FastAPI:
@@ -165,6 +170,8 @@ def create_application() -> FastAPI:
         }
 
     return app
+
+# ...............................................................................
 
 
 app = create_application()

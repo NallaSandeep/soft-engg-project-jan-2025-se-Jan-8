@@ -1,6 +1,7 @@
 from typing import AsyncGenerator, Dict, Any, List
 from src.core.base import BaseAgent
 from src.core.state import AgentState, get_metadata, clear_state
+from src.modules.integerity_tool import IntegrityChecker
 from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.graph import END
 import logging
@@ -11,29 +12,6 @@ class CourseGuideAgent(BaseAgent):
 
     def __init__(self):
         super().__init__()
-        # Dummy data for course guide database
-        self.course_guide_db = {
-            "SVD": {
-                "courses": [
-                    {"id": "CS110", "name": "Machine Learning", "confidence": 0.95},
-                    {"id": "CS101", "name": "Linear Algebra", "confidence": 0.85},
-                ],
-                "summary": "Singular Value Decomposition is a matrix factorization technique covered in both ML and Linear Algebra courses.",
-            },
-            "SDLC": {
-                "courses": [
-                    {"id": "CS105", "name": "Software Engineering", "confidence": 0.98},
-                    {"id": "CS106", "name": "Software Development", "confidence": 0.90},
-                ],
-                "summary": "Software Development Life Cycle models are extensively covered in Software Engineering courses.",
-            },
-            "Software Engineering": {
-                "courses": [
-                    {"id": "CS105", "name": "Software Engineering", "confidence": 0.92}
-                ],
-                "summary": "Prime path testing is covered in Software Engineering course under software testing module.",
-            },
-        }
 
     async def get_relevant_courses(self, query: str) -> Dict[str, Any]:
         """Retrieve relevant courses based on the query."""

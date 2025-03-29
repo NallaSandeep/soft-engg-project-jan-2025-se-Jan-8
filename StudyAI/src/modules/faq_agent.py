@@ -1,5 +1,6 @@
-from typing import AsyncGenerator, Dict, Any
 import logging
+from config import Config
+from typing import AsyncGenerator, Dict, Any, List
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 from src.core.state import AgentState, get_metadata, clear_state
 from src.core.base import BaseAgent
@@ -15,28 +16,83 @@ class RagAgent(BaseAgent):
     async def get_relevant_docs(self, query: str) -> str:
         """Retrieve relevant documents from the knowledge base."""
         try:
-            return get_docs(query)
+            topics = extract_keywords(query)
+
+            payload = {
+                "query": query,
+                "limit": 10,
+                "min_score": 0.3,
+                "tags": [""],
+                "topic": topics,
+                "source": "",
+            }
+
+            # Make API call to the FAQ search endpoint using the base agent's HTTP client
+            result = await self.make_http_request(
+                method="POST",
+                url=f"http://{Config.HOST}:{Config.STUDY_INDEXER_PORT}/api/v1/faq/search",
+                json=payload,
+            )
+
+            if result["success"]:
+                data = result
+                if data.get("results") and len(data["results"]) > 0:
+                    # Combine the results into a comprehensive context
+                    results = data["results"]
+                    context = "\n\n".join(
+                        [
+                            f"Source: {result.get('source', 'Unknown')}\n"
+                            f"Topic: {result.get('topic', 'General')}\n"
+                            f"Q: {result.get('question', '')}\n"
+                            f"A: {result.get('answer', '')}"
+                            for result in results
+                        ]
+                    )
+                    return context
+
+            return "No relevant documents found."
+
         except Exception as e:
             logging.error(f"Error retrieving documents: {str(e)}")
             return ""
 
-    def _create_enrichment_prompt(self, query: str, context: str) -> str:
-        return f"""Based on the following context from our knowledge base, enrich the user's query with relevant information.
-        Keep the enriched response focused and concise. Include only the most relevant information.
 
-        Context from knowledge base:
-        {context}
+def extract_keywords(query: str) -> List[str]:
+    """Extract potential keywords from the query to use as topics."""
+    
+    # List of common FAQ topics
+    common_topics = [
+        "grading",
+        "syllabus",
+        "exam",
+        "schedule",
+        "course",
+        "quiz",
+        "midterm",
+        "final",
+        "policy",
+        "grade",
+        "credit",
+    ]
 
-        Original Query: {query}
+    # Convert to lowercase for matching
+    query_lower = query.lower()
 
-        Provide an enriched response that combines the query with relevant context:"""
+    # Find matches
+    matched_topics = []
+    for topic in common_topics:
+        if topic in query_lower:
+            matched_topics.append(topic)
+
+    # If no matches, return empty list
+    return matched_topics if matched_topics else []
 
 
 async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
     """RAG agent node that processes FAQ queries and generates responses."""
     try:
         agent = RagAgent()
-        
+
         state["current_agent"] = "faq_agent"
         state["next_step"] = "supervisor"
 
@@ -118,7 +174,7 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
             if f"subq_{subq_index}" in state["metadata"]:
                 response = f"FAQ agent found: {context.strip()}"
                 state["metadata"][f"subq_{subq_index}"]["result"] = response
-        else: 
+        else:
             yield state
 
     except Exception as e:
@@ -138,31 +194,3 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
     finally:
         # Ensure the state is yielded at the end of processing
         yield state
-
-
-def get_docs(query: str) -> str:
-    """Get documents from the knowledge base."""
-    if "grading" in query.lower():
-        return """
-        Grading Document
-        NLP
-        Quiz 1 - 25%
-        Quiz 2 - 25%
-        End Term - 50%
-        """
-    elif "syllabus" in query.lower():
-        return """
-        Syllabus Document
-        Week 1 - Introduction to NLP
-        Week 2 - Text Preprocessing
-        Week 3 - Feature Extraction
-        Week 4 - Model Training
-        Week 5 - Evaluation
-        Quiz 1- Week 1-2
-        Quiz 2 - Week 3-4
-        End Term - Week 5
-        """
-    else:
-        return """
-        No relevant documents found.
-        """
