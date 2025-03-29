@@ -1,7 +1,7 @@
 from typing import AsyncGenerator, Dict, Any
 import logging
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
-from src.core.state import AgentState, update_metadata, get_metadata
+from src.core.state import AgentState, get_metadata, clear_state
 from src.core.base import BaseAgent
 from langgraph.graph import END
 
@@ -118,11 +118,8 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
             if f"subq_{subq_index}" in state["metadata"]:
                 response = f"FAQ agent found: {context.strip()}"
                 state["metadata"][f"subq_{subq_index}"]["result"] = response
-        else:
-            # This is the original query - generate a direct response
-            enriched_response = f"Based on our FAQ knowledge: {context.strip()}"
-            state["messages"].append(AIMessage(content=enriched_response))
-            state["next_step"] = END
+        else: 
+            yield state
 
     except Exception as e:
         logging.error(f"RAG agent error: {str(e)}")
@@ -137,6 +134,7 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
             # Direct error message for standalone query
             state["messages"].append(AIMessage(content=error_message))
             state["next_step"] = END
+            clear_state(state)
     finally:
         # Ensure the state is yielded at the end of processing
         yield state

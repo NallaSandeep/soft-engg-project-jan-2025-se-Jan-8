@@ -1,7 +1,7 @@
 from typing import AsyncGenerator, Dict, Any, List
 from src.core.base import BaseAgent
-from src.core.state import AgentState, update_metadata, get_metadata
-from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
+from src.core.state import AgentState, get_metadata, clear_state
+from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.graph import END
 import logging
 
@@ -27,7 +27,7 @@ class CourseGuideAgent(BaseAgent):
                 ],
                 "summary": "Software Development Life Cycle models are extensively covered in Software Engineering courses.",
             },
-            "prime path": {
+            "Software Engineering": {
                 "courses": [
                     {"id": "CS105", "name": "Software Engineering", "confidence": 0.92}
                 ],
@@ -73,7 +73,7 @@ async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, Non
         is_subquestion = False
         query_to_process = ""
 
-        if "active_subq_index" in state.get("metadata", {}):
+        if "active_subq_index" in state["metadata"]:
             # We're processing a subquestion from a complex query
             is_subquestion = True
             subq_index = state["metadata"]["active_subq_index"]
@@ -167,9 +167,7 @@ async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, Non
             if f"subq_{subq_index}" in state["metadata"]:
                 state["metadata"][f"subq_{subq_index}"]["result"] = response
         else:
-            # This is the original query - generate a direct response
-            state["messages"].append(AIMessage(content=response))
-            state["next_step"] = END
+            yield state
 
     except Exception as e:
         logging.error(f"Course guide agent error: {str(e)}")
@@ -180,5 +178,6 @@ async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, Non
             )
         )
         state["next_step"] = END
+        clear_state(state)
     finally:
         yield state

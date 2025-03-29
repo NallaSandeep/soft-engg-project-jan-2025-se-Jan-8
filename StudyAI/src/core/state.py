@@ -57,6 +57,13 @@ def update_task_status(state: AgentState, status: TaskStatus) -> AgentState:
     new_state["task_status"] = status
     return new_state
 
+def clear_state(state: AgentState) -> AgentState:
+    """Clear the agent state."""
+    new_state = initialize_state()
+    new_state["messages"] = state["messages"]
+    new_state["current_agent"] = state["current_agent"]
+    new_state["next_step"] = state["next_step"]
+    return new_state
 
 # ...................................................research context functions.........................................
 

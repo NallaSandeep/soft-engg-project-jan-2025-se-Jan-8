@@ -1,6 +1,6 @@
 """Application entry point for StudyAI API."""
 
-from fastapi import FastAPI, Depends, HTTPException, Request, Response
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html
@@ -22,8 +22,7 @@ from langchain.globals import set_llm_cache
 
 from src.routes.basic_routes import router as chatbot_router
 from src.routes.websocket_routes import router as websocket_router
-from src.models.db_models import Base
-from src.database import engine, init_db
+from src.database import init_db
 from config import Config
 
 logger = logging.getLogger(__name__)

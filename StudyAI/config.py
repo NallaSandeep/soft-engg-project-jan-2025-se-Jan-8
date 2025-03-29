@@ -50,6 +50,9 @@ class Config:
     # Server Configuration
     HOST = os.getenv("HOST")
     PORT = int(os.getenv("PORT", "5010"))
+    
+    # Study Indexer Configuration
+    STUDY_INDEXER_PORT = os.getenv("STUDY_INDEXER_PORT", "8081")
 
     @classmethod
     def get(cls, key: str, default: Any = None) -> Any:

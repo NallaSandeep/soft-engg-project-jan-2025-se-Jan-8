@@ -15,7 +15,6 @@ from src.modules.faq_agent import rag_agent_node
 from src.modules.course_guide import course_guide_node
 from src.modules.dismiss_node import dismiss_node
 from src.modules.q_type_checker import check_question_type_node
-from pprint import pprint
 
 
 # ..................................................................................................
