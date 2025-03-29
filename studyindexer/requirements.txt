@@ -19,3 +19,4 @@ langchain
 
 # Utilities
 pytest==7.4.3 
+langchain_community==0.3.20
