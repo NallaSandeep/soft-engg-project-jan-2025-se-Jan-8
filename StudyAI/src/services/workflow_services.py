@@ -1,5 +1,5 @@
 import logging
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from src.core.workflow import create_workflow
 from .basic_services import add_message_to_session
@@ -105,7 +105,7 @@ async def process_message_stream(
                     (
                         msg
                         for msg in reversed(chunk["messages"])
-                        if isinstance(msg, AIMessage) and hasattr(msg, "content")
+                        if (isinstance(msg, (AIMessage)) and hasattr(msg, "content"))
                     ),
                     None,
                 )

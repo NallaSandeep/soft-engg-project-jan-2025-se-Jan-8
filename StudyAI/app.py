@@ -22,6 +22,7 @@ from langchain.globals import set_llm_cache
 
 from src.routes.basic_routes import router as chatbot_router
 from src.routes.websocket_routes import router as websocket_router
+from src.services.websocket_services import disconnect_all_clients
 from src.database import init_db
 from config import Config
 
@@ -51,6 +52,8 @@ async def lifespan(app: FastAPI):
 
     # Shutdown logic
     logger.info("StudyAI API shutting down")
+    await disconnect_all_clients() 
+    logger.info("WebSocket connections closed")
 
 
 def create_application() -> FastAPI:
