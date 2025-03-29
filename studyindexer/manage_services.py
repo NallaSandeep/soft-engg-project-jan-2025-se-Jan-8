@@ -17,6 +17,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import socket
 import psutil  # Add psutil import for process management
+import concurrent.futures  # Add for parallel service operations
 
 # Get the absolute path to the project root
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -70,17 +71,21 @@ SERVICES = {
         "name": "ChromaDB",
         "start_cmd": f"chroma run --host 127.0.0.1 --port {get_env('CHROMA_PORT', '8000')} --path {os.path.join(PROJECT_ROOT, get_env('CHROMA_PERSIST_DIR', 'data/chroma'))}",
         "health_url": f"http://127.0.0.1:{get_env('CHROMA_PORT', '8000')}/api/v1/heartbeat",
-        "health_check": lambda: requests.get(f"http://127.0.0.1:{get_env('CHROMA_PORT', '8000')}/api/v1/heartbeat", timeout=5).status_code == 200,
+        "health_check": lambda: requests.get(f"http://127.0.0.1:{get_env('CHROMA_PORT', '8000')}/api/v1/heartbeat", timeout=2).status_code == 200,
+        "port": int(get_env('CHROMA_PORT', '8000')),
         "required": True,
-        "startup_time": 10
+        "max_startup_time": 15,  # Maximum seconds to wait for service to start
+        "process_name": "chroma" if platform.system() == "Windows" else "chroma run"
     },
     "fastapi": {
         "name": "FastAPI Server",
         "start_cmd": f"python -m uvicorn main:app --host 127.0.0.1 --port {get_env('PORT', '8081')} {'--reload' if get_env('DEBUG', 'true').lower() == 'true' else ''}",
         "health_url": f"http://127.0.0.1:{get_env('PORT', '8081')}/",
-        "health_check": lambda: requests.get(f"http://127.0.0.1:{get_env('PORT', '8081')}/", timeout=5).status_code == 200,
+        "health_check": lambda: requests.get(f"http://127.0.0.1:{get_env('PORT', '8081')}/", timeout=2).status_code == 200,
+        "port": int(get_env('PORT', '8081')),
         "required": True,
-        "startup_time": 5
+        "max_startup_time": 8,  # Maximum seconds to wait for service to start
+        "process_name": "uvicorn" if platform.system() == "Windows" else "uvicorn main:app"
     }
 }
 
@@ -116,28 +121,44 @@ def check_prerequisites():
     logger.info("All prerequisites are satisfied")
     return True
 
+# Find and kill process by port
+def kill_process_by_port(port):
+    """Kill process using specific port with simple commands for WSL"""
+    try:
+        # Simple Linux/WSL approach
+        subprocess.run(f"fuser -k {port}/tcp", shell=True, stderr=subprocess.PIPE)
+        return True
+    except Exception as e:
+        logger.warning(f"Error in kill_process_by_port: {e}")
+    return False
+
 # Check if a service is running
-def is_service_running(service_name):
-    """Check if a service is running"""
+def is_service_running(service_name, retry_count=2, retry_delay=0.5):
+    """Check if a service is running with retries"""
     if service_name not in SERVICES:
         logger.error(f"Unknown service: {service_name}")
         return False
     
     service = SERVICES[service_name]
+    port = service["port"]
     
-    try:
-        # For FastAPI, just check if the port is in use as a quick health check
-        if service_name == "fastapi":
-            port = int(get_env('PORT', '8081'))
-            # If port is in use, consider the service running
-            # This assumes that if something is on port 8081, it's our FastAPI service
-            return is_port_in_use(port)
-        
-        # For all other services, use HTTP health check
-        response = requests.get(service["health_url"], timeout=2)
-        return response.status_code == 200
-    except requests.RequestException:
+    # First just check if the port is in use
+    if not is_port_in_use(port):
         return False
+    
+    # Always try an actual HTTP check for both services
+    for attempt in range(retry_count):
+        try:
+            response = requests.get(service["health_url"], timeout=2)
+            if response.status_code == 200:
+                return True
+        except requests.RequestException:
+            if attempt < retry_count - 1:
+                time.sleep(retry_delay)
+    
+    # If we reach here, the port is in use but HTTP check failed
+    logger.warning(f"Port {port} is in use but {service['name']} health check failed")
+    return False
 
 # Start a service
 def start_service(service_name):
@@ -150,62 +171,45 @@ def start_service(service_name):
     
     logger.info(f"Starting {service['name']}...")
     
-    # Check if the service is already running
-    if is_service_running(service_name):
-        logger.info(f"{service['name']} is already running")
-        return True
-    
-    # Check if port is in use
-    port = int(get_env('CHROMA_PORT', '8000')) if service_name == "chromadb" else int(get_env('PORT', '8081'))
+    # Kill any existing process on the port to ensure clean start
+    # Don't check if service is running first, just clean the port
+    port = service["port"]
     if is_port_in_use(port):
-        # For FastAPI, try basic process killing without complex checks
-        if service_name == "fastapi":
-            logger.warning(f"Port {port} is in use. Attempting to kill existing process...")
-            try:
-                if platform.system() == "Windows":
-                    subprocess.run(f"taskkill /F /IM uvicorn.exe", shell=True, stderr=subprocess.PIPE)
-                else:
-                    subprocess.run("pkill -f uvicorn", shell=True, stderr=subprocess.PIPE)
-                    subprocess.run(f"fuser -k {port}/tcp", shell=True, stderr=subprocess.PIPE)
-                time.sleep(2)
-            except Exception as e:
-                logger.error(f"Failed to kill process on port {port}: {e}")
-                
-            # Check again if port is free
-            if is_port_in_use(port):
-                logger.error(f"Port {port} is still in use. Cannot start {service['name']}")
-                return False
-        else:
-            logger.error(f"Port {port} is already in use. Cannot start {service['name']}")
+        logger.info(f"Killing any process using port {port} before starting {service['name']}")
+        kill_process_by_port(port)
+        time.sleep(1)
+        
+        # Check again if port is free
+        if is_port_in_use(port):
+            logger.error(f"Port {port} is still in use. Cannot start {service['name']}")
             return False
     
     # Start the service
     try:
         log_file = os.path.join(LOGS_DIR, f"{service_name}.log")
         
-        if platform.system() == "Windows":
-            # Windows-specific start command
-            cmd = f"start /B {service['start_cmd']} > \"{log_file}\" 2>&1"
-            subprocess.Popen(cmd, shell=True, cwd=PROJECT_ROOT)
-        else:
-            # Unix-specific start command
-            cmd = f"cd \"{PROJECT_ROOT}\" && nohup {service['start_cmd']} > \"{log_file}\" 2>&1 &"
-            subprocess.Popen(cmd, shell=True)
+        # WSL start command
+        cmd = f"cd \"{PROJECT_ROOT}\" && nohup {service['start_cmd']} > \"{log_file}\" 2>&1 &"
+        subprocess.Popen(cmd, shell=True)
         
-        logger.info(f"{service['name']} started")
+        logger.info(f"{service['name']} starting...")
         
-        # Wait for the service to start
-        startup_time = service.get("startup_time", 5)
-        logger.info(f"Waiting {startup_time} seconds for {service['name']} to start...")
-        time.sleep(startup_time)
+        # Use longer wait times for WSL environment
+        wait_time = 15 if service_name == "fastapi" else 12
+        logger.info(f"Waiting {wait_time} seconds for {service['name']} to start...")
+        time.sleep(wait_time)
         
-        # Check if the service is healthy
-        if is_service_running(service_name):
+        # Verify the service is actually running with HTTP check with more retries for FastAPI
+        retry_count = 5 if service_name == "fastapi" else 2
+        retry_delay = 3 if service_name == "fastapi" else 0.5
+        
+        if is_service_running(service_name, retry_count=retry_count, retry_delay=retry_delay):
             logger.info(f"{service['name']} started successfully")
             return True
         else:
-            logger.error(f"{service['name']} failed to start or is not healthy")
+            logger.error(f"{service['name']} failed to start properly - check logs")
             return False
+        
     except Exception as e:
         logger.error(f"Error starting {service['name']}: {str(e)}")
         return False
@@ -221,106 +225,161 @@ def stop_service(service_name):
     
     logger.info(f"Stopping {service['name']}...")
     
-    # Check if the service is running
-    if not is_service_running(service_name):
+    # Check if the service is running by port check only
+    port = service["port"]
+    if not is_port_in_use(port):
         logger.info(f"{service['name']} is not running")
         return True
     
-    # Stop the service - simple approach without complex process detection
-    try:
-        if platform.system() == "Windows":
-            if service_name == "chromadb":
-                subprocess.run(f"taskkill /F /IM chroma.exe", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            elif service_name == "fastapi":
-                subprocess.run(f"taskkill /F /IM uvicorn.exe", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        else:
-            # Unix-specific stop command
-            if service_name == "chromadb":
-                subprocess.run("pkill -f 'chroma run'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                # Also free the port
-                port = int(get_env('CHROMA_PORT', '8000'))
-                subprocess.run(f"fuser -k {port}/tcp", shell=True, stderr=subprocess.PIPE)
-            elif service_name == "fastapi":
-                subprocess.run("pkill -f 'uvicorn main:app'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                subprocess.run("pkill -f uvicorn", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                # Also free the port
-                port = int(get_env('PORT', '8081'))
-                subprocess.run(f"fuser -k {port}/tcp", shell=True, stderr=subprocess.PIPE)
-        
-        # Wait for the service to stop
-        time.sleep(2)
-        
-        # Check if the service is still running by checking if port is free
-        port = int(get_env('CHROMA_PORT', '8000')) if service_name == "chromadb" else int(get_env('PORT', '8081'))
-        if is_port_in_use(port):
-            logger.warning(f"Port {port} is still in use. Trying forceful kill...")
-            if platform.system() != "Windows":
-                subprocess.run(f"fuser -k {port}/tcp", shell=True, stderr=subprocess.PIPE)
-            time.sleep(1)
-            
-            if is_port_in_use(port):
-                logger.error(f"{service['name']} failed to stop. Port {port} still in use.")
-                return False
-            
-        logger.info(f"{service['name']} stopped successfully")
+    # Unix-specific stop command
+    if service_name == "chromadb":
+        # Try multiple commands for ChromaDB in WSL
+        subprocess.run("pkill -f 'chroma'", shell=True, stderr=subprocess.PIPE)
+        subprocess.run("pkill -f 'chromadb'", shell=True, stderr=subprocess.PIPE)
+        # Force-free the port for ChromaDB
+        for i in range(3):  # Try multiple times with increasing force
+            subprocess.run(f"fuser -k {port}/tcp", shell=True, stderr=subprocess.PIPE)
+            if not is_port_in_use(port):
+                break
+            time.sleep(0.5)
+    elif service_name == "fastapi":
+        subprocess.run("pkill -f 'uvicorn'", shell=True, stderr=subprocess.PIPE)
+        subprocess.run(f"fuser -k {port}/tcp", shell=True, stderr=subprocess.PIPE)
+    
+    # Allow a moment for the process to terminate
+    time.sleep(1)
+    
+    # For ChromaDB, accept that it might not fully stop and continue anyway
+    if service_name == "chromadb" and is_port_in_use(port):
+        logger.warning(f"ChromaDB may still be running (port {port} is still in use). Continuing anyway.")
         return True
-    except Exception as e:
-        logger.error(f"Error stopping {service['name']}: {e}")
+    
+    # Verify the port is free now
+    if is_port_in_use(port):
+        logger.warning(f"{service['name']} may still be running (port {port} is still in use)")
         return False
+    
+    logger.info(f"{service['name']} stopped successfully")
+    return True
 
 # Start all services
 def start_all():
     """Start all StudyIndexerNew services"""
     logger.info("Starting all StudyIndexerNew services...")
     
-    # Create required directories without full prerequisite check
+    # Create required directories
     os.makedirs(os.path.join(PROJECT_ROOT, "data", "chroma"), exist_ok=True)
     os.makedirs(LOGS_DIR, exist_ok=True)
     
-    # Start services in order
-    success = True
+    # Always forcefully kill all existing services first
+    stop_all(force=True)
+    
+    # Clear log files to ensure fresh logs
+    try:
+        # Clear existing log files for services to avoid confusion
+        open(os.path.join(LOGS_DIR, "chromadb.log"), 'w').close()
+        open(os.path.join(LOGS_DIR, "fastapi.log"), 'w').close()
+    except Exception as e:
+        logger.warning(f"Failed to clear log files: {e}")
+    
+    # Explicitly wait to ensure all processes are stopped
+    time.sleep(2)
     
     # Start ChromaDB first
+    logger.info("Starting ChromaDB server...")
     if not start_service("chromadb"):
         logger.error("Failed to start ChromaDB")
         return False
     
-    # Start FastAPI last
+    # Wait and verify ChromaDB actually started - essential for FastAPI
+    for attempt in range(3):
+        try:
+            logger.info("Verifying ChromaDB is responding...")
+            response = requests.get(SERVICES["chromadb"]["health_url"], timeout=2)
+            if response.status_code == 200:
+                logger.info("ChromaDB is responding correctly")
+                break
+        except requests.RequestException:
+            if attempt < 2:
+                logger.warning("ChromaDB not responding yet, waiting 3 more seconds...")
+                time.sleep(3)
+            else:
+                logger.error("ChromaDB failed to respond to health check - FastAPI will likely fail")
+    
+    # Then start FastAPI with longer timeout
+    logger.info("Starting FastAPI server...")
     if not start_service("fastapi"):
-        logger.error("Failed to start FastAPI")
-        success = False
+        # Even if FastAPI reports failure, it might still be initializing
+        logger.warning("FastAPI reported failure but might still be starting up...")
+        logger.warning("Run 'python manage_services.py status' in a few seconds to check if it completes initialization")
+        
+        # Start status polling in the background
+        poll_status_in_background()
+        return False
     
-    if success:
-        logger.info("All services started successfully")
-    else:
-        logger.warning("Some services failed to start")
+    # Wait for services to fully initialize
+    logger.info("Waiting for services to fully initialize...")
+    time.sleep(3)
     
-    return success
+    logger.info("All services started successfully")
+    return True
 
 # Stop all services
-def stop_all():
+def stop_all(force=False):
     """Stop all StudyIndexerNew services"""
     logger.info("Stopping all StudyIndexerNew services...")
     
-    # Stop services in reverse order
-    success = True
+    # More aggressive brute force killing of all related processes
+    try:
+        # Kill FastAPI processes
+        subprocess.run("pkill -f 'uvicorn main:app'", shell=True, stderr=subprocess.PIPE)
+        subprocess.run("pkill -f uvicorn", shell=True, stderr=subprocess.PIPE)
+        
+        # Kill ChromaDB processes 
+        subprocess.run("pkill -f 'chroma'", shell=True, stderr=subprocess.PIPE)
+        subprocess.run("pkill -f 'chromadb'", shell=True, stderr=subprocess.PIPE)
+        
+        # Free ports directly with maximum force
+        subprocess.run(f"fuser -k {SERVICES['fastapi']['port']}/tcp", shell=True, stderr=subprocess.PIPE)
+        subprocess.run(f"fuser -k {SERVICES['chromadb']['port']}/tcp", shell=True, stderr=subprocess.PIPE)
+        
+        # Try one more time with force if specified
+        if force:
+            subprocess.run(f"fuser -k -9 {SERVICES['fastapi']['port']}/tcp", shell=True, stderr=subprocess.PIPE)
+            subprocess.run(f"fuser -k -9 {SERVICES['chromadb']['port']}/tcp", shell=True, stderr=subprocess.PIPE)
+        
+        # Give processes time to terminate
+        time.sleep(2)
+    except Exception as e:
+        logger.warning(f"Error in brute force process killing: {e}")
     
-    # Stop FastAPI first
+    # Then do the normal stop procedures
+    services_stopped = True
+    
+    # First stop FastAPI
     if not stop_service("fastapi"):
         logger.error("Failed to stop FastAPI")
-        success = False
+        services_stopped = False
     
-    # Stop ChromaDB last
+    # Then stop ChromaDB
     if not stop_service("chromadb"):
         logger.error("Failed to stop ChromaDB")
-        success = False
+        services_stopped = False
     
-    if success:
-        logger.info("All services stopped successfully")
-    else:
-        logger.warning("Some services failed to stop")
+    # Final check - make sure the ports are definitely free
+    fastapi_port_free = not is_port_in_use(SERVICES['fastapi']['port'])
+    chroma_port_free = not is_port_in_use(SERVICES['chromadb']['port'])
     
-    return success
+    if not fastapi_port_free:
+        logger.warning(f"FastAPI port {SERVICES['fastapi']['port']} still in use after stop attempts")
+    
+    if not chroma_port_free:
+        logger.warning(f"ChromaDB port {SERVICES['chromadb']['port']} still in use after stop attempts")
+    
+    if fastapi_port_free and chroma_port_free:
+        logger.info("All ports verified free - services successfully stopped")
+    
+    return services_stopped
 
 # Check status of all services
 def check_status():
@@ -329,19 +388,14 @@ def check_status():
     
     all_running = True
     
-    # Check ChromaDB
-    if is_service_running("chromadb"):
-        logger.info("ChromaDB is running")
-    else:
-        logger.warning("ChromaDB is not running")
-        all_running = False
-    
-    # Check FastAPI
-    if is_service_running("fastapi"):
-        logger.info("FastAPI is running")
-    else:
-        logger.warning("FastAPI is not running")
-        all_running = False
+    # Simple sequential check for each service
+    for service_name in SERVICES:
+        running = is_service_running(service_name)
+        if running:
+            logger.info(f"{SERVICES[service_name]['name']} is running")
+        else:
+            logger.warning(f"{SERVICES[service_name]['name']} is not running")
+            all_running = False
     
     if all_running:
         logger.info("All services are running")
@@ -406,13 +460,7 @@ def start_fastapi_debug():
     port = int(get_env('PORT', '8081'))
     if is_port_in_use(port):
         logger.warning(f"Port {port} is in use. Attempting to kill existing process...")
-        try:
-            if platform.system() != "Windows":
-                subprocess.run(f"fuser -k {port}/tcp", shell=True, stderr=subprocess.PIPE)
-                subprocess.run("pkill -f uvicorn", shell=True, stderr=subprocess.PIPE)
-            time.sleep(2)
-        except Exception as e:
-            logger.error(f"Failed to kill process on port {port}: {e}")
+        kill_process_by_port(port)
     
     # Start FastAPI directly
     cmd = f"cd \"{PROJECT_ROOT}\" && python -m uvicorn main:app --host 127.0.0.1 --port {port}"
@@ -424,6 +472,16 @@ def start_fastapi_debug():
     except KeyboardInterrupt:
         logger.info("FastAPI debug mode stopped by user")
         return
+
+# Poll status in background and display result
+def poll_status_in_background():
+    """Start a background process to check service status after delay"""
+    try:
+        # Use a simple bash script to wait and then run status check
+        cmd = f"sleep 15 && echo '\n\n---- Automatic status check after delay ----' && python {os.path.join(PROJECT_ROOT, 'manage_services.py')} status"
+        subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        logger.warning(f"Could not start background status polling: {e}")
 
 # Main function
 def main():
@@ -441,7 +499,9 @@ def main():
         stop_all()
     elif args.command == "restart":
         stop_all()
-        start_all()
+        if start_all() is False:
+            print("\nNOTE: If FastAPI is still starting up, wait 15 seconds and check again with:")
+            print("    python manage_services.py status")
     elif args.command == "status":
         check_status()
     elif args.command == "info":
