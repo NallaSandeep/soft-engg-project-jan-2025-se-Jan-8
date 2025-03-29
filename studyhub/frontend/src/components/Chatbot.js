@@ -11,8 +11,12 @@ import {
   BookmarkSlashIcon,
   Squares2X2Icon,
   PlusIcon,
-  ArrowLeftIcon
+  ArrowLeftIcon,
+  TrashIcon,
+  ClockIcon
 } from '@heroicons/react/24/outline';
+
+// import { BookmarkIcon } from '@heroicons/react/24/solid';
 import { chatAPI, messageAPI } from '../services/chatService';
 import { personalApi } from '../services/apiService';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,6 +24,7 @@ import MarkdownIt from 'markdown-it';
 const md = new MarkdownIt();
 
 const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
+  console.log(user)
   const [firstLoad, setFirstLoad] = useState(false);
   const [message, setMessage] = useState('');
   const [currResponse, setCurrResponse] = useState('');
@@ -28,17 +33,21 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const [reportedMessageId, setReportedMessageId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [savedChats, setSavedChats] = useState(null);
-  const [showSavedChats, setShowSavedChats] = useState(false);
+  // const [showSavedChats, setShowSavedChats] = useState(false);
   const [showMentions, setShowMentions] = useState(false);
   const [savedChatId, setSavedChatId] = useState(null);
   const [mentionOptions] = useState([
     { id: 1, name: 'code', prefix: '@code' },
-    { id: 2, name: 'explain', prefix: '@explain' },
+    { id: 2, name: 'course', prefix: '@course' },
     { id: 3, name: 'summary', prefix: '@summary' },
     { id: 4, name: 'faq', prefix: '@faq' },
   ]);
   const [mentionSearch, setMentionSearch] = useState('');
   const [isFirstMessage, setIsFirstMessage] = useState(true);
+  const [allChats, setAllChats] = useState([]);
+  const [isFetchingChats, setIsFetchingChats] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+
   const messagesEndRef = useRef(null);
   const abortControllerRef = useRef(null);
   const socket = useRef(null);
@@ -65,6 +74,79 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleToggleSave = async (chatId, save) => {
+    try {
+      await chatAPI.updateChat(chatId, {
+        op: "replace", 
+        path: "/is_bookmarked", 
+        value: save
+      });
+      
+      setAllChats(prev => prev.map(chat => 
+        chat.id === chatId 
+          ? {...chat, isBookmarked: save}
+          : chat
+      ).sort((a, b) => {
+        if (a.isBookmarked && !b.isBookmarked) return -1;
+        if (!a.isBookmarked && b.isBookmarked) return 1;
+        return b.timestamp - a.timestamp;
+      }));
+    } catch (error) {
+      console.error('Error updating chat:', error);
+    }
+  };
+  
+  const handleDeleteChat = async (chatId) => {
+    try {
+      await chatAPI.deleteChat(chatId);
+      setAllChats(prev => prev.filter(chat => chat.id !== chatId));
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+    }
+  };
+
+  const handleShowHistory = async () => {
+    if (showHistory) {
+      setShowHistory(false);
+      return;
+    }
+    setShowHistory(true);
+    setIsFetchingChats(true);
+  
+    try {
+      const response = await chatAPI.getChats(user?.id);
+      if (Array.isArray(response)) {
+        const formattedChats = response.map(chat => ({
+          id: chat.session_id,
+          name: chat.name,
+          messages: Array.isArray(chat.messages) ? chat.messages : [],
+          date: new Intl.DateTimeFormat('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+          }).format(new Date(chat.created_at)),
+          timestamp: new Date(chat.created_at).getTime(),
+          isBookmarked: chat.is_bookmarked
+        }));
+  
+        // Sort chats: bookmarked first, then by date
+        const sortedChats = formattedChats.sort((a, b) => {
+          if (a.isBookmarked && !b.isBookmarked) return -1;
+          if (!a.isBookmarked && b.isBookmarked) return 1;
+          return b.timestamp - a.timestamp;
+        });
+  
+        setAllChats(sortedChats);
+      }
+    } catch (error) {
+      console.error('Error fetching chats:', error);
+    } finally {
+      setIsFetchingChats(false);
+    }
   };
 
   const handleNewChat = async () => {
@@ -141,10 +223,10 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   setTimeout(() => setSavedChatId(null), 800);
 };
 
-  const handleDeleteSavedChat = (chatId) => {
-    setSavedChats(savedChats.filter(chat => chat.id !== chatId));
-    chatAPI.updateChat(chatId, {op: "replace", path: "/is_bookmarked", value: false});
-  };
+  // const handleDeleteSavedChat = (chatId) => {
+  //   setSavedChats(savedChats.filter(chat => chat.id !== chatId));
+  //   chatAPI.updateChat(chatId, {op: "replace", path: "/is_bookmarked", value: false});
+  // };
 
   const handleLoadSavedChat = async (chat) => {
     // return
@@ -166,9 +248,8 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
       }));
       console.log('Formatted messages:', formattedMessages);
       setMessages(formattedMessages);
-      setShowSavedChats(false);
+      setShowHistory(false);
       setIsFirstMessage(false);
-      setSavedChatId(chat.id);
       setTimeout(() => setSavedChatId(null), 800);
       setIsLoading(false);
     }).catch((error) => {
@@ -181,45 +262,45 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
     console.log('Saved Chat: WebSocket connection established for session:', chatSessionID.current);
   };
 
-  const handleShowSavedChats = async () => {
-    if (showSavedChats) {
-      setShowSavedChats(false);
-      return;
-    }
-    setShowSavedChats(true);
-    try {
-      const response = await chatAPI.getChats(user?.id);
-      if (Array.isArray(response)) {
-        const formattedChats = response
-          .filter(chat => chat.is_bookmarked)
-          .map(chat => {
-            const date = new Date(chat.created_at);
-            const formattedDate = new Intl.DateTimeFormat('en-US', {
-              month: 'short',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: true
-            }).format(date);
+  // const handleShowSavedChats = async () => {
+  //   if (showSavedChats) {
+  //     setShowSavedChats(false);
+  //     return;
+  //   }
+  //   setShowSavedChats(true);
+  //   try {
+  //     const response = await chatAPI.getChats(user?.id);
+  //     if (Array.isArray(response)) {
+  //       const formattedChats = response
+  //         .filter(chat => chat.is_bookmarked)
+  //         .map(chat => {
+  //           const date = new Date(chat.created_at);
+  //           const formattedDate = new Intl.DateTimeFormat('en-US', {
+  //             month: 'short',
+  //             day: 'numeric',
+  //             hour: '2-digit',
+  //             minute: '2-digit',
+  //             hour12: true
+  //           }).format(date);
   
-            return {
-              id: chat.session_id,
-              name: chat.name,
-              messages: Array.isArray(chat.messages) ? chat.messages : [],
-              date: formattedDate,
-              timestamp: date.getTime() // Add timestamp for sorting
-            };
-          })
-          .sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp descending
+  //           return {
+  //             id: chat.session_id,
+  //             name: chat.name,
+  //             messages: Array.isArray(chat.messages) ? chat.messages : [],
+  //             date: formattedDate,
+  //             timestamp: date.getTime() // Add timestamp for sorting
+  //           };
+  //         })
+  //         .sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp descending
   
-        setSavedChats(formattedChats);
-      } else {
-        console.error('Expected array response from getChats:', response);
-      }
-    } catch (error) {
-      console.error('Error fetching saved chats:', error);
-    }
-  };
+  //       setSavedChats(formattedChats);
+  //     } else {
+  //       console.error('Expected array response from getChats:', response);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching saved chats:', error);
+  //   }
+  // };
 
   const handleKeyDown = (e) => {
     if (e.key === '@' && message.trim().length === 0) {
@@ -280,7 +361,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
     let message_id = ''
     messageAPI.sendMessage(socket.current, chatSessionID.current, message)
     setIsLoading(true);
-    socket.current.onmessage = (event) => {
+    socket.current?.onmessage = (event) => {
       const response = JSON.parse(event.data);
       console.log(response)
       if (response.type === 'start') {
@@ -364,9 +445,9 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
           {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-zinc-200 dark:border-zinc-700 relative z-20">
           {/* Left side - New Chat/Back Button */}
-            {showSavedChats ? (
+            {showHistory ? (
               <button
-                onClick={() => setShowSavedChats(false)}
+                onClick={() => setShowHistory(false)}
                 title="Back to Chat"
                 className="p-2 rounded-lg text-zinc-500 hover:text-zinc-500 dark:text-zinc-400 dark:hover:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
               >
@@ -382,23 +463,23 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
               </button>
             )}
 
-          {showSavedChats && (
-            <p className='text-xs font-semibold text-zinc-800 dark:text-zinc-100'>Saved Conversations</p>
+          {showHistory && (
+            <p className='text-xs font-semibold text-zinc-800 dark:text-zinc-100'>Previous Conversations</p>
           )}
 
           {/* Right side buttons */}
           <div className="flex items-center space-x-2 z-10">
-          {!showSavedChats && (
+          {!showHistory && (
             <button
-              onClick={handleShowSavedChats}
+              onClick={handleShowHistory}
               title="View Saved Chats"
               className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
             >
-              <Squares2X2Icon className="h-5 w-5" />
+              <ClockIcon className="h-5 w-5" />
             </button>
           )}
 
-            {!showSavedChats && messages.length > 0 && (
+            {!showHistory && messages.length > 0 && (
               <button
                 onClick={handleSaveChat}
                 title="Bookmark Chat"
@@ -421,21 +502,21 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
             </button>
           </div>
           </div>
-          {/* Saved Chats Panel */}
-          {showSavedChats && (
-            <div className="absolute inset-0 top-[57px] bg-white dark:bg-zinc-900 rounded-b-xl sm:rounded-b-xl z-10">
-              {savedChats?.length === 0 ? (
+          {/* History Panel */}
+          {showHistory && (
+            <div className="absolute inset-0 top-[57px] bg-white dark:bg-zinc-900 rounded-b-xl sm:rounded-b-xl z-20">
+              {allChats?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-[calc(100%-57px)] text-center px-4">
                   <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-3">
-                    <BookmarkIcon className="h-6 w-6 text-zinc-400 dark:text-zinc-500" />
+                    <ChatBubbleLeftRightIcon className="h-6 w-6 text-zinc-400 dark:text-zinc-500" />
                   </div>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    No saved conversations yet
+                    No conversations yet
                   </p>
                 </div>
               ) : (
-                <div className="overflow-y-auto h-[calc(100%-57px)] mt-3">
-                  {savedChats?.map(chat => (
+                <div className="overflow-y-auto h-full">
+                  {allChats?.filter(chat => chat.messages.length > 0).map(chat => (
                     <div 
                       key={chat.id} 
                       className="border-b border-zinc-200 dark:border-zinc-700 last:border-0"
@@ -447,22 +528,46 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                         >
                           <div className="flex items-start gap-3">
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-zinc-900 dark:text-white truncate">
-                                {chat.name || "Conversation"}...
-                              </p>
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium text-zinc-900 dark:text-white truncate">
+                                  {chat.name || "Conversation"}...
+                                </p>
+                                {chat.isBookmarked && (
+                                  <BookmarkIcon className="h-3.5 w-3.5 text-zinc-400 fill-zinc-400 dark:text-zinc-500 dark:fill-zinc-500" />
+                                )}
+                              </div>
                               <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                                 {chat.date}
                               </p>
                             </div>
                           </div>
                         </button>
-                        <button
-                          onClick={() => handleDeleteSavedChat(chat.id)}
-                          className="p-1 -m-1 text-zinc-400 hover:text-red-500 dark:text-zinc-500 dark:hover:text-red-400"
-                          title="Remove from saved"
-                        >
-                          <BookmarkSlashIcon className="h-5 w-5" />
-                        </button>
+                        <div className="flex items-center space-x-2">
+                          {chat.isBookmarked ? (
+                            <button
+                              onClick={() => handleToggleSave(chat.id, false)}
+                              className="p-1 text-zinc-400 hover:text-blue-500"
+                              title="Remove from saved"
+                            >
+                              <BookmarkSlashIcon className="h-4 w-4" />
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleToggleSave(chat.id, true)}
+                              className="p-1 text-zinc-400 hover:text-blue-500"
+                              title="Save conversation"
+                            >
+                              <BookmarkIcon className="h-4 w-4" />
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleDeleteChat(chat.id)}
+                            className="p-1 text-zinc-400 hover:text-red-500"
+                            title="Delete conversation"
+                          >
+                            <TrashIcon className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
