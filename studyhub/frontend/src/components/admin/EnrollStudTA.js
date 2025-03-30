@@ -73,7 +73,11 @@ const EnrollStudents = () => {
                 <option value="">{placeholder}</option>
                 {options.map(option => (
                     <option key={option.id} value={option.id}>
-                        {option.name || `${option.first_name} ${option.last_name}`}
+                        {option.name || [
+                            [
+                                option.first_name, option.last_name].filter(Boolean).join(" "), 
+                                option.username,
+                            ].filter(Boolean).join(" | ")}
                     </option>
                 ))}
             </select>
