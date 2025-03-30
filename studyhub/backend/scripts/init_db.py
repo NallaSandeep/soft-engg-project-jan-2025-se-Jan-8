@@ -369,85 +369,119 @@ def sync_with_studyindexer(courses):
         for course in courses:
             log(f"Syncing course {course.code} with StudyIndexer...")
             
-            # Get course weeks and content
+            # Get course weeks
             weeks = db.session.query(Week).filter_by(course_id=course.id).all()
-            week_data = []
             
+            # Format weeks into properly structured array
+            week_data = []
             for week in weeks:
-                # Get lectures for this week
+                week_data.append({
+                    "week_id": week.id,
+                    "course_id": course.id,
+                    "order": week.number,
+                    "title": week.title,
+                    "estimated_hours": getattr(week, 'estimated_hours', 25)  # Default to 25 if not present
+                })
+            
+            # Collect all lectures as a separate top-level array
+            lectures_data = []
+            for week in weeks:
                 lectures = db.session.query(Lecture).filter_by(week_id=week.id).all()
-                lecture_data = []
                 
                 for lecture in lectures:
-                    lecture_data.append({
+                    lecture_entry = {
                         "lecture_id": lecture.id,
+                        "week_id": week.id,
+                        "order": getattr(lecture, 'lecture_number', 1),  # Get lecture_number if exists
                         "title": lecture.title,
-                        "description": lecture.description,
-                        "content_type": lecture.content_type,
-                        "youtube_url": lecture.youtube_url,
-                        "file_path": lecture.file_path,
-                        "content_transcript": lecture.transcript,
-                        "week_id": week.id
-                    })
-                
-                # Get assignments for this week
+                        "resource_type": lecture.content_type
+                    }
+                    
+                    # Add URL based on content type
+                    if lecture.content_type == "youtube" and hasattr(lecture, 'youtube_url'):
+                        lecture_entry["video_url"] = lecture.youtube_url
+                    elif hasattr(lecture, 'file_path') and lecture.file_path:
+                        lecture_entry["resource_url"] = lecture.file_path
+                        
+                    # Add transcript/content if available
+                    if hasattr(lecture, 'transcript') and lecture.transcript:
+                        lecture_entry["content_transcript"] = lecture.transcript
+                    
+                    # Add duration if available or default
+                    lecture_entry["duration_minutes"] = getattr(lecture, 'duration', 45)
+                    
+                    # Add keywords if available
+                    if hasattr(lecture, 'keywords') and lecture.keywords:
+                        lecture_entry["keywords"] = lecture.keywords
+                    else:
+                        lecture_entry["keywords"] = [course.code, "lecture", week.title.split(':')[0] if ':' in week.title else week.title]
+                    
+                    lectures_data.append(lecture_entry)
+            
+            # Create LLM_Summary if not present (using course description)
+            llm_summary = {
+                "summary": course.description,
+                "concepts_covered": [],
+                "concepts_not_covered": []
+            }
+            
+            # Structure the final course data according to expected format
+            course_data = {
+                "course": {
+                    "course_id": course.id,
+                    "code": course.code,
+                    "title": course.name,  # StudyHub uses 'name', StudyIndexer expects 'title'
+                    "description": course.description,
+                    "instructor_id": course.created_by_id,
+                    "credits": getattr(course, 'credits', 3),  # Default to 3 if not present
+                    "department": getattr(course, 'department', "Computer Science"),
+                    "LLM_Summary": llm_summary
+                },
+                "weeks": week_data,
+                "lectures": lectures_data
+            }
+            
+            # Add assignments if they exist
+            assignment_data = []
+            for week in weeks:
                 assignments = db.session.query(Assignment).filter_by(week_id=week.id).all()
-                assignment_data = []
-                
                 for assignment in assignments:
-                    # Get questions for this assignment
-                    assignment_questions = db.session.query(AssignmentQuestion).filter_by(assignment_id=assignment.id).all()
-                    question_ids = []
-                    
-                    for aq in assignment_questions:
-                        question_ids.append(aq.question_id)
-                    
-                    assignment_data.append({
+                    assignment_entry = {
                         "assignment_id": assignment.id,
+                        "week_id": week.id,
                         "title": assignment.title,
                         "description": assignment.description,
                         "type": assignment.type,
-                        "question_ids": question_ids,
-                        "week_id": week.id
-                    })
+                        "due_date": str(assignment.due_date) if hasattr(assignment, 'due_date') else None,
+                        "start_date": str(assignment.start_date) if hasattr(assignment, 'start_date') else None,
+                        "is_published": getattr(assignment, 'is_published', True)
+                    }
+                    
+                    # Get question IDs if needed
+                    question_ids = []
+                    assignment_questions = db.session.query(AssignmentQuestion).filter_by(assignment_id=assignment.id).all()
+                    for aq in assignment_questions:
+                        question_ids.append(aq.question_id)
+                    
+                    if question_ids:
+                        assignment_entry["question_ids"] = question_ids
+                        
+                    assignment_data.append(assignment_entry)
+            
+            if assignment_data:
+                course_data["assignments"] = assignment_data
                 
-                week_data.append({
-                    "week_id": week.id,
-                    "week_number": week.number,
-                    "title": week.title,
-                    "description": week.description or "Week description for this course - detailed explanation of the topics covered this week.",
-                    "lectures": lecture_data,
-                    "assignments": assignment_data
-                })
-            
-            # Convert course data to format expected by StudyIndexer APIs
-            course_data = {
-                "course_code": course.code,
-                "course_name": course.name,
-                "course_id": course.id,
-                "description": course.description,
-                "created_by": course.created_by_id,
-                "start_date": str(course.start_date),
-                "end_date": str(course.end_date),
-                "is_active": course.is_active,
-                "enrollment_type": course.enrollment_type,
-                "weeks": week_data
-            }
-            
             # Sync with StudyIndexer CourseContent API
-            success = False
             try:
-                # Sync with CourseContent API
                 content_response = requests.post(
                     COURSE_CONTENT_URL, 
                     json=course_data,
                     headers={"Content-Type": "application/json"}
                 )
                 
-                content_success = content_response.status_code == 200
-                if content_success:
+                if content_response.status_code == 200:
                     log(f"Successfully synced course {course.code} with CourseContent API")
-                    success = True
+                    courses_synced += 1
                 else:
                     log(f"Failed to sync course {course.code} with CourseContent API. Status: {content_response.status_code}", "ERROR")
                     log(f"Response: {content_response.text}", "ERROR")
@@ -455,9 +489,6 @@ def sync_with_studyindexer(courses):
             except RequestException as e:
                 log(f"Error connecting to StudyIndexer for course {course.code}: {str(e)}", "ERROR")
                 log("StudyIndexer service may not be running. This is not critical for StudyHub operation.", "WARNING")
-                
-            if success:
-                courses_synced += 1
                 
         if courses_synced > 0:
             log(f"Successfully synced {courses_synced} courses with StudyIndexer")

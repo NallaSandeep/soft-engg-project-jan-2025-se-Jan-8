@@ -1,0 +1,106 @@
+{
+  "course_info": {
+    "course_id": "CS301",
+    "code": "CS301",
+    "title": "Data Structures and Algorithms",
+    "description": "A comprehensive exploration of common data structures and algorithms with practical applications.",
+    "department": "Computer Science",
+    "credits": 4
+  },
+  "topics": [
+    {
+      "name": "Arrays and Lists",
+      "description": "Fundamental sequential data structures",
+      "week": 1,
+      "importance": 9
+    },
+    {
+      "name": "Trees and Graphs",
+      "description": "Hierarchical and network data representations",
+      "week": 3,
+      "importance": 8
+    },
+    {
+      "name": "Sorting Algorithms",
+      "description": "Methods for ordering collections of data",
+      "week": 2,
+      "importance": 7
+    }
+  ],
+  "concepts_covered": [
+    "Time complexity",
+    "Space complexity",
+    "Binary search trees",
+    "Hash tables",
+    "Dynamic programming"
+  ],
+  "concepts_not_covered": [
+    "Advanced machine learning algorithms",
+    "Quantum computing algorithms"
+  ],
+  "weeks": [
+    {
+      "order": 1,
+      "title": "Introduction to Data Structures",
+      "description": "Overview of basic data structures and their applications",
+      "is_published": true
+    },
+    {
+      "order": 2,
+      "title": "Arrays and Linked Lists",
+      "description": "Implementation and comparison of arrays and linked lists",
+      "is_published": true
+    },
+    {
+      "order": 3,
+      "title": "Trees and Recursion",
+      "description": "Hierarchical data structures and recursive algorithms",
+      "is_published": true
+    }
+  ],
+  "lectures": [
+    {
+      "title": "Introduction to Algorithm Analysis",
+      "week": 1,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/dsa/intro-algorithm-analysis",
+      "transcript": "In this lecture, we introduce the fundamental concepts of algorithm analysis...",
+      "is_published": true
+    },
+    {
+      "title": "Big O Notation",
+      "week": 1,
+      "order": 2,
+      "content_type": "document",
+      "url": "https://example.com/dsa/big-o-notation.pdf",
+      "is_published": true
+    },
+    {
+      "title": "Array Operations and Applications",
+      "week": 2,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/dsa/array-operations",
+      "transcript": "Arrays are fundamental data structures with constant-time access...",
+      "is_published": true
+    },
+    {
+      "title": "Linked List Implementation",
+      "week": 2,
+      "order": 2,
+      "content_type": "code",
+      "url": "https://example.com/dsa/linked-list-implementation",
+      "is_published": true
+    },
+    {
+      "title": "Binary Search Trees",
+      "week": 3,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/dsa/binary-search-trees",
+      "transcript": "Binary search trees combine the flexibility of linked structures with efficient searching...",
+      "is_published": true
+    }
+  ]
+} 

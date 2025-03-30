@@ -1,0 +1,158 @@
+{
+  "course_info": {
+    "course_id": "DBMS201",
+    "code": "DBMS201",
+    "title": "Database Management Systems",
+    "description": "Fundamentals of database design, development, and management with a focus on relational databases.",
+    "department": "Information Systems",
+    "credits": 4
+  },
+  "topics": [
+    {
+      "name": "Relational Database Design",
+      "description": "Principles of designing efficient and effective relational databases",
+      "week": 1,
+      "importance": 10
+    },
+    {
+      "name": "SQL Fundamentals",
+      "description": "Core SQL syntax for data definition and manipulation",
+      "week": 2,
+      "importance": 10
+    },
+    {
+      "name": "Database Normalization",
+      "description": "Techniques for eliminating redundancy and improving data integrity",
+      "week": 3,
+      "importance": 9
+    },
+    {
+      "name": "Transaction Management",
+      "description": "Ensuring data consistency and reliability in database operations",
+      "week": 5,
+      "importance": 8
+    }
+  ],
+  "concepts_covered": [
+    "Entity-Relationship modeling",
+    "Relational schema design",
+    "SQL (DDL, DML, DCL)",
+    "Normalization (1NF to BCNF)",
+    "Transaction properties (ACID)",
+    "Indexing and query optimization"
+  ],
+  "concepts_not_covered": [
+    "NoSQL databases",
+    "Distributed databases",
+    "Big data platforms"
+  ],
+  "weeks": [
+    {
+      "order": 1,
+      "title": "Introduction to Database Systems",
+      "description": "Database concepts, architecture, and the relational model",
+      "is_published": true
+    },
+    {
+      "order": 2,
+      "title": "SQL: Data Definition and Manipulation",
+      "description": "Creating and manipulating database structures and data",
+      "is_published": true
+    },
+    {
+      "order": 3,
+      "title": "Database Design Theory",
+      "description": "Functional dependencies and normalization",
+      "is_published": true
+    },
+    {
+      "order": 4,
+      "title": "Advanced SQL",
+      "description": "Joins, subqueries, views, and stored procedures",
+      "is_published": true
+    },
+    {
+      "order": 5,
+      "title": "Transaction Processing",
+      "description": "Transaction concepts, concurrency control, and recovery",
+      "is_published": true
+    },
+    {
+      "order": 6,
+      "title": "Physical Database Design",
+      "description": "Storage structures, indexing, and performance tuning",
+      "is_published": false
+    }
+  ],
+  "lectures": [
+    {
+      "title": "Database Systems Overview",
+      "week": 1,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/dbms201/overview",
+      "transcript": "In this introductory lecture, we'll discuss what database systems are and why they're essential...",
+      "is_published": true
+    },
+    {
+      "title": "The Relational Model",
+      "week": 1,
+      "order": 2,
+      "content_type": "document",
+      "url": "https://example.com/dbms201/relational-model.pdf",
+      "is_published": true
+    },
+    {
+      "title": "SQL Data Definition Language",
+      "week": 2,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/dbms201/sql-ddl",
+      "transcript": "DDL commands allow us to create and modify database structures...",
+      "is_published": true
+    },
+    {
+      "title": "SQL Data Manipulation Language",
+      "week": 2,
+      "order": 2,
+      "content_type": "lab",
+      "url": "https://example.com/dbms201/sql-dml",
+      "is_published": true
+    },
+    {
+      "title": "Functional Dependencies",
+      "week": 3,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/dbms201/functional-dependencies",
+      "transcript": "Functional dependencies are relationships between attributes in a relation...",
+      "is_published": true
+    },
+    {
+      "title": "Normal Forms",
+      "week": 3,
+      "order": 2,
+      "content_type": "document",
+      "url": "https://example.com/dbms201/normal-forms.pdf",
+      "is_published": true
+    },
+    {
+      "title": "SQL Joins and Subqueries",
+      "week": 4,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/dbms201/joins-subqueries",
+      "transcript": "Complex queries often require combining data from multiple tables...",
+      "is_published": true
+    },
+    {
+      "title": "ACID Properties",
+      "week": 5,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/dbms201/acid-properties",
+      "transcript": "Transactions must maintain the ACID properties to ensure data integrity...",
+      "is_published": true
+    }
+  ]
+} 

@@ -89,102 +89,81 @@ class CourseContentService:
         """Async wrapper for initialize_sync"""
         return self.initialize_sync()
         
-    def add_course_content_sync(self, course_content: Union[Dict[str, Any], CourseContent]) -> str:
+    def add_course_content_sync(self, course_data: Dict[str, Any]) -> Union[int, str]:
         """Synchronous version of add_course_content"""
         if not self._initialized:
             self.initialize_sync()
             
-        # Convert to dict if CourseContent object
-        if isinstance(course_content, CourseContent):
-            course_data = course_content.dict()
-        else:
-            course_data = course_content
+        try:
+            # Validate course data has the right structure
+            if "course" not in course_data:
+                logger.error("Invalid course data - missing 'course' key")
+                raise ValueError("Invalid course data format - missing 'course' key")
+                
+            course_info = course_data["course"]
+            if not course_info:
+                logger.error("Empty course information")
+                raise ValueError("Course information is empty")
+                
+            # Extract key course metadata
+            course_id = course_info.get("course_id")
+            if not course_id:
+                logger.warning("Course ID missing, will generate a new one")
+                course_id = str(uuid.uuid4())
+                course_info["course_id"] = course_id
+                
+            # Get course code and title for logging/identification
+            course_code = course_info.get("code", "Unknown")
+            course_title = course_info.get("title", "Unknown")
             
-        # Transform data format if needed
-        course_data = self._transform_course_data(course_data)
+            logger.info(f"Adding/updating course: ID={course_id}, Code={course_code}, Title={course_title}")
             
-        # Extract course info
-        course_info = course_data.get("course_info", {})
-        if not course_info:
-            raise ValueError("Course data must contain course information")
+            # Check if a course with this code already exists
+            try:
+                search_results = self.chroma.search_sync(
+                    collection_name=self.collection_name,
+                    query="",
+                    n_results=1,
+                    where={"code": course_code}
+                )
+                
+                if search_results.ids and len(search_results.ids) > 0:
+                    existing_id = search_results.ids[0]
+                    existing_metadata = search_results.metadatas[0] if search_results.metadatas else {}
+                    logger.warning(f"Course with code {course_code} already exists with ID {existing_id}, metadata: {existing_metadata}")
+            except Exception as e:
+                logger.error(f"Error checking for existing course: {str(e)}")
             
-        course_id = course_info.get("course_id")
-        if not course_id:
-            # Generate a default ID if none provided
-            course_id = str(int(datetime.now().timestamp()))
-            logger.warning(f"No course_id provided, generated default: {course_id}")
-            course_info["course_id"] = course_id
-            course_data["course_info"] = course_info
+            # Prepare metadata and store the course document
+            metadata = {
+                "course_id": course_id,
+                "code": course_code,
+                "title": course_title,
+                "department": course_info.get("department", "Computer Science"),
+                "added_on": datetime.now().isoformat()
+            }
             
-        # Ensure course_id is a string
-        course_id_str = str(course_id)
-        
-        # Create a combined text for embedding that captures the essence of the course
-        title = course_info.get("title", "")
-        description = course_info.get("description", "")
-        
-        # Get topics
-        topics = course_data.get("topics", [])
-        topic_texts = [topic.get("name", "") for topic in topics]
-        
-        # Get concepts covered
-        concepts_covered = course_data.get("concepts_covered", [])
-        concepts_not_covered = course_data.get("concepts_not_covered", [])
-        
-        # Get weeks data
-        weeks = course_data.get("weeks", [])
-        week_texts = []
-        for week in weeks:
-            week_title = week.get("title", "")
-            week_description = week.get("description", "")
-            week_texts.append(f"{week_title}: {week_description}")
-        
-        # Combine all text for embedding
-        combined_text = f"COURSE: {title}\nDESCRIPTION: {description}\n"
-        
-        if topic_texts:
-            combined_text += "TOPICS: " + ", ".join(topic_texts) + "\n"
+            logger.info(f"Adding to ChromaDB with metadata: {metadata}")
             
-        if concepts_covered:
-            combined_text += "CONCEPTS COVERED: " + ", ".join(concepts_covered) + "\n"
+            # Convert course data to a string for storage
+            course_json = json.dumps(course_data)
             
-        if concepts_not_covered:
-            combined_text += "CONCEPTS NOT COVERED: " + ", ".join(concepts_not_covered) + "\n"
+            # Add document to ChromaDB
+            result_ids = self.chroma.add_documents_sync(
+                collection_name=self.collection_name,
+                documents=[course_json],
+                metadatas=[metadata],
+                ids=[str(course_id)]
+            )
             
-        if week_texts:
-            combined_text += "WEEKS: " + " | ".join(week_texts)
-        
-        # Generate embedding
-        embedding = self.embedder.generate_embedding(combined_text)
-        
-        # Store the full course content as a JSON string in the document
-        document = json.dumps(course_data)
-        
-        # Prepare metadata
-        metadata = {
-            "course_id": course_id_str,
-            "code": course_info.get("code", ""),
-            "title": title,
-            "description": description[:1000] if description else "",  # Truncate for metadata limits
-            "department": course_info.get("department", ""),
-            "credits": str(course_info.get("credits", 0)),
-            "created_at": datetime.utcnow().isoformat(),
-            "updated_at": datetime.utcnow().isoformat(),
-            "week_count": str(len(weeks)) if weeks else "0",
-            "topic_count": str(len(topics)) if topics else "0",
-        }
-        
-        # Store in ChromaDB
-        ids = self.chroma.add_documents_sync(
-            collection_name=self.collection_name,
-            documents=[document],
-            metadatas=[metadata],
-            ids=[course_id_str],
-            embeddings=[embedding]
-        )
-        
-        logger.info(f"Added course content for {title} (ID: {course_id_str})")
-        return course_id_str
+            logger.info(f"Course added with IDs: {result_ids}")
+            
+            return course_id
+        except Exception as e:
+            logger.error(f"Error adding course content: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
+            raise
     
     async def add_course_content(self, course_content: Union[Dict[str, Any], CourseContent]) -> str:
         """Async wrapper for add_course_content_sync"""
@@ -195,51 +174,89 @@ class CourseContentService:
         if not self._initialized:
             self.initialize_sync()
             
-        course_id_str = str(course_id)
-        
         try:
-            # Try direct lookup first
-            result = self.chroma.get_sync(
-                collection_name=self.collection_name,
-                ids=[course_id_str]
-            )
+            # Convert to string for consistency
+            course_id_str = str(course_id)
+            logger.info(f"Getting course content for ID/code: {course_id_str}")
             
-            # If not found and looks like a course code (contains letters)
-            if (not result.ids or len(result.ids) == 0) and any(c.isalpha() for c in course_id_str):
-                # Try searching by code field in metadata
-                search_results = self.chroma.search_sync(
+            # First try direct lookup by ID
+            try:
+                direct_results = self.chroma.get_sync(
                     collection_name=self.collection_name,
-                    query="",
-                    n_results=1,
-                    where={"code": course_id_str}
+                    ids=[course_id_str]
                 )
                 
-                if search_results.ids and len(search_results.ids) > 0:
-                    # Get full document using the found ID
-                    result = self.chroma.get_sync(
-                        collection_name=self.collection_name,
-                        ids=[search_results.ids[0]]
-                    )
-                    logger.info(f"Found course with code {course_id_str}, ID: {search_results.ids[0]}")
+                if direct_results.ids and len(direct_results.ids) > 0:
+                    logger.info(f"Found course with direct ID lookup: {course_id_str}")
+                    metadata = direct_results.metadatas[0] if direct_results.metadatas else {}
+                    document = direct_results.documents[0] if direct_results.documents else None
+                    
+                    if document:
+                        try:
+                            course_data = json.loads(document)
+                            return self._build_course_content(course_data)
+                        except json.JSONDecodeError:
+                            logger.error(f"Error parsing JSON for course ID {course_id_str}")
+                    else:
+                        logger.warning(f"No document content found for course ID {course_id_str}")
+            except Exception as e:
+                logger.error(f"Error in direct ID lookup: {str(e)}")
             
-            if not result.documents or len(result.documents) == 0:
-                logger.warning(f"Course content with ID {course_id} not found")
-                return None
+            # If direct lookup fails, try search by code or other means
+            search_params = {}
+            
+            # Check if course_id might be a course code (contains letters)
+            if any(c.isalpha() for c in course_id_str):
+                logger.info(f"Trying to find course by code: {course_id_str}")
+                search_params["where"] = {"code": course_id_str}
+            # If it's numeric, try both as string and int
+            elif course_id_str.isdigit():
+                numeric_id = int(course_id_str)
+                logger.info(f"Trying to find course by numeric ID: {numeric_id}")
+                search_params["where"] = {"$or": [
+                    {"course_id": numeric_id},
+                    {"course_id": course_id_str}
+                ]}
+            else:
+                # Last resort - try with empty query
+                logger.info(f"Using fallback search with no filter for ID: {course_id_str}")
+            
+            # Search with empty query to find by metadata filter
+            search_results = self.chroma.search_sync(
+                collection_name=self.collection_name,
+                query="",
+                n_results=1,
+                **search_params
+            )
+            
+            if search_results.ids and len(search_results.ids) > 0:
+                doc_id = search_results.ids[0]
+                logger.info(f"Found course via search, actual ID: {doc_id}")
                 
-            # Parse the document JSON
-            try:
-                course_data = json.loads(result.documents[0])
+                # Get full document by ID
+                found_results = self.chroma.get_sync(
+                    collection_name=self.collection_name,
+                    ids=[doc_id]
+                )
                 
-                # Transform data to ensure it has the right structure
-                course_data = self._transform_course_data(course_data)
-                
-                # Return as CourseContent object
-                return CourseContent(**course_data)
-            except json.JSONDecodeError:
-                logger.error(f"Error parsing course content JSON for ID {course_id}")
-                return None
+                if found_results.ids and len(found_results.ids) > 0:
+                    document = found_results.documents[0] if found_results.documents else None
+                    
+                    if document:
+                        try:
+                            course_data = json.loads(document)
+                            return self._build_course_content(course_data)
+                        except json.JSONDecodeError:
+                            logger.error(f"Error parsing JSON for found course ID {doc_id}")
+                    else:
+                        logger.warning(f"No document content found for course ID {doc_id}")
+            
+            logger.warning(f"Course with ID/code {course_id_str} not found")
+            return None
         except Exception as e:
-            logger.error(f"Error retrieving course content: {str(e)}")
+            logger.error(f"Error getting course content: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
             return None
     
     async def get_course_content(self, course_id: Union[int, str]) -> Optional[CourseContent]:
@@ -293,18 +310,66 @@ class CourseContentService:
             self.initialize_sync()
             
         course_id_str = str(course_id)
+        logger.info(f"Attempting to delete course with ID: {course_id_str}")
         
         try:
-            # Delete the course from ChromaDB
-            self.chroma.delete_sync(
+            # First check if the course exists using get method
+            result = self.chroma.get_sync(
                 collection_name=self.collection_name,
                 ids=[course_id_str]
             )
             
-            logger.info(f"Deleted course content with ID: {course_id_str}")
+            if not result.ids or len(result.ids) == 0:
+                logger.warning(f"Course with ID {course_id_str} not found using direct lookup")
+                
+                # Try searching by code if the ID might be a course code
+                if any(c.isalpha() for c in course_id_str):
+                    search_results = self.chroma.search_sync(
+                        collection_name=self.collection_name,
+                        query="",
+                        n_results=1,
+                        where={"code": course_id_str}
+                    )
+                    
+                    if search_results.ids and len(search_results.ids) > 0:
+                        actual_id = search_results.ids[0]
+                        logger.info(f"Found course with code {course_id_str}, actual ID: {actual_id}")
+                        course_id_str = actual_id
+                    else:
+                        logger.warning(f"Course with code {course_id_str} not found for deletion")
+                        return False
+                else:
+                    logger.warning(f"Course with ID {course_id_str} not found for deletion")
+                    return False
+            else:
+                logger.info(f"Found course with ID {course_id_str} for deletion")
+            
+            # Delete the course from ChromaDB
+            logger.info(f"Deleting course with ID: {course_id_str}")
+            delete_result = self.chroma.delete_sync(
+                collection_name=self.collection_name,
+                ids=[course_id_str]
+            )
+            
+            # Log delete result
+            logger.info(f"Delete operation result: {delete_result}")
+            
+            # Verify deletion was successful
+            verification = self.chroma.get_sync(
+                collection_name=self.collection_name,
+                ids=[course_id_str]
+            )
+            
+            if verification.ids and len(verification.ids) > 0:
+                logger.error(f"Deletion failed - course {course_id_str} still exists")
+                return False
+            
+            logger.info(f"Successfully deleted course with ID: {course_id_str}")
             return True
         except Exception as e:
             logger.error(f"Error deleting course content: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
             return False
     
     async def delete_course_content(self, course_id: Union[int, str]) -> bool:
@@ -350,90 +415,127 @@ class CourseContentService:
         """Async wrapper for list_courses_sync"""
         return self.list_courses_sync(limit, offset)
     
-    def search_courses_sync(self, query: str, limit: int = 10, course_ids: List[str] = None) -> List[Dict[str, Any]]:
-        """
-        Search for course content matching the query string
-        
-        This is the core RAG retrieval functionality for StudyAI. It returns specific 
-        content chunks (lectures, topics, week content) that match the query, not just 
-        course metadata. This allows StudyAI to use these content chunks for retrieval-augmented
-        generation.
-        
-        Args:
-            query: The search query string
-            limit: Maximum number of results to return
-            course_ids: Optional list of course IDs to filter the search results
-            
-        Returns:
-            List of content chunks with their metadata, relevance scores, and source information
-        """
+    def search_courses_sync(
+        self, 
+        query: str = "",
+        limit: int = 10,
+        course_ids: Optional[List[str]] = None
+    ) -> List[Dict[str, Any]]:
+        """Synchronous version of search_courses"""
         if not self._initialized:
             self.initialize_sync()
             
         try:
-            # Generate embedding for the query
-            query_embedding = self.embedder.generate_embedding(query)
+            # Generate embedding for query
+            query_embedding = None
+            if query and len(query.strip()) > 0:
+                logger.info(f"Generating embedding for query: '{query}'")
+                query_embedding = self.embedder.generate_embedding(query.strip())
             
-            # Prepare the where clause for filtering by course IDs if provided
+            # Set up filter if course_ids are provided
             where_clause = None
-            if course_ids:
-                # Convert all IDs to strings for consistency
-                course_ids = [str(cid) for cid in course_ids]
-                where_clause = {"course_id": {"$in": course_ids}}
+            if course_ids and len(course_ids) > 0:
+                # Simply filter by course code - this is the most reliable method
+                logger.info(f"Filtering search by course_ids: {course_ids}")
+                where_clause = {"code": {"$in": course_ids}}
+                logger.info(f"Using where clause: {where_clause}")
             
-            # Search for matching documents
-            results = self.chroma.search_sync(
-                collection_name=self.collection_name,
-                query_embeddings=[query_embedding],
-                where=where_clause,
-                n_results=limit
-            )
+            # Execute search
+            logger.info(f"Calling ChromaDB search with: query='{query}', embedding={'Yes' if query_embedding else 'No'}, where={where_clause}")
             
-            if not results.ids:
-                return []
+            # Basic parameters
+            search_params = {
+                "collection_name": self.collection_name,
+                "n_results": limit
+            }
+            
+            # Add where clause if provided
+            if where_clause:
+                search_params["where"] = where_clause
                 
-            # Process results to extract content chunks
-            content_chunks = []
-            for i, doc_id in enumerate(results.ids):
+            # Use embedding if available, otherwise use the text query
+            if query_embedding:
+                search_params["query"] = ""  # Must be empty when using embedding
+                search_params["query_embedding"] = query_embedding
+            else:
+                search_params["query"] = query
+            
+            # Execute search
+            search_results = self.chroma.search_sync(**search_params)
+                
+            if not search_results.ids or len(search_results.ids) == 0:
+                logger.info(f"No results found for query: '{query}'")
+                return []
+            
+            logger.info(f"Found {len(search_results.ids)} results")
+            
+            # Process results
+            results = []
+            processed_courses = set()
+            
+            for i, doc_id in enumerate(search_results.ids):
                 try:
-                    # Extract document and metadata
-                    doc_content = json.loads(results.documents[i])
-                    metadata = results.metadatas[i]
+                    metadata = search_results.metadatas[i]
+                    document = search_results.documents[i] if hasattr(search_results, 'documents') and search_results.documents else None
                     
-                    # Convert distance to similarity score (higher is better)
-                    similarity = max(0.0, min(1.0, 1.0 - 0.5 * results.distances[i]))
+                    # Get course ID and code from metadata
+                    course_id = metadata.get("course_id", doc_id)
+                    course_code = metadata.get("code", "Unknown")
                     
-                    # Extract course info for source reference
-                    course_info = doc_content.get("course_info", {})
-                    if not course_info and "course" in doc_content:
-                        course_info = doc_content.get("course", {})
+                    # Skip if we've already processed this course
+                    if course_code in processed_courses:
+                        continue
                         
-                    # Basic course information
-                    course_data = {
-                        "course_id": metadata.get("course_id"),
-                        "code": metadata.get("code", ""),
-                        "title": metadata.get("title", ""),
-                        "department": metadata.get("department", ""),
-                        "match_score": similarity
+                    processed_courses.add(course_code)
+                    
+                    # Try to parse the document to get course data
+                    course_data = None
+                    if document:
+                        try:
+                            json_data = json.loads(document)
+                            course_data = self._build_course_content(json_data)
+                        except:
+                            logger.warning(f"Could not parse document for course {course_code}")
+                    
+                    # If failed, fall back to get_course_content_sync
+                    if not course_data:
+                        course_data = self.get_course_content_sync(course_code)
+                        
+                    if not course_data:
+                        logger.warning(f"Could not retrieve data for course {course_code}")
+                        continue
+                    
+                    # Extract content chunks
+                    content_chunks = self._extract_content_chunks(course_data)
+                    
+                    # Calculate score
+                    score = 1.0 - min(1.0, search_results.distances[i])
+                    
+                    # Build result according to API spec format
+                    source_course = {
+                        "code": course_data.course.code,
+                        "title": course_data.course.title,
+                        "match_score": score
                     }
                     
-                    # Extract relevant content chunks based on query
-                    chunks = self._extract_relevant_chunks(doc_content, query)
-                    
-                    # Add source information and chunks to result
-                    content_chunks.append({
-                        "source_course": course_data,
-                        "content_chunks": chunks,
-                        "score": similarity
+                    results.append({
+                        "source_course": source_course,
+                        "content_chunks": content_chunks,
+                        "score": score
                     })
-                except json.JSONDecodeError:
-                    logger.error(f"Error parsing document JSON for ID {doc_id}")
+                    
+                    logger.info(f"Added course {course_code} to results with {len(content_chunks)} chunks")
                 except Exception as e:
                     logger.error(f"Error processing search result: {str(e)}")
-                
-            return content_chunks
+                    import traceback
+                    logger.error(traceback.format_exc())
+            
+            logger.info(f"Returning {len(results)} courses with content")
+            return results
         except Exception as e:
-            logger.error(f"Error searching courses: {str(e)}")
+            logger.error(f"Error in search_courses_sync: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
             return []
     
     def _extract_relevant_chunks(self, doc_content: Dict[str, Any], query: str) -> List[Dict[str, Any]]:
@@ -571,3 +673,74 @@ class CourseContentService:
                     lecture["description"] = lecture.get("title", "Lecture")
             
         return transformed_data 
+
+    def _extract_content_chunks(self, course_data: Union[CourseContent, Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Extract content chunks from a course for search results
+        
+        Args:
+            course_data: The CourseContent object or dictionary
+            
+        Returns:
+            List of content chunks for search results
+        """
+        chunks = []
+        
+        # Handle both CourseContent objects and dictionaries
+        is_course_dict = isinstance(course_data, dict)
+        
+        # Add weeks
+        weeks = course_data.get('weeks', []) if is_course_dict else course_data.weeks or []
+        for week in weeks:
+            is_dict = isinstance(week, dict)
+            week_data = {
+                "type": "week",
+                "week_number": week.get('week_number', 0) if is_dict else week.week_number,
+                "title": week.get('title', '') if is_dict else week.title,
+                "description": week.get('description', '') if is_dict else week.description,
+                "topics": week.get('topics', []) if is_dict else (week.topics if hasattr(week, "topics") else [])
+            }
+            chunks.append(week_data)
+        
+        # Add lectures
+        lectures = course_data.get('lectures', []) if is_course_dict else course_data.lectures or []
+        for lecture in lectures:
+            is_dict = isinstance(lecture, dict)
+            lecture_data = {
+                "type": "lecture",
+                "title": lecture.get('title', '') if is_dict else lecture.title,
+                "description": lecture.get('content_transcript', '') if is_dict else (lecture.content_transcript or ''),
+                "content": lecture.get('content_transcript', '') if is_dict else (lecture.content_transcript or ''),
+                "week_number": lecture.get('week', 0) if is_dict else lecture.week
+            }
+            chunks.append(lecture_data)
+        
+        # Add assignments
+        assignments = course_data.get('assignments', []) if is_course_dict else course_data.assignments or []
+        for assignment in assignments:
+            is_dict = isinstance(assignment, dict)
+            assignment_data = {
+                "type": "assignment",
+                "title": assignment.get('title', '') if is_dict else assignment.title,
+                "description": assignment.get('description', '') if is_dict else assignment.description,
+                "due_date": assignment.get('due_date', '') if is_dict else assignment.due_date
+            }
+            chunks.append(assignment_data)
+        
+        return chunks
+
+    def _build_course_content(self, course_data: Dict[str, Any]) -> CourseContent:
+        """
+        Build a CourseContent object from raw course data
+        
+        Args:
+            course_data: Raw course data from ChromaDB
+            
+        Returns:
+            CourseContent object
+        """
+        # Transform data to ensure it has the right structure
+        course_data = self._transform_course_data(course_data)
+        
+        # Return as CourseContent object
+        return CourseContent(**course_data) 
