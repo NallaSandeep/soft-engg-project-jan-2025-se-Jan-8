@@ -359,7 +359,7 @@ const AssignmentView = () => {
                             const wasSelected = lastAnswer?.answer === optionIndex;
                             let optionClass = "flex items-center space-x-3 p-2 rounded transition-colors ";
                             
-                            if (lastSubmission && wasSelected) {
+                            if (shouldShowResults && lastSubmission && wasSelected) {
                                 optionClass += lastAnswer?.is_correct
                                     ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 " 
                                     : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 ";
@@ -386,7 +386,7 @@ const AssignmentView = () => {
                             </label>
                         )})}
                         
-                        {showCorrectAnswer && correctAnswer && (
+                        {lastSubmission && showCorrectAnswer && correctAnswer && (
                             <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-200 dark:border-slate-700">
                                 <div className="text-sm text-slate-600 dark:text-slate-400">
                                     Correct Answer:
@@ -411,7 +411,7 @@ const AssignmentView = () => {
                             const wasSelected = Array.isArray(lastAnswer?.answer) && lastAnswer.answer.includes(optionIndex);
                             let optionClass = "flex items-center space-x-3 p-2 rounded transition-colors ";
                             
-                            if (lastSubmission && wasSelected) {
+                            if (shouldShowResults && lastSubmission && wasSelected) {
                                 optionClass += lastAnswer?.is_correct
                                     ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 " 
                                     : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 ";
@@ -471,7 +471,7 @@ const AssignmentView = () => {
                             type="number"
                             value={answers[question.id]}
                             onChange={(e) => handleAnswerChange(question.id, e.target.value)}
-                            className={`w-full max-w-xs rounded-lg border shadow-sm ${
+                            className={`input-field ${
                                 lastSubmission && lastAnswer
                                     ? lastAnswer?.is_correct
                                         ? 'border-green-300 dark:border-green-600 bg-green-50 dark:bg-green-900/20'
@@ -492,7 +492,7 @@ const AssignmentView = () => {
                                     Your answer: {lastAnswer?.answer} {lastAnswer?.is_correct ? '✓' : '✗'}
                                 </div>
                                 
-                                {showCorrectAnswer && correctAnswer && (
+                                {lastSubmission && showCorrectAnswer && correctAnswer && (
                                     <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-200 dark:border-slate-700">
                                         <div className="text-sm text-slate-600 dark:text-slate-400">
                                             Correct Answer:
