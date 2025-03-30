@@ -111,6 +111,8 @@ def run_phase1_create_users(db_session):
         email=ADMIN_EMAIL,
         password=ADMIN_PASSWORD,
         role="admin",
+        first_name="Admin",
+        last_name="User",
         is_active=True
     )
     db_session.add(admin)
@@ -124,7 +126,7 @@ def run_phase1_create_users(db_session):
         email=TEACHER_EMAIL,
         password=TEACHER_PASSWORD,
         role="teacher",
-        is_active=True
+                is_active=True
     )
     db_session.add(teacher)
     db_session.flush()
@@ -142,6 +144,8 @@ def run_phase1_create_users(db_session):
             email=email,
             password=STUDENT_PASSWORD,
             role="student",
+            first_name=f"Student{i}",
+            last_name="User",
             is_active=True
         )
         db_session.add(student)
@@ -605,4 +609,4 @@ def main():
     log("Database initialization completed")
 
 if __name__ == "__main__":
-    main() 
+    main()
