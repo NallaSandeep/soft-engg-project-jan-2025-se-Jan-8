@@ -188,7 +188,7 @@ const AdminDashboard = () => {
                                 <div 
                                     key={course.id} 
                                     className="p-4 border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer rounded-md"
-                                    onClick={() => navigateTo(`/admin/courses/${course.id}`)}
+                                    // onClick={() => navigateTo(`/admin/courses/${course.id}`)}
                                 >
                                     <div className="flex justify-between">
                                         <div>
@@ -219,7 +219,7 @@ const AdminDashboard = () => {
                                     <div className="flex justify-between items-center">
                                         <div>
                                             <h3 className="font-medium text-zinc-900 dark:text-white">{assignment.title}</h3>
-                                            <p className="text-sm text-zinc-600 dark:text-zinc-400">Due: {formatDate(assignment.dueDate)}</p>
+                                            <p className="text-sm text-zinc-600 dark:text-zinc-400">Due: {formatDate(assignment.due_date)}</p>
                                         </div>
                                         <span className={`px-2 py-1 text-xs rounded-full ${
                                             assignment.status === 'published' 
