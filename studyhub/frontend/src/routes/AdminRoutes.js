@@ -12,7 +12,6 @@ import UserForm from '../components/admin/UserForm';
 import AssignmentsList from '../components/admin/AssignmentsList';
 import AssignmentForm from '../components/admin/AssignmentForm';
 import AssignmentView from '../components/admin/assignments/AssignmentView';
-import QuestionBank from '../components/admin/QuestionBank';
 import QuestionForm from '../components/admin/QuestionBank/QuestionForm';
 import QuestionList from '../components/admin/QuestionBank/QuestionList';
 import EnrollStudents from '../components/admin/EnrollStudTA';

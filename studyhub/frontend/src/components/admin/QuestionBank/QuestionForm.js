@@ -207,7 +207,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                 name="title"
                                 value={formData.title}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
+                                className="input-field"
                                 required
                                 disabled={isViewMode}
                             />
@@ -221,7 +221,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                 name="content"
                                 value={formData.content}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
+                                className="input-field"
                                 rows="3"
                                 required
                                 disabled={isViewMode}
@@ -237,7 +237,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                     name="type"
                                     value={formData.type}
                                     onChange={handleInputChange}
-                                    className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
+                                    className="input-field"
                                     required
                                     disabled={isViewMode}
                                 >
@@ -256,7 +256,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                     name="points"
                                     value={formData.points}
                                     onChange={handleInputChange}
-                                    className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
+                                    className="input-field"
                                     min="1"
                                     required
                                     disabled={isViewMode}
@@ -278,7 +278,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                             type="text"
                                             value={option}
                                             onChange={(e) => handleOptionChange(index, e.target.value)}
-                                            className="flex-1 rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
+                                            className="input-field"
                                             placeholder={`Option ${index + 1}`}
                                             required
                                             disabled={isViewMode}
@@ -316,7 +316,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                 name="correct_answer"
                                 value={formData.correct_answer}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
+                                className="input-field"
                                 required
                                 disabled={isViewMode}
                             >
@@ -360,7 +360,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                 name="correct_answer"
                                 value={formData.correct_answer}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
+                                className="input-field"
                                 step="any"
                                 required
                                 disabled={isViewMode}
@@ -378,7 +378,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                 name="course_id"
                                 value={formData.course_id}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
+                                className="input-field"
                                 required
                                 disabled={isViewMode}
                             >
@@ -399,7 +399,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                                 name="status"
                                 value={formData.status}
                                 onChange={handleInputChange}
-                                className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
+                                className="input-field"
                                 required
                                 disabled={isViewMode}
                             >
@@ -418,7 +418,7 @@ const QuestionForm = ({ mode = 'create' }) => {
                             name="explanation"
                             value={formData.explanation}
                             onChange={handleInputChange}
-                            className="w-full rounded-lg border-gray-300 dark:bg-zinc-800 dark:text-gray-100 dark:border-zinc-500"
+                            className="input-field"
                             rows="3"
                             placeholder="Explain the correct answer (optional)"
                             disabled={isViewMode}
