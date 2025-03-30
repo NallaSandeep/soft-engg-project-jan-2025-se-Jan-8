@@ -69,7 +69,7 @@ def is_port_in_use(port, host='127.0.0.1'):
 SERVICES = {
     "chromadb": {
         "name": "ChromaDB",
-        "start_cmd": f"chroma run --host 127.0.0.1 --port {get_env('CHROMA_PORT', '8000')} --path {os.path.join(PROJECT_ROOT, get_env('CHROMA_PERSIST_DIR', 'data/chroma'))}",
+        "start_cmd": f"chroma run --host 127.0.0.1 --port {get_env('CHROMA_PORT', '8000')} --path {get_env('CHROMA_PERSIST_DIR', './data/chroma')}",
         "health_url": f"http://127.0.0.1:{get_env('CHROMA_PORT', '8000')}/api/v1/heartbeat",
         "health_check": lambda: requests.get(f"http://127.0.0.1:{get_env('CHROMA_PORT', '8000')}/api/v1/heartbeat", timeout=2).status_code == 200,
         "port": int(get_env('CHROMA_PORT', '8000')),
@@ -154,6 +154,7 @@ def is_service_running(service_name, retry_count=2, retry_delay=0.5):
                 return True
         except requests.RequestException:
             if attempt < retry_count - 1:
+                logger.info(f"Waiting {retry_delay} seconds for {service['name']} for retry attempt {attempt} of {retry_count}...")
                 time.sleep(retry_delay)
     
     # If we reach here, the port is in use but HTTP check failed
@@ -195,7 +196,7 @@ def start_service(service_name):
         logger.info(f"{service['name']} starting...")
         
         # Use longer wait times for WSL environment
-        wait_time = 15 if service_name == "fastapi" else 12
+        wait_time = 15 if service_name == "fastapi" else 30
         logger.info(f"Waiting {wait_time} seconds for {service['name']} to start...")
         time.sleep(wait_time)
         
