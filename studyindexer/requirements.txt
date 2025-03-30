@@ -19,4 +19,4 @@ huggingface-hub==0.19.4
 langchain
 
 # Utilities
-pytest==7.4.3 
+pytest==7.4.3
