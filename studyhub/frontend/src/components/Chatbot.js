@@ -21,6 +21,8 @@ import { chatAPI, messageAPI } from '../services/chatService';
 import { personalApi } from '../services/apiService';
 import { v4 as uuidv4 } from 'uuid';
 import MarkdownIt from 'markdown-it';
+import {Panel, PanelGroup, PanelResizeHandle} from 'react-resizable-panels';
+
 const md = new MarkdownIt();
 
 const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
@@ -361,7 +363,10 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
     let message_id = ''
     messageAPI.sendMessage(socket.current, chatSessionID.current, message)
     setIsLoading(true);
-    socket.current?.onmessage = (event) => {
+    if (!socket.current) {
+      return
+    } 
+    socket.current.onmessage = (event) => {
       const response = JSON.parse(event.data);
       console.log(response)
       if (response.type === 'start') {
@@ -427,16 +432,18 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
         <ChatBubbleLeftRightIcon className="h-6 w-6 text-blue-200 dark:text-blue-400" />
       </button>
 
+      <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'} transition-opacity duration-300 z-40`}>
+
+      <PanelGroup direction='horizontal' className={`flex ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'} fixed inset-0 z-50`}>
       {/* Chatbot backdrop */}
-      <div
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 chatbot-backdrop ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+      <Panel
+        className={`inset-0 chatbot-backdrop`}
         onClick={handleBackdropClick}
       >
+        </Panel>
+        <PanelResizeHandle className="w-0 z-50" isVertical={true} />
         {/* Chatbot container */}
-        <div
-           className={`fixed inset-y-0 right-0 w-full sm:w-[350px] md:w-[420px] bg-white dark:bg-zinc-900 shadow-xl transform transition-all duration-300 flex flex-col z-50 ${
+        <Panel defaultSize={30} minSize={30} className={`bg-white dark:bg-zinc-900 shadow-xl transform transition-all duration-300 flex flex-col ${
             isOpen 
               ? 'translate-x-0' 
               : 'translate-x-full'
@@ -663,19 +670,18 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
 
             {/* Loading Animation */}
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="max-w-[85%] rounded-lg p-3 bg-white dark:bg-zinc-900">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex space-x-1">
-                      <div className="h-1 w-1 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="h-1 w-1 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="h-1 w-1 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                <div className="flex justify-start">
+                  <div className="max-w-[85%] rounded-lg p-3 bg-white dark:bg-zinc-900">
+                    <div className="flex items-center space-x-2">
+                      <div className="flex space-x-1">
+                        <div className="h-1.5 w-1.5 rounded-full bg-zinc-400 dark:bg-zinc-500 opacity-75 animate-pulse"></div>
+                        <div className="h-1.5 w-1.5 rounded-full bg-zinc-400 dark:bg-zinc-500 opacity-75 animate-pulse delay-75"></div>
+                        <div className="h-1.5 w-1.5 rounded-full bg-zinc-400 dark:bg-zinc-500 opacity-75 animate-pulse delay-150"></div>
+                      </div>
                     </div>
-                    <span className="text-xs text-zinc-500 dark:text-zinc-400"></span>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
             <div ref={messagesEndRef} />
           </div>
 
@@ -740,7 +746,8 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
               </div>
             </div>
           </div>
-        </div>
+        </Panel>
+      </PanelGroup>
       </div>
     </>
   );

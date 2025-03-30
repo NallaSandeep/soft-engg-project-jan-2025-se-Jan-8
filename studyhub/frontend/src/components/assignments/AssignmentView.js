@@ -360,7 +360,7 @@ const AssignmentView = () => {
                             let optionClass = "flex items-center space-x-3 p-2 rounded transition-colors ";
                             
                             if (lastSubmission && wasSelected) {
-                                optionClass += lastAnswer.is_correct
+                                optionClass += lastAnswer?.is_correct
                                     ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 " 
                                     : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 ";
                             } else {
@@ -412,7 +412,7 @@ const AssignmentView = () => {
                             let optionClass = "flex items-center space-x-3 p-2 rounded transition-colors ";
                             
                             if (lastSubmission && wasSelected) {
-                                optionClass += lastAnswer.is_correct
+                                optionClass += lastAnswer?.is_correct
                                     ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 " 
                                     : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 ";
                             } else {
@@ -440,7 +440,7 @@ const AssignmentView = () => {
                                     <span>{option}</span>
                                     {shouldShowResults && lastSubmission && wasSelected && (
                                         <span className="ml-2">
-                                            {lastAnswer.is_correct ? '✓' : '✗'}
+                                            {lastAnswer?.is_correct ? '✓' : '✗'}
                                         </span>
                                     )}
                                 </label>
@@ -473,7 +473,7 @@ const AssignmentView = () => {
                             onChange={(e) => handleAnswerChange(question.id, e.target.value)}
                             className={`w-full max-w-xs rounded-lg border shadow-sm ${
                                 lastSubmission && lastAnswer
-                                    ? lastAnswer.is_correct
+                                    ? lastAnswer?.is_correct
                                         ? 'border-green-300 dark:border-green-600 bg-green-50 dark:bg-green-900/20'
                                         : 'border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/20'
                                     : 'border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-700'
@@ -485,11 +485,11 @@ const AssignmentView = () => {
                         {shouldShowResults && lastSubmission && (
                             <div className="mt-2">
                                 <div className={`text-sm ${
-                                    lastAnswer.is_correct
+                                    lastAnswer?.is_correct
                                         ? 'text-green-600 dark:text-green-400' 
                                         : 'text-red-600 dark:text-red-400'
                                 }`}>
-                                    Your answer: {lastAnswer.answer} {lastAnswer.is_correct ? '✓' : '✗'}
+                                    Your answer: {lastAnswer?.answer} {lastAnswer?.is_correct ? '✓' : '✗'}
                                 </div>
                                 
                                 {showCorrectAnswer && correctAnswer && (
@@ -584,7 +584,7 @@ const AssignmentView = () => {
         <div className="flex h-screen bg-zinc-50 dark:bg-zinc-900">
             {/* Left Sidebar - Course Structure */}
             {course && (
-                <div className="w-64 bg-white dark:bg-zinc-800 shadow-lg dark:shadow-zinc-900/50 overflow-y-auto">
+                <div className="w-80 bg-white dark:bg-zinc-800 shadow-lg dark:shadow-zinc-900/50 overflow-y-auto">
                     <div className="p-4 border-b dark:border-zinc-700">
                         <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">{course.code}</h2>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">{course.name}</p>
