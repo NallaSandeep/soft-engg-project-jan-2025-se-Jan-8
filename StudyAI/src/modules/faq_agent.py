@@ -16,7 +16,7 @@ class RagAgent(BaseAgent):
     async def get_relevant_docs(self, query: str) -> str:
         """Retrieve relevant documents from the knowledge base."""
         try:
-            _ = extract_keywords(query)
+            # _ = extract_keywords(query)
 
             payload = {
                 "query": query,
@@ -32,21 +32,33 @@ class RagAgent(BaseAgent):
                 method="POST",
                 url=f"http://{Config.HOST}:{Config.STUDY_INDEXER_PORT}/api/v1/faq/search",
                 json=payload,
+                headers={"Content-Type": "application/json"},
             )
+            
+            print(f"Response from FAQ search: {response.get('success', False)}")
 
             if response.get("success", False):
-                if "results" in response and len(response["results"]) > 0:
-                    results = response["results"]
-                    context = "\n\n".join(
-                        [
-                            f"Source: {result.get('source', 'Unknown')}\n"
-                            f"Topic: {result.get('topic', 'General')}\n"
-                            f"Q: {result.get('question', '')}\n"
-                            f"A: {result.get('answer', '')}"
-                            for result in results
-                        ]
-                    )
-                    return context
+                # Check if the data field exists and contains the actual results
+                if "data" in response and isinstance(response["data"], dict):
+                    data = response["data"]
+
+                    # Check if the nested data structure contains the results
+                    if (
+                        data.get("success", False)
+                        and "results" in data
+                        and len(data["results"]) > 0
+                    ):
+                        results = data["results"]
+                        context = "\n\n".join(
+                            [
+                                f"Source: {result.get('source', 'Unknown')}\n"
+                                f"Topic: {result.get('topic', 'General')}\n"
+                                f"Q: {result.get('question', '')}\n"
+                                f"A: {result.get('answer', '')}"
+                                for result in results
+                            ]
+                        )
+                        return context
 
             return "No relevant documents found."
 
@@ -57,33 +69,7 @@ class RagAgent(BaseAgent):
 
 def extract_keywords(query: str) -> List[str]:
     """Extract potential keywords from the query to use as topics."""
-
-    # List of common FAQ topics
-    common_topics = [
-        "grading",
-        "syllabus",
-        "exam",
-        "schedule",
-        "course",
-        "quiz",
-        "midterm",
-        "final",
-        "policy",
-        "grade",
-        "credit",
-    ]
-
-    # Convert to lowercase for matching
-    query_lower = query.lower()
-
-    # Find matches
-    matched_topics = []
-    for topic in common_topics:
-        if topic in query_lower:
-            matched_topics.append(topic)
-
-    # If no matches, return empty list
-    return matched_topics if matched_topics else []
+    pass
 
 
 async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:

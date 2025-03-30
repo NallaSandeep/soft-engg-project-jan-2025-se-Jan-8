@@ -114,7 +114,6 @@ async def process_message_stream(
                     final_ai_message = last_ai_message
                 else:
                     logger.warning("No valid AI message found in chunk")
-                    logger.info(chunk)
             else:
                 logger.warning("No messages in response")
                 logger.info(chunk)
