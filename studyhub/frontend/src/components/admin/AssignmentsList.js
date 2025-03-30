@@ -179,9 +179,9 @@ const AssignmentsList = () => {
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
                                 Title
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
+                            {/* <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
                                 Course
-                            </th>
+                            </th> */}
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
                                 Week
                             </th>
@@ -216,17 +216,17 @@ const AssignmentsList = () => {
                                                 <div className="text-sm font-medium text-zinc-900 dark:text-white">
                                                     {assignment.title}
                                                 </div>
-                                                <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                                                    {assignment.points} pts
-                                                </div>
+                                                {/* <div className="text-sm text-zinc-500 dark:text-zinc-400">
+                                                    {assignment.points_possible} pts
+                                                </div> */}
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
+                                    {/* <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm text-zinc-900 dark:text-white">
                                             {assignment.course?.code || 'N/A'}
                                         </div>
-                                    </td>
+                                    </td> */}
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm text-zinc-900 dark:text-white">
                                             {assignment.weekNumber ? 
