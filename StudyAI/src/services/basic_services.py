@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from src.models.db_models import (
     Message,
     ChatSession,
@@ -122,6 +123,34 @@ def list_sessions(db: Session, user_id: str = None):
         return results
     except Exception as e:
         logger.error(f"List sessions error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+def list_sessions_with_counts(db: Session, user_id: str = None):
+    """List chat sessions with message counts for each session."""
+    try:
+        query = db.query(ChatSession)
+        if user_id:
+            query = query.filter(ChatSession.user_id == user_id)
+
+        chat_sessions = query.all()
+        results = []
+
+        for chat_session in chat_sessions:
+            # Get message count for this session
+            message_count = (
+                db.query(func.count(Message.id))
+                .filter(Message.session_id == chat_session.session_id)
+                .scalar()
+            )
+
+            session_dict = chat_session.to_dict()
+            session_dict["message_count"] = message_count
+            results.append(session_dict)
+
+        return results
+    except Exception as e:
+        logger.error(f"List sessions with counts error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

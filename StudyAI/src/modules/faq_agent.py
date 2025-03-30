@@ -16,29 +16,27 @@ class RagAgent(BaseAgent):
     async def get_relevant_docs(self, query: str) -> str:
         """Retrieve relevant documents from the knowledge base."""
         try:
-            topics = extract_keywords(query)
+            _ = extract_keywords(query)
 
             payload = {
                 "query": query,
-                "limit": 10,
+                "limit": 4,
                 "min_score": 0.3,
                 "tags": [""],
-                "topic": topics,
+                "topic": "",
                 "source": "",
             }
 
             # Make API call to the FAQ search endpoint using the base agent's HTTP client
-            result = await self.make_http_request(
+            response = await self.make_http_request(
                 method="POST",
                 url=f"http://{Config.HOST}:{Config.STUDY_INDEXER_PORT}/api/v1/faq/search",
                 json=payload,
             )
 
-            if result["success"]:
-                data = result
-                if data.get("results") and len(data["results"]) > 0:
-                    # Combine the results into a comprehensive context
-                    results = data["results"]
+            if response.get("success", False):
+                if "results" in response and len(response["results"]) > 0:
+                    results = response["results"]
                     context = "\n\n".join(
                         [
                             f"Source: {result.get('source', 'Unknown')}\n"
@@ -59,7 +57,7 @@ class RagAgent(BaseAgent):
 
 def extract_keywords(query: str) -> List[str]:
     """Extract potential keywords from the query to use as topics."""
-    
+
     # List of common FAQ topics
     common_topics = [
         "grading",
@@ -124,6 +122,7 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
                 AIMessage(content="I couldn't process your query. Please try again.")
             )
             state["next_step"] = END
+            state = clear_state(state)
             yield state
             return
 
@@ -141,6 +140,7 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
                 # This is a standalone query - add the message directly
                 state["messages"].append(AIMessage(content=response_message))
                 state["next_step"] = END
+                state = clear_state(state)
 
             yield state
             return
@@ -190,7 +190,7 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
             # Direct error message for standalone query
             state["messages"].append(AIMessage(content=error_message))
             state["next_step"] = END
-            clear_state(state)
+            state = clear_state(state)
     finally:
         # Ensure the state is yielded at the end of processing
         yield state
