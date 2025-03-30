@@ -106,7 +106,7 @@ const UsersList = () => {
                         >
                             <option value="">All Roles</option>
                             <option value="admin">Admin</option>
-                            <option value="teacher">Teacher</option>
+                            {/* <option value="teacher">Teacher</option> */}
                             <option value="ta">Teaching Assistant</option>
                             <option value="student">Student</option>
                         </select>
