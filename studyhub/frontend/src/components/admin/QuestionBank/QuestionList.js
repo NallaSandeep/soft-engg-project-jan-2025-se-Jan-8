@@ -107,7 +107,7 @@ const QuestionList = () => {
                         <select
                             value={filters.status}
                             onChange={(e) => handleFilterChange('status', e.target.value)}
-                            className="rounded-lg border-gray-300 dark:border-gray-500 dark:bg-zinc-700 dark:text-zinc-100 text-xs"
+                             className="input-field"
                         >
                             <option value="">All Status</option>
                             <option value="draft">Draft</option>
@@ -118,7 +118,7 @@ const QuestionList = () => {
                         <select
                             value={filters.type}
                             onChange={(e) => handleFilterChange('type', e.target.value)}
-                            className="rounded-lg border-gray-300 dark:border-gray-500 dark:bg-zinc-700 dark:text-zinc-100 text-xs"
+                             className="input-field"
                         >
                             <option value="">All Types</option>
                             <option value="MCQ">Multiple Choice</option>
@@ -129,7 +129,7 @@ const QuestionList = () => {
                         <select
                             value={filters.course_id}
                             onChange={(e) => handleFilterChange('course_id', e.target.value)}
-                            className="rounded-lg border-gray-300 dark:border-gray-500 dark:bg-zinc-700 dark:text-zinc-100 text-xs"
+                             className="input-field"
                         >
                             <option value="">All Courses</option>
                             {courses.map(course => (
