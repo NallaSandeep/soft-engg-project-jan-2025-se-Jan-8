@@ -50,7 +50,8 @@ api.interceptors.response.use(
             method: error.config?.method,
             status: error.response?.status,
             data: error.response?.data,
-            error: error.message
+            error: error.message,
+            requestData: error.config?.data ? JSON.parse(error.config.data) : null
         });
 
         if (error.response) {
@@ -101,9 +102,17 @@ export const courseApi = {
         },
         withCredentials: true
     }),
-    createLecture: (weekId, lectureData) => api.post(`/courses/weeks/${weekId}/lectures`, lectureData),
+    createLecture: (weekId, lectureData) => {
+        console.log(`Creating lecture for week ${weekId}:`, lectureData);
+        return api.post(`/courses/weeks/${weekId}/lectures`, lectureData);
+    },
     updateLecture: (lectureId, lectureData) => api.put(`/courses/lectures/${lectureId}`, lectureData),
     deleteLecture: (lectureId) => api.delete(`/courses/lectures/${lectureId}`),
+    uploadLecturePdf: (lectureId, formData) => api.post(`/courses/lectures/${lectureId}/pdf`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }),
     // Assignment management
     getAssignments: (courseId) => api.get(`/courses/${courseId}/assignments`),
     createAssignment: (weekId, assignmentData) => api.post(`/courses/weeks/${weekId}/assignments`, assignmentData),
