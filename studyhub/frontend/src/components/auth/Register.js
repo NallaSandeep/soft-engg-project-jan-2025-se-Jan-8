@@ -16,6 +16,7 @@ const Register = () => {
         role: 'student'
     });
     const [error, setError] = useState(null);
+    const [successMsg, setSuccessMsg] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e) => {
@@ -25,6 +26,9 @@ const Register = () => {
             [name]: value
         }));
         if (error) setError(null);
+        if (successMsg) {
+            setSuccessMsg(null);
+        }
     };
 
     const validateForm = () => {
@@ -45,6 +49,7 @@ const Register = () => {
 
         setLoading(true);
         setError(null);
+        setSuccessMsg(null);
 
         try {
             const result = await register({
@@ -57,6 +62,17 @@ const Register = () => {
             });
             if (!result.success) {
                 setError(result.error);
+            } else {
+                setFormData({
+                    username: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    first_name: '',
+                    last_name: '',
+                    role: 'student'
+                });
+                setSuccessMsg('Registration successful. Please go to login page to sign in.');
             }
         } catch (err) {
             setError(err.message || 'An error occurred during registration');
@@ -84,6 +100,12 @@ const Register = () => {
                     {error && (
                         <div className="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded relative mb-4" role="alert">
                             <span className="block sm:inline">{error}</span>
+                        </div>
+                    )}
+
+                    {successMsg && (
+                        <div className="bg-green-100 dark:bg-green-900/20 border border-green-400 dark:border-green-800 text-green-700 dark:text-green-400 px-4 py-3 rounded relative mb-4" role="alert">
+                            <span className="block sm:inline">{successMsg}</span>
                         </div>
                     )}
 

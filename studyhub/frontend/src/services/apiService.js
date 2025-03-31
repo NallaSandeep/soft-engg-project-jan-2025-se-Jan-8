@@ -82,7 +82,7 @@ export const courseApi = {
     updateCourse: (id, courseData) => api.put(`/courses/${id}`, courseData),
     deleteCourse: (id) => api.delete(`/courses/${id}`),
     getCourseContent: (courseId) => api.get(`/courses/${courseId}/content`),
-    enrollStudent: (courseId, studentId) => api.post(`/courses/${courseId}/enroll/${studentId}`),
+    enrollStudent: (courseId, studentId, role) => api.post(`/courses/enroll/`, { courseId, studentId, role }),
     unenrollStudent: (courseId, studentId) => api.delete(`/courses/${courseId}/enroll/${studentId}`),
     getEnrolledStudents: (courseId) => api.get(`/courses/${courseId}/students`),
     // Week management
@@ -210,22 +210,36 @@ export const adminApi = {
 
 // Question Bank API
 export const questionBankApi = {
+    // List questions with filters
     getQuestions: (filters = {}) => {
         const params = new URLSearchParams();
+        if (filters.status) params.append('status', filters.status);
         if (filters.type) params.append('type', filters.type);
         if (filters.difficulty) params.append('difficulty', filters.difficulty);
-        if (filters.search) params.append('search', filters.search);
-        return api.get(`/questions?${params.toString()}`);
+        if (filters.course_id) params.append('course_id', filters.course_id);
+        if (filters.week_id) params.append('week_id', filters.week_id);
+        if (filters.lecture_id) params.append('lecture_id', filters.lecture_id);
+        if (filters.page) params.append('page', filters.page);
+        if (filters.limit) params.append('limit', filters.limit);
+        return api.get(`/question-bank/questions?${params.toString()}`);
     },
-    getQuestion: (id) => api.get(`/questions/${id}`),
-    createQuestion: (questionData) => api.post('/questions', questionData),
-    updateQuestion: (id, questionData) => api.put(`/questions/${id}`, questionData),
-    deleteQuestion: (id) => api.delete(`/questions/${id}`),
-    importQuestions: (fileData) => api.post('/questions/import', fileData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-    }),
-    exportQuestions: () => api.get('/questions/export', { responseType: 'blob' })
+
+    // Get a specific question
+    getQuestion: (questionId) => api.get(`/question-bank/questions/${questionId}`),
+
+    // Create a question
+    createQuestion: (questionData) => api.post('/question-bank/questions', questionData),
+
+    // Update a question
+    updateQuestion: (questionId, questionData) => api.put(`/question-bank/questions/${questionId}`, questionData),
+
+    // Delete a question
+    deleteQuestion: (questionId) => api.delete(`/question-bank/questions/${questionId}`),
+
+    // Batch create questions
+    batchCreateQuestions: (questionsData) => api.post('/question-bank/questions/batch', questionsData)
 };
+
 
 // Personal Resources API
 export const personalApi = {

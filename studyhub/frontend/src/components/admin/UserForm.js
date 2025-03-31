@@ -166,6 +166,7 @@ const UserForm = () => {
                                     onChange={handleChange}
                                     className="input-field"
                                     required
+                                    {...(isEditMode && { readOnly: true, disabled: true })}
                                 />
                             </div>
 
@@ -180,6 +181,7 @@ const UserForm = () => {
                                     onChange={handleChange}
                                     className="input-field"
                                     required
+                                    {...(isEditMode && { readOnly: true, disabled: true })}
                                 />
                             </div>
 
@@ -210,7 +212,7 @@ const UserForm = () => {
                                         required
                                     >
                                         <option value="student">Student</option>
-                                        <option value="teacher">Teacher</option>
+                                        {/* <option value="teacher">Teacher</option> */}
                                         <option value="ta">Teaching Assistant</option>
                                         <option value="admin">Admin</option>
                                     </select>

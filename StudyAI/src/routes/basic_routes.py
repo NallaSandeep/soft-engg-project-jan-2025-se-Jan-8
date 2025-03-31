@@ -7,6 +7,7 @@ from src.services.basic_services import (
     add_message_to_session,
     get_session,
     list_sessions,
+    list_sessions_with_counts,
     apply_session_patch,
     apply_report_patch,
     delete_session,
@@ -19,13 +20,11 @@ from src.models.db_models import (
     MessageResponse,
     ChatSessionResponse,
     ChatSessionWithMessagesResponse,
+    ChatSessionSummaryResponse,
     SessionPatch,
     ReportCreate,
     ReportResponse,
     ReportPatch,
-    UserCreate,
-    UserResponse,
-    SessionCreate,
 )
 from typing import List, Optional
 from pydantic import BaseModel
@@ -74,13 +73,14 @@ async def get_chat_session(session_id: str, db: Session = Depends(get_db)):
 
 @router.get(
     "/sessions",
-    response_model=List[ChatSessionWithMessagesResponse],
+    response_model=List[ChatSessionSummaryResponse],
     tags=["Chat Session"],
     summary="List All Chat Sessions",
-    description="Returns a list of all available chat sessions",
+    description="Returns a list of all available chat sessions with message counts",
 )
 async def get_all_sessions(user_id: str = None, db: Session = Depends(get_db)):
-    return list_sessions(db, user_id)
+    """Get sessions with message counts instead of full message details."""
+    return list_sessions_with_counts(db, user_id)
 
 
 @router.patch(

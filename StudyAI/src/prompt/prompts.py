@@ -13,7 +13,7 @@ Query: {query}
 Response:"""
 
 ROUTING_PROMPT = """Analyze this query and respond with only one word: faq_agent, course_guide, or dismiss.
-- faq_agent: for general FAQs about exam dates, course information of all courses offered by BS Degree (Data science and Programming), grading policy and Student Handbook etc.
+- faq_agent: for general FAQs about exam dates, course information of all courses offered by BS Degree (Data science and Programming), grading policy, credit clearing capacity, student Handbook etc.
 - course_guide: for course/curriculum content related questions from field of Data Science and Programming
 - dismiss: for out-of-scope queries that do not fit into the above categories
 

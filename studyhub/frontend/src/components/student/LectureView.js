@@ -341,7 +341,7 @@ const LectureView = () => {
                     </Card>
 
                     {/* Notes Section */}
-                    <Card className="mb-4">
+                    {/* <Card className="mb-4">
                         <div className="p-4">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-lg font-medium text-zinc-900 dark:text-white">Your Notes</h2>
@@ -355,7 +355,7 @@ const LectureView = () => {
                                 <p className="text-zinc-500 dark:text-zinc-400">No notes taken yet.</p>
                             )}
                         </div>
-                    </Card>
+                    </Card> */}
                 </div>
             </div>
         </div>

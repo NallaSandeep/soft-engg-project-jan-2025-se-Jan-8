@@ -17,12 +17,55 @@ const Button = ({
   const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2';
   
   const variants = {
-    primary: 'bg-brand-primary hover:bg-brand-primary/90 text-white focus:ring-brand-primary/50',
-    secondary: 'bg-light-secondary dark:bg-dark-secondary hover:bg-light-accent dark:hover:bg-dark-accent text-light-text-primary dark:text-dark-text-primary focus:ring-brand-primary/50',
-    success: 'bg-brand-success hover:bg-brand-success/90 text-white focus:ring-brand-success/50',
-    danger: 'bg-brand-error hover:bg-brand-error/90 text-white focus:ring-brand-error/50',
-    warning: 'bg-brand-warning hover:bg-brand-warning/90 text-white focus:ring-brand-warning/50',
-    ghost: 'bg-transparent hover:bg-light-accent dark:hover:bg-dark-accent text-light-text-primary dark:text-dark-text-primary'
+    primary: `
+      bg-blue-600 dark:bg-blue-700
+      hover:bg-blue-700 dark:hover:bg-blue-600
+      text-white
+      focus:ring-4 focus:ring-blue-500/30
+      active:bg-blue-800 dark:active:bg-blue-500
+    `,
+    secondary: `
+      bg-gray-200 dark:bg-gray-700
+      hover:bg-gray-300 dark:hover:bg-gray-600
+      text-gray-800 dark:text-gray-100
+      focus:ring-4 focus:ring-gray-500/20
+      active:bg-gray-400 dark:active:bg-gray-500
+    `,
+    success: `
+      bg-green-600 dark:bg-green-700
+      hover:bg-green-700 dark:hover:bg-green-600
+      text-white
+      focus:ring-4 focus:ring-green-500/30
+      active:bg-green-800 dark:active:bg-green-500
+    `,
+    danger: `
+      bg-red-600 dark:bg-red-700
+      hover:bg-red-700 dark:hover:bg-red-600
+      text-white
+      focus:ring-4 focus:ring-red-500/30
+      active:bg-red-800 dark:active:bg-red-500
+    `,
+    warning: `
+      bg-yellow-500 dark:bg-yellow-600
+      hover:bg-yellow-600 dark:hover:bg-yellow-500
+      text-white
+      focus:ring-4 focus:ring-yellow-500/30
+      active:bg-yellow-700 dark:active:bg-yellow-400
+    `,
+    ghost: `
+      bg-transparent
+      hover:bg-gray-100 dark:hover:bg-gray-800
+      text-gray-800 dark:text-gray-200
+      focus:ring-4 focus:ring-gray-500/10
+      active:bg-gray-200 dark:active:bg-gray-700
+    `,
+    link: `
+      bg-transparent
+      hover:underline
+      text-blue-600 dark:text-blue-400
+      focus:ring-2 focus:ring-blue-500/20
+      active:text-blue-800 dark:active:text-blue-200
+    `
   };
 
   const sizes = {

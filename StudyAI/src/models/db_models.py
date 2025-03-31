@@ -15,7 +15,7 @@ class User(Base):
     user_id = Column(String(50), unique=True, default=lambda: str(uuid.uuid4()))
     user_metadata = Column(
         JSON, nullable=True
-    )  # Flexible JSON field for any user metadata
+    )
 
     def __init__(self, user_id=None, metadata=None):
         self.user_id = user_id or str(uuid.uuid4())
@@ -120,24 +120,6 @@ class ReportedResponse(Base):
 # .............................................................................................
 
 
-class UserCreate(BaseModel):
-    user_id: Optional[str] = None
-    metadata: Optional[dict] = None
-
-
-class UserResponse(BaseModel):
-    user_id: str
-    metadata: Optional[dict] = None
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class SessionCreate(BaseModel):
-    metadata: Optional[dict] = None
-
-    model_config = ConfigDict(from_attributes=True)
-
-
 class MessageCreate(BaseModel):
     message: str
 
@@ -167,6 +149,12 @@ class ChatSessionWithMessagesResponse(ChatSessionResponse):
     model_config = ConfigDict(from_attributes=True)
 
 
+class ChatSessionSummaryResponse(ChatSessionResponse):
+    message_count: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 # JSON Patch model
 class JSONPatchOperation(BaseModel):
     op: Literal["replace", "add", "remove", "test", "move", "copy"]
@@ -175,7 +163,6 @@ class JSONPatchOperation(BaseModel):
     from_: Optional[str] = Field(None, alias="from")
 
 
-# Replace SessionRename and SessionBookmark with JSONPatch
 class SessionPatch(BaseModel):
     operations: List[JSONPatchOperation]
 
@@ -196,6 +183,5 @@ class ReportResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-# Replace ReportUpdateStatus with JSONPatch
 class ReportPatch(BaseModel):
     operations: List[JSONPatchOperation]

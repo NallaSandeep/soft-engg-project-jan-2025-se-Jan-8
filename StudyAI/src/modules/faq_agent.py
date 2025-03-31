@@ -16,39 +16,49 @@ class RagAgent(BaseAgent):
     async def get_relevant_docs(self, query: str) -> str:
         """Retrieve relevant documents from the knowledge base."""
         try:
-            topics = extract_keywords(query)
+            # _ = extract_keywords(query)
 
             payload = {
                 "query": query,
-                "limit": 10,
+                "limit": 4,
                 "min_score": 0.3,
                 "tags": [""],
-                "topic": topics,
+                "topic": "",
                 "source": "",
             }
 
             # Make API call to the FAQ search endpoint using the base agent's HTTP client
-            result = await self.make_http_request(
+            response = await self.make_http_request(
                 method="POST",
                 url=f"http://{Config.HOST}:{Config.STUDY_INDEXER_PORT}/api/v1/faq/search",
                 json=payload,
+                headers={"Content-Type": "application/json"},
             )
+            
+            print(f"Response from FAQ search: {response.get('success', False)}")
 
-            if result["success"]:
-                data = result
-                if data.get("results") and len(data["results"]) > 0:
-                    # Combine the results into a comprehensive context
-                    results = data["results"]
-                    context = "\n\n".join(
-                        [
-                            f"Source: {result.get('source', 'Unknown')}\n"
-                            f"Topic: {result.get('topic', 'General')}\n"
-                            f"Q: {result.get('question', '')}\n"
-                            f"A: {result.get('answer', '')}"
-                            for result in results
-                        ]
-                    )
-                    return context
+            if response.get("success", False):
+                # Check if the data field exists and contains the actual results
+                if "data" in response and isinstance(response["data"], dict):
+                    data = response["data"]
+
+                    # Check if the nested data structure contains the results
+                    if (
+                        data.get("success", False)
+                        and "results" in data
+                        and len(data["results"]) > 0
+                    ):
+                        results = data["results"]
+                        context = "\n\n".join(
+                            [
+                                f"Source: {result.get('source', 'Unknown')}\n"
+                                f"Topic: {result.get('topic', 'General')}\n"
+                                f"Q: {result.get('question', '')}\n"
+                                f"A: {result.get('answer', '')}"
+                                for result in results
+                            ]
+                        )
+                        return context
 
             return "No relevant documents found."
 
@@ -59,33 +69,7 @@ class RagAgent(BaseAgent):
 
 def extract_keywords(query: str) -> List[str]:
     """Extract potential keywords from the query to use as topics."""
-    
-    # List of common FAQ topics
-    common_topics = [
-        "grading",
-        "syllabus",
-        "exam",
-        "schedule",
-        "course",
-        "quiz",
-        "midterm",
-        "final",
-        "policy",
-        "grade",
-        "credit",
-    ]
-
-    # Convert to lowercase for matching
-    query_lower = query.lower()
-
-    # Find matches
-    matched_topics = []
-    for topic in common_topics:
-        if topic in query_lower:
-            matched_topics.append(topic)
-
-    # If no matches, return empty list
-    return matched_topics if matched_topics else []
+    pass
 
 
 async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
@@ -124,6 +108,7 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
                 AIMessage(content="I couldn't process your query. Please try again.")
             )
             state["next_step"] = END
+            state = clear_state(state)
             yield state
             return
 
@@ -141,6 +126,7 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
                 # This is a standalone query - add the message directly
                 state["messages"].append(AIMessage(content=response_message))
                 state["next_step"] = END
+                state = clear_state(state)
 
             yield state
             return
@@ -190,7 +176,7 @@ async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
             # Direct error message for standalone query
             state["messages"].append(AIMessage(content=error_message))
             state["next_step"] = END
-            clear_state(state)
+            state = clear_state(state)
     finally:
         # Ensure the state is yielded at the end of processing
         yield state

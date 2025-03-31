@@ -23,7 +23,7 @@ class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
     context: Optional[
         Dict[str, Any]
-    ]  # Changed from ResearchContext to match actual usage
+    ] 
     current_agent: str
     next_step: str
     metadata: Optional[Dict[str, Any]]
@@ -61,7 +61,6 @@ def clear_state(state: AgentState) -> AgentState:
     """Clear the agent state."""
     new_state = initialize_state()
     new_state["messages"] = state["messages"]
-    new_state["current_agent"] = state["current_agent"]
     new_state["next_step"] = state["next_step"]
     return new_state
 
