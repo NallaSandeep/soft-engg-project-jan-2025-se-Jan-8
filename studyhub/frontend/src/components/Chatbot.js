@@ -433,23 +433,18 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
         <ChatBubbleLeftRightIcon className="h-6 w-6 text-blue-200 dark:text-blue-400" />
       </button>
 
-      <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'} transition-opacity duration-300 z-40`}>
+      <div className={`fixed inset-0 bg-black/50 backdrop-blur-md ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'} transition-opacity duration-500 z-40`}>
 
-      <PanelGroup direction='horizontal' className={`flex ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'} fixed inset-0 z-50`}>
+      <PanelGroup direction='horizontal' className={`fixed inset-0 z-50 ${isOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-500`}>
       {/* Chatbot backdrop */}
       <Panel
-        className={`inset-0 chatbot-backdrop`}
+        className={`chatbot-backdrop`}
         onClick={handleBackdropClick}
       >
         </Panel>
-        <PanelResizeHandle className="w-0 z-50" isVertical={true} />
+        <PanelResizeHandle className="w-2 z-50" isVertical={true} />
         {/* Chatbot container */}
-        <Panel defaultSize={30} minSize={30} className={`bg-white dark:bg-zinc-900 shadow-xl transform transition-all duration-300 flex flex-col ${
-            isOpen 
-              ? 'translate-x-0' 
-              : 'translate-x-full'
-          }`}
-        >
+        <Panel defaultSize={35} minSize={35} className={`inset-0 right-0 top-0 bg-white dark:bg-zinc-900 shadow-xl transform transition-all flex flex-col`}>
           {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-zinc-200 dark:border-zinc-700 relative z-20">
           {/* Left side - New Chat/Back Button */}
