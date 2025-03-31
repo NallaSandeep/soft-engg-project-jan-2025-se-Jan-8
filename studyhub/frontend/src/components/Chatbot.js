@@ -124,6 +124,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
           id: chat.session_id,
           name: chat.name,
           messages: Array.isArray(chat.messages) ? chat.messages : [],
+          message_count: chat.message_count || 0,
           date: new Intl.DateTimeFormat('en-US', {
             month: 'short',
             day: 'numeric',
@@ -523,7 +524,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                 </div>
               ) : (
                 <div className="overflow-y-auto h-full">
-                  {allChats?.filter(chat => chat.messages.length > 0).map(chat => (
+                  {allChats?.filter(chat => chat.message_count > 0).map(chat => (
                     <div 
                       key={chat.id} 
                       className="border-b border-zinc-200 dark:border-zinc-700 last:border-0"
