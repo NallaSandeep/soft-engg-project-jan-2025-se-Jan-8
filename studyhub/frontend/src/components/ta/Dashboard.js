@@ -66,16 +66,16 @@ const TADashboard = () => {
             value: courses.length,
             icon: BookOpenIcon
         },
-        { 
-            title: 'Pending Assignments', 
-            value: pendingAssignments,
-            icon: ClipboardDocumentListIcon
-        },
-        { 
-            title: 'Graded This Week', 
-            value: gradedThisWeek,
-            icon: ChartBarIcon
-        }
+        // { 
+        //     title: 'Pending Assignments', 
+        //     value: pendingAssignments,
+        //     icon: ClipboardDocumentListIcon
+        // },
+        // { 
+        //     title: 'Graded This Week', 
+        //     value: gradedThisWeek,
+        //     icon: ChartBarIcon
+        // }
     ];
 
     return (
