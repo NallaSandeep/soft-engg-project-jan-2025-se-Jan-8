@@ -1,0 +1,122 @@
+{
+  "course_info": {
+    "course_id": "CS101",
+    "code": "CS101",
+    "title": "Introduction to Programming",
+    "description": "A first course in computer programming using Python, covering fundamental concepts and techniques.",
+    "department": "Computer Science",
+    "credits": 3
+  },
+  "topics": [
+    {
+      "name": "Variables and Data Types",
+      "description": "Understanding basic data types and variable declaration",
+      "week": 1,
+      "importance": 10
+    },
+    {
+      "name": "Control Structures",
+      "description": "Using if/else statements and loops",
+      "week": 2,
+      "importance": 9
+    },
+    {
+      "name": "Functions",
+      "description": "Defining and using functions for code organization",
+      "week": 3,
+      "importance": 8
+    }
+  ],
+  "concepts_covered": [
+    "Python syntax",
+    "Data types",
+    "Control flow",
+    "Functions",
+    "Basic I/O",
+    "File handling"
+  ],
+  "concepts_not_covered": [
+    "Object-oriented programming",
+    "Advanced data structures",
+    "Web development"
+  ],
+  "weeks": [
+    {
+      "order": 1,
+      "title": "Getting Started with Python",
+      "description": "Installation, environment setup, and first programs",
+      "is_published": true
+    },
+    {
+      "order": 2,
+      "title": "Control Flow",
+      "description": "Decision making and repetition in programs",
+      "is_published": true
+    },
+    {
+      "order": 3,
+      "title": "Functions and Modularity",
+      "description": "Creating reusable code with functions",
+      "is_published": true
+    },
+    {
+      "order": 4,
+      "title": "Basic Data Structures",
+      "description": "Working with lists, tuples, and dictionaries",
+      "is_published": false
+    }
+  ],
+  "lectures": [
+    {
+      "title": "Introduction to Python",
+      "week": 1,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/cs101/intro-python",
+      "transcript": "Welcome to CS101! In this first lecture, we'll explore the Python programming language...",
+      "is_published": true
+    },
+    {
+      "title": "Variables and Simple I/O",
+      "week": 1,
+      "order": 2,
+      "content_type": "document",
+      "url": "https://example.com/cs101/variables.pdf",
+      "is_published": true
+    },
+    {
+      "title": "Conditional Statements",
+      "week": 2,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/cs101/conditionals",
+      "transcript": "Conditional statements allow our programs to make decisions based on data...",
+      "is_published": true
+    },
+    {
+      "title": "Loops and Iteration",
+      "week": 2,
+      "order": 2,
+      "content_type": "code",
+      "url": "https://example.com/cs101/loops",
+      "is_published": true
+    },
+    {
+      "title": "Function Basics",
+      "week": 3,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/cs101/functions",
+      "transcript": "Functions are one of the most important concepts in programming...",
+      "is_published": true
+    },
+    {
+      "title": "Function Parameters and Return Values",
+      "week": 3,
+      "order": 2,
+      "content_type": "lab",
+      "url": "https://example.com/cs101/function-parameters",
+      "is_published": true
+    }
+  ]
+} 

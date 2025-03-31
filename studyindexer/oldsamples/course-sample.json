@@ -1,0 +1,25 @@
+{
+    "course": {
+      "code": "CS401",
+      "title": "Machine Learning Fundamentals",
+      "description": "Introduction to machine learning concepts and techniques",
+      "department": "Computer Science",
+      "credits": 3,
+      "weeks": [
+        {
+          "week_number": 1,
+          "title": "Introduction to ML",
+          "description": "Overview of machine learning paradigms",
+          "lectures": [
+            {
+              "title": "ML Basics",
+              "description": "Introduction to supervised and unsupervised learning",
+              "content": "This lecture introduces the fundamental concepts of ML..."
+            }
+          ]
+        }
+      ],
+      "topics": ["machine learning", "supervised learning", "neural networks"],
+      "concepts_covered": ["regression", "classification", "clustering"]
+    }
+  }

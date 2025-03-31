@@ -1,0 +1,90 @@
+{
+  "course_info": {
+    "course_id": "ML401",
+    "code": "ML401",
+    "title": "Machine Learning Fundamentals",
+    "description": "Introduction to machine learning concepts, algorithms, and practical applications.",
+    "department": "Computer Science",
+    "credits": 4
+  },
+  "topics": [
+    {
+      "name": "Supervised Learning",
+      "description": "Learning from labeled data for classification and regression tasks",
+      "week": 2,
+      "importance": 10
+    },
+    {
+      "name": "Unsupervised Learning",
+      "description": "Finding patterns in unlabeled data",
+      "week": 4,
+      "importance": 8
+    },
+    {
+      "name": "Neural Networks",
+      "description": "Basics of neural network architectures and training",
+      "week": 6,
+      "importance": 9
+    }
+  ],
+  "concepts_covered": [
+    "Data preprocessing",
+    "Feature engineering",
+    "Model training",
+    "Evaluation metrics",
+    "Hyperparameter tuning"
+  ],
+  "concepts_not_covered": [
+    "Deep reinforcement learning",
+    "Advanced neural architectures",
+    "Generative AI"
+  ],
+  "weeks": [
+    {
+      "order": 1,
+      "title": "Introduction to Machine Learning",
+      "description": "Overview of machine learning types and applications",
+      "is_published": true
+    },
+    {
+      "order": 2,
+      "title": "Supervised Learning Algorithms",
+      "description": "Linear regression, logistic regression, and decision trees",
+      "is_published": true
+    },
+    {
+      "order": 3,
+      "title": "Model Evaluation",
+      "description": "Metrics, validation techniques, and overfitting prevention",
+      "is_published": true
+    }
+  ],
+  "lectures": [
+    {
+      "title": "What is Machine Learning?",
+      "week": 1,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/ml401/intro",
+      "transcript": "Machine learning is a field of computer science that gives computers the ability to learn without being explicitly programmed...",
+      "is_published": true
+    },
+    {
+      "title": "Types of Machine Learning",
+      "week": 1,
+      "order": 2,
+      "content_type": "document",
+      "url": "https://example.com/ml401/types.pdf",
+      "is_published": true
+    },
+    {
+      "title": "Linear Regression",
+      "week": 2,
+      "order": 1,
+      "content_type": "video",
+      "url": "https://example.com/ml401/linear-regression",
+      "transcript": "Linear regression is a basic predictive analytics technique where we model the relationship between variables...",
+      "is_published": true
+    }
+  ]
+} 

@@ -25,12 +25,12 @@ class WeekOverview(BaseModel):
 
 class CourseInfo(BaseModel):
     """Course information model"""
-    course_id: int = Field(..., description="Course ID that matches StudyHub")
     code: str = Field(..., description="Course code")
     title: str = Field(..., description="Course title")
     description: str = Field(..., description="Course description")
-    department: str = Field(..., description="Department")
-    credits: int = Field(..., description="Number of credits")
+    course_id: Optional[int] = Field(None, description="Course ID that matches StudyHub")
+    department: Optional[str] = Field(None, description="Department")
+    credits: Optional[int] = Field(None, description="Number of credits")
 
 class CourseTopic(BaseModel):
     """Course topic model"""
@@ -55,9 +55,9 @@ class CourseContent(BaseModel):
 
 class CourseSelectorQuery(BaseSearchQuery):
     """Query model for CourseSelector search"""
-    subscribed_courses: List[int] = Field(
+    subscribed_courses: List[str] = Field(
         ..., 
-        description="List of course IDs the student is subscribed to",
+        description="List of course codes the student is subscribed to (e.g. 'MATH301', 'CS350')",
         min_items=1
     )
     
@@ -65,20 +65,16 @@ class CourseSelectorQuery(BaseSearchQuery):
     def validate_subscribed_courses(cls, v):
         """Validate that there is at least one subscribed course"""
         if not v:
-            raise ValueError("At least one subscribed course ID must be provided")
+            raise ValueError("At least one subscribed course code must be provided")
         return v
 
 class CourseMatchResult(BaseModel):
     """Search result model for matched courses"""
-    course_id: int = Field(..., description="Course ID")
-    code: str = Field(..., description="Course code")
+    code: str = Field(..., description="Course code (e.g. 'MATH301', 'CS350')")
     title: str = Field(..., description="Course title")
-    description: str = Field(..., description="Course description")
-    department: str = Field(..., description="Department")
-    credits: int = Field(..., description="Number of credits")
+    description: Optional[str] = Field(None, description="Course description")
     score: float = Field(..., ge=0.0, le=1.0, description="Relevance score")
     matched_topics: List[str] = Field(default_factory=list, description="Topics that matched the query")
-    weeks: List[int] = Field(default_factory=list, description="Relevant week numbers")
 
 class CourseSelectorResponse(BaseSearchResponse):
     """Response model for CourseSelector operations"""

@@ -1,8 +1,3 @@
-Awesome! I’ll create a detailed beginner-to-intermediate level 'Data Structures' course covering both fundamental structures and related algorithms. It will span 8 weeks with real YouTube videos and public PDFs linked to each lecture.
-
-I'll share the finalized JSON-formatted output once ready.
-
-```json
 {
   "course": {
     "course_id": 3,
@@ -873,4 +868,3 @@ I'll share the finalized JSON-formatted output once ready.
     }
   ]
 }
-```

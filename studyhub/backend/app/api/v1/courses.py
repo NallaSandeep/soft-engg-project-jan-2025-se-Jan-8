@@ -961,7 +961,6 @@ def get_course_progress(course_id):
         }), 500
 
 @courses_bp.route('/lectures/<int:lecture_id>/pdf', methods=['GET', 'OPTIONS'])
-@jwt_required()
 def get_lecture_pdf(lecture_id):
     """Get lecture PDF file"""
     print(f"\n=== PDF Request ===")

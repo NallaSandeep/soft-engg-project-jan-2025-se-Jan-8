@@ -249,7 +249,7 @@ const Dashboard = () => {
                                             a 15.9155 15.9155 0 0 1 0 31.831
                                             a 15.9155 15.9155 0 0 1 0 -31.831"
                                         fill="none"
-                                        stroke="#eee"
+                                        stroke="#828282"
                                         strokeWidth="3"
                                     />
                                     <path
@@ -285,7 +285,7 @@ const Dashboard = () => {
                                             a 15.9155 15.9155 0 0 1 0 31.831
                                             a 15.9155 15.9155 0 0 1 0 -31.831"
                                         fill="none"
-                                        stroke="#eee"
+                                        stroke="#828282"
                                         strokeWidth="3"
                                     />
                                     <path
@@ -315,13 +315,13 @@ const Dashboard = () => {
                                 <p className="text-sm text-zinc-600 dark:text-zinc-400">Completed</p>
                             </div>
                             <div className="w-16 h-16">
-                                <svg viewBox="0 0 36 36" className="circular-chart">
+                                <svg viewBox="0 0 36 36" className="circular-chart text-zinc-900">
                                     <path
                                         d="M18 2.0845
                                             a 15.9155 15.9155 0 0 1 0 31.831
                                             a 15.9155 15.9155 0 0 1 0 -31.831"
                                         fill="none"
-                                        stroke="#eee"
+                                        stroke="#828282"
                                         strokeWidth="3"
                                     />
                                     <path
