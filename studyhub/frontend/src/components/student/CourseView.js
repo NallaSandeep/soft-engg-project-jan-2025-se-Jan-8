@@ -18,7 +18,7 @@ const CourseView = () => {
     const [isSummarizing, setIsSummarizing] = useState(false);
     const [summaryError, setSummaryError] = useState(null);
 
-    const [practiceSuggestions, setPracticeSuggestions] = useState([]);
+    const [practiceSuggestions, setPracticeSuggestions] = useState(null); // Updated to string
     const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false);
     const [suggestionsError, setSuggestionsError] = useState(null);
 
@@ -90,7 +90,7 @@ const CourseView = () => {
     const fetchPracticeSuggestions = async () => {
         setIsFetchingSuggestions(true);
         setSuggestionsError(null);
-    
+
         try {
             const contentToAnalyze = {
                 courseDescription: course.description,
@@ -101,7 +101,7 @@ const CourseView = () => {
                     assignments: week.assignments?.map(assignment => assignment.title + (assignment.description ? ": " + assignment.description : ""))
                 }))
             };
-    
+
             const response = await fetch('http://127.0.0.1:5010/chat/message', {
                 method: 'POST',
                 headers: {
@@ -111,11 +111,11 @@ const CourseView = () => {
                     message: `Suggest practice assignments based on this course content: ${JSON.stringify(contentToAnalyze)}`
                 })
             });
-    
+
             if (!response.ok) throw new Error('Failed to fetch suggestions');
             const data = await response.json();
             console.log('Suggestions:', data.content || data.response);
-            setPracticeSuggestions(data.suggestions || []);
+            setPracticeSuggestions(data.content || data.response || "No suggestions available."); // Updated to handle multi-line text
         } catch (err) {
             console.error('Error fetching practice suggestions:', err);
             setSuggestionsError('Failed to fetch practice assignment suggestions');
@@ -407,17 +407,15 @@ const CourseView = () => {
     </div>
 
     {suggestionsError && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-4">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-zinc-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-4">
             {suggestionsError}
         </div>
     )}
 
-    {practiceSuggestions.length > 0 ? (
-        <ul className="list-disc pl-6 text-zinc-700 dark:text-zinc-300">
-            {practiceSuggestions.map((suggestion, index) => (
-                <li key={index}>{suggestion}</li>
-            ))}
-        </ul>
+    {practiceSuggestions ? (
+        <div className="prose dark:prose-invert max-w-none">
+            <pre className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-300">{practiceSuggestions}</pre>
+        </div>
     ) : (
         <div className="text-center text-zinc-500 dark:text-zinc-400 py-4">
             {isFetchingSuggestions ? 'Fetching suggestions...' : 'No suggestions available. Click the button above to fetch suggestions.'}

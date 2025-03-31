@@ -15,6 +15,11 @@ const AssignmentView = () => {
     const [answers, setAnswers] = useState({});
     const [submitted, setSubmitted] = useState(false);
 
+    // State for practice suggestions
+    const [practiceSuggestions, setPracticeSuggestions] = useState([]);
+    const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false);
+    const [suggestionsError, setSuggestionsError] = useState(null);
+
     useEffect(() => {
         fetchAssignmentContent();
     }, [courseId, assignmentId]);
@@ -93,6 +98,43 @@ const AssignmentView = () => {
             }
         } catch (err) {
             console.error('Error submitting assignment:', err);
+        }
+    };
+
+    // Fetch practice suggestions
+    const fetchPracticeSuggestions = async () => {
+        setIsFetchingSuggestions(true);
+        setSuggestionsError(null);
+
+        try {
+            const contentToAnalyze = {
+                courseDescription: course?.description,
+                assignmentTitle: assignment?.title,
+                questions: assignment?.questions?.map(q => ({
+                    title: q.title,
+                    content: q.content,
+                    type: q.type,
+                })),
+            };
+
+            const response = await fetch('http://127.0.0.1:5010/chat/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: `Suggest practice assignments based on this assignment content: ${JSON.stringify(contentToAnalyze)}`,
+                }),
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch suggestions');
+            const data = await response.json();
+            setPracticeSuggestions(data.suggestions || []);
+        } catch (err) {
+            console.error('Error fetching practice suggestions:', err);
+            setSuggestionsError('Failed to fetch practice assignment suggestions');
+        } finally {
+            setIsFetchingSuggestions(false);
         }
     };
 
@@ -353,6 +395,53 @@ const AssignmentView = () => {
                         ))}
                     </div>
 
+                    {/* Practice Assignment Suggestions */}
+                    <Card className="mt-6">
+                        <div className="p-4">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Practice Assignment Suggestions</h2>
+                                <button
+                                    onClick={fetchPracticeSuggestions}
+                                    disabled={isFetchingSuggestions}
+                                    className="btn-primary flex items-center space-x-1"
+                                >
+                                    {isFetchingSuggestions ? (
+                                        <>
+                                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            <span>Fetching...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <ClipboardDocumentListIcon className="w-4 h-4" />
+                                            <span>Get Suggestions</span>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+
+                            {suggestionsError && (
+                                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-4">
+                                    {suggestionsError}
+                                </div>
+                            )}
+
+                            {practiceSuggestions.length > 0 ? (
+                                <ul className="list-disc pl-6 text-zinc-700 dark:text-zinc-300">
+                                    {practiceSuggestions.map((suggestion, index) => (
+                                        <li key={index}>{suggestion}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <div className="text-center text-zinc-500 dark:text-zinc-400 py-4">
+                                    {isFetchingSuggestions ? 'Fetching suggestions...' : 'No suggestions available. Click the button above to fetch suggestions.'}
+                                </div>
+                            )}
+                        </div>
+                    </Card>
+
                     {/* Submit Button */}
                     <div className="mt-6 flex items-center justify-between">
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
@@ -378,4 +467,4 @@ const AssignmentView = () => {
     );
 };
 
-export default AssignmentView; 
+export default AssignmentView;
