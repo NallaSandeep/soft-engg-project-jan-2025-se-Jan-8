@@ -188,7 +188,7 @@ const AdminDashboard = () => {
                                 <div 
                                     key={course.id} 
                                     className="p-4 border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer rounded-md"
-                                    // onClick={() => navigateTo(`/admin/courses/${course.id}`)}
+                                    onClick={() => navigateTo(`/admin/courses/${course.id}/content`)}
                                 >
                                     <div className="flex justify-between">
                                         <div>
@@ -241,4 +241,4 @@ const AdminDashboard = () => {
     );
 };
 
-export default AdminDashboard; 
+export default AdminDashboard;

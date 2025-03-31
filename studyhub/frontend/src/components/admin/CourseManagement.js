@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { courseApi } from '../../services/apiService';
+import { 
+    PlusCircleIcon,
+    AcademicCapIcon,
+    PencilSquareIcon,
+    DocumentTextIcon
+} from '@heroicons/react/24/outline';
 
 const CourseManagement = () => {
     const [courses, setCourses] = useState([]);
@@ -73,93 +79,113 @@ const CourseManagement = () => {
         }
     };
 
+    const ActionButton = ({ label, icon: Icon, onClick, color = 'blue' }) => {
+        const colorClasses = {
+            blue: 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white',
+            green: 'bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white',
+            gray: 'bg-zinc-600 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white'
+        };
+    
+        return (
+            <button
+                onClick={onClick}
+                className={`flex items-center justify-center space-x-2 px-4 py-2 rounded-lg ${colorClasses[color]} shadow-sm hover:shadow-md transition-shadow`}
+            >
+                <Icon className="w-5 h-5" />
+                <span>{label}</span>
+            </button>
+        );
+    };
+
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-full">
-                <div className="text-gray-600">Loading courses...</div>
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
+                <span className="ml-3 text-zinc-600 dark:text-zinc-400">Loading courses...</span>
             </div>
         );
     }
 
     return (
-        <div className="container mx-auto px-4 py-6">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Course Management</h1>
-                <button
+        <div className="space-y-8">
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold mb-6 text-zinc-900 dark:text-white">Course Management</h1>
+                <ActionButton 
+                    label="Add New Course" 
+                    icon={PlusCircleIcon} 
                     onClick={() => setShowAddForm(true)}
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                >
-                    Add New Course
-                </button>
+                    color="green"
+                />
             </div>
 
             {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-                    {error}
+                <div className="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded relative" role="alert">
+                    <strong className="font-bold">Error!</strong>
+                    <span className="block sm:inline"> {error}</span>
                 </div>
             )}
 
             {/* Add Course Form */}
             {showAddForm && (
-                <div className="bg-white rounded-lg shadow p-6 mb-6">
-                    <h2 className="text-xl font-semibold mb-4">Add New Course</h2>
+                <div className="glass-card p-6 mb-6 shadow-md dark:shadow-zinc-800/30">
+                    <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-white">Add New Course</h2>
                     {formError && (
-                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        <div className="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded mb-4">
                             {formError}
                         </div>
                     )}
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Course Code</label>
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Course Code</label>
                             <input
                                 type="text"
                                 name="code"
                                 value={formData.code}
                                 onChange={handleInputChange}
-                                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="mt-1 block w-full rounded-md border border-zinc-300 dark:border-zinc-700 px-3 py-2 bg-white dark:bg-zinc-800 shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-blue-400 text-zinc-900 dark:text-white"
                                 required
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Course Name</label>
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Course Name</label>
                             <input
                                 type="text"
                                 name="name"
                                 value={formData.name}
                                 onChange={handleInputChange}
-                                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="mt-1 block w-full rounded-md border border-zinc-300 dark:border-zinc-700 px-3 py-2 bg-white dark:bg-zinc-800 shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-blue-400 text-zinc-900 dark:text-white"
                                 required
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Description</label>
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Description</label>
                             <textarea
                                 name="description"
                                 value={formData.description}
                                 onChange={handleInputChange}
-                                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="mt-1 block w-full rounded-md border border-zinc-300 dark:border-zinc-700 px-3 py-2 bg-white dark:bg-zinc-800 shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-blue-400 text-zinc-900 dark:text-white"
                                 rows="3"
                                 required
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Max Students</label>
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Max Students</label>
                             <input
                                 type="number"
                                 name="max_students"
                                 value={formData.max_students}
                                 onChange={handleInputChange}
-                                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="mt-1 block w-full rounded-md border border-zinc-300 dark:border-zinc-700 px-3 py-2 bg-white dark:bg-zinc-800 shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-blue-400 text-zinc-900 dark:text-white"
                                 min="1"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Enrollment Type</label>
+                            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Enrollment Type</label>
                             <select
                                 name="enrollment_type"
                                 value={formData.enrollment_type}
                                 onChange={handleInputChange}
-                                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="mt-1 block w-full rounded-md border border-zinc-300 dark:border-zinc-700 px-3 py-2 bg-white dark:bg-zinc-800 shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-blue-400 text-zinc-900 dark:text-white"
                             >
                                 <option value="open">Open</option>
                                 <option value="closed">Closed</option>
@@ -173,13 +199,13 @@ const CourseManagement = () => {
                                     setShowAddForm(false);
                                     setFormError(null);
                                 }}
-                                className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                                className="bg-zinc-300 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 px-4 py-2 rounded hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white px-4 py-2 rounded shadow-sm hover:shadow-md transition-shadow"
                             >
                                 Create Course
                             </button>
@@ -192,37 +218,52 @@ const CourseManagement = () => {
             <div className="grid grid-cols-1 gap-6">
                 {courses.length > 0 ? (
                     courses.map(course => (
-                        <div key={course.id} className="bg-white rounded-lg shadow p-6">
+                        <div key={course.id} className="glass-card p-6 hover:shadow-lg transition-shadow">
                             <div className="flex justify-between items-start">
-                                <div>
-                                    <h2 className="text-xl font-semibold mb-2">{course.name}</h2>
-                                    <p className="text-gray-600 mb-2">{course.code}</p>
-                                    <p className="text-gray-700 mb-4">{course.description}</p>
-                                    <div className="text-sm text-gray-600">
-                                        <p>Max Students: {course.max_students || 'Unlimited'}</p>
-                                        <p>Enrollment: {course.enrollment_type}</p>
+                                <div className="flex items-start gap-3">
+                                    <AcademicCapIcon className="w-6 h-6 text-blue-500 dark:text-blue-400" />
+                                    <div>
+                                        <h2 className="text-xl font-semibold mb-2 text-zinc-900 dark:text-white">{course.name}</h2>
+                                        <p className="text-zinc-600 dark:text-zinc-400 mb-2">{course.code}</p>
+                                        <p className="text-zinc-700 dark:text-zinc-300 mb-4">{course.description}</p>
+                                        <div className="text-sm text-zinc-600 dark:text-zinc-400">
+                                            <p>Max Students: {course.max_students || 'Unlimited'}</p>
+                                            <p className="flex items-center">
+                                                <span>Enrollment:</span>
+                                                <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                                                    course.enrollment_type === 'open'
+                                                        ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400'
+                                                        : course.enrollment_type === 'closed'
+                                                            ? 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400'
+                                                            : 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400'
+                                                }`}>
+                                                    {course.enrollment_type}
+                                                </span>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="space-x-2">
-                                    <button
+                                <div className="space-x-2 flex">
+                                    <ActionButton
+                                        label="Manage Content"
+                                        icon={DocumentTextIcon}
                                         onClick={() => navigate(`/admin/courses/${course.id}/content`)}
-                                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                                    >
-                                        Manage Content
-                                    </button>
-                                    <button
+                                        color="blue"
+                                    />
+                                    <ActionButton
+                                        label="Edit Course"
+                                        icon={PencilSquareIcon}
                                         onClick={() => navigate(`/admin/courses/${course.id}/edit`)}
-                                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                                    >
-                                        Edit Course
-                                    </button>
+                                        color="gray"
+                                    />
                                 </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className="text-center py-8 bg-white rounded-lg shadow">
-                        <p className="text-gray-600">No courses available. Create your first course!</p>
+                    <div className="glass-card p-8 text-center">
+                        <AcademicCapIcon className="w-12 h-12 text-zinc-400 dark:text-zinc-500 mx-auto mb-4" />
+                        <p className="text-zinc-600 dark:text-zinc-400">No courses available. Create your first course!</p>
                     </div>
                 )}
             </div>
@@ -230,4 +271,4 @@ const CourseManagement = () => {
     );
 };
 
-export default CourseManagement; 
+export default CourseManagement;

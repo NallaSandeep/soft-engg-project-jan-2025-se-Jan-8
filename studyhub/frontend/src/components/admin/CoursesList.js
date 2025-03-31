@@ -24,14 +24,17 @@ const CoursesList = () => {
         try {
             setLoading(true);
             const response = await courseApi.getCourses();
-            if (response.success) {
+            console.log('Courses response:', response);
+            
+            if (response && response.success) {
                 setCourses(response.data || []);
             } else {
-                setError(response.message || 'Failed to load courses');
+                setError((response && response.message) || 'Failed to load courses');
+                console.error('API error on courses fetch:', response);
             }
         } catch (err) {
             console.error('Error fetching courses:', err);
-            setError('Failed to load courses');
+            setError('Failed to load courses. Please check your connection and try again.');
         } finally {
             setLoading(false);
         }
@@ -149,13 +152,17 @@ const CoursesList = () => {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                            course.is_active 
+                                            course.is_active === true || course.is_active === 'active'
                                                 ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400' 
                                                 : course.is_active === 'inactive'
                                                 ? 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400'
                                                 : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-400'
                                         }`}>
-                                            {course.is_active ? 'Active' : 'Inactive'}
+                                            {course.is_active === true || course.is_active === 'active' 
+                                             ? 'Active' 
+                                             : course.is_active === 'inactive' 
+                                             ? 'Inactive' 
+                                             : 'Archived'}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
