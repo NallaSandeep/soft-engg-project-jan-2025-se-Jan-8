@@ -128,6 +128,7 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
       The API will be available at: http://localhost:5000
 
 4. **Frontend Setup**: (Need Node and NPM installed)
+
    a. Change directory
       ```powershell
       cd .\studyhub\frontend
@@ -149,6 +150,7 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 
 
 5. **StudyAI Setup**: 
+
    a. Change directory:
       ```bash
       cd studyai
