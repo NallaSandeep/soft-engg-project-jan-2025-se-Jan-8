@@ -35,17 +35,18 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 │   ├── logs/             # Service logs
 │   └── setup.ps1         # Service setup
 │
-├── app.py              # FastAPI application entry point
-├── config.py           # Configuration management
-├── requirements.txt    # Python dependencies
-├── src/
-│   ├── core/           # Core components (agents, workflow)
-│   ├── database.py     # Database connection
-│   ├── models/         # Data models (Pydantic & SQLAlchemy)
-│   ├── modules/        # Agent modules
-│   ├── routes/         # API routes
-│   └── services/       # Business logic
-```
+├── studyai/   q          # Document processing service
+│   ├── app.py            # FastAPI application
+│   ├── src/             
+│   │   ├── core/         # Core components (agents, workflow)
+│   │   ├── models/       # Processed documents
+│   │   └── modules/      # Agent modules
+│   │   └── routes/       # API routes
+│   │   └── services/     # Business logic
+│   │   └── database.py   # Database connection
+│   ├── config.py         # Configuration management
+│   └── requirements.txt  # Python dependencies
+
 ```
 
 ## Quick Start Guide
@@ -59,150 +60,150 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 
 2. **StudyIndexer Setup**: (Needs WSL for Windows or Linux (Ubuntu))
 
-a. Change directory
-   ```bash
-   cd studyindexer
+   a. Change directory
+      ```bash
+      cd studyindexer
+      ```
 
-a. Run the setup script:
-   ```bash
-   ./setup.sh
-   ```
+   b. Run the setup script:
+      ```bash
+      ./setup.sh
+      ```
+      This will:
+      - Create required directories
+      - Install dependencies
+
+   c. Run the application:
+      ```bash
+      python manage_services.py setup
+      ```
+      ```bash
+      python manage_services.py start
+      ```
    This will:
-   - Create required directories
-   - Install dependencies
+      - Starts ChromaDB
+      - Starts FastAPI (This takes 2-3 mins)
+      - Check status using below command
 
-b. Run the application:
-```bash
-   python manage_services.py setup
-   ```
-```bash
-   python manage_services.py start
-   ```
-This will:
-   - Starts ChromaDB
-   - Starts FastAPI (This takes 2-3 mins)
-   - Check status using below command
+      ```bash
+      python manage_services.py status
+      ```
+      - Keep checking status (for 2-3 mins)
+      - Check logs if the issue persists even after 3 mins
 
-```bash
-   python manage_services.py status
-   ```
-   - Keep checking status (for 2-3 mins)
-   - Check logs if the issue persists even after 3 mins
-
-```bash
-   python manage_services.py restart
-   ```
-   - Restarts chroma db and FastAPI
+      ```bash
+      python manage_services.py restart
+      ```
+      - Restarts chroma db and FastAPI
 
 3. **Backend Setup**:
 
-a. Change directory
-   ```powershell
-   cd .\studyhub\backend
-   ```
+   a. Change directory
+      ```powershell
+      cd .\studyhub\backend
+      ```
 
-b Create and activate a virtual environment:
-   ```powershell
-   python -m venv .venv
-   .\.venv\Scripts\activate  # Windows
-   # or
-   source .venv/bin/activate     # Linux/macOS
-   ```
+   b Create and activate a virtual environment:
+      ```powershell
+      python -m venv .venv
+      .\.venv\Scripts\activate  # Windows
+      # or
+      source .venv/bin/activate     # Linux/macOS
+      ```
 
-c. Run the setup script:
-   ```powershell
-   .\setup.ps1
-   ```
-   This will:
-   - Activate the virtual environment
-   - Install all required dependencies
-   - Initialize the database (if not already initialized)
-   - Create necessary directories
+   c. Run the setup script:
+      ```powershell
+      .\setup.ps1
+      ```
+      This will:
+      - Activate the virtual environment
+      - Install all required dependencies
+      - Initialize the database (if not already initialized)
+      - Create necessary directories
 
-d. Start the server:
-   ```powershell
-   .\start.ps1
-   ```
-   The API will be available at: http://localhost:5000
+   d. Start the server:
+      ```powershell
+      .\start.ps1
+      ```
+      The API will be available at: http://localhost:5000
 
-4. **Frontend Setup**: (Need Node and NPM installed before starting)
-a. Change directory
-   ```powershell
-   cd .\studyhub\frontend
-   ```
+4. **Frontend Setup**: (Need Node and NPM installed)
+   a. Change directory
+      ```powershell
+      cd .\studyhub\frontend
+      ```
 
-b. Run the setup script:
-   ```powershell
-   .\setup.ps1
-   ```
-   This will:
-   - Create required directories
-   - Install dependencies
-c. Start the development server
-   - `npm start`: Start development server
+   b. Run the setup script:
+      ```powershell
+      .\setup.ps1
+      ```
+      This will:
+      - Create required directories
+      - Install dependencies
+   c. Start the development server
+      - `npm start`: Start development server
 
-d. Access the application:
-   - Local: http://localhost:3000
-   - Network: http://172.20.16.1:3000
+   d. Access the application:
+      - Local: http://localhost:3000
+      - Network: http://172.20.16.1:3000
 
 
 5. **StudyAI Setup**: 
-# Needs WSL for Windows or Linux (Ubuntu)
-1. Change directory:
-   ```bash
-    cd studyai
-   ```
+   a. Change directory:
+      ```bash
+      cd studyai
+      ```
 
-2. Create a virtual environment:
-   ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows: venv/Scripts/activate
-   ```
+   b. Create a virtual environment:
+      ```bash
+      python -m venv venv
+      source venv/bin/activate  # On Windows: venv/Scripts/activate
+      ```
 
-3. Install dependencies:
-   ```bash
-    pip install -r requirements.txt
-   ```
+   c. Install dependencies:
+      ```bash
+      pip install -r requirements.txt
+      ```
 
-3. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   ```
+   d. Set up environment variables:
+      ```bash
+      cp .env.example .env
+      ```
 
-4. Configure the `.env` file with your API keys (see API Key Setup section below)
+   e. Configure the `.env` file with your API keys (see API Key Setup section below)
 
-5. Start the development server:
-   ```bash
-    python app.py
-    # or
-    uvicorn app:app --reload
-   ```
+   f. Start the development server:
+      ```bash
+      python app.py
+      # or
+      uvicorn app:app --reload
+      ```
 
-## API Key Setup
+   ## API Key Setup
 
-### Google Gemini API
+   ### Google Gemini API
 
-1. Go to [Google AI Studio](https://aistudio.google.com/)
-2. Create a google studio account(use personal email id) if you don't have one
-3. Generate an API key from the home page
-4. Add the API key to your `.env` file:
+   1. Go to [Google AI Studio](https://aistudio.google.com/)
+   2. Create a google studio account(use personal email id) if you don't have one
+   3. Generate an API key from the home page
+   4. Add the API key to your `.env` file:
 
-   ```
-   GEMINI_API_KEY=your_api_key_here
-   ```
+      ```
+      GEMINI_API_KEY=your_api_key_here
+      ```
 
-### LangSmith API
+   ### LangSmith API
 
-1. Create an account at [LangSmith](https://smith.langchain.com/)
-2. Navigate to the API Keys section in your account settings
-3. Create a new API key
-4. Add the API key to your `.env` file:
+   1. Create an account at [LangSmith](https://smith.langchain.com/)
+   2. Navigate to the API Keys section in your account settings
+   3. Create a new API key
+   4. Add the API key to your `.env` file:
 
-   ```
-   LANGCHAIN_API_KEY=your_api_key_here
-   LANGCHAIN_PROJECT=your_project_name
-   LANGSMITH_TRACING_V2=true
-   ```
+      ```
+      LANGCHAIN_API_KEY=your_api_key_here
+      LANGCHAIN_PROJECT=your_project_name
+      LANGSMITH_TRACING_V2=true
+      ```
 
 
 
