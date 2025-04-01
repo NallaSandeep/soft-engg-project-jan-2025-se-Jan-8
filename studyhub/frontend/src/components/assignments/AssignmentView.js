@@ -255,7 +255,7 @@ const AssignmentView = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    message: `Please provide suggestions for this assignment submission. 
+                    message: `Please provide me guidance for this assignment submission. 
                      here is the assignement ${JSON.stringify(assignment)}.
                      Here are submitted answers ${JSON.stringify(answers)}. 
                      Here is the correct answers ${JSON.stringify(correctAnswers)}
@@ -750,8 +750,8 @@ const AssignmentView = () => {
                             {renderSubmissionDetails()}
                                         </div>
                     </div>
-                    /* NEW: Add Summary Section Here
-                    {(!lastSubmission && assignment.type === 'practice') && (<div className="glass-card p-6 mb-6">
+                    {/* /* NEW: Add Summary Section Here*/ }
+                    {(lastSubmission && assignment.type === 'practice') && (<div className="glass-card p-6 mb-6">
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Assignment Guidance </h2>
                             <button
