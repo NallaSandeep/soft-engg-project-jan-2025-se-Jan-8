@@ -8,9 +8,9 @@ from src.core.state import (
 
 from src.prompt.prompts import (
     COMPLEX_QUERY_PROMPT,
-    ROUTING_PROMPT,
+    get_routing_prompt,
     BREAKDOWN_QUERY_PROMPT,
-    RESPONSE_SYNTHESIS_PROMPT,
+    get_response_synthesis_prompt,
 )
 
 
@@ -30,7 +30,7 @@ class Supervisor(BaseAgent):
                 return "supervisor"  # Complex query, route to supervisor
 
             # Regular routing for simple queries
-            routing_prompt = ROUTING_PROMPT.format(query=message)
+            routing_prompt = get_routing_prompt(query=message)
             chain = self.create_chain(routing_prompt)
             response = await chain.ainvoke({})
             return self._parse_routing_response(response)
@@ -177,7 +177,7 @@ class Supervisor(BaseAgent):
         context = "\n".join(context_parts)
 
         # Create prompt for response synthesis
-        prompt = RESPONSE_SYNTHESIS_PROMPT.format(
+        prompt = get_response_synthesis_prompt(
             original_query=original_query, context=context
         )
 

@@ -36,6 +36,7 @@ class RagAgent(BaseAgent):
             )
             
             print(f"Response from FAQ search: {response.get('success', False)}")
+            print(response)
 
             if response.get("success", False):
                 # Check if the data field exists and contains the actual results

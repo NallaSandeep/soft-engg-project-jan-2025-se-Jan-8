@@ -21,67 +21,52 @@ class CourseGuideAgent(BaseAgent):
 
         # Mock data for testing
         self.mock_courses = {
-            "programming": [
+            "business": [
                 {
-                    "code": "CS101",
-                    "title": "Introduction to Programming",
-                    "description": "Learn fundamentals of programming using Python. Covers variables, loops, conditionals, and basic data structures.",
-                },
-                {
-                    "code": "SE101",
-                    "title": "Software Engineering Basics",
-                    "description": "Introduction to software development lifecycle, requirements engineering, and project management.",
+                    "code": "BA201",
+                    "title": "Business Analytics",
+                    "description": "A comprehensive course providing in-depth coverage of data visualization techniques, statistical distribution fitting, association analysis, Bayesian inference, and advanced demand modeling for informed business decision-making.",
                 }
             ],
-            "mathematics": [
+            "database": [
                 {
-                    "code": "MATH101",
-                    "title": "Calculus I",
-                    "description": "Introduction to differential and integral calculus of single-variable functions.",
-                },
-                {
-                    "code": "MATH201",
-                    "title": "Linear Algebra",
-                    "description": "Study of vector spaces, linear transformations, matrices, and determinants.",
-                },
+                    "code": "DBMS101",
+                    "title": "Database Management Systems",
+                    "description": "This course provides a comprehensive introduction to Database Management Systems (DBMS), covering foundational and advanced database concepts. Students will explore database design, entity-relationship (ER) modeling, relational algebra, and relational calculus. The course includes hands-on experience with Structured Query Language (SQL) for data retrieval, modification, and optimization. Topics such as indexing, query processing, normalization techniques, and transaction management are explored in depth. Advanced topics include data constraints, integrity rules, and security considerations. The course also introduces mathematical underpinnings such as predicate logic and quantifiers in relational calculus. Through practical exercises, case studies, and real-world applications, students will develop strong database management skills applicable to various industries. The course spans 12 weeks and is structured to provide a systematic and practice-oriented understanding of modern database",
+                }
             ],
-            "ai": [
+            "programming": [
                 {
-                    "code": "AI101",
-                    "title": "Introduction to Artificial Intelligence",
-                    "description": "Overview of AI concepts, search algorithms, knowledge representation, and machine learning basics.",
+                    "code": "SE101",
+                    "title": "Software Engineering",
+                    "description": "A comprehensive course covering software engineering principles, processes, and best practices across the entire software development lifecycle, from requirements gathering to post-deployment maintenance. Emphasis is placed on practical applications, risk management, and modern software methodologies.",
                 },
                 {
-                    "code": "ML202",
-                    "title": "Machine Learning",
-                    "description": "Fundamental machine learning algorithms, including supervised and unsupervised learning techniques.",
+                    "code": "MAD201",
+                    "title": "Modern Application Development - II",
+                    "description": "An advanced course that dives deep into modern frontend development using JavaScript and Vue.js, focusing on building dynamic, interactive web applications. The course emphasizes the principles of reactive programming, component-based architecture, and advanced client-side state management. It covers essential techniques for working with the Document Object Model (DOM), handling asynchronous operations, and applying best practices in frontend architecture and design. Students will gain hands-on experience through practical implementations and real-world projects.",
                 },
             ],
             "default": [
                 {
-                    "code": "CS101",
-                    "title": "Introduction to Programming",
-                    "description": "Learn fundamentals of programming using Python. Covers variables, loops, conditionals, and basic data structures.",
-                },
-                {
                     "code": "SE101",
-                    "title": "Software Engineering Basics",
-                    "description": "Introduction to software development lifecycle, requirements engineering, and project management.",
+                    "title": "Software Engineering ",
+                    "description": "A comprehensive course covering software engineering principles, processes, and best practices across the entire software development lifecycle, from requirements gathering to post-deployment maintenance. Emphasis is placed on practical applications, risk management, and modern software methodologies.",
                 },
             ],
         }
 
         self.mock_course_content = {
-            "CS101": {
+            "MAD201": {
                 "source_course": {
-                    "title": "Introduction to Programming",
-                    "code": "CS101",
-                    "match_score": 0.95,
+                    "title": "Modern Application Development - II",
+                    "code": "MAD201",
+                    "match_score": 0.92,
                 },
                 "content_chunks": [
                     {
                         "type": "lecture",
-                        "title": "Variables and Data Types",
+                        "title": "Vue.js Fundamentals",
                         "description": "An introduction to variables, primitive data types, and type conversion in Python.",
                         "week_number": 1,
                     },
@@ -114,93 +99,93 @@ class CourseGuideAgent(BaseAgent):
                 "content_chunks": [
                     {
                         "type": "lecture",
-                        "title": "Software Development Lifecycle",
-                        "description": "Overview of the stages in software development.",
-                        "week_number": 1,
-                    },
-                    {
-                        "type": "lab",
-                        "title": "Requirements Gathering",
-                        "description": "Techniques for effective requirements gathering.",
+                        "title": "Deconstructing the Software Development Process",
+                        "description": "Understanding the stages of software development.",
                         "week_number": 1,
                     },
                     {
                         "type": "lecture",
-                        "title": "Agile Methodologies",
-                        "description": "Introduction to Agile and Scrum frameworks.",
+                        "title": "Software Requirements",
+                        "description": "Gathering and analyzing software requirements.",
                         "week_number": 2,
                     },
                     {
-                        "type": "assignment",
-                        "title": "Project Specification",
-                        "description": "Create a detailed specification for a simple software project.",
-                        "week_number": 2,
+                        "type": "lecture",
+                        "title": "Software User Interfaces",
+                        "description": "Designing user-friendly interfaces.",
+                        "week_number": 3,
+                    },
+                    {
+                        "type": "lecture",
+                        "title": "Software Project Management",
+                        "description": "Managing software projects effectively.",
+                        "week_number": 4,
                     },
                 ],
             },
-            "AI101": {
+            "DBMS101": {
                 "source_course": {
-                    "title": "Introduction to Artificial Intelligence",
-                    "code": "AI101",
+                    "title": "Database Management Systems",
+                    "code": "DBMS101",
                     "match_score": 0.94,
                 },
                 "content_chunks": [
                     {
                         "type": "lecture",
-                        "title": "AI Foundations",
-                        "description": "Introduction to the key concepts and history of artificial intelligence.",
+                        "title": "Foundations of Database Systems",
+                        "description": "Introduction to database abstraction, schemas, and data models.",
                         "week_number": 1,
                     },
                     {
                         "type": "lab",
-                        "title": "AI Problem Solving",
-                        "description": "Implementing basic search algorithms for problem solving.",
+                        "title": "Introduction to SQL",
+                        "description": "Hands-on practice with SQL syntax and basic queries.",
                         "week_number": 1,
                     },
                     {
                         "type": "lecture",
-                        "title": "Knowledge Representation",
-                        "description": "Methods for representing knowledge in AI systems.",
-                        "week_number": 2,
+                        "title": "Advanced SQL Techniques",
+                        "description": "Working with subqueries and data modification operations.",
+                        "week_number": 3,
                     },
                     {
                         "type": "assignment",
-                        "title": "Search Algorithm Implementation",
-                        "description": "Implement A* and other search algorithms for a pathfinding problem.",
-                        "week_number": 2,
+                        "title": "Relational Calculus Implementation",
+                        "description": "Practice with tuple and domain relational calculus expressions.",
+                        "week_number": 4,
                     },
                 ],
             },
-            "ML202": {
+            "BA201": {
                 "source_course": {
-                    "title": "Machine Learning",
-                    "code": "ML202",
+                    "title": "Business Analytics",
+                    "code": "BA201",
                     "match_score": 0.92,
                 },
                 "content_chunks": [
                     {
                         "type": "lecture",
-                        "title": "Supervised Learning",
-                        "description": "Introduction to supervised learning algorithms and techniques.",
-                        "week_number": 1,
-                    },
-                    {
-                        "type": "lab",
-                        "title": "Linear Regression",
-                        "description": "Implementing and evaluating linear regression models.",
+                        "title": "Principles of Effective Data Visualization",
+                        "description": "Understanding how to represent data visually for business insights.",
                         "week_number": 1,
                     },
                     {
                         "type": "lecture",
-                        "title": "Neural Networks",
-                        "description": "Fundamentals of neural networks and backpropagation.",
+                        "title": "Distribution Fitting Techniques",
+                        "description": "Statistical methods for fitting probability distributions to business data.",
                         "week_number": 2,
                     },
                     {
-                        "type": "assignment",
-                        "title": "Classification Model",
-                        "description": "Build and evaluate a classification model on a real-world dataset.",
-                        "week_number": 2,
+                        "type": "lecture",
+                        "title": "Statistical Association Analysis",
+                        "description": "Methods to identify relationships between business variables.",
+                        "week_number": 3,
+                    },
+                    {
+                        "type": "lecture",
+                        "title": "Demand Response Curve Fundamentals",
+                        "description": "Analyzing customer demand patterns for business forecasting.",
+                        "week_number": 4,
                     },
                 ],
             },
@@ -257,18 +242,27 @@ class CourseGuideAgent(BaseAgent):
 
                 if any(
                     term in query_lower
-                    for term in ["program", "code", "python", "java"]
+                    for term in [
+                        "program",
+                        "code",
+                        "python",
+                        "java",
+                        "software engineering",
+                        "vue.js",
+                        "javascript",
+                    ]
                 ):
                     mock_key = "programming"
                 elif any(
-                    term in query_lower for term in ["math", "calculus", "algebra"]
+                    term in query_lower
+                    for term in ["database", "sql", "dbms", "relational"]
                 ):
-                    mock_key = "mathematics"
+                    mock_key = "database"
                 elif any(
                     term in query_lower
-                    for term in ["ai", "machine learning", "artificial intelligence"]
+                    for term in ["business", "analytics", "visualization", "statistics"]
                 ):
-                    mock_key = "ai"
+                    mock_key = "business"
 
                 # Get courses from the selected mock dataset
                 courses = self.mock_courses.get(mock_key, self.mock_courses["default"])[
