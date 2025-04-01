@@ -128,7 +128,7 @@ async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, Non
                 course["id"], "No content available"
             )
             course_details.append(
-                f"- {course['id']}: {course['name']} (Confidence: {course['confidence']:.2f})"
+                f"- {course['id']}: {course['name']})"
             )
             course_details.append(f"  {course_content}")
 
@@ -155,10 +155,9 @@ async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, Non
             if f"subq_{subq_index}" in state["metadata"]:
                 state["metadata"][f"subq_{subq_index}"]["result"] = response
         else:
-            state["messages"].append(AIMessage(content=response))
-            state["next_step"] = END
-
-        yield state
+            # state["messages"].append(AIMessage(content=response))
+            # state["next_step"] = "supervisor"
+            pass
 
     except Exception as e:
         logging.error(f"Course guide agent error: {str(e)}")

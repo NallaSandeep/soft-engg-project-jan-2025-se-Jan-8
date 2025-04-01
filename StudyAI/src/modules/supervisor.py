@@ -6,6 +6,7 @@ from src.core.state import (
     AgentState,
     update_metadata,
     get_metadata,
+    clear_state,
 )
 from src.modules.supervisor_class import Supervisor
 
@@ -52,15 +53,9 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
                         )
 
                         # Clear metadata and context after processing
-                        state["current_agent"] = ""
                         state["next_step"] = END
-                        state["metadata"] = {}
-                        state["context"] = {
-                            "topic": "",
-                            "query": "",
-                            "sources": [],
-                            "findings": [],
-                        }
+                        state = clear_state(state)
+                        
                         yield state
                         return
                 else:
@@ -175,15 +170,18 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
 
     except ValueError as ve:
         logging.error(f"ValueError in supervisor node: {str(ve)}")
-        state["next_step"] = "dismiss"
+        state["next_step"] = END
         state["messages"].append(
             AIMessage(content=f"I encountered an issue: {str(ve)}")
         )
+        state = clear_state(state)
     except Exception as e:
         logging.error(f"Supervisor node error: {str(e)}")
-        state["next_step"] = "dismiss"
+        state["next_step"] = END
         state["messages"].append(
             AIMessage(content="Sorry, I encountered an error processing your request.")
         )
-
-    yield state
+        state = clear_state(state)
+    finally:
+        yield state
+        

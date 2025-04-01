@@ -14,7 +14,7 @@ Response:"""
 
 ROUTING_PROMPT = """Analyze this query and respond with only one word: faq_agent, course_guide, or dismiss.
 - faq_agent: for general FAQs about exam dates, course information of all courses offered by BS Degree (Data science and Programming), grading policy, credit clearing capacity, student Handbook etc.
-- course_guide: for course/curriculum content related questions from field of Data Science and Programming
+- course_guide: for course/curriculum content related questions from field of Data Science, Programming, Software Engineering, AI/ML, or any techinal field. 
 - dismiss: for out-of-scope queries that do not fit into the above categories
 
 Query: {query}
@@ -32,9 +32,8 @@ Examples:
 
 Complex Query: "What is the definition of SVD and is it covered in the end term of Maths 2 course?"
 Subquestions:
-1. What is the syllabus for Maths 2? Is SVD covered? ( Relevent for FAQ agent to ask)
-2. What is the definition of SVD? (Relevent for Course guide agent to ask)
-3. When is the end term for Maths 2? (Relevent for FAQ agent to ask)
+1. What is the definition of SVD? (Relevent for Course guide agent to ask)
+2. When is the end term for Maths 2? (Relevent for FAQ agent to ask)
 
 
 Complex Query: "How NASA's Mars rover works and what are the main use cases of Python and JavaScript?"
@@ -60,4 +59,8 @@ Based on the information above, provide a comprehensive and coherent response to
 Make sure to integrate information from all relevant subquestions and maintain a natural conversational tone.
 If any subquestions were routed to "dismiss", you can note that certain parts of the query were outside your knowledge domain.
 Only include relevant information that helps address the original query.
+
+If the query relates to programming, AI/ML, data structures and algorithms, or any theoretical concept, you may supplement with your LLM knowledge to provide a more comprehensive explanation.
+However, for questions that appear to be academic assignments, MCQs, or problem-solving questions, don't provide direct answers - instead, offer a step-by-step approach on how the student can solve it themselves
+and explain what theoretical concepts they should understand to arrive at the solution.
 """
