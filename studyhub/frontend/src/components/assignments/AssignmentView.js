@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { formatDate } from '../../utils/dateUtils';
 import { FaClock, FaCheckCircle, FaTimesCircle, FaInfoCircle } from 'react-icons/fa';
 import { Card } from '../common/Card';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon, ClockIcon, DocumentTextIcon, PlayIcon, ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
 
 const safeJSONParse = (value) => {
     try {
@@ -35,6 +35,9 @@ const AssignmentView = () => {
     const [showResults, setShowResults] = useState(false);
     const [correctAnswers, setCorrectAnswers] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [summary, setSummary] = useState(null);
+    const [isSummarizing, setIsSummarizing] = useState(false);
+    const [summaryError, setSummaryError] = useState(null);
 
     useEffect(() => {
         fetchAssignment();
@@ -42,6 +45,7 @@ const AssignmentView = () => {
         fetchCourseContent();
         fetchCourseProgress();
         setErrorMessage(null);
+        setSummary(null);
     }, [assignmentId]);
 
     useEffect(() => {
@@ -228,6 +232,46 @@ const AssignmentView = () => {
         
         // Graded assignments can be submitted multiple times before due date
         return true;
+    };
+
+    const fetchSummary = async () => {
+        setIsSummarizing(true);
+        setSummaryError(null);
+        
+        try {
+            const contentToSummarize = {
+                courseDescription: course.description,
+                weeks: course.weeks?.map(week => ({
+                    title: week.title,
+                    description: week.description,
+                    lectures: week.lectures?.map(lecture => lecture.title + ": " + lecture.description),
+                    assignments: week.assignments?.map(assignment => assignment.title + (assignment.description ? ": " + assignment.description : ""))
+                }))
+            };
+    
+            const response = await fetch('http://127.0.0.1:5010/chat/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: `Please provide me guidance for this assignment submission. 
+                     here is the assignement ${JSON.stringify(assignment)}.
+                     Here are submitted answers ${JSON.stringify(answers)}. 
+                     Here is the correct answers ${JSON.stringify(correctAnswers)}
+                     Show just summary. No bullet points.`,
+                })
+            });
+    
+            if (!response.ok) throw new Error('Failed to fetch summary');
+            const data = await response.json();
+            setSummary(data.content|| data.response || "No summary available");
+        } catch (err) {
+            console.error('Error fetching summary:', err);
+            setSummaryError('Failed to generate summary');
+        } finally {
+            setIsSummarizing(false);
+        }
     };
 
     // Update the submission details display
@@ -705,7 +749,49 @@ const AssignmentView = () => {
                         <div className="flex flex-col space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
                             {renderSubmissionDetails()}
                                         </div>
-                                    </div>
+                    </div>
+                    {/* /* NEW: Add Summary Section Here*/ }
+                    {(lastSubmission && assignment.type === 'practice') && (<div className="glass-card p-6 mb-6">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Assignment Guidance </h2>
+                            <button
+                                onClick={fetchSummary}
+                                disabled={isSummarizing}
+                                className="btn-primary flex items-center space-x-1"
+                            >
+                                {isSummarizing ? (
+                                    <>
+                                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span>Generating...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <ClipboardDocumentListIcon className="w-4 h-4" />
+                                        <span>Provide Guidance </span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
+  
+                        {summaryError && (
+                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-4">
+                                {summaryError}
+                            </div>
+                        )}
+  
+                        {summary ? (
+                            <div className="prose dark:prose-invert max-w-none">
+                                <p className="text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap">{summary}</p>
+                            </div>
+                        ) : (
+                            <div className="text-center text-zinc-500 dark:text-zinc-400 py-4">
+                                {isSummarizing ? 'Generating guidance summary...' : 'No guidance summary generated yet. Click the button above to generate one.'}
+                            </div>
+                        )}
+                    </div>)}
 
                     {/* Questions */}
                     <div className="space-y-6 mb-8">
