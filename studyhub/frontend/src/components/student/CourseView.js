@@ -407,14 +407,16 @@ const CourseView = () => {
     </div>
 
     {suggestionsError && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-zinc-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-4">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-4">
             {suggestionsError}
         </div>
     )}
 
     {practiceSuggestions ? (
-        <div className="prose dark:prose-invert max-w-none">
-            <pre className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-300">{practiceSuggestions}</pre>
+        <div className="prose dark:prose-invert max-w-none bg-zinc-50 dark:bg-zinc-800 p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
+            <pre className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-300 font-mono text-sm leading-relaxed">
+                {practiceSuggestions}
+            </pre>
         </div>
     ) : (
         <div className="text-center text-zinc-500 dark:text-zinc-400 py-4">
@@ -422,48 +424,6 @@ const CourseView = () => {
         </div>
     )}
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
