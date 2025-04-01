@@ -35,7 +35,17 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 │   ├── logs/             # Service logs
 │   └── setup.ps1         # Service setup
 │
-└── studyai/              # Future AI service (planned)
+├── app.py              # FastAPI application entry point
+├── config.py           # Configuration management
+├── requirements.txt    # Python dependencies
+├── src/
+│   ├── core/           # Core components (agents, workflow)
+│   ├── database.py     # Database connection
+│   ├── models/         # Data models (Pydantic & SQLAlchemy)
+│   ├── modules/        # Agent modules
+│   ├── routes/         # API routes
+│   └── services/       # Business logic
+```
 ```
 
 ## Quick Start Guide
@@ -47,58 +57,8 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
    git clone https://github.com/NallaSandeep/soft-engg-project-jan-2025-se-Jan-8.git
    ```
 
-2. **Backend Setup**:
-a. Change directory
-   ```powershell
-   cd .\studyhub\backend
-   ```
+2. **StudyIndexer Setup**: (Needs WSL for Windows or Linux (Ubuntu))
 
-b Create and activate a virtual environment:
-   ```powershell
-   python -m venv .venv
-   .\.venv\Scripts\activate  # Windows
-   # or
-   source .venv/bin/activate     # Linux/macOS
-   ```
-
-c. Run the setup script:
-   ```powershell
-   .\setup.ps1
-   ```
-   This will:
-   - Activate the virtual environment
-   - Install all required dependencies
-   - Initialize the database (if not already initialized)
-   - Create necessary directories
-
-d. Start the server:
-   ```powershell
-   .\start.ps1
-   ```
-   The API will be available at: http://localhost:5000
-
-3. **Frontend Setup**:
-a. Change directory
-   ```powershell
-   cd .\studyhub\frontend
-   ```
-
-b. Run the setup script:
-   ```powershell
-   .\setup.ps1
-   ```
-   This will:
-   - Create required directories
-   - Install dependencies
-c. Start the development server
-   - `npm start`: Start development server
-
-d. Access the application:
-   - Local: http://localhost:3000
-   - Network: http://172.20.16.1:3000
-
-4. **StudyIndexer Setup**: 
-# Needs WSL for Windows or Linux (Ubuntu)
 a. Change directory
    ```bash
    cd studyindexer
@@ -134,7 +94,59 @@ This will:
    ```
    - Restarts chroma db and FastAPI
 
-4. **StudyAI Setup**: 
+3. **Backend Setup**:
+
+a. Change directory
+   ```powershell
+   cd .\studyhub\backend
+   ```
+
+b Create and activate a virtual environment:
+   ```powershell
+   python -m venv .venv
+   .\.venv\Scripts\activate  # Windows
+   # or
+   source .venv/bin/activate     # Linux/macOS
+   ```
+
+c. Run the setup script:
+   ```powershell
+   .\setup.ps1
+   ```
+   This will:
+   - Activate the virtual environment
+   - Install all required dependencies
+   - Initialize the database (if not already initialized)
+   - Create necessary directories
+
+d. Start the server:
+   ```powershell
+   .\start.ps1
+   ```
+   The API will be available at: http://localhost:5000
+
+4. **Frontend Setup**: (Need Node and NPM installed before starting)
+a. Change directory
+   ```powershell
+   cd .\studyhub\frontend
+   ```
+
+b. Run the setup script:
+   ```powershell
+   .\setup.ps1
+   ```
+   This will:
+   - Create required directories
+   - Install dependencies
+c. Start the development server
+   - `npm start`: Start development server
+
+d. Access the application:
+   - Local: http://localhost:3000
+   - Network: http://172.20.16.1:3000
+
+
+5. **StudyAI Setup**: 
 # Needs WSL for Windows or Linux (Ubuntu)
 1. Change directory:
    ```bash
