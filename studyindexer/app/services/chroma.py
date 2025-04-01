@@ -38,25 +38,29 @@ class ChromaService:
     def __init__(self):
         """Initialize the ChromaDB client"""
         if getattr(self, '_initialized', False):
+            logger.info("ChromaDB service already initialized")
             return
             
         # Configure ChromaDB settings
         self.persistent_dir = os.environ.get("CHROMA_PERSISTENCE_DIR", "./data/chroma")
         os.makedirs(self.persistent_dir, exist_ok=True)
+        logger.info(f"Using ChromaDB persistence directory: {self.persistent_dir}")
         
         # Initialize embedding service
+        logger.info("Initializing embedding service...")
         self.embedding_service = EmbeddingService()
         self.embedding_function = ChromaEmbeddingFunction(self.embedding_service)
         
         try:
             # Initialize client with new API format
+            logger.info("Initializing ChromaDB HTTP client...")
             self.client = chromadb.HttpClient(
                 host="127.0.0.1",
                 port=int(os.environ.get("CHROMA_PORT", "8000"))
             )
             self._initialized = True
             self.collections = {}  # Cache for collections
-            logger.info(f"ChromaDB initialized successfully with HTTP client")
+            logger.info("ChromaDB initialized successfully with HTTP client")
         except Exception as e:
             logger.error(f"Error initializing ChromaDB: {str(e)}")
             self.client = None
@@ -72,9 +76,11 @@ class ChromaService:
                 
             # Use cached collection if available
             if name in self.collections:
+                logger.info(f"Using cached collection: {name}")
                 return self.collections[name]
                 
             # Create or get collection directly
+            logger.info(f"Creating/getting collection: {name}")
             collection = self.client.get_or_create_collection(
                 name=name,
                 metadata=metadata,
@@ -83,6 +89,7 @@ class ChromaService:
             
             # Cache the collection
             self.collections[name] = collection
+            logger.info(f"Collection {name} created/retrieved successfully")
             return collection
         except Exception as e:
             logger.error(f"Error in get_or_create_collection_sync: {str(e)}")
@@ -101,6 +108,7 @@ class ChromaService:
             if not self._initialized or self.client is None:
                 raise ValueError("ChromaDB client not initialized")
                 
+            logger.info(f"Adding {len(documents)} documents to collection {collection_name}")
             collection = self.get_or_create_collection_sync(collection_name)
             
             # Generate IDs if not provided
@@ -114,7 +122,8 @@ class ChromaService:
                 ids=ids,
                 embeddings=embeddings
             )
-                
+            
+            logger.info(f"Successfully added {len(documents)} documents to collection {collection_name}")
             return ids
         except Exception as e:
             logger.error(f"Error in add_documents_sync: {str(e)}")
@@ -135,6 +144,10 @@ class ChromaService:
             if not self._initialized or self.client is None:
                 raise ValueError("ChromaDB client not initialized")
                 
+            logger.info(f"Searching collection {collection_name} with query: '{query}'")
+            if where:
+                logger.info(f"Using filter: {where}")
+                
             collection = self.get_or_create_collection_sync(collection_name)
             
             # Basic query parameters
@@ -148,18 +161,23 @@ class ChromaService:
             
             # Determine which query method to use - prefer embeddings if available
             if query_embedding is not None:
+                logger.info("Using embedding-based search")
                 # Use embedding search
                 query_params["query_embeddings"] = [query_embedding]
             elif query and len(query.strip()) > 0:
+                logger.info("Using text-based search")
                 # Use text search if no embedding but valid query text
                 query_params["query_texts"] = [query]
             else:
+                logger.info("Using empty query fallback")
                 # Emergency fallback - use empty query
                 query_params["query_texts"] = [""]
                 
             try:
                 # Execute query directly
+                logger.info(f"Executing search with parameters: {query_params}")
                 result = collection.query(**query_params)
+                logger.info(f"Search returned {len(result['ids'][0])} results")
             except Exception as e:
                 # Provide detailed error for debugging
                 raise Exception(f"ChromaDB query failed: {str(e)} with params: {query_params}")
@@ -543,3 +561,64 @@ class ChromaService:
         except Exception as e:
             logger.error(f"Error in delete_sync: {str(e)}")
             raise 
+
+    def delete_collection_sync(self, collection_name: str) -> bool:
+        """Delete an entire collection synchronously"""
+        try:
+            if not self._initialized or self.client is None:
+                raise ValueError("ChromaDB client not initialized")
+                
+            # Delete collection
+            self.client.delete_collection(name=collection_name)
+            
+            # Remove from cache if exists
+            if collection_name in self.collections:
+                del self.collections[collection_name]
+                
+            return True
+        except Exception as e:
+            logger.error(f"Error deleting collection {collection_name}: {str(e)}")
+            return False
+            
+    async def delete_collection(self, collection_name: str) -> bool:
+        """Async wrapper for delete_collection_sync"""
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            loop = asyncio.get_event_loop()
+            return await loop.run_in_executor(
+                executor,
+                self.delete_collection_sync,
+                collection_name
+            )
+            
+    def reset_all_sync(self) -> bool:
+        """Delete all collections and reset ChromaDB state synchronously"""
+        try:
+            if not self._initialized or self.client is None:
+                raise ValueError("ChromaDB client not initialized")
+                
+            # Get list of all collections
+            collections = self.client.list_collections()
+            
+            # Delete each collection
+            for collection in collections:
+                try:
+                    self.delete_collection_sync(collection.name)
+                except Exception as e:
+                    logger.error(f"Error deleting collection {collection.name}: {str(e)}")
+                    
+            # Clear collection cache
+            self.collections = {}
+            
+            return True
+        except Exception as e:
+            logger.error(f"Error resetting ChromaDB: {str(e)}")
+            return False
+            
+    async def reset_all(self) -> bool:
+        """Async wrapper for reset_all_sync"""
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            loop = asyncio.get_event_loop()
+            return await loop.run_in_executor(
+                executor,
+                self.reset_all_sync
+            ) 

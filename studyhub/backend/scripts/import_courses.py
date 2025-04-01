@@ -188,6 +188,12 @@ def process_weeks(db_session, course, data):
             description=w_data.get("description", ""),
             is_published=True
         )
+
+        # If LLM_Summary exists in the JSON data, add it to the week object
+        if "LLM_Summary" in w_data:
+            week.LLM_Summary = w_data["LLM_Summary"]
+            log(f"Added LLM_Summary to week {week.number}")
+
         db_session.add(week)
         db_session.flush()  # This assigns a unique DB ID
         
@@ -237,6 +243,12 @@ def process_weeks(db_session, course, data):
                 # Update fields
                 existing_lecture.title = title
                 existing_lecture.description = l_data.get("description", "")
+                
+                # Update keywords if present
+                if "keywords" in l_data:
+                    existing_lecture.keywords = l_data["keywords"]
+                    log(f"Updated keywords for lecture {existing_lecture.lecture_number}")
+                
                 continue
                 
             # Create lecture - DON'T use the JSON lecture_id for the DB ID
@@ -261,6 +273,16 @@ def process_weeks(db_session, course, data):
                 order=order,
                 is_published=True
             )
+
+            # Add keywords if present in the lecture data
+            if "keywords" in l_data:
+                lecture.keywords = l_data["keywords"]
+                log(f"Added keywords to lecture {lecture.lecture_number}")
+            else:
+                # Default keywords if none provided
+                lecture.keywords = [course.code, "lecture", week.title.split(':')[0] if ':' in week.title else week.title]
+                log(f"Added default keywords to lecture {lecture.lecture_number}")
+
             db_session.add(lecture)
             log(f"Created lecture {lecture.lecture_number}: {lecture.title} for week {week.number}")
             

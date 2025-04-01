@@ -22,6 +22,8 @@ class WeekOverview(BaseModel):
     title: str = Field(..., min_length=2, max_length=200, description="Week title")
     description: str = Field(..., min_length=10, description="Week description")
     topics: List[str] = Field(default_factory=list, description="Topics covered in this week")
+    summary: Optional[str] = Field(None, description="LLM-generated summary of the week")
+    concepts: Optional[List[str]] = Field(default_factory=list, description="Key concepts covered in this week")
 
 class CourseInfo(BaseModel):
     """Course information model"""
@@ -31,6 +33,8 @@ class CourseInfo(BaseModel):
     course_id: Optional[int] = Field(None, description="Course ID that matches StudyHub")
     department: Optional[str] = Field(None, description="Department")
     credits: Optional[int] = Field(None, description="Number of credits")
+    summary: Optional[str] = Field(None, description="LLM-generated summary of the course")
+    concepts: Optional[List[str]] = Field(default_factory=list, description="Key concepts covered in the course")
 
 class CourseTopic(BaseModel):
     """Course topic model"""

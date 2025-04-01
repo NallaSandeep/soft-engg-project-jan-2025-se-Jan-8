@@ -96,24 +96,20 @@ class CourseSelectorService:
     def index_course_sync(self, course_data: Dict[str, Any]) -> str:
         """
         Index a course for semantic search
-        
-        Args:
-            course_data: Dictionary containing course information with the following structure:
-                - course: CourseInfo object or dict with course details
-                - weeks: Optional list of week information
-                
-        Returns:
-            The course code as a string
         """
         if not self._initialized:
             self.initialize_sync()
             
+        logger.info("Starting course indexing process...")
         course_info = course_data.get("course", {})
         
         # Get the course code - this is the main identifier between systems
         code = course_info.get("code")
         if not code:
+            logger.error("Course code is required for indexing")
             raise ValueError("Course code is required for indexing")
+            
+        logger.info(f"Processing course with code: {code}")
         
         # Get or generate course_id (secondary identifier)
         course_id = course_info.get("course_id")
@@ -126,17 +122,22 @@ class CourseSelectorService:
             
         # Convert course_id to string if it's not already
         course_id = str(course_id)
+        logger.info(f"Using course_id: {course_id}")
             
         # Create combined text for embedding
+        logger.info("Creating combined text for embedding...")
         combined_text = self._create_course_embedding_text(course_data)
+        logger.info(f"Created combined text of length: {len(combined_text)}")
         
         # Generate embedding
+        logger.info("Generating embedding...")
         embedding = self.embedder.generate_embedding(combined_text)
+        logger.info("Embedding generated successfully")
         
-        # Extract concepts and summary
+        # Extract concepts with our improved method
+        logger.info("Extracting concepts...")
         concepts = self._extract_concepts(course_data)
-        llm_summary = course_info.get("LLM_Summary", {})
-        summary = llm_summary.get("summary", "")
+        logger.info(f"Extracted {len(concepts)} concepts for course {code}: {concepts}")
         
         # Check for required fields, use defaults for missing ones
         title = course_info.get("title", "Untitled Course")
@@ -144,6 +145,7 @@ class CourseSelectorService:
         department = course_info.get("department", "General")
         credits = course_info.get("credits", 0)
         
+        logger.info("Building metadata for ChromaDB...")
         # Ensure all values are safe for ChromaDB metadata
         safe_metadata = {}
         
@@ -162,16 +164,17 @@ class CourseSelectorService:
         safe_metadata["department"] = str(department) if department is not None else "General"
         safe_metadata["credits"] = str(credits) if credits is not None else "0"
         
-        # Handle concepts and summary
-        safe_metadata["concepts_covered"] = ",".join([str(c) for c in concepts if c is not None]) if concepts else ""
-        
-        if summary is not None:
-            summary_str = str(summary)
-            safe_metadata["summary"] = summary_str[:1000] if len(summary_str) > 1000 else summary_str
+        # Handle concepts - this is critical for the matched_topics in search results
+        if concepts:
+            # Join concepts into a comma-separated string for ChromaDB metadata
+            safe_metadata["concepts_covered"] = ",".join([str(c) for c in concepts if c is not None])
+            logger.info(f"Concepts saved to metadata: {safe_metadata['concepts_covered']}")
         else:
-            safe_metadata["summary"] = ""
+            safe_metadata["concepts_covered"] = ""
+            logger.warning(f"No concepts found for course {code}")
             
-        safe_metadata["indexed_at"] = datetime.utcnow().isoformat()
+        # Add timestamp
+        safe_metadata["added_on"] = datetime.utcnow().isoformat()
         
         # Verify no None values remain before adding to ChromaDB
         for key, value in safe_metadata.items():
@@ -181,6 +184,23 @@ class CourseSelectorService:
         
         # Store in ChromaDB - use code as the document ID to ensure uniqueness
         try:
+            # Check if course already exists
+            logger.info(f"Checking if course {code} already exists...")
+            existing = self.chroma.get_sync(
+                collection_name=self.collection_name,
+                ids=[code]
+            )
+            
+            if existing and existing.ids:
+                # Delete existing entry to update it
+                logger.info(f"Course {code} already exists in ChromaDB, updating...")
+                self.chroma.delete_sync(
+                    collection_name=self.collection_name,
+                    ids=[code]
+                )
+            
+            # Add the new/updated document
+            logger.info(f"Adding/updating course {code} in ChromaDB...")
             self.chroma.add_documents_sync(
                 collection_name=self.collection_name,
                 documents=[combined_text],
@@ -188,12 +208,13 @@ class CourseSelectorService:
                 ids=[code],  # Use code as document ID instead of course_id
                 embeddings=[embedding]
             )
+            
+            logger.info(f"Successfully indexed course {title} (Code: {code}) with {len(concepts)} concepts")
         except Exception as e:
             logger.error(f"Error in add_documents_sync: {str(e)}")
             logger.error(f"Metadata that caused the error: {safe_metadata}")
             raise
         
-        logger.info(f"Indexed course {title} (Code: {code}, ID: {course_id}) with {len(concepts)} concepts")
         return code
     
     async def index_course(self, course_data: Dict[str, Any]) -> str:
@@ -333,6 +354,9 @@ class CourseSelectorService:
         course_info = course_data.get("course", {})
         llm_summary = course_info.get("LLM_Summary", {})
         
+        # CRITICAL FIX: Log LLM_Summary to debug concepts
+        logger.info(f"LLM_Summary during embedding: {json.dumps(llm_summary)}")
+        
         # Combine course information
         text_parts = [
             f"COURSE: {course_info.get('title', '')}",
@@ -347,6 +371,12 @@ class CourseSelectorService:
         key_concepts = llm_summary.get("key_concepts", [])
         if key_concepts:
             text_parts.append(f"KEY CONCEPTS: {', '.join(key_concepts)}")
+            
+        # CRITICAL FIX: Explicitly add concepts_covered from LLM_Summary
+        concepts_covered = llm_summary.get("concepts_covered", [])
+        if concepts_covered:
+            logger.info(f"Adding concepts_covered from LLM_Summary: {concepts_covered}")
+            text_parts.append(f"CONCEPTS: {', '.join(concepts_covered)}")
             
         # Add summary from LLM_Summary
         summary = llm_summary.get("summary", "")
@@ -400,34 +430,96 @@ class CourseSelectorService:
         """Extract concepts from course data"""
         concepts = set()
         
-        # Extract from course LLM_Summary
+        # Extract concepts from course LLM_Summary (primary source)
         course_info = course_data.get("course", {})
+        
+        # IMPORTANT: LLM_Summary is the main source of concepts in sample.json
         llm_summary = course_info.get("LLM_Summary", {})
         
-        # Get concepts directly from key_concepts field
+        # Get concepts_covered from LLM_Summary (primary location in sample.json)
+        llm_concepts_covered = llm_summary.get("concepts_covered", [])
+        if llm_concepts_covered:
+            logger.info(f"Found concepts_covered in LLM_Summary: {llm_concepts_covered}")
+            for concept in llm_concepts_covered:
+                if concept:  # Skip empty concepts
+                    concepts.add(concept)
+        
+        # Also get any key_concepts if present
         key_concepts = llm_summary.get("key_concepts", [])
         if key_concepts:
-            concepts.update(key_concepts)
-            
-        # Also get any concepts_covered if present
+            for concept in key_concepts:
+                if concept:
+                    concepts.add(concept)
+        
+        # Check top-level topics if present
+        if "topics" in course_data and isinstance(course_data["topics"], list):
+            topics = course_data["topics"]
+            for topic in topics:
+                if isinstance(topic, dict) and "name" in topic:
+                    concepts.add(topic["name"])
+                elif isinstance(topic, str):
+                    concepts.add(topic)
+        
+        # Also get any concepts_covered if present at top level
         concepts_covered = course_data.get("concepts_covered", [])
         if concepts_covered:
-            concepts.update(concepts_covered)
+            for concept in concepts_covered:
+                if concept:
+                    concepts.add(concept)
         
         # Add concepts from weeks
         for week in course_data.get("weeks", []):
             week_summary = week.get("LLM_Summary", {})
+            
+            # Check for key_concepts first
             week_concepts = week_summary.get("key_concepts", [])
             if week_concepts:
-                concepts.update(week_concepts)
-                
+                for concept in week_concepts:
+                    if concept:
+                        concepts.add(concept)
+            
+            # Also check for concepts_covered within week LLM_Summary
+            week_concepts_covered = week_summary.get("concepts_covered", [])
+            if week_concepts_covered:
+                for concept in week_concepts_covered:
+                    if concept:
+                        concepts.add(concept)
+            
+            # Check for topics list in week
+            week_topics = week.get("topics", [])
+            if week_topics:
+                for topic in week_topics:
+                    if isinstance(topic, dict) and "name" in topic:
+                        concepts.add(topic["name"])
+                    elif isinstance(topic, str):
+                        concepts.add(topic)
+            
         # Add concepts from lectures
         for lecture in course_data.get("lectures", []):
             lecture_summary = lecture.get("LLM_Summary", {})
+            
+            # Check for key_concepts first
             lecture_concepts = lecture_summary.get("key_concepts", [])
             if lecture_concepts:
-                concepts.update(lecture_concepts)
+                for concept in lecture_concepts:
+                    if concept:
+                        concepts.add(concept)
+            
+            # Also check for concepts_covered within lecture LLM_Summary
+            lecture_concepts_covered = lecture_summary.get("concepts_covered", [])
+            if lecture_concepts_covered:
+                for concept in lecture_concepts_covered:
+                    if concept:
+                        concepts.add(concept)
+            
+            # Check for keywords field in lectures
+            keywords = lecture.get("keywords", [])
+            if keywords:
+                for keyword in keywords:
+                    if keyword:
+                        concepts.add(keyword)
         
+        logger.info(f"Extracted {len(concepts)} unique concepts: {list(concepts)}")
         return list(concepts)
     
     def _process_search_results(
@@ -452,13 +544,11 @@ class CourseSelectorService:
                 raw_concepts = metadata.get("concepts_covered", "").split(",")
                 concepts = [concept.strip() for concept in raw_concepts if concept.strip()]
                 
-                # We'll use a less strict matching for topics
-                # If no specific matches, show up to 3 most relevant topics
-                if len(concepts) > 3:
-                    concepts = concepts[:3]
+                # Log the extracted concepts for debugging
+                logger.info(f"Extracted concepts from metadata: {concepts}")
                 
-                # Only attempt to filter if we have a query and concepts
-                if query and concepts and len(query.split()) > 1:
+                # Score concepts by matching with query terms
+                if query and concepts:
                     query_terms = [term.lower() for term in query.split()]
                     
                     # Score concepts by matching with query terms, with partial matching
@@ -479,14 +569,22 @@ class CourseSelectorService:
                                 if term in word or word in term:
                                     score += 0.5  # Give partial credit for partial matches
                         
-                        # Keep concepts with any score
-                        if score > 0:
-                            scored_concepts.append((concept, score))
+                        # Keep track of all concepts with their scores
+                        scored_concepts.append((concept, score))
                     
-                    # Sort by score and limit to most relevant
+                    # Sort by score and include only concepts that matched
                     if scored_concepts:
                         scored_concepts.sort(key=lambda x: x[1], reverse=True)
-                        concepts = [c[0] for c in scored_concepts[:5]]
+                        # Only include concepts that have a positive score (some relevance)
+                        matching_concepts = [c[0] for c in scored_concepts if c[1] > 0]
+                        concepts = matching_concepts
+                        
+                        # Log the matching concepts
+                        if matching_concepts:
+                            logger.info(f"Found {len(matching_concepts)} matching concepts: {matching_concepts}")
+                        else:
+                            logger.info(f"No matching concepts found for query: {query}")
+                            concepts = []  # No matches, return empty list
             
             # Create result object with required fields
             course_result = CourseMatchResult(
@@ -494,7 +592,7 @@ class CourseSelectorService:
                 title=metadata.get("title", ""),
                 description=metadata.get("description", ""),
                 score=similarity,
-                matched_topics=concepts
+                matched_topics=concepts  # Use our extracted and filtered concepts
             )
             
             course_results.append(course_result)

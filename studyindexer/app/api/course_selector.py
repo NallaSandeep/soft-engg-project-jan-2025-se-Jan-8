@@ -100,6 +100,35 @@ async def index_course(course_data: Dict[str, Any]):
                     transformed_topics.append(topic)
             course_data["topics"] = transformed_topics
         
+        # Add required fields for StudyIndexer format compatibility
+        if "weeks" in course_data:
+            for i, week in enumerate(course_data["weeks"]):
+                if "week_id" in week and "week_number" not in week:
+                    week["week_number"] = week.get("order", i + 1)  
+                if "description" not in week:
+                    week["description"] = week.get("title", f"Week {i+1}")
+        
+        # Extract course field if needed
+        has_valid_course = False
+        if "course" in course_data:
+            if isinstance(course_data["course"], dict) and "title" in course_data["course"]:
+                has_valid_course = True
+        elif "title" in course_data:
+            # Create course field from main data
+            course_data["course"] = {
+                "code": course_data.get("code", "UNKNOWN"),
+                "title": course_data.get("title", ""),
+                "description": course_data.get("description", ""),
+                "course_id": course_data.get("course_id", None)
+            }
+            has_valid_course = True
+            
+        if not has_valid_course:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Course data must contain a valid 'course' object with 'title'"
+            )
+                
         # Validate with the CourseContent model
         try:
             course_content = CourseContent(**course_data)
@@ -164,7 +193,7 @@ async def import_json_data(
 ):
     """
     Import and index a course from a JSON file.
-    Supports both standard format and alternative structures like se-compact.json.
+    Supports both standard format and alternative structures like sample.json.
     """
     try:
         # Read the uploaded file
@@ -188,7 +217,7 @@ async def import_json_data(
         
         # Transform the data if needed and requested
         if transform_format and "course" in data:
-            # Handle format like se-compact.json
+            # Handle format like sample.json
             course_info = data["course"]
             
             # Make sure course_id is a string (for ChromaDB compatibility)
@@ -223,34 +252,51 @@ async def import_json_data(
             # Extract concepts from LLM_Summary
             if "LLM_Summary" in course_info:
                 llm_summary = course_info["LLM_Summary"]
-                # Add concepts_covered
-                if "concepts_covered" in llm_summary:
+                # Make sure LLM_Summary gets included in the course object
+                transformed_data["course"]["LLM_Summary"] = llm_summary
+                
+                # IMPORTANT: Extract concepts_covered
+                if "concepts_covered" in llm_summary and llm_summary["concepts_covered"]:
+                    print(f"Found concepts_covered in LLM_Summary: {llm_summary['concepts_covered']}")
                     transformed_data["concepts_covered"] = llm_summary["concepts_covered"]
+                    
+                    # Create topics from concepts_covered
+                    for i, topic_name in enumerate(llm_summary["concepts_covered"]):
+                        if topic_name:  # Skip empty topics
+                            transformed_data["topics"].append({
+                                "name": topic_name,
+                                "description": "Generated from concepts_covered",
+                                "week": (i % 4) + 1,  # Distribute across weeks 1-4
+                                "importance": 8
+                            })
                 
                 # Add concepts_not_covered
-                if "concepts_not_covered" in llm_summary:
+                if "concepts_not_covered" in llm_summary and llm_summary["concepts_not_covered"]:
                     transformed_data["concepts_not_covered"] = llm_summary["concepts_not_covered"]
-                
-                # Create topics from concepts_covered
-                if "concepts_covered" in llm_summary:
-                    for i, topic_name in enumerate(llm_summary["concepts_covered"]):
-                        transformed_data["topics"].append({
-                            "name": topic_name,
-                            "description": "Generated from concepts_covered",
-                            "week": (i % 4) + 1,  # Distribute across weeks 1-4
-                            "importance": 8
-                        })
             
             # Extract weeks
             if "weeks" in data:
                 for week in data["weeks"]:
-                    transformed_data["weeks"].append({
+                    week_data = {
                         "order": week.get("order", week.get("week_id", 0)),
                         "title": week.get("title", ""),
                         "description": week.get("description", "Week content"),
                         "is_published": True,
-                        "week_number": week.get("week_id", week.get("order", 0))
-                    })
+                        "week_number": week.get("week_id", week.get("order", 0)),
+                        "topics": []  # Add topics field
+                    }
+                    
+                    # Extract week LLM_Summary if available
+                    if "LLM_Summary" in week:
+                        week_data["LLM_Summary"] = week["LLM_Summary"]
+                        
+                        # Add topics from concepts_covered in week LLM_Summary
+                        if "concepts_covered" in week["LLM_Summary"]:
+                            week_concepts = week["LLM_Summary"]["concepts_covered"]
+                            if week_concepts:
+                                week_data["topics"] = week_concepts
+                    
+                    transformed_data["weeks"].append(week_data)
             
             # Extract lectures and their concepts
             if "lectures" in data:
@@ -259,20 +305,10 @@ async def import_json_data(
                     
                     # Get lecture summary and concepts if available
                     lecture_concepts = []
-                    if "LLM_Summary" in lecture:
-                        lecture_summary = lecture["LLM_Summary"]
-                        if not transcript and "summary" in lecture_summary:
-                            transcript = lecture_summary.get("summary", "")
-                        
-                        # Extract lecture concepts
-                        if "concepts_covered" in lecture_summary:
-                            lecture_concepts = lecture_summary["concepts_covered"]
-                            # Add unique lecture concepts to the course concepts
-                            for concept in lecture_concepts:
-                                if concept not in transformed_data["concepts_covered"]:
-                                    transformed_data["concepts_covered"].append(concept)
+                    if "keywords" in lecture:
+                        lecture_concepts = lecture["keywords"]
                     
-                    transformed_data["lectures"].append({
+                    lecture_data = {
                         "title": lecture.get("title", ""),
                         "week": lecture.get("week_id", 1),
                         "order": lecture.get("order", 1),
@@ -280,8 +316,24 @@ async def import_json_data(
                         "url": lecture.get("video_url", lecture.get("resource_url", "")),
                         "transcript": transcript,
                         "concepts": lecture_concepts,
+                        "keywords": lecture.get("keywords", []),
                         "is_published": True
-                    })
+                    }
+                    
+                    # Add LLM_Summary if available
+                    if "LLM_Summary" in lecture:
+                        lecture_data["LLM_Summary"] = lecture["LLM_Summary"]
+                        
+                        # Extract concepts from LLM_Summary
+                        if "concepts_covered" in lecture["LLM_Summary"]:
+                            lecture_concepts.extend(lecture["LLM_Summary"]["concepts_covered"])
+                            
+                            # Add unique lecture concepts to the course concepts
+                            for concept in lecture["LLM_Summary"]["concepts_covered"]:
+                                if concept and concept not in transformed_data["concepts_covered"]:
+                                    transformed_data["concepts_covered"].append(concept)
+                    
+                    transformed_data["lectures"].append(lecture_data)
             
             data = transformed_data
         else:
@@ -295,17 +347,28 @@ async def import_json_data(
                     if "week_number" not in week:
                         week["week_number"] = week.get("order", week.get("week_id", 0))
         
-        # Debug: Print the structure before validation
-        print(f"Data structure before validation: {json.dumps(data, indent=2)[:500]}...")
-        
-        # Validate with the CourseContent model
+        # Index the course with our service
         try:
+            # Validate and convert to dictionary to pass to the service
             course_content = CourseContent(**data)
-            # Convert to dict for the service - this resolves the .get() attribute error
             course_dict = course_content.model_dump()
+            
+            # IMPORTANT: Preserve any concepts_covered after validation
+            if "concepts_covered" in data and isinstance(data["concepts_covered"], list):
+                course_dict["concepts_covered"] = data["concepts_covered"]
+                print(f"Preserved concepts_covered after validation: {course_dict['concepts_covered']}")
+            
+            # Also preserve concepts in LLM_Summary
+            if "course" in data and "LLM_Summary" in data["course"] and "concepts_covered" in data["course"]["LLM_Summary"]:
+                if "course" not in course_dict:
+                    course_dict["course"] = {}
+                if "LLM_Summary" not in course_dict["course"]:
+                    course_dict["course"]["LLM_Summary"] = {}
+                
+                course_dict["course"]["LLM_Summary"]["concepts_covered"] = data["course"]["LLM_Summary"]["concepts_covered"]
+                print(f"Preserved LLM_Summary.concepts_covered: {course_dict['course']['LLM_Summary']['concepts_covered']}")
         except Exception as validation_error:
             print(f"Validation error: {validation_error}")
-            print(f"Data structure: {json.dumps(data, indent=2)[:500]}...")
             
             return BaseResponse(
                 success=False,
@@ -315,7 +378,7 @@ async def import_json_data(
                 }
             )
         
-        # Index the course - pass dictionary instead of Pydantic model
+        # Index the course
         course_code = await course_selector_service.index_course(course_dict)
         
         return BaseResponse(

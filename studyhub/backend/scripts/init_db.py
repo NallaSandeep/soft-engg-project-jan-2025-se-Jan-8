@@ -355,7 +355,8 @@ def sync_with_studyindexer(courses):
     This calls the StudyIndexer API to index the courses
     
     StudyIndexer has several vector databases that need to be updated:
-    1. CourseContent - For within-course search (synced here)
+    1. CourseContent - For within-course search (for RAG)
+    2. CourseSelector - For course selection based on query (for recommending courses)
     """
     log("SYNCING COURSES WITH STUDYINDEXER...")
     
@@ -367,8 +368,11 @@ def sync_with_studyindexer(courses):
         # URLs for the StudyIndexer APIs
         STUDYINDEXER_BASE_URL = "http://127.0.0.1:8081"
         COURSE_CONTENT_URL = f"{STUDYINDEXER_BASE_URL}/api/v1/course-content"
+        COURSE_SELECTOR_URL = f"{STUDYINDEXER_BASE_URL}/api/v1/course-selector/index"
         
         courses_synced = 0
+        course_content_success = 0
+        course_selector_success = 0
         
         for course in courses:
             log(f"Syncing course {course.code} with StudyIndexer...")
@@ -420,14 +424,22 @@ def sync_with_studyindexer(courses):
                     else:
                         lecture_entry["keywords"] = [course.code, "lecture", week.title.split(':')[0] if ':' in week.title else week.title]
                     
+                    # Ensure each lecture has access to course and week summaries
+                    if hasattr(week, 'LLM_Summary') and week.LLM_Summary:
+                        lecture_entry["week_LLM_Summary"] = week.LLM_Summary
+                    
                     lectures_data.append(lecture_entry)
             
             # Create LLM_Summary if not present (using course description)
-            llm_summary = {
-                "summary": course.description,
-                "concepts_covered": [],
-                "concepts_not_covered": []
-            }
+            llm_summary = None
+            if hasattr(course, 'LLM_Summary') and course.LLM_Summary:
+                llm_summary = course.LLM_Summary
+            else:
+                llm_summary = {
+                    "summary": course.description,
+                    "concepts_covered": [],
+                    "concepts_not_covered": []
+                }
             
             # Structure the final course data according to expected format
             course_data = {
@@ -475,7 +487,7 @@ def sync_with_studyindexer(courses):
             if assignment_data:
                 course_data["assignments"] = assignment_data
                 
-            # Sync with StudyIndexer CourseContent API
+            # 1. Sync with StudyIndexer CourseContent API
             try:
                 content_response = requests.post(
                     COURSE_CONTENT_URL, 
@@ -485,19 +497,44 @@ def sync_with_studyindexer(courses):
                 
                 if content_response.status_code == 200:
                     log(f"Successfully synced course {course.code} with CourseContent API")
-                    courses_synced += 1
+                    course_content_success += 1
                 else:
                     log(f"Failed to sync course {course.code} with CourseContent API. Status: {content_response.status_code}", "ERROR")
                     log(f"Response: {content_response.text}", "ERROR")
                     
             except RequestException as e:
-                log(f"Error connecting to StudyIndexer for course {course.code}: {str(e)}", "ERROR")
-                log("StudyIndexer service may not be running. This is not critical for StudyHub operation.", "WARNING")
+                log(f"Error connecting to StudyIndexer CourseContent API for course {course.code}: {str(e)}", "ERROR")
                 
-        if courses_synced > 0:
-            log(f"Successfully synced {courses_synced} courses with StudyIndexer")
-        else:
+            # 2. Sync with StudyIndexer CourseSelector API
+            try:
+                selector_response = requests.post(
+                    COURSE_SELECTOR_URL, 
+                    json=course_data,
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if selector_response.status_code == 200:
+                    log(f"Successfully synced course {course.code} with CourseSelector API")
+                    course_selector_success += 1
+                else:
+                    log(f"Failed to sync course {course.code} with CourseSelector API. Status: {selector_response.status_code}", "ERROR")
+                    log(f"Response: {selector_response.text}", "ERROR")
+                    
+            except RequestException as e:
+                log(f"Error connecting to StudyIndexer CourseSelector API for course {course.code}: {str(e)}", "ERROR")
+                
+            # If either API call succeeded, count the course as synced
+            if course_content_success > 0 or course_selector_success > 0:
+                courses_synced += 1
+                
+        # Log summary of sync operations
+        log(f"Sync summary: {courses_synced} courses processed")
+        log(f"CourseContent API: {course_content_success} successes")
+        log(f"CourseSelector API: {course_selector_success} successes")
+        
+        if courses_synced == 0:
             log("No courses were synced with StudyIndexer", "WARNING")
+            log("StudyIndexer service may not be running.", "WARNING")
             
     except ImportError:
         log("Could not import 'requests' module. Please install it with 'pip install requests'", "ERROR")

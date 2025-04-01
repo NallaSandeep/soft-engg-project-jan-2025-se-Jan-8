@@ -26,12 +26,15 @@ import os
 import json
 import logging
 import uuid
+import time
+import re
 from typing import List, Dict, Any, Optional, Union
 from datetime import datetime
 
 from ..models.course_selector import CourseInfo, CourseTopic, CourseContent, WeekOverview
 from .chroma import ChromaService
 from .embeddings import EmbeddingService
+from app.services.embeddings import TextChunker
 
 logger = logging.getLogger(__name__)
 
@@ -63,11 +66,15 @@ class CourseContentService:
         self._initialized = False
         
     def initialize_sync(self) -> bool:
-        """Synchronous version of initialize"""
+        """Initialize the service and ensure the collection exists"""
         if self._initialized:
+            logger.info("CourseContent service already initialized")
             return True
             
         try:
+            logger.info("Initializing CourseContent service...")
+            logger.info(f"Creating/getting collection: {self.collection_name}")
+            
             # Create or get the collection
             collection = self.chroma.get_or_create_collection_sync(
                 name=self.collection_name,
@@ -80,6 +87,7 @@ class CourseContentService:
             logger.info(f"Course content collection initialized with {count} entries")
             
             self._initialized = True
+            logger.info("CourseContent service initialization complete")
             return True
         except Exception as e:
             logger.error(f"Failed to initialize CourseContent service: {str(e)}")
@@ -90,173 +98,440 @@ class CourseContentService:
         return self.initialize_sync()
         
     def add_course_content_sync(self, course_data: Dict[str, Any]) -> Union[int, str]:
-        """Synchronous version of add_course_content"""
+        """
+        Add course content to ChromaDB with chunked lecture content for better RAG
+        
+        This method:
+        1. Extracts course, week, and lecture information
+        2. Chunks lecture content into smaller segments for better search
+        3. Stores both course metadata and individual content chunks
+        
+        Args:
+            course_data: Dictionary containing course information
+                
+        Returns:
+            The course ID
+        """
         if not self._initialized:
             self.initialize_sync()
             
         try:
-            # Validate course data has the right structure
-            if "course" not in course_data:
-                logger.error("Invalid course data - missing 'course' key")
-                raise ValueError("Invalid course data format - missing 'course' key")
-                
-            course_info = course_data["course"]
-            if not course_info:
-                logger.error("Empty course information")
-                raise ValueError("Course information is empty")
-                
-            # Extract key course metadata
-            course_id = course_info.get("course_id")
+            # Extract course info
+            course_info = course_data.get("course", {})
+            course_id = str(course_info.get("course_id", ""))
+            course_code = course_info.get("code", "")
+            course_title = course_info.get("title", "")
+            
             if not course_id:
-                logger.warning("Course ID missing, will generate a new one")
                 course_id = str(uuid.uuid4())
-                course_info["course_id"] = course_id
                 
-            # Get course code and title for logging/identification
-            course_code = course_info.get("code", "Unknown")
-            course_title = course_info.get("title", "Unknown")
+            # Get lectures and weeks
+            lectures = course_data.get("lectures", [])
+            weeks = course_data.get("weeks", [])
             
-            logger.info(f"Adding/updating course: ID={course_id}, Code={course_code}, Title={course_title}")
+            # Build week lookup map for faster access
+            week_map = {}
+            for week in weeks:
+                week_id = str(week.get("week_id", ""))
+                if week_id:
+                    week_map[week_id] = week
             
-            # Check if a course with this code already exists
-            try:
-                search_results = self.chroma.search_sync(
-                    collection_name=self.collection_name,
-                    query="",
-                    n_results=1,
-                    where={"code": course_code}
-                )
-                
-                if search_results.ids and len(search_results.ids) > 0:
-                    existing_id = search_results.ids[0]
-                    existing_metadata = search_results.metadatas[0] if search_results.metadatas else {}
-                    logger.warning(f"Course with code {course_code} already exists with ID {existing_id}, metadata: {existing_metadata}")
-            except Exception as e:
-                logger.error(f"Error checking for existing course: {str(e)}")
+            # Initialize chunker
+            chunker = TextChunker(chunk_size=500, chunk_overlap=100)
             
-            # Prepare metadata and store the course document
-            metadata = {
+            # Process each lecture
+            chunks_added = 0
+            
+            # First, store the course overview as a document
+            overview_metadata = {
                 "course_id": course_id,
-                "code": course_code,
-                "title": course_title,
-                "department": course_info.get("department", "Computer Science"),
-                "added_on": datetime.now().isoformat()
+                "course_code": course_code,
+                "course_title": course_title,
+                "content_type": "course_description",
+                "description": course_info.get("description", ""),
+                "department": course_info.get("department", ""),
+                "credits": course_info.get("credits", 0),
+                "course_summary": course_info.get("LLM_Summary", {}).get("summary", ""),
+                "course_concepts": ", ".join(course_info.get("LLM_Summary", {}).get("concepts_covered", []))
             }
             
-            logger.info(f"Adding to ChromaDB with metadata: {metadata}")
-            
-            # Convert course data to a string for storage
-            course_json = json.dumps(course_data)
-            
-            # Add document to ChromaDB
-            result_ids = self.chroma.add_documents_sync(
-                collection_name=self.collection_name,
-                documents=[course_json],
-                metadatas=[metadata],
-                ids=[str(course_id)]
+            self.chroma.add_documents_sync(
+                    collection_name=self.collection_name,
+                documents=[course_info.get("description", "")],
+                metadatas=[overview_metadata],
+                ids=[f"course_{course_id}"]
             )
             
-            logger.info(f"Course added with IDs: {result_ids}")
+            # Process each lecture for detailed content chunks
+            for lecture in lectures:
+                # Extract lecture content (transcript or extract)
+                content = lecture.get("content_transcript") or lecture.get("content_extract", "")
+                if not content:
+                    continue
+                    
+                # Get lecture metadata
+                lecture_id = str(lecture.get("lecture_id", ""))
+                week_id = str(lecture.get("week_id", ""))
+                lecture_title = lecture.get("title", "")
+                
+                # Get week info from the map
+                week_info = week_map.get(week_id, {})
+                week_title = week_info.get("title", "")
+                week_number = week_info.get("order", "")
+                
+                # Create metadata for chunks
+                metadata = {
+                    "course_id": course_id,
+                    "course_code": course_code,
+                    "course_title": course_title,
+                    "week_id": week_id,
+                    "week_title": week_title,
+                    "week_number": week_number,
+                    "lecture_id": lecture_id,
+                    "lecture_title": lecture_title,
+                    "content_type": "lecture_chunk",
+                    "resource_type": lecture.get("resource_type", ""),
+                    "course_description": course_info.get("description", ""),
+                    "course_summary": course_info.get("LLM_Summary", {}).get("summary", ""),
+                    "course_concepts": ", ".join(course_info.get("LLM_Summary", {}).get("concepts_covered", [])),
+                    "week_summary": week_info.get("LLM_Summary", {}).get("summary", ""),
+                    "week_concepts": ", ".join(week_info.get("LLM_Summary", {}).get("concepts_covered", [])),
+                    "keywords": ", ".join(lecture.get("keywords", [])),
+                    "duration_minutes": lecture.get("duration_minutes", 0)
+                }
             
+            # Chunk the content
+            content_chunks = chunker.chunk_text(content, metadata)
+            
+            # Generate chunk IDs and index in ChromaDB
+            for idx, chunk in enumerate(content_chunks):
+                chunk_id = f"{course_id}_{lecture_id}_{idx}"
+                chunk_content = chunk["content"]
+                chunk_metadata = chunk["metadata"]
+                
+                # Add to ChromaDB
+                self.chroma.add_documents_sync(
+                    collection_name=self.collection_name,
+                    documents=[chunk_content],
+                    metadatas=[chunk_metadata],
+                    ids=[chunk_id]
+                )
+                chunks_added += 1
+            
+            logger.info(f"Added course {course_code} with {chunks_added} content chunks")
             return course_id
+            
         except Exception as e:
             logger.error(f"Error adding course content: {str(e)}")
-            import traceback
-            logger.error(traceback.format_exc())
             raise
+    
+    def _delete_course_chunks(self, course_code: str) -> bool:
+        """
+        Delete all chunks for a specific course
+        
+        Args:
+            course_code: The course code to delete chunks for
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            # Search for chunks with this course code
+            results = self.chroma.search_sync(
+                collection_name=self.collection_name,
+                query="",
+                n_results=1000,  # Large number to get all chunks
+                where={"code": course_code}
+            )
+            
+            if results.ids and len(results.ids) > 0:
+                # Delete all found documents
+                self.chroma.delete_sync(
+                    collection_name=self.collection_name,
+                    ids=results.ids
+                )
+                logger.info(f"Deleted {len(results.ids)} chunks for course {course_code}")
+                return True
+            else:
+                logger.info(f"No chunks found for course {course_code}")
+                return True
+        except Exception as e:
+            logger.error(f"Error deleting chunks for course {course_code}: {str(e)}")
+            return False
     
     async def add_course_content(self, course_content: Union[Dict[str, Any], CourseContent]) -> str:
         """Async wrapper for add_course_content_sync"""
         return self.add_course_content_sync(course_content)
         
-    def get_course_content_sync(self, course_id: Union[int, str]) -> Optional[CourseContent]:
-        """Synchronous version of get_course_content"""
+    def get_course_content_sync(self, course_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Retrieve a course and its content by ID or course code
+        
+        Args:
+            course_id: Course ID or course code
+            
+        Returns:
+            Course content as a dictionary or None if not found
+        """
         if not self._initialized:
             self.initialize_sync()
             
         try:
-            # Convert to string for consistency
-            course_id_str = str(course_id)
-            logger.info(f"Getting course content for ID/code: {course_id_str}")
+            logger.info(f"DEBUG: get_course_content_sync called with course_id={course_id}")
             
-            # First try direct lookup by ID
-            try:
-                direct_results = self.chroma.get_sync(
+            # First, try to find course by ID
+            logger.info(f"DEBUG: Trying to find course by ID: {course_id}")
+            results = self.chroma.search_sync(
                     collection_name=self.collection_name,
-                    ids=[course_id_str]
-                )
-                
-                if direct_results.ids and len(direct_results.ids) > 0:
-                    logger.info(f"Found course with direct ID lookup: {course_id_str}")
-                    metadata = direct_results.metadatas[0] if direct_results.metadatas else {}
-                    document = direct_results.documents[0] if direct_results.documents else None
-                    
-                    if document:
-                        try:
-                            course_data = json.loads(document)
-                            return self._build_course_content(course_data)
-                        except json.JSONDecodeError:
-                            logger.error(f"Error parsing JSON for course ID {course_id_str}")
-                    else:
-                        logger.warning(f"No document content found for course ID {course_id_str}")
-            except Exception as e:
-                logger.error(f"Error in direct ID lookup: {str(e)}")
-            
-            # If direct lookup fails, try search by code or other means
-            search_params = {}
-            
-            # Check if course_id might be a course code (contains letters)
-            if any(c.isalpha() for c in course_id_str):
-                logger.info(f"Trying to find course by code: {course_id_str}")
-                search_params["where"] = {"code": course_id_str}
-            # If it's numeric, try both as string and int
-            elif course_id_str.isdigit():
-                numeric_id = int(course_id_str)
-                logger.info(f"Trying to find course by numeric ID: {numeric_id}")
-                search_params["where"] = {"$or": [
-                    {"course_id": numeric_id},
-                    {"course_id": course_id_str}
-                ]}
-            else:
-                # Last resort - try with empty query
-                logger.info(f"Using fallback search with no filter for ID: {course_id_str}")
-            
-            # Search with empty query to find by metadata filter
-            search_results = self.chroma.search_sync(
-                collection_name=self.collection_name,
-                query="",
+                query="",  # Empty query to get all results
                 n_results=1,
-                **search_params
+                where={"course_id": course_id}
             )
             
-            if search_results.ids and len(search_results.ids) > 0:
-                doc_id = search_results.ids[0]
-                logger.info(f"Found course via search, actual ID: {doc_id}")
-                
-                # Get full document by ID
-                found_results = self.chroma.get_sync(
-                    collection_name=self.collection_name,
-                    ids=[doc_id]
-                )
-                
-                if found_results.ids and len(found_results.ids) > 0:
-                    document = found_results.documents[0] if found_results.documents else None
-                    
-                    if document:
-                        try:
-                            course_data = json.loads(document)
-                            return self._build_course_content(course_data)
-                        except json.JSONDecodeError:
-                            logger.error(f"Error parsing JSON for found course ID {doc_id}")
-                    else:
-                        logger.warning(f"No document content found for course ID {doc_id}")
+            logger.info(f"DEBUG: ID search returned {len(results.ids) if results and results.ids else 0} results")
             
-            logger.warning(f"Course with ID/code {course_id_str} not found")
+            # If not found by ID, try to find by course code
+            if not results.ids:
+                logger.info(f"DEBUG: Course not found by ID, trying by course_code: {course_id}")
+                results = self.chroma.search_sync(
+                    collection_name=self.collection_name,
+                    query="",  # Empty query to get all results
+                    n_results=1,
+                    where={"course_code": course_id}
+                )
+                logger.info(f"DEBUG: course_code search returned {len(results.ids) if results and results.ids else 0} results")
+                
+            # Try a less restrictive query with contains if still not found
+            if not results.ids:
+                logger.info(f"DEBUG: Course not found by exact match, trying broader query")
+                # Dump all collection documents to see what's there
+                all_docs = self.chroma.get_collection_docs_sync(
+                    collection_name=self.collection_name,
+                    limit=100,
+                    offset=0,
+                    include_metadata=True
+                )
+                logger.info(f"DEBUG: Found {len(all_docs.ids) if all_docs and all_docs.ids else 0} total documents in collection")
+                logger.info("DEBUG: Checking first 5 documents for course codes:")
+                for i, doc_id in enumerate(all_docs.ids[:5] if all_docs and all_docs.ids else []):
+                    logger.info(f"DEBUG: Doc {i} - Metadata: {all_docs.metadatas[i]}")
+                
+                # Try a less strict query that looks for course_code containing the course_id
+                for field in ["course_code", "code"]:
+                    found = False
+                    logger.info(f"DEBUG: Scanning collection for documents with {field}={course_id}")
+                    for i, metadata in enumerate(all_docs.metadatas if all_docs and all_docs.metadatas else []):
+                        if field in metadata and metadata[field] == course_id:
+                            logger.info(f"DEBUG: Found match in document {i} with {field}={course_id}")
+                            results = type('obj', (object,), {
+                                'ids': [all_docs.ids[i]],
+                                'metadatas': [all_docs.metadatas[i]]
+                            })
+                            found = True
+                            break
+                    if found:
+                        break
+                
+            if not results.ids:
+                logger.warning(f"Course with ID or code {course_id} not found")
+                return None
+                
+            # Found course, now get all its content
+            course_code = results.metadatas[0].get("course_code", "")
+            if not course_code:
+                logger.error(f"Course {course_id} found but has no course_code")
+                logger.info(f"DEBUG: Found course metadata: {results.metadatas[0]}")
+                
+                # Try alternate fields
+                for field in ["code", "course_code"]:
+                    if field in results.metadatas[0]:
+                        course_code = results.metadatas[0][field]
+                        logger.info(f"DEBUG: Found course_code in alternate field {field}: {course_code}")
+                        break
+                        
+                if not course_code:
+                    # If we still don't have a course code, use the course_id as the code
+                    course_code = course_id
+                    logger.info(f"DEBUG: Using course_id as course_code: {course_code}")
+                
+            logger.info(f"DEBUG: Found course_code: {course_code}, retrieving all content")
+                
+            # Retrieve all course content by course code - use both course_code and code fields
+            # Since we can't do OR conditions, we'll need to do separate searches
+            logger.info(f"DEBUG: Querying for all content with course_code={course_code}")
+            
+            # Search by course_code
+            all_results_by_code = self.chroma.search_sync(
+                collection_name=self.collection_name,
+                query="",  # Empty query to get all results 
+                n_results=1000,  # Get all content chunks
+                where={"course_code": course_code}
+            )
+            
+            # Search by code field
+            all_results_by_alt_code = self.chroma.search_sync(
+                collection_name=self.collection_name,
+                query="",  # Empty query to get all results
+                n_results=1000,  # Get all content chunks
+                where={"code": course_code}
+            )
+            
+            # Search by course_id
+            all_results_by_id = self.chroma.search_sync(
+                collection_name=self.collection_name,
+                query="",  # Empty query to get all results
+                n_results=1000,  # Get all content chunks
+                where={"course_id": course_code}  # Use course_code as it might be the ID
+            )
+            
+            # Combine results (might have duplicates but we'll handle that)
+            all_ids = []
+            all_metadatas = []
+            all_documents = []
+            
+            # Helper function to add results while avoiding duplicates
+            def add_results(results):
+                if not results or not results.ids:
+                    return
+                for i, doc_id in enumerate(results.ids):
+                    if doc_id not in all_ids:  # Only add if not already present
+                        all_ids.append(doc_id)
+                        all_metadatas.append(results.metadatas[i])
+                        all_documents.append(results.documents[i])
+            
+            # Add results from all searches, avoiding duplicates
+            add_results(all_results_by_code)
+            add_results(all_results_by_alt_code)
+            add_results(all_results_by_id)
+            
+            logger.info(f"DEBUG: Found total of {len(all_ids)} unique documents across all searches")
+            
+            if not all_ids:
+                logger.warning(f"No content found for course {course_code}")
+                return None
+                
+            # Extract course metadata from the first result
+            course_metadata = None
+            course_description = ""
+            lectures = []
+            weeks = []
+            
+            # Process each document based on its type
+            lecture_count = 0
+            week_count = 0
+            
+            for i, doc_id in enumerate(all_ids):
+                metadata = all_metadatas[i]
+                content = all_documents[i]
+                content_type = metadata.get("content_type", "")
+                
+                logger.info(f"DEBUG: Processing document {i}, type={content_type}")
+                
+                if content_type == "course_description":
+                    # Found course overview
+                    logger.info(f"DEBUG: Found course description")
+                    course_metadata = {
+                        "course_id": metadata.get("course_id", ""),
+                        "code": metadata.get("course_code", ""),
+                        "title": metadata.get("course_title", ""),
+                        "description": content,
+                        "department": metadata.get("department", ""),
+                        "credits": metadata.get("credits", 0),
+                        "summary": metadata.get("course_summary", ""),
+                        "concepts": metadata.get("course_concepts", "")
+                    }
+                    course_description = content
+                    logger.info(f"DEBUG: Found course description with summary length {len(metadata.get('course_summary', ''))}")
+                
+                elif content_type == "lecture_chunk":
+                    # Construct lecture information
+                    lecture_id = metadata.get("lecture_id", "")
+                    week_id = metadata.get("week_id", "")
+                    
+                    logger.info(f"DEBUG: Found lecture chunk - lecture_id={lecture_id}, week_id={week_id}")
+                    
+                    # Check if we've already processed this lecture
+                    existing_lecture = next((l for l in lectures if l.get("lecture_id") == lecture_id), None)
+                    
+                    if not existing_lecture:
+                        # Create new lecture
+                        lecture = {
+                            "lecture_id": lecture_id,
+                            "week_id": week_id,
+                            "title": metadata.get("lecture_title", ""),
+                            "content_extract": content[:1000],  # Use first chunk as extract
+                            "content_transcript": content,
+                            "resource_type": metadata.get("resource_type", ""),
+                            "keywords": metadata.get("keywords", ""),
+                            "duration_minutes": metadata.get("duration_minutes", 0),
+                            "course_summary": metadata.get("course_summary", ""),
+                            "week_summary": metadata.get("week_summary", ""),
+                            "course_concepts": metadata.get("course_concepts", ""),
+                            "week_concepts": metadata.get("week_concepts", "")
+                        }
+                        lectures.append(lecture)
+                        lecture_count += 1
+                        logger.info(f"DEBUG: Added new lecture: {lecture['title']} with {len(content)} chars")
+                    else:
+                        # Append content to existing lecture
+                        existing_lecture["content_transcript"] += "\n\n" + content
+                        # Update metadata if not already present
+                        for field in ["keywords", "duration_minutes", "course_summary", "week_summary", 
+                                    "course_concepts", "week_concepts"]:
+                            if field not in existing_lecture and field in metadata:
+                                existing_lecture[field] = metadata[field]
+                        logger.info(f"DEBUG: Appended to existing lecture: {existing_lecture['title']}, now {len(existing_lecture['content_transcript'])} chars")
+                    
+                    # Check if we need to add this week
+                    if week_id:
+                        existing_week = next((w for w in weeks if w.get("week_id") == week_id), None)
+                        if not existing_week:
+                            week = {
+                                "week_id": week_id,
+                                "title": metadata.get("week_title", ""),
+                                "order": metadata.get("week_number", 0),
+                                "summary": metadata.get("week_summary", ""),
+                                "concepts": metadata.get("week_concepts", "")
+                            }
+                            weeks.append(week)
+                            week_count += 1
+                            logger.info(f"DEBUG: Added new week: {week['title']} with summary length {len(week['summary'])}")
+            
+            logger.info(f"DEBUG: Processed {lecture_count} unique lectures and {week_count} unique weeks")
+            
+            # If no course metadata was found but we have content, create a placeholder
+            if not course_metadata and lectures:
+                logger.info(f"DEBUG: No course metadata found, creating placeholder from lecture metadata")
+                first_metadata = all_metadatas[0]
+                course_metadata = {
+                    "course_id": first_metadata.get("course_id", ""),
+                    "code": first_metadata.get("course_code", ""),
+                    "title": first_metadata.get("course_title", ""),
+                    "description": course_description,
+                    "department": "",
+                    "credits": 0,
+                    "summary": first_metadata.get("course_summary", ""),
+                    "concepts": first_metadata.get("course_concepts", "")
+                }
+                logger.info(f"DEBUG: Created placeholder course metadata: {course_metadata}")
+            
+            # Construct final course content structure
+            if course_metadata:
+                result = {
+                    "course": course_metadata,
+                    "weeks": weeks,
+                    "lectures": lectures
+                }
+                logger.info(f"DEBUG: Returning complete course content with {len(lectures)} lectures and {len(weeks)} weeks")
+                return result
+            
+            logger.warning(f"DEBUG: Could not construct course content, returning None")
             return None
+            
         except Exception as e:
-            logger.error(f"Error getting course content: {str(e)}")
+            logger.error(f"Error retrieving course content for {course_id}: {str(e)}")
             import traceback
-            logger.error(traceback.format_exc())
+            logger.error(f"DEBUG: Full traceback: {traceback.format_exc()}")
             return None
     
     async def get_course_content(self, course_id: Union[int, str]) -> Optional[CourseContent]:
@@ -377,227 +652,563 @@ class CourseContentService:
         return self.delete_course_content_sync(course_id)
     
     def list_courses_sync(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
-        """Synchronous version of list_courses"""
+        """List all course content with pagination"""
         if not self._initialized:
+            logger.info("Service not initialized, initializing now...")
             self.initialize_sync()
             
         try:
-            # Get all course documents with pagination
-            result = self.chroma.get_collection_docs_sync(
+            logger.info(f"DEBUG: List courses called with limit={limit}, offset={offset}")
+            
+            # First try with content_type filter
+            logger.info("DEBUG: Trying to query with content_type=course_description")
+            results = self.chroma.get_collection_docs_sync(
                 collection_name=self.collection_name,
                 limit=limit,
-                offset=offset
+                offset=offset,
+                include_metadata=True
             )
             
-            if not result.ids:
+            logger.info(f"DEBUG: Initial query returned {len(results.ids if results.ids else [])} results")
+            
+            # If no results, try a broader query to find any course data
+            if not results.ids or len(results.ids) == 0:
+                logger.warning("No course descriptions found with content_type filter, trying broader query")
+                logger.info("DEBUG: Trying broader query with no filters")
+                results = self.chroma.get_collection_docs_sync(
+                    collection_name=self.collection_name,
+                    limit=1000,  # Get all and we'll filter
+                    offset=0,
+                    include_metadata=True
+                )
+                
+                logger.info(f"DEBUG: Broader query returned {len(results.ids if results.ids else [])} results")
+                
+                # Find any entries that have course_code
+                filtered_ids = []
+                filtered_documents = []
+                filtered_metadatas = []
+                seen_courses = set()
+                
+                # Dump all metadata for debugging
+                logger.info("DEBUG: Dumping metadata from first 5 results:")
+                for i, doc_id in enumerate(results.ids[:5] if results.ids else []):
+                    logger.info(f"DEBUG: Result {i} - ID: {doc_id}, Metadata: {results.metadatas[i]}")
+                
+                for i, doc_id in enumerate(results.ids if results.ids else []):
+                    metadata = results.metadatas[i]
+                    course_code = metadata.get("course_code", "")
+                    
+                    # Skip if no course code or already processed this course
+                    if not course_code or course_code in seen_courses:
+                        continue
+                        
+                    logger.info(f"DEBUG: Found course with code {course_code}")
+                    seen_courses.add(course_code)
+                    filtered_ids.append(doc_id)
+                    filtered_documents.append(results.documents[i] if i < len(results.documents) else "")
+                    filtered_metadatas.append(metadata)
+                    
+                    # Only collect up to the limit
+                    if len(filtered_ids) >= limit:
+                        break
+                        
+                # Replace results with filtered version
+                # Create a new object to mimic ChromaDB result structure
+                class FilteredResults:
+                    def __init__(self, ids, documents, metadatas):
+                        self.ids = ids
+                        self.documents = documents
+                        self.metadatas = metadatas
+                        
+                results = FilteredResults(filtered_ids, filtered_documents, filtered_metadatas)
+                logger.info(f"DEBUG: After filtering, found {len(results.ids if results.ids else [])} unique courses")
+            
+            if not results.ids:
+                logger.warning("No course data found at all")
                 return []
                 
-            # Extract basic info from metadata
+            # Extract course info from metadata
             courses = []
-            for i, doc_id in enumerate(result.ids):
-                metadata = result.metadatas[i]
-                courses.append({
-                    "course_id": metadata.get("course_id"),
-                    "code": metadata.get("code", ""),
-                    "title": metadata.get("title", ""),
-                    "department": metadata.get("department", ""),
-                    "credits": int(metadata.get("credits", 0)),
-                    "week_count": int(metadata.get("week_count", 0)),
-                    "created_at": metadata.get("created_at")
-                })
+            for i, doc_id in enumerate(results.ids):
+                metadata = results.metadatas[i]
+                content = results.documents[i] if i < len(results.documents) else ""
                 
+                # Build course info
+                course = {
+                    "course_id": metadata.get("course_id", ""),
+                    "code": metadata.get("course_code", ""),
+                    "title": metadata.get("course_title", ""),
+                    "department": metadata.get("department", ""),
+                    "credits": metadata.get("credits", 0),
+                    "description": content,
+                    "created_at": metadata.get("created_at", None)
+                }
+                courses.append(course)
+                logger.info(f"DEBUG: Added course {course['code'] or course['course_id']} to result list")
+                
+            logger.info(f"DEBUG: Returning {len(courses)} courses")
             return courses
         except Exception as e:
             logger.error(f"Error listing courses: {str(e)}")
+            import traceback
+            logger.error(f"DEBUG: Full traceback: {traceback.format_exc()}")
             return []
     
     async def list_courses(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         """Async wrapper for list_courses_sync"""
         return self.list_courses_sync(limit, offset)
     
+    def _normalize_query(self, query: str) -> str:
+        """
+        Normalize a query string by replacing hyphens, underscores, and special characters with spaces.
+        
+        Args:
+            query: The query string to normalize
+            
+        Returns:
+            Normalized query string
+        """
+        # Replace common separators with spaces
+        normalized = query.replace('-', ' ').replace('_', ' ')
+        
+        # Remove extra spaces
+        normalized = ' '.join(normalized.split())
+        
+        return normalized
+    
     def search_courses_sync(
         self, 
-        query: str = "",
+        query: str, 
         limit: int = 10,
-        course_ids: Optional[List[str]] = None
-    ) -> List[Dict[str, Any]]:
-        """Synchronous version of search_courses"""
-        if not self._initialized:
-            self.initialize_sync()
-            
+        course_ids: list = None,
+        min_score: float = 0.01,
+        exact_match_boost: float = 0.1,
+        phrase_match_boost: float = 0.15,
+        description_threshold: float = 0.05
+    ) -> dict:
+        """
+        Search for course content by query.
+        """
         try:
-            # Generate embedding for query
-            query_embedding = None
-            if query and len(query.strip()) > 0:
-                logger.info(f"Generating embedding for query: '{query}'")
-                query_embedding = self.embedder.generate_embedding(query.strip())
+            logger.info(f"DEBUG: Search called with query='{query}', limit={limit}, course_ids={course_ids}, min_score={min_score}")
             
-            # Set up filter if course_ids are provided
-            where_clause = None
-            if course_ids and len(course_ids) > 0:
-                # Simply filter by course code - this is the most reliable method
-                logger.info(f"Filtering search by course_ids: {course_ids}")
-                where_clause = {"code": {"$in": course_ids}}
-                logger.info(f"Using where clause: {where_clause}")
+            if not query or not query.strip():
+                logger.warning("DEBUG: Empty query provided, returning empty results")
+                return {"content_chunks": [], "total_count": 0, "query": query, "limit": limit}
             
-            # Execute search
-            logger.info(f"Calling ChromaDB search with: query='{query}', embedding={'Yes' if query_embedding else 'No'}, where={where_clause}")
+            # Prepare filter based on course_ids
+            filter_dict = {}
+            if course_ids:
+                logger.info(f"DEBUG: Using course filter: {{'course_code': {{'$in': {course_ids}}}}}")
+                filter_dict = {"course_code": {"$in": course_ids}}
             
-            # Basic parameters
-            search_params = {
-                "collection_name": self.collection_name,
-                "n_results": limit
+            # Normalize the query by replacing hyphens with spaces, etc.
+            normalized_query = self._normalize_query(query)
+            logger.info(f"DEBUG: Normalized query: '{normalized_query}'")
+            
+            # List to store all expanded versions of the query
+            expanded_queries = [normalized_query]
+            
+            # Check if the query is short and likely an acronym (e.g., "RDBMS")
+            if len(normalized_query.split()) == 1 and len(normalized_query) <= 10 and normalized_query.isupper():
+                logger.info(f"DEBUG: Detected potential acronym: {normalized_query}")
+                
+                # Dictionary of common database-related acronyms and their expansions
+                acronyms = {
+                    "RDBMS": "relational database management system",
+                    "SQL": "structured query language",
+                    "DDL": "data definition language",
+                    "DML": "data manipulation language",
+                    "DCL": "data control language",
+                    "TCL": "transaction control language",
+                    "ER": "entity relationship",
+                    "ACID": "atomicity consistency isolation durability",
+                    "DBMS": "database management system",
+                    "1NF": "first normal form",
+                    "2NF": "second normal form", 
+                    "3NF": "third normal form",
+                    "BCNF": "boyce codd normal form"
+                }
+                
+                # Add the expanded acronym to the list of queries to search
+                if normalized_query in acronyms:
+                    expanded_query = acronyms[normalized_query]
+                    logger.info(f"DEBUG: Added expansion: '{normalized_query}' → '{expanded_query}'")
+                    expanded_queries.append(normalized_query)  # Keep the original acronym
+                    expanded_queries.append(expanded_query)
+            
+            # Special handling for normal forms - check for patterns
+            normalization_patterns = {
+                r"(?i)first\s+normal\s+form": ["1NF", "first normal form"],
+                r"(?i)second\s+normal\s+form": ["2NF", "second normal form"],
+                r"(?i)third\s+normal\s+form": ["3NF", "third normal form"],
+                r"(?i)boyce\s+codd\s+normal\s+form": ["BCNF", "boyce codd normal form"],
+                r"(?i)fourth\s+normal\s+form": ["4NF", "fourth normal form"],
+                r"(?i)fifth\s+normal\s+form": ["5NF", "fifth normal form"],
+                r"(?i)1nf": ["first normal form", "1NF"],
+                r"(?i)2nf": ["second normal form", "2NF"],
+                r"(?i)3nf": ["third normal form", "3NF"],
+                r"(?i)bcnf": ["boyce codd normal form", "BCNF"],
+                r"(?i)4nf": ["fourth normal form", "4NF"],
+                r"(?i)5nf": ["fifth normal form", "5NF"]
             }
             
-            # Add where clause if provided
-            if where_clause:
-                search_params["where"] = where_clause
+            # Check if the query matches any normalization pattern
+            for pattern, expansions in normalization_patterns.items():
+                if re.search(pattern, normalized_query):
+                    logger.info(f"DEBUG: Detected normalization form pattern: {pattern}")
+                    for expansion in expansions:
+                        if expansion not in expanded_queries:
+                            logger.info(f"DEBUG: Added normalization expansion: '{expansion}'")
+                            expanded_queries.append(expansion)
+            
+            # Special handling for phrases containing "normal form"
+            if "normal form" in normalized_query.lower():
+                logger.info("DEBUG: Query contains 'normal form', adding specific normalization expansions")
+                normal_form_expansions = ["1NF", "2NF", "3NF", "BCNF", "first normal form", "second normal form", "third normal form", "boyce codd normal form"]
+                for expansion in normal_form_expansions:
+                    if expansion not in expanded_queries:
+                        expanded_queries.append(expansion)
+            
+            logger.info(f"DEBUG: All expanded queries: {expanded_queries}")
+            
+            # Get collection info
+            collection = self.chroma.get_or_create_collection_sync(self.collection_name)
+            logger.info(f"DEBUG: Using collection: {self.collection_name}")
+            
+            # Process each expanded query
+            all_results = []
+            
+            for expanded_query in set(expanded_queries):
+                logger.info(f"DEBUG: Searching with expanded query: '{expanded_query}'")
                 
-            # Use embedding if available, otherwise use the text query
-            if query_embedding:
-                search_params["query"] = ""  # Must be empty when using embedding
-                search_params["query_embedding"] = query_embedding
-            else:
-                search_params["query"] = query
-            
-            # Execute search
-            search_results = self.chroma.search_sync(**search_params)
+                # Search using the expanded query
+                results = self.chroma.search_sync(
+                    collection_name=self.collection_name,
+                    query=expanded_query,
+                    n_results=50,  # Get more results initially for filtering
+                    where=filter_dict
+                )
                 
-            if not search_results.ids or len(search_results.ids) == 0:
-                logger.info(f"No results found for query: '{query}'")
-                return []
-            
-            logger.info(f"Found {len(search_results.ids)} results")
-            
-            # Process results
-            results = []
-            processed_courses = set()
-            
-            for i, doc_id in enumerate(search_results.ids):
-                try:
-                    metadata = search_results.metadatas[i]
-                    document = search_results.documents[i] if hasattr(search_results, 'documents') and search_results.documents else None
-                    
-                    # Get course ID and code from metadata
-                    course_id = metadata.get("course_id", doc_id)
-                    course_code = metadata.get("code", "Unknown")
-                    
-                    # Skip if we've already processed this course
-                    if course_code in processed_courses:
+                if not results or not results.ids or not results.ids:
                         continue
                         
-                    processed_courses.add(course_code)
+                result_ids = results.ids
+                result_distances = results.distances
+                result_metadatas = results.metadatas
+                result_documents = results.documents
+                
+                logger.info(f"DEBUG: Search for '{expanded_query}' found {len(result_ids)} initial results")
+                
+                if len(result_ids) > 0:
+                    logger.info("DEBUG: Sample results for '{expanded_query}':")
+                    for i in range(min(3, len(result_ids))):
+                        # Convert distance to a relevance score (1 - distance, as lower distance = higher relevance)
+                        # Clamp between 0 and 1
+                        score = max(0, min(1, 1 - result_distances[i]))
+                        logger.info(f"DEBUG: Result {i}: ID={result_ids[i]}, score={score:.4f}, metadata={result_metadatas[i]}")
+                
+                # Process results
+                for i in range(len(result_ids)):
+                    doc_id = result_ids[i]
+                    distance = result_distances[i]
+                    metadata = result_metadatas[i]
+                    document = result_documents[i]
                     
-                    # Try to parse the document to get course data
-                    course_data = None
-                    if document:
-                        try:
-                            json_data = json.loads(document)
-                            course_data = self._build_course_content(json_data)
-                        except:
-                            logger.warning(f"Could not parse document for course {course_code}")
+                    # Calculate relevance score (1 - distance, as lower distance = higher relevance)
+                    # Clamp between 0 and 1
+                    score = max(0, min(1, 1 - distance))
                     
-                    # If failed, fall back to get_course_content_sync
-                    if not course_data:
-                        course_data = self.get_course_content_sync(course_code)
-                        
-                    if not course_data:
-                        logger.warning(f"Could not retrieve data for course {course_code}")
+                    # Skip low scoring results
+                    if score < min_score:
+                        logger.info(f"DEBUG: Skipping result {i} with score {score:.4f} < min_score {min_score}")
                         continue
                     
-                    # Extract content chunks
-                    content_chunks = self._extract_content_chunks(course_data)
+                    content_type = metadata.get('content_type', '')
                     
-                    # Calculate score
-                    score = 1.0 - min(1.0, search_results.distances[i])
+                    # For course descriptions, only include them if they meet a higher relevance threshold
+                    if content_type == 'course_description' and score < description_threshold:
+                        continue
                     
-                    # Build result according to API spec format
-                    source_course = {
-                        "code": course_data.course.code,
-                        "title": course_data.course.title,
-                        "match_score": score
-                    }
+                    # Apply exact match and term match boosting
+                    boosted_score = score
                     
-                    results.append({
-                        "source_course": source_course,
-                        "content_chunks": content_chunks,
-                        "score": score
-                    })
+                    # Check for term matches in the document text
+                    query_terms = set(expanded_query.lower().split())
+                    doc_text = document.lower()
                     
-                    logger.info(f"Added course {course_code} to results with {len(content_chunks)} chunks")
-                except Exception as e:
-                    logger.error(f"Error processing search result: {str(e)}")
-                    import traceback
-                    logger.error(traceback.format_exc())
+                    # Only consider terms with at least 2 characters
+                    matching_terms = [term for term in query_terms if len(term) >= 2 and term in doc_text]
+                    
+                    if matching_terms:
+                        logger.info(f"DEBUG: Term match: '{', '.join(matching_terms)}' in result {i}")
+                        # Boost based on number of matching terms
+                        term_boost = exact_match_boost * len(matching_terms)
+                        boosted_score += term_boost
+                        logger.info(f"DEBUG: Term boost: +{term_boost:.4f} for {len(matching_terms)} matches, new score: {boosted_score:.4f}")
+                    
+                    # Check for acronym match
+                    if expanded_query.isupper() and expanded_query in document:
+                        logger.info(f"DEBUG: Acronym boost: +0.2 for exact match of {expanded_query}, new score: {boosted_score + 0.2:.4f}")
+                        boosted_score += 0.2  # Significant boost for exact acronym match
+                    
+                    # Check for exact phrase match
+                    if expanded_query.lower() in doc_text:
+                        logger.info(f"DEBUG: Phrase boost: +{phrase_match_boost} for exact phrase match, new score: {boosted_score + phrase_match_boost:.4f}")
+                        boosted_score += phrase_match_boost
+                    
+                    # For normalization forms (like "first normal form", "1NF"), check for specific matches
+                    for pattern, _ in normalization_patterns.items():
+                        if re.search(pattern, expanded_query, re.IGNORECASE) and any(re.search(pattern, doc_text, re.IGNORECASE) for pattern in normalization_patterns.keys()):
+                            logger.info(f"DEBUG: Normalization form boost: +0.25 for matching normalization concept, new score: {boosted_score + 0.25:.4f}")
+                            boosted_score += 0.25  # Higher boost for database normalization concepts
+                            break
+                    
+                    # NEW BOOST CHECKS FOR ADDITIONAL METADATA FIELDS
+                    # Check for matches in keywords (highest boost because most specific)
+                    if "keywords" in metadata and metadata["keywords"]:
+                        keywords_lower = metadata["keywords"].lower()
+                        if expanded_query.lower() in keywords_lower:
+                            logger.info(f"DEBUG: Keywords exact match boost: +0.3 for '{expanded_query}', new score: {boosted_score + 0.3:.4f}")
+                            boosted_score += 0.3
+                        else:
+                            # Check for individual terms in keywords
+                            matching_keywords = [term for term in query_terms if len(term) >= 2 and term in keywords_lower]
+                            if matching_keywords:
+                                keyword_boost = 0.15 * len(matching_keywords)
+                                logger.info(f"DEBUG: Keywords term match boost: +{keyword_boost:.4f} for {len(matching_keywords)} terms, new score: {boosted_score + keyword_boost:.4f}")
+                                boosted_score += keyword_boost
+                    
+                    # Check for matches in course concepts and week concepts
+                    for concept_field in ["course_concepts", "week_concepts"]:
+                        if concept_field in metadata and metadata[concept_field]:
+                            concepts_lower = metadata[concept_field].lower()
+                            if expanded_query.lower() in concepts_lower:
+                                logger.info(f"DEBUG: {concept_field} match boost: +0.2 for '{expanded_query}', new score: {boosted_score + 0.2:.4f}")
+                                boosted_score += 0.2
+                                break  # Only boost once for concepts
+                            else:
+                                # Check for individual terms in concepts
+                                matching_concepts = [term for term in query_terms if len(term) >= 2 and term in concepts_lower]
+                                if matching_concepts:
+                                    concept_boost = 0.1 * len(matching_concepts)
+                                    logger.info(f"DEBUG: {concept_field} term match boost: +{concept_boost:.4f}, new score: {boosted_score + concept_boost:.4f}")
+                                    boosted_score += concept_boost
+                                    break  # Only boost once for concepts
+                    
+                    # Check for matches in course summary and week summary
+                    for summary_field in ["course_summary", "week_summary"]:
+                        if summary_field in metadata and metadata[summary_field]:
+                            summary_lower = metadata[summary_field].lower()
+                            if expanded_query.lower() in summary_lower:
+                                logger.info(f"DEBUG: {summary_field} match boost: +0.1 for '{expanded_query}', new score: {boosted_score + 0.1:.4f}")
+                                boosted_score += 0.1
+                                break  # Only boost once for summaries
+                            else:
+                                # Check for individual terms in summaries
+                                matching_summary_terms = [term for term in query_terms if len(term) >= 2 and term in summary_lower]
+                                if matching_summary_terms:
+                                    summary_boost = 0.05 * len(matching_summary_terms)
+                                    logger.info(f"DEBUG: {summary_field} term match boost: +{summary_boost:.4f}, new score: {boosted_score + summary_boost:.4f}")
+                                    boosted_score += summary_boost
+                                    break  # Only boost once for summaries
+                    
+                    # Prepare the result with the boosted score
+                    if content_type == 'course_description':
+                        result = {
+                            'type': 'course_description',
+                            'title': metadata.get('course_title', ''),
+                            'content': document,
+                            'relevance_score': round(boosted_score, 2),
+                            'course_code': metadata.get('course_code', ''),
+                            'course_summary': metadata.get('course_summary', ''),
+                            'course_concepts': metadata.get('course_concepts', '')
+                        }
+                    elif content_type == 'lecture_chunk':
+                        result = {
+                            'type': 'lecture_content',
+                            'title': metadata.get('lecture_title', ''),
+                            'content': document,
+                            'relevance_score': round(boosted_score, 2),
+                            'course_code': metadata.get('course_code', ''),
+                            'course_title': metadata.get('course_title', ''),
+                            'week_title': metadata.get('week_title', ''),
+                            'week_number': metadata.get('week_number', ''),
+                            'lecture_id': metadata.get('lecture_id', ''),
+                            'resource_type': metadata.get('resource_type', ''),
+                            'keywords': metadata.get('keywords', ''),
+                            'course_summary': metadata.get('course_summary', ''),
+                            'week_summary': metadata.get('week_summary', '')
+                        }
+                    else:
+                        continue  # Skip unknown content types
+                    
+                    # Create a unique key for deduplication
+                    chunk_key = f"{metadata.get('course_code', '')}__{metadata.get('lecture_id', '')}__{metadata.get('chunk_index', '')}"
+                    result['chunk_key'] = chunk_key
+                    
+                    all_results.append(result)
             
-            logger.info(f"Returning {len(results)} courses with content")
-            return results
+            logger.info(f"DEBUG: Total results before deduplication: {len(all_results)}")
+            
+            # Deduplicate results by chunk_key and sort by relevance score
+            unique_results = {}
+            for result in all_results:
+                chunk_key = result.pop('chunk_key', None)  # Remove the key from the result dict
+                if chunk_key not in unique_results or result['relevance_score'] > unique_results[chunk_key]['relevance_score']:
+                    unique_results[chunk_key] = result
+            
+            # Sort by relevance score in descending order
+            sorted_results = sorted(
+                unique_results.values(), 
+                key=lambda x: x['relevance_score'], 
+                reverse=True
+            )
+            
+            # Limit the number of results
+            final_results = sorted_results[:limit]
+            
+            logger.info(f"DEBUG: Final results: {len(final_results)} unique content chunks for query: '{query}'")
+            
+            if not final_results:
+                logger.warning("DEBUG: No results found for any expanded queries")
+                
+                # Try a broader search without filters as a fallback
+                broader_results = self.chroma.search_sync(
+                    collection_name=self.collection_name,
+                    query=normalized_query,
+                    n_results=5,  # Just get a few results
+                )
+                
+                if broader_results and broader_results.ids and len(broader_results.ids) > 0:
+                    logger.info(f"DEBUG: Broader search (no filters) found {len(broader_results.ids)} results")
+                    first_score = 1 - broader_results.distances[0] if broader_results.distances else 0
+                    logger.info(f"DEBUG: First result score: {first_score:.4f}")
+                    if broader_results.metadatas:
+                        logger.info(f"DEBUG: First result metadata: {broader_results.metadatas[0]}")
+            
+            return {
+                "content_chunks": final_results,
+                "total_count": len(final_results),
+                "query": query,
+                "limit": limit
+            }
+            
         except Exception as e:
-            logger.error(f"Error in search_courses_sync: {str(e)}")
+            logger.error(f"Error searching courses: {str(e)}", exc_info=True)
+            return {"content_chunks": [], "total_count": 0, "query": query, "limit": limit}
+
+    def _extract_content_chunks_from_course(self, course_data: Dict[str, Any], query: str) -> List[Dict[str, Any]]:
+        """
+        Extract and score content chunks from a course document
+        
+        This handles backward compatibility with the old storage format where
+        entire course documents were stored instead of individual chunks.
+        
+        Args:
+            course_data: The course data dictionary
+            query: The search query to score chunks against
+            
+        Returns:
+            List of extracted content chunks
+        """
+        try:
+            logger.info(f"Extracting chunks from course data for query: '{query}'")
+            
+            # Extract content based on query relevance
+            content_chunks = []
+            query_terms = query.lower().split()
+            
+            # Extract lecture content from weeks
+            if "weeks" in course_data and course_data["weeks"]:
+                for week in course_data["weeks"]:
+                    week_title = week.get("title", "")
+                    week_number = week.get("number", 0)
+                    
+                    # Extract lectures from week
+                    if "lectures" in week and week["lectures"]:
+                        for lecture in week["lectures"]:
+                            lecture_title = lecture.get("title", "")
+                            
+                            # Score the lecture title for relevance
+                            title_score = 0
+                            for term in query_terms:
+                                if term in lecture_title.lower():
+                                    title_score += 0.1
+                            
+                            # Get lecture content
+                            lecture_content = lecture.get("content", "")
+                            if not lecture_content:
+                                continue
+                            
+                            # Find paragraphs containing query terms
+                            paragraphs = lecture_content.split("\n\n")
+                            for paragraph in paragraphs:
+                                if not paragraph.strip():
+                                    continue
+                                    
+                                # Calculate paragraph score
+                                paragraph_score = 0
+                                paragraph_lower = paragraph.lower()
+                                for term in query_terms:
+                                    if term in paragraph_lower:
+                                        paragraph_score += 0.05
+                                        
+                                # Skip paragraphs with no relevance
+                                if paragraph_score == 0 and title_score == 0:
+                                    continue
+                                
+                                # Create content chunk
+                                chunk = {
+                                    "type": "lecture_paragraph",
+                                    "title": lecture_title,
+                                    "content": paragraph,
+                                    "week_number": week_number,
+                                    "relevance_score": title_score + paragraph_score
+                                }
+                                content_chunks.append(chunk)
+            
+            # If no lecture content found, try course description
+            if not content_chunks and "description" in course_data:
+                description = course_data["description"]
+                description_score = 0
+                
+                for term in query_terms:
+                    if term in description.lower():
+                        description_score += 0.05
+                        
+                if description_score > 0:
+                    chunk = {
+                        "type": "course_description",
+                        "title": course_data.get("title", ""),
+                        "content": description,
+                        "relevance_score": description_score
+                    }
+                    content_chunks.append(chunk)
+            
+            # Add course summary if available
+            if "LLM_Summary" in course_data and content_chunks:
+                summary = course_data["LLM_Summary"].get("summary", "")
+                if summary:
+                    chunk = {
+                        "type": "course_summary",
+                        "title": f"Summary: {course_data.get('title', '')}",
+                        "content": summary,
+                        "relevance_score": 0.4  # Give summary a decent score
+                    }
+                    content_chunks.append(chunk)
+            
+            # Sort by relevance
+            content_chunks.sort(key=lambda x: x.get("relevance_score", 0), reverse=True)
+            
+            return content_chunks
+            
+        except Exception as e:
+            logger.error(f"Error extracting content chunks: {str(e)}")
             import traceback
             logger.error(traceback.format_exc())
             return []
-    
-    def _extract_relevant_chunks(self, doc_content: Dict[str, Any], query: str) -> List[Dict[str, Any]]:
-        """
-        Extract content chunks from the document that are most relevant to the query
-        
-        This extracts lectures, topics, and week content that matches the query
-        for use in RAG applications.
-        """
-        chunks = []
-        
-        # Extract weeks content
-        if "weeks" in doc_content and doc_content["weeks"]:
-            for week in doc_content["weeks"]:
-                week_chunk = {
-                    "type": "week",
-                    "week_number": week.get("week_number"),
-                    "title": week.get("title"),
-                    "description": week.get("description"),
-                    "topics": week.get("topics", [])
-                }
-                chunks.append(week_chunk)
-                
-        # Extract lecture content
-        if "lectures" in doc_content and doc_content["lectures"]:
-            for lecture in doc_content["lectures"]:
-                # Include the most relevant parts of the lecture for RAG
-                lecture_chunk = {
-                    "type": "lecture",
-                    "title": lecture.get("title"),
-                    "description": lecture.get("description"),
-                    "content": lecture.get("content", lecture.get("content_transcript", "")),
-                    "week_number": lecture.get("week")
-                }
-                chunks.append(lecture_chunk)
-                
-        # Extract topic content
-        if "topics" in doc_content and doc_content["topics"]:
-            for topic in doc_content["topics"]:
-                topic_chunk = {
-                    "type": "topic",
-                    "name": topic.get("name"),
-                    "description": topic.get("description")
-                }
-                chunks.append(topic_chunk)
-                
-        # Extract assignment content if available
-        if "assignments" in doc_content and doc_content["assignments"]:
-            for assignment in doc_content["assignments"]:
-                assignment_chunk = {
-                    "type": "assignment",
-                    "title": assignment.get("title"),
-                    "description": assignment.get("description"),
-                    "due_date": assignment.get("due_date")
-                }
-                chunks.append(assignment_chunk)
-                
-        return chunks
-    
-    async def search_courses(self, query: str, limit: int = 10, course_ids: List[str] = None) -> List[Dict[str, Any]]:
-        """Async wrapper for search_courses_sync"""
-        return self.search_courses_sync(query, limit, course_ids)
 
     def _transform_course_data(self, course_data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -744,3 +1355,24 @@ class CourseContentService:
         
         # Return as CourseContent object
         return CourseContent(**course_data) 
+
+    async def search_courses(
+        self, 
+        query: str, 
+        limit: int = 10, 
+        course_ids: List[str] = None,
+        min_score: float = 0.01,
+        exact_match_boost: float = 0.1,
+        phrase_match_boost: float = 0.15,
+        description_threshold: float = 0.05
+    ) -> List[Dict[str, Any]]:
+        """Async wrapper for search_courses_sync with full parameter support"""
+        return self.search_courses_sync(
+            query=query, 
+            limit=limit, 
+            course_ids=course_ids,
+            min_score=min_score,
+            exact_match_boost=exact_match_boost,
+            phrase_match_boost=phrase_match_boost,
+            description_threshold=description_threshold
+        ) 

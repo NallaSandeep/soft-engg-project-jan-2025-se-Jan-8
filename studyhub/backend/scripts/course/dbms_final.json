@@ -1,66 +1,149 @@
 {
-  "course": {
-    "course_id": 2,
-    "code": "DBMS201",
-    "title": "Database Management Systems",
-    "description": "This course provides a comprehensive introduction to Database Management Systems (DBMS), covering foundational and advanced database concepts. Students will explore database design, entity-relationship (ER) modeling, relational algebra, and relational calculus. The course includes hands-on experience with Structured Query Language (SQL) for data retrieval, modification, and optimization. Topics such as indexing, query processing, normalization techniques, and transaction management are explored in depth. Advanced topics include data constraints, integrity rules, and security considerations. The course also introduces mathematical underpinnings such as predicate logic and quantifiers in relational calculus. Through practical exercises, case studies, and real-world applications, students will develop strong database management skills applicable to various industries. The course spans 12 weeks and is structured to provide a systematic and practice-oriented understanding of modern database technologies.",
-    "instructor_id": 2,
-    "credits": 4,
-    "department": "Computer Science",
-    "image_url": "/assets/courses/dbms201/cover.jpg",
-    "LLM_Summary": {
-      "summary": "This course delves into the fundamental and intermediate principles of database management, covering both theoretical and practical aspects. It includes database design, ER modeling, relational algebra, tuple and domain relational calculus, SQL queries, indexing strategies, normalization techniques, and transaction management. The course introduces predicate logic as a foundation for relational calculus and explores optimization techniques for efficient database operations. Students will gain hands-on experience with SQL for data retrieval, modification, and subqueries, while also learning about integrity constraints and ACID properties. Practical assignments and case studies will reinforce real-world database implementation, preparing students for careers in data engineering, software development, and information systems management.",
-      "concepts_covered": [
-        "Database design and abstraction levels",
-        "Entity-Relationship (ER) modeling",
-        "Relational algebra and its operations",
-        "Tuple and domain relational calculus",
-        "SQL query structure, subqueries, and optimization",
-        "Data definition and manipulation (DDL & DML)",
-        "Integrity constraints and data constraints",
-        "Normalization techniques and schema refinement",
-        "Indexing strategies and query performance",
-        "Transaction management and ACID properties",
-        "Predicate logic and quantification in relational calculus"
-      ],
-      "concepts_not_covered": [
-        "NoSQL databases and alternative data models",
-        "Distributed database architectures",
-        "Big data frameworks and cloud-based databases",
-        "Graph databases and RDF-based query languages",
-        "Database security policies and role-based access control"
-      ]
-    }
-  },
-
-  "weeks": [
+    "course": {
+        "course_id": 1,
+        "code": "DBMS101",
+        "title": "Database Management Systems",
+        "description": "This course provides a comprehensive introduction to Database Management Systems (DBMS), covering foundational and advanced database concepts. Students will explore database design, entity-relationship (ER) modeling, relational algebra, and relational calculus. The course includes hands-on experience with Structured Query Language (SQL) for data retrieval, modification, and optimization. Topics such as indexing, query processing, normalization techniques, and transaction management are explored in depth. Advanced topics include data constraints, integrity rules, and security considerations. The course also introduces mathematical underpinnings such as predicate logic and quantifiers in relational calculus. Through practical exercises, case studies, and real-world applications, students will develop strong database management skills applicable to various industries. The course spans 12 weeks and is structured to provide a systematic and practice-oriented understanding of modern database technologies.",
+        "instructor_id": 2,
+        "credits": 4,
+        "department": "Computer Science",
+        "image_url": "/assets/courses/dbms201/cover.jpg",
+        "prerequisites": ["None"],
+        "learning_outcomes": [
+            "Understand database design and abstraction levels",
+            "Develop proficiency in ER modeling and relational algebra",
+            "Execute and optimize SQL queries",
+            "Apply normalization techniques for schema refinement",
+            "Manage transactions and ensure ACID compliance",
+            "Understand indexing strategies and query optimization",
+            "Explore predicate logic in relational calculus"
+        ],
+        "assessment_methods": ["Quizzes", "Assignments", "Project", "Final Exam"],
+        "delivery_mode": "Online",
+        "tools_and_technologies": ["SQL", "MySQL", "PostgreSQL"],
+        "LLM_Summary": {
+            "summary": "This course delves into the fundamental and intermediate principles of database management, covering both theoretical and practical aspects. It includes database design, ER modeling, relational algebra, tuple and domain relational calculus, SQL queries, indexing strategies, normalization techniques, and transaction management. The course introduces predicate logic as a foundation for relational calculus and explores optimization techniques for efficient database operations. Students will gain hands-on experience with SQL for data retrieval, modification, and subqueries, while also learning about integrity constraints and ACID properties. Practical assignments and case studies will reinforce real-world database implementation, preparing students for careers in data engineering, software development, and information systems management.",
+            "concepts_covered": [
+                "Database design and abstraction levels",
+                "Entity-Relationship (ER) modeling",
+                "Relational algebra and its operations",
+                "Tuple and domain relational calculus",
+                "SQL query structure, subqueries, and optimization",
+                "Data definition and manipulation (DDL & DML)",
+                "Integrity constraints and data constraints",
+                "Normalization techniques and schema refinement",
+                "Indexing strategies and query performance",
+                "Transaction management and ACID properties",
+                "Predicate logic and quantification in relational calculus"
+            ],
+            "concepts_not_covered": [
+                "NoSQL databases and alternative data models",
+                "Distributed database architectures",
+                "Big data frameworks and cloud-based databases",
+                "Graph databases and RDF-based query languages",
+                "Database security policies and role-based access control"
+            ]
+        }
+    },
+  
+    "weeks": [
     {
       "week_id": 1,
-      "course_id": 2,
-      "title": "Week 1: Introduction to Databases, Abstraction, and DBMS",
+      "course_id": 1,
       "order": 1,
-      "estimated_hours": 25
+      "title": "Week 1: Introduction to Databases, Abstraction, and DBMS",
+      "estimated_hours": 25,
+      "LLM_Summary": {
+        "summary": "This week lays the groundwork for understanding Database Management Systems by introducing the fundamental principles of data abstraction, schema design, and various data models. The materials cover the differences between the logical and physical organization of data, the contrast between traditional file systems and modern DBMS, and the core concepts of Data Definition Language (DDL) and Data Manipulation Language (DML). Detailed discussions include the roles of schema and instance, levels of abstraction (physical, logical, and view), and the basics of normalization and integrity constraints. In addition, the lectures explain how traditional file systems suffer from redundancy and lack robust data integrity, thereby necessitating DBMS. The content further explores data independence and the evolution of database schemas, supported by real-world examples and case studies that highlight design challenges and optimization techniques.",
+        "concepts_covered": [
+          "Levels of data abstraction: Physical, Logical, and View levels",
+          "Differences between schema and instance",
+          "Fundamentals of data models: relational, entity-relationship, and hierarchical models",
+          "Introduction to relational databases and their structure",
+          "Overview of DDL and DML for defining and manipulating data",
+          "Normalization principles and basic integrity constraints"
+        ],
+        "concepts_not_covered": [
+          "Distributed Database Architectures",
+          "Concurrency Control and Recovery Mechanisms",
+          "Advanced Indexing Strategies",
+          "In-depth Query Optimization Techniques"
+        ]
+      }
     },
     {
       "week_id": 2,
-      "course_id": 2,
-      "title": "Week 2: Relational Model, SQL Essentials, and Integrity Constraints",
+      "course_id": 1,
       "order": 2,
-      "estimated_hours": 25
+      "title": "Week 2: Relational Model, SQL Essentials, and Integrity Constraints",
+      "estimated_hours": 25,
+      "LLM_Summary": {
+        "summary": "This week delves deeply into the relational model and the essentials of SQL. The lectures explore the historical evolution of SQL, its dual functionality as a language for both defining database schemas (DDL) and manipulating data (DML), and the standard query structure embodied in the SELECT-FROM-WHERE framework. The content also emphasizes the critical role of integrity constraints in ensuring database consistency, covering topics such as primary keys, foreign keys, and NOT NULL constraints. Furthermore, the material illustrates how SQL standards have evolved over time and demonstrates practical applications of SQL through real-world examples. Students gain insight into designing robust schemas and enforcing data integrity, which are essential for developing efficient and maintainable relational databases.",
+        "concepts_covered": [
+          "Historical development and standardization of SQL",
+          "Role of SQL in relational database management",
+          "Data Definition Language (DDL) and Data Manipulation Language (DML) fundamentals",
+          "SQL query structure: SELECT, FROM, and WHERE clauses",
+          "Implementation of integrity constraints (primary keys, foreign keys, NOT NULL)",
+          "Basic table operations: insertion, deletion, and updates"
+        ],
+        "concepts_not_covered": [
+          "Recursive Queries and Advanced Common Table Expressions",
+          "Window Functions and Analytical Queries",
+          "Advanced Stored Procedures and Triggers",
+          "Integration with External Data Sources"
+        ]
+      }
     },
     {
       "week_id": 3,
-      "course_id": 2,
-      "title": "Week 3: Advanced SQL, Subqueries, and Database Modification",
+      "course_id": 1,
       "order": 3,
-      "estimated_hours": 25
+      "title": "Week 3: Advanced SQL, Subqueries, and Database Modification",
+      "estimated_hours": 25,
+      "LLM_Summary": {
+        "summary": "This week focuses on advanced SQL techniques, particularly the use of nested subqueries and sophisticated data modification strategies. The lectures introduce intermediate SQL concepts that enable students to construct complex queries by embedding subqueries in the WHERE, FROM, and SELECT clauses. Emphasis is placed on understanding existential and universal quantifiers through the use of EXISTS, NOT EXISTS, SOME, and ALL operators. Furthermore, the content covers practical database modification operations including INSERT, DELETE, and UPDATE, and demonstrates the use of scalar subqueries and Common Table Expressions (CTEs) for enhancing query readability and performance. The extended discussion also explores methods for optimizing query execution and performance tuning, providing students with a toolkit for writing efficient, maintainable SQL in complex database environments.",
+        "concepts_covered": [
+          "Nested subqueries and their application in different SQL clauses",
+          "Set operations using subqueries",
+          "Use of EXISTS, NOT EXISTS, SOME, and ALL for quantification",
+          "Data modification techniques: INSERT, DELETE, UPDATE",
+          "Conditional updates using CASE statements",
+          "Utilization of scalar subqueries and Common Table Expressions (CTEs)",
+          "Strategies for query optimization and performance tuning"
+        ],
+        "concepts_not_covered": [
+          "Temporal and Spatial Data Extensions in SQL",
+          "Advanced Error Handling and Exception Management in SQL",
+          "User-Defined Functions and Procedures",
+          "Distributed SQL and Data Warehousing Concepts"
+        ]
+      }
     },
     {
       "week_id": 4,
-      "course_id": 2,
-      "title": "Week 4: Indexing, Transactions, and Relational Calculus",
+      "course_id": 1,
       "order": 4,
-      "estimated_hours": 25
+      "title": "Week 4: Indexing, Transactions, and Relational Calculus",
+      "estimated_hours": 25,
+      "LLM_Summary": {
+        "summary": "This week bridges the gap between practical SQL applications and the theoretical underpinnings of database queries through formal query languages. The lectures introduce the fundamentals of relational calculus, covering both tuple and domain approaches, and explain how predicate logic and quantifiers form the basis for formulating complex queries. Detailed discussions include the concept of safe expressions to ensure finite query results and demonstrate the equivalence between relational algebra and relational calculus. In addition, the materials provide practical insights into transaction management and indexing strategies that are crucial for maintaining data integrity and performance. This extensive overview not only reinforces the logical structures underlying modern SQL but also lays a strong theoretical foundation for advanced topics, emphasizing the significance of formal methods in the evolution of database management systems.",
+        "concepts_covered": [
+          "Foundations of relational calculus as an alternative to relational algebra",
+          "Use of predicate logic, including propositional and predicate logic",
+          "Application of universal and existential quantifiers in query formulation",
+          "Comparison between tuple and domain relational calculus",
+          "Expressing queries using logical expressions and safe expressions",
+          "Equivalence of relational algebra with formal query languages",
+          "Basics of transaction management and indexing strategies"
+        ],
+        "concepts_not_covered": [
+          "Advanced Query Execution and Optimization Strategies",
+          "Hybrid Query Models Combining SQL and NoSQL",
+          "Transactional Integrity in Distributed Environments",
+          "Real-Time Data Processing and Stream Databases"
+        ]
+      }
     }
   ],
 
@@ -85,22 +168,7 @@
         "SQL",
         "database design",
         "physical vs logical schema"
-      ],
-      "LLM_Summary": {
-        "summary": "This lecture provides a comprehensive introduction to Database Management Systems (DBMS), covering fundamental concepts such as data abstraction, schema vs. instance, and different data models. It explores the advantages of DBMS over traditional file-based systems and introduces core database languages like SQL, including Data Definition Language (DDL) and Data Manipulation Language (DML). Additionally, it delves into logical and physical database design principles and highlights key considerations in structuring relational databases.",
-        "concepts_covered": [
-          "Levels of data abstraction: Physical, Logical, and View levels",
-          "Differences between schema and instance",
-          "Importance of physical data independence",
-          "Overview of data models, including relational, entity-relationship, and hierarchical models",
-          "Introduction to relational databases and their structure",
-          "Key aspects of DDL for defining database schemas",
-          "DML operations for querying and modifying data",
-          "SQL as a database query language and its role in DBMS",
-          "Fundamentals of database design and schema optimization",
-          "Challenges in designing well-structured relational schemas"
-        ]
-      }
+      ]
     },
     {
       "lecture_id": 2,
@@ -108,23 +176,20 @@
       "order": 2,
       "title": "Introduction to DBMS",
       "resource_type": "pdf",
-      "resource_url": "https://drive.google.com/drive/folders/1twKok3YeXkMq8xN4nj3JFWnojQ9crfSH",
+      "resource_url": "https://drive.google.com/file/d/1dKAo_82BYRVoLIk2ci9FKXdfenTW0LZQ/view?usp=sharing",
       "content_extract": "Introduction to Database Management Systems (DBMS) A Database Management System (DBMS) is a software application that interacts with the user, applications, and the database itself to capture and analyze data. It enables users to define, create, maintain, and control access to the database. DBMSs serve as intermediaries between users and databases, ensuring that data is efficiently stored, retrieved, and manipulated. DBMSs are used to handle large amounts of data in various fields, including banking, education, telecommunications, healthcare, and e-commerce. They provide functionalities that allow efficient data management, security, consistency, and easy retrieval. One of the key features of DBMSs is the three-level architecture, which helps separate the physical storage details from the logical structure of data. This enhances flexibility and security. The physical level is the lowest level of abstraction, dealing with how data is actually stored in memory and disk. It defines file structures, indexing methods, and access paths. Example: Data is stored as blocks of records on a hard disk using B-trees or hashing techniques. The logical level represents what data is stored in the database and the relationships between them. It involves designing schemas that define tables, fields, and their relationships. Example: A university database may have tables such as Students, Courses, and Enrollments with relationships between them. The view level is the highest level, which defines how users interact with the database. Users do not see the entire database but only specific parts relevant to them. Example: A student might only see their grades and courses, while an administrator has access to all student records. A schema is the overall design of a database. It defines the structure of the database, including tables, attributes, and constraints. Physical Schema describes how data is stored at the physical level. Logical Schema defines the logical structure of the database (e.g., tables, relationships). View Schema describes different views that users have access to. An instance refers to the actual data stored in the database at a particular moment in time. Example: The database structure remains the same, but the records change over time. Data models define how data is organized, stored, and manipulated. The primary types are the relational model, entity-relationship (ER) model, object-based model, hierarchical and network models. The relational model represents data as tables (relations). Each table consists of rows (tuples) and columns (attributes). Example: A Students table might have columns (StudentID, Name, Age, Course). The entity-relationship (ER) model uses entities, attributes, and relationships to represent real-world data. Example: A university database has entities Student, Professor, and Course, with relationships such as enrolled in or teaches. The object-based model extends the relational model by incorporating object-oriented programming concepts and is used in applications that require complex data structures, such as multimedia databases. The hierarchical model organizes data in a tree-like structure (parent-child relationship), while the network model uses graph structures to show multiple relationships. DBMS provides languages to define, manipulate, and query data. Data Definition Language (DDL) is used to define and modify database structures. Commands: CREATE, ALTER, DROP. Example: CREATE TABLE Students (StudentID INT PRIMARY KEY, Name VARCHAR(50), Age INT); Data Manipulation Language (DML) is used to insert, update, delete, and retrieve data. Commands: SELECT, INSERT, UPDATE, DELETE. Example: INSERT INTO Students (StudentID, Name, Age) VALUES (1, 'Alice', 20); SQL is the standard language for relational databases. Basic SQL operations include retrieving data: SELECT Name, Age FROM Students WHERE Age > 18; updating data: UPDATE Students SET Age = 21 WHERE StudentID = 1; deleting data: DELETE FROM Students WHERE StudentID = 2; Database design principles include normalization and integrity constraints. Normalization is the process of organizing database tables to reduce redundancy and improve efficiency. Forms: 1NF (First Normal Form): Eliminate duplicate columns. 2NF (Second Normal Form): Ensure each table has a primary key. 3NF (Third Normal Form): Remove transitive dependencies. Integrity constraints include Primary Key, which ensures each record is unique, Foreign Key, which enforces relationships between tables, and Check Constraints, which ensure valid data. Example: ALTER TABLE Students ADD CONSTRAINT chk_age CHECK (Age >= 18); Advantages of using DBMS include data consistency, data security, concurrent access, and backup & recovery. A Database Management System (DBMS) is crucial for handling structured data efficiently. Understanding its architecture, data models, SQL, and database design principles helps in building robust and scalable database systems. DBMS plays a fundamental role in various domains, ensuring data integrity, security, and accessibility.",
       "duration_minutes": 60,
-      "keywords": ["DBMS", "data models", "schema", "abstraction", "SQL", "database design", "normalization", "data integrity", "relational model"], 
-      "LLM_Summary": { 
-        "summary": "This resource provides a comprehensive exploration of Database Management Systems (DBMS), contrasting traditional file-based storage methods with modern relational databases. It delves into various data models, levels of abstraction, schema design, and the fundamental principles of SQL and normalization.", 
-        "concepts_covered": [ 
-          "Limitations of traditional file systems and the necessity of DBMS", "Advantages of DBMS, including data integrity, security, and concurrent access", 
-          "Detailed examination of data abstraction principles at physical, logical, and view levels",
-          "Understanding schemas, instances, and the role of relational models in database structuring", 
-          "Comparison of different data models, including relational, hierarchical, and network models", 
-          "Overview of Data Definition Language (DDL) and Data Manipulation Language (DML) in SQL", 
-          "Concepts of database normalization and its importance in reducing redundancy and ensuring consistency", 
-          "Integrity constraints such as primary keys, foreign keys, and domain constraints in relational databases", 
-          "Best practices in database design and the significance of efficient schema structuring" 
-        ] 
-      }
+      "keywords": [
+        "DBMS",
+        "data models",
+        "schema",
+        "abstraction",
+        "SQL",
+        "database design",
+        "normalization",
+        "data integrity",
+        "relational model"
+      ]
     },
     {
       "lecture_id": 3,
@@ -146,25 +211,7 @@
         "SQL standards",
         "relational algebra",
         "database constraints"
-      ],
-      "LLM_Summary": {
-        "summary": "This lecture provides an in-depth introduction to SQL, its historical development, and its role in defining and manipulating relational databases. It covers Data Definition Language (DDL) for schema creation and integrity constraints, as well as Data Manipulation Language (DML) for querying and modifying database records. The lecture also discusses the evolution of SQL standards from SQL-86 to SQL-2019, compliance variations across database systems, and alternatives like SPARQL for specialized database applications. Additionally, it explains SQL query structure, including the SELECT-FROM-WHERE framework, relational operations like projection and selection, and integrity constraints such as primary keys and foreign keys.",
-        "concepts_covered": [
-          "Historical development of SQL and its standardization",
-          "Role of SQL in relational database management systems",
-          "Overview of Data Definition Language (DDL) for schema creation",
-          "Understanding Data Manipulation Language (DML) for querying and updates",
-          "SQL query structure: SELECT, FROM, and WHERE clauses",
-          "Types of integrity constraints: primary keys, foreign keys, and NOT NULL constraints",
-          "SQL data types and their significance in schema definition",
-          "Importance of relational algebra concepts in SQL query formulation",
-          "Compliance and variations in SQL across database systems",
-          "Comparison of SQL with alternative query languages like SPARQL",
-          "Basic and advanced table operations, including insertion, deletion, and updates",
-          "Impact of SQL constraints on database consistency and relationships",
-          "Cartesian product and its role in multi-table queries"
-        ]
-      }
+      ]
     },
     {
       "lecture_id": 4,
@@ -172,25 +219,20 @@
       "order": 2,
       "title": "Introduction to SQL",
       "resource_type": "pdf",
-      "resource_url": "https://drive.google.com/drive/folders/1EkKyMguryZZ5prnVIpIwOtvkBIq8-IBe",
+      "resource_url": "https://drive.google.com/file/d/1fr7C4pMYVwzTXi4RSTChir1kh2U4ICNF/view?usp=sharing",
       "content_extract": "Structured Query Language (SQL) is the standard language used to interact with relational databases. It originated from IBM's System R project, where it was initially called Structured English Query Language (SEQUEL) before being renamed SQL while still retaining the pronunciation  'sequel. ' SQL has evolved through various versions, with key enhancements improving its functionality and applicability in modern databases. SQL-86 was the first official version standardized by ANSI. SQL-89 introduced integrity constraints, while SQL-92 became the de facto industry standard due to its significant revisions under the ISO/IEC 9075 standard. SQL:1999 expanded the language by adding support for regular expressions, recursive queries, triggers, and procedural flow statements. It also included object-oriented features such as structured types and the ability to embed SQL in Java and vice versa. Subsequent versions continued to enhance SQL's capabilities. SQL:2003 introduced XML features, window functions, and auto-generated columns. SQL:2006 added mechanisms for handling XML data within relational databases. SQL:2008 incorporated advanced features like the INSTEAD OF triggers, the TRUNCATE statement, and support for the FETCH clause. SQL:2011 expanded on temporal data support and enhanced window functions. SQL:2016 added support for row pattern matching, polymorphic table functions, and JSON. SQL:2019 further extended SQL's capabilities by supporting multidimensional arrays. Despite being the standard for interacting with relational databases, different database systems implement the SQL standard to varying degrees. Some systems may fully comply with a given standard, while others may only implement a subset of features. Developers are advised to consult their specific database documentation to ensure compatibility when using advanced SQL features. Though there are no direct alternatives to SQL for interacting with relational databases, many programming languages offer front-end libraries and frameworks to simplify SQL interactions. Examples include SchemeQL and CLSQL for Lisp, LINQ for .NET, ScalaQL and ScalaQuery for Scala, ActiveRecord for Ruby, and HaskellDB for Haskell. Furthermore, SPARQL, a derivative of SQL, is widely used for querying and manipulating data in Resource Description Framework (RDF) format, making it a critical component of the semantic web. It is particularly useful for querying graph databases and has been standardized by the W3C Consortium, with versions including SPARQL 1.0 (2008) and SPARQL 1.1 (2013). SQL is divided into several sublanguages, including the Data Definition Language (DDL) and the Data Manipulation Language (DML). DDL is used to define and manage database structures. Key commands include CREATE TABLE for defining new relations, ALTER TABLE for modifying existing relations, and DROP TABLE for deleting relations. When defining a table, each attribute is specified with a data type, and optional integrity constraints can be added to enforce data accuracy and consistency. For instance, the NOT NULL constraint ensures that an attribute cannot contain NULL values. The PRIMARY KEY constraint uniquely identifies each record and inherently enforces the NOT NULL constraint. The FOREIGN KEY constraint establishes referential integrity by linking a column to another table's primary key. SQL supports a variety of data types, including fixed-length character strings (CHAR), variable-length character strings (VARCHAR), integers (INT and SMALLINT), fixed-point numbers (NUMERIC), floating-point numbers (REAL and DOUBLE PRECISION), and user-defined domains. For example, a table for storing instructor information can be defined using the CREATE TABLE statement:     CREATE TABLE instructor (     ID CHAR(5),     name VARCHAR(20) NOT NULL,     dept_name VARCHAR(20),     salary NUMERIC(8, 2),     PRIMARY KEY (ID),     FOREIGN KEY (dept_name) REFERENCES department ); DML is used for retrieving and manipulating data. A typical SQL query consists of three main clauses: SELECT, FROM, and WHERE. The SELECT clause specifies the attributes to be retrieved, the FROM clause lists the tables involved, and the WHERE clause defines conditions that filter the results. SQL allows duplicate rows by default; however, the DISTINCT keyword can be used to eliminate duplicates. Conversely, the ALL keyword ensures that duplicates are included in the output. For instance, the following query retrieves distinct department names from the instructor table:  sql   SELECT DISTINCT dept_name FROM instructor; To select all attributes from a table, an asterisk (*) can be used. For instance, to retrieve all information about instructors, the following query is used:  sql   SELECT * FROM instructor; Arithmetic operations can be performed directly in the SELECT clause. For example, to calculate the monthly salary of instructors, the following query can be executed:     SELECT ID, name, salary/12 AS monthly_salary FROM instructor; The WHERE clause is used to filter records based on specified conditions. Logical connectives such as AND, OR, and NOT can be used to combine conditions. For example, the following query retrieves instructors from the Computer Science department earning more than 80,000:     SELECT name FROM instructor WHERE dept_name = 'Comp. Sci.' AND salary > 80000; The FROM clause specifies the tables to be queried and supports Cartesian products when multiple tables are listed. However, Cartesian products are typically combined with the WHERE clause to produce meaningful results. For instance, the following query produces a Cartesian product of the instructor and teaches tables:  sql   SELECT * FROM instructor, teaches; SQL supports inserting, updating, and deleting records through DML commands. The INSERT command adds new records to a table:  sql   INSERT INTO instructor VALUES ('10211', 'Smith', 'Biology', 66000); The DELETE command removes records matching specified conditions. To delete all records from the student table:  sql   DELETE FROM student; The UPDATE command modifies existing records. To increase the salary of all instructors by 10%, the following query is used:  sql   UPDATE instructor SET salary = salary * 1.10; The ALTER TABLE command allows for modifying the structure of existing tables by adding or dropping columns. To add a new column to an existing table:  sql   ALTER TABLE instructor ADD email VARCHAR(50); SQL queries return relations as output, and their structure is determined by the query's SELECT clause. SQL supports case-insensitive identifiers, meaning that  'name, '  'NAME, ' and  'Name ' are equivalent. The ability to manipulate and retrieve data using SQL makes it a powerful tool for database management across different platforms and systems. As the language evolves through new standards, it continues to incorporate features that improve flexibility, efficiency, and integration with modern applications.",
       "duration_minutes": 50,
-      "keywords": ["SQL", "DDL", "DML", "query structure", "database", "integrity constraints", "schema design", "data manipulation", "data definition"],
-      "LLM_Summary": {
-        "summary": "This resource provides an in-depth exploration of SQL (Structured Query Language), focusing on its dual role as a Data Definition Language (DDL) and Data Manipulation Language (DML). It covers the evolution of SQL, its core syntax, and practical applications for defining and managing relational databases. The lecture details how to create, alter, and delete tables using DDL commands and perform operations such as inserting, updating, and deleting records with DML commands. Emphasis is placed on defining schemas, specifying data types, and enforcing integrity constraints (e.g., PRIMARY KEY, FOREIGN KEY, and NOT NULL) to maintain database consistency. The resource also introduces the fundamental 'SELECT-FROM-WHERE' query structure, illustrating how to retrieve and filter data efficiently. Additionally, advanced techniques like handling null values, updating multiple records, and enforcing referential integrity between tables are covered. The lecture further discusses best practices for designing robust database schemas while ensuring data integrity through key constraints and other validation rules. Practical examples are provided to solidify understanding of how SQL facilitates real-world database operations and ensures precise data handling.",
-        "concepts_covered": [
-          "Fundamentals of SQL syntax and structure",
-          "Understanding DDL and DML operations",
-          "Creating, modifying, and deleting tables",
-          "Schema design and defining data types",
-          "Implementing integrity constraints (PRIMARY KEY, FOREIGN KEY, NOT NULL)",
-          "Basic query structure using SELECT, FROM, and WHERE clauses",
-          "Performing data insertion, updates, and deletions",
-          "Handling null values and default entries",
-          "Enforcing data integrity through referential constraints",
-          "Practical examples of real-world SQL database operations"
-        ]
-      }
+      "keywords": [
+        "SQL",
+        "DDL",
+        "DML",
+        "query structure",
+        "database",
+        "integrity constraints",
+        "schema design",
+        "data manipulation",
+        "data definition"
+      ]
     },
     {
       "lecture_id": 5,
@@ -212,25 +254,7 @@
         "some and all clauses",
         "query optimization",
         "relational algebra"
-      ],
-      "LLM_Summary": {
-        "summary": "This lecture introduces intermediate SQL concepts, focusing on nested subqueries and data modification techniques. It explains how subqueries can be used in WHERE, FROM, and SELECT clauses to create powerful and efficient database queries. The lecture also covers existential and universal quantification using the EXISTS, NOT EXISTS, SOME, and ALL operators. Additionally, it explores practical database modification operations such as INSERT, DELETE, and UPDATE, demonstrating how SQL handles complex updates and constraint enforcement. The use of scalar subqueries and the WITH clause for defining temporary relations is also discussed, highlighting their role in optimizing query performance and improving maintainability.",
-        "concepts_covered": [
-          "Introduction to intermediate SQL and its role in complex query processing",
-          "Understanding nested subqueries and their placement in SQL statements",
-          "Using subqueries in WHERE, FROM, and SELECT clauses",
-          "Set operations and their implementation using subqueries",
-          "Existential quantification: EXISTS and NOT EXISTS operators",
-          "Universal quantification: SOME and ALL operators",
-          "Handling empty result sets with EXISTS-based queries",
-          "Data modification operations: INSERT, DELETE, and UPDATE statements",
-          "Updating records with conditional logic using CASE statements",
-          "Using scalar subqueries to return single values within SELECT clauses",
-          "Query optimization techniques for improving performance",
-          "Defining temporary relations using the WITH clause",
-          "Avoiding common pitfalls in nested queries and data modifications"
-        ]
-      }
+      ]
     },
     {
       "lecture_id": 6,
@@ -238,21 +262,19 @@
       "order": 2,
       "title": "Intermediate SQL & Subqueries",
       "resource_type": "pdf",
-      "resource_url": "https://drive.google.com/drive/folders/1GUVhzk_8-lnDYHoVsQ-YanlxTqdCsIM9",
+      "resource_url": "https://drive.google.com/file/d/14mepfRkZ1p33_g-1bdIkUxg6Ja4ABb3f/view?usp=sharing",
       "content_extract": "Intermediate SQL concepts are crucial for understanding how to perform complex queries, nested operations, and modifications to a database efficiently. SQL (Structured Query Language) is a powerful tool used in relational database management systems (RDBMS) to interact with structured data. This module focuses on advanced aspects of SQL, such as nested subqueries, subqueries in different clauses, and database modifications. A nested subquery is a query embedded within another SQL query. SQL allows subqueries to be placed in the WHERE clause, FROM clause, and SELECT clause. These subqueries are evaluated first, and their results are used in the outer query. Nested subqueries allow for more efficient and complex queries that improve database operations. In the WHERE clause, subqueries are typically used for set membership, set comparisons, and set cardinality. For example, to find all students who are enrolled in both Fall 2020 and Spring 2021, one can use the following SQL query: SELECT DISTINCT student_id FROM enrollments WHERE semester = 'Fall' AND year = 2020 AND student_id IN (SELECT student_id FROM enrollments WHERE semester = 'Spring' AND year = 2021); Here, the inner query retrieves all students enrolled in Spring 2021, and the outer query selects those who were also enrolled in Fall 2020. Similarly, subqueries can be used for set comparison, such as finding instructors whose salary is greater than at least one instructor in the Biology department: SELECT name FROM instructor WHERE salary > SOME (SELECT salary FROM instructor WHERE dept_name = 'Biology'); The SOME clause checks whether a condition holds for at least one value in the subquery result. Another important clause is the ALL clause, which is used when we want to compare a value against all values in a subquery result. For example, to find instructors whose salary is greater than every instructor in the Biology department, we use: SELECT name FROM instructor WHERE salary > ALL (SELECT salary FROM instructor WHERE dept_name = 'Biology'); The EXISTS clause is another powerful SQL construct used to test whether a subquery returns any rows. For example, to find all courses offered in both Fall 2020 and Spring 2021, we can use: SELECT course_id FROM courses AS C WHERE semester = 'Fall' AND year = 2020 AND EXISTS (SELECT * FROM courses AS T WHERE semester = 'Spring' AND year = 2021 AND C.course_id = T.course_id); The EXISTS clause evaluates to true if the subquery returns at least one row. The NOT EXISTS clause can be used to find cases where no match exists, such as finding students who have taken all courses in the Biology department: SELECT DISTINCT S.id, S.name FROM students AS S WHERE NOT EXISTS (SELECT course_id FROM courses WHERE dept_name = 'Biology' EXCEPT SELECT T.course_id FROM enrollments AS T WHERE S.id = T.student_id); Here, the EXCEPT operator ensures that we only select students who have taken all Biology courses. Another useful SQL construct is the UNIQUE keyword, which checks whether a subquery returns distinct values. For example, to find all courses that were offered at most once in 2020, we can use: SELECT T.course_id FROM courses AS T WHERE UNIQUE (SELECT R.course_id FROM enrollments AS R WHERE T.course_id = R.course_id AND R.year = 2020); The FROM clause can also contain subqueries. This allows temporary tables to be created within a query. For instance, to find the average salary of instructors in departments where the average salary is greater than $42,000, we can use: SELECT dept_name, avg_salary FROM (SELECT dept_name, AVG(salary) AS avg_salary FROM instructor GROUP BY dept_name) WHERE avg_salary > 42000; Here, the subquery creates a temporary relation with department names and average salaries, which is then filtered by the outer query. The WITH clause, also known as Common Table Expressions (CTE), allows for complex queries to be structured more clearly. An example of a query using WITH to find departments with the maximum budget is: WITH max_budget(value) AS (SELECT MAX(budget) FROM department) SELECT department.name FROM department, max_budget WHERE department.budget = max_budget.value; Similarly, the WITH clause can be used for complex queries, such as finding departments where the total salary is greater than the average total salary across all departments: WITH dept_total (dept_name, value) AS (SELECT dept_name, SUM(salary) FROM instructor GROUP BY dept_name), dept_total_avg(value) AS (SELECT AVG(value) FROM dept_total) SELECT dept_name FROM dept_total, dept_total_avg WHERE dept_total.value > dept_total_avg.value; The SELECT clause can also contain subqueries, known as scalar subqueries. These are used where a single value is expected. For example, listing all departments along with the number of instructors in each department can be achieved with: SELECT dept_name, (SELECT COUNT(*) FROM instructor WHERE department.dept_name = instructor.dept_name) AS num_instructors FROM department; Scalar subqueries must return only a single value; otherwise, they cause a runtime error. Database modifications are another essential aspect of SQL. Modifications include deleting, inserting, and updating records. The DELETE statement removes records based on a condition. For example, to delete all instructors in the Finance department: DELETE FROM instructor WHERE dept_name = 'Finance'; Another example is deleting instructors whose salary is less than the average salary: DELETE FROM instructor WHERE salary < (SELECT AVG(salary) FROM instructor); Since deleting records can change the average salary, the deletion process involves two steps: first computing the average salary and then deleting the matching records. Insertion of records into a table is done using the INSERT statement. For example, adding a new course: INSERT INTO courses VALUES ('CS-437', 'Database Systems', 'Computer Science', 4); We can also insert records based on the results of a query. For example, adding all instructors to the students table with total credits set to zero: INSERT INTO students SELECT ID, name, dept_name, 0 FROM instructor; The UPDATE statement modifies existing records. For example, increasing salaries based on a condition: UPDATE instructor SET salary = salary * 1.03 WHERE salary > 100000; UPDATE instructor SET salary = salary * 1.05 WHERE salary <= 100000; A better approach using the CASE statement is: UPDATE instructor SET salary = CASE WHEN salary <= 100000 THEN salary * 1.05 ELSE salary * 1.03 END; Scalar subqueries can also be used in updates. For example, updating total credits for students: UPDATE students S SET total_credits = (SELECT SUM(credits) FROM enrollments E, courses C WHERE E.course_id = C.course_id AND S.id = E.student_id AND E.grade <> 'F' AND E.grade IS NOT NULL); Intermediate SQL techniques allow for more complex data manipulation and retrieval, making it a crucial skill for database professionals. Understanding subqueries, EXISTS, IN, ALL, SOME, UNIQUE, and modifying databases efficiently is essential for optimizing database performance and ensuring data integrity. By mastering these advanced SQL concepts, one can perform sophisticated operations that enhance the functionality of relational databases.",
       "duration_minutes": 45,
-      "keywords": ["SQL", "subqueries", "data modification", "nested queries", "database", "query optimization", "advanced SQL techniques", "performance tuning"], 
-      "LLM_Summary": { 
-        "summary": "This resource provides an in-depth exploration of advanced SQL techniques, focusing on subqueries, nested queries, and data modification strategies. It includes detailed explanations of query optimization, efficient data retrieval, and performance tuning using SQL constructs.", 
-        "concepts_covered": [ 
-          "Comprehensive understanding of subqueries and their use cases", "Optimization strategies for nested queries to improve execution time", 
-          "Advanced data modification techniques including INSERT, DELETE, and UPDATE with subqueries", 
-          "Efficient use of EXISTS, IN, SOME, ALL, and UNIQUE clauses in SQL queries", 
-          "Utilizing Common Table Expressions (CTEs) and WITH clauses for better query structuring", 
-          "Performance tuning considerations and best practices for SQL query execution", 
-          "Practical implementation examples demonstrating real-world database scenarios" 
-        ] 
-        }
+      "keywords": [
+        "SQL",
+        "subqueries",
+        "data modification",
+        "nested queries",
+        "database",
+        "query optimization",
+        "advanced SQL techniques",
+        "performance tuning"
+      ]
     },
     {
       "lecture_id": 7,
@@ -261,7 +283,7 @@
       "title": "Formal Query Languages: Tuple and Domain Relational Calculus",
       "resource_type": "youtube",
       "video_url": "https://www.youtube.com/watch?v=WjlbMfEqom8",
-      "content_transcript": "Welcome to Module 17 of database  management systems course in IIT Madras online BSc program. From the  last module, we have started a little formal discussion about the  foundational mathematics of relational database. We have discussed about relational  algebra and its operation in some depth. We will continue on that stream,  but just take a quick look into the calculus-based query languages through  the equivalence with relational algebra, we do not intend to really go deep on the calculus  because first of all for 2 reasons one is the calculus needs more in-depth foundation  on the results of predicate calculus, because they are based on predicate calculus  and the other is they are all equivalent to relational algebra. So, just following one model  on which particularly SQL is based would be quite okay for our future discussions.  But it will be good for you all to know that these kinds of models exist and what is their  interrelationships with between themselves. So, the first one in the formal relational query  language we have already done the second is what you get second and you know,  just glimpse of the third will take. Now, before we get into a tuple relational  calculus, the first language or the first model, let me just take a quick look at predicate logic  because I am not sure how much of predicate logic you are familiar with, but a few basic definitions  are required for the entire of this calculus. So, predicate logic or predicate calculus, these  are 2 names interchangeably used in some case places is called logic some place it is called  calculus, is an extension of propositional logic or propositional calculus or what  more simply is called Boolean algebra. So, what we have in Boolean algebra?  In Boolean algebra, we have say variables Boolean variables or propositions, which  can be either true or false either true or false. And we have a few operators, 3 operators; say something like this and  or not and we using them we can write any number of formula and  once the truth value is assigned to these Boolean variables, we evaluate  them to get a final truth result. So, that is the basic formulation of Boolean  algebra or propositional logic. So, you have propositions or variables which take true or  false value and based on that you have a result. When it comes to predicate calculus, you have,  you add a concept you still have propositions, but you add the concept of predicate and quantifiers  to better capture the meaning of the statements which cannot be captured adequately appropriately  precisely in terms of the propositional logic. So, that is the extension. So, that is these  are the key things to know, predicate and quantify plus the propositions A, B, C, D all  variables which could be true or false. Now, tuple relational calculus on the domain calculus  are completely based on predicate calculus. They are basically certain forms  of predicate calculus. Let us take a quick look at what these predicates  and quantify you may know but it is always good to discuss for completeness. So,  suppose I make a statement that x is greater than 3. If you look into the  statement, there are 2 things in this; one is the variable x, I do not know what it  values what is the variable normal variable which can take some number 17, 23, 112 and so on.  And the second part is a property, second part is actually a property.  So, it says that is greater than 3. So, I have a, I have a  variable and I have a property. Now, this part the property is called a  predicate. It refers to the property that the subject of the statement x can  have, may have or may not have. So, what I do is we denote this typically in  this kind of notation, where P is the predicate such that x is the x is the subject of that  predicate x is a variable. So, that this predicate once I put a value to x this predicate  is evaluated and becomes a proposition. So, P x is a predicate but P 5 is a  proposition which has a value true or false. P is a proposition which has  a value true or false. Naturally if my predicate P x is x greater than 3 then P 5 the proposition P 5 is  true the proposition P 2 is false. Alternatively, you can think  about a predicate as a function because it tells you the truth value  of P x at the assumed value of x. So, you have predicates, you  can again write conjunction, disjunction, negation with these predicates,  you have a predicate calculus expression. Once you put values truth value, once you put the  different variable values x, y, z whatever they become propositions. So, it becomes  now from a predicate calculus formula it becomes a propositional calculus formula a  Boolean expression which will evaluate by the rules of Boolean expression and you finally  have a truth value, the difference being that now, you are associating  properties with variables which are not necessarily Boolean which are not necessarily  binary, which can come from any domain and can have any property and combination of  those keeps you to capture the truth. So, this obviously subsumes the entire of the  propositional calculus but has a lot more. Now, suddenly it is not limited to one variable.  So, I can have any number of n number of variables for a predicate and I can denote them and if a variable if a predicate does not  every variable, it is a proposition. The predicate logic also has alongside the  predicates they have quantifiers. Quantifiers are used to talk about properties that hold over  the entire domain of discourse in a certain way. Now, I said x is greater than 3. So, what is  the domain of discourse for x, I can say it is a natural number. It is a natural number.  If I say it is a natural number, then it is the whole of the natural numbers.  Now, there are certain properties, which I want to know, whether it holds, how it  holds over the entire domain of discourse. So, the first quantifier is  known as a universal quantifier where it has a property which has to  hold over the, why is it universal, because it talks about a property  that has to universally hold true over the whole universe, which means it  must be true for all elements in the domain. Only then, that quantification  is true. So, the way I say so, it is written in terms  of this notation for all. So, I said this is a quantified  formula for all x P x. Now, P x depending on the value of x P x  may be true or may be false individually. So, what is for all x P x, it means, if I take any  value in the domain of discourse, I can specify that domain or it can be implicitly known if I  specify any value in that domain. And for that, if the x is true, then this entire statement  is true. This becomes a new predicate. So, I say that, well, I am looking at  a statement x plus 2 is greater than x. If that is my P x does this hold? Obviously, no matter what you take, the  value of x is any real number natural number x plus 2 will be always greater than  x. So, I say that for all x P x, I say my predicate M x is x is  mortal. Whether domain of discourse is a population of the world,  human population of the world, what is for all x M x it is true.  Within proverbial comes we say men are mortal, means human beings are mortal. So  that is a universal quantifier. Let us say that we were seeing  that earlier we saw that P x is x greater than 3. Now, what is for all xP(x)?  Over the domain of discourse, natural numbers. This quantified formula is not true.  Well, it is true for 4, it is true for 5 to 1000. But it is not true for  3, true for 2, true for 1 and so on. So, for all x P(x), x is greater than 3 is not  true. But if I say my domain of discourse is all positive numbers having two or more digits, let us say my  domain of discourse is all positive numbers having two or more digits then P(x), x  greater than 3 for all xP(x) is true. So, you can see that the truth is always  with respect to certain domains. And with respect to that, we are saying  that if it holds universally, then it is universal true Otherwise it is false.  So, let us move on the other is existential quantifier which is on very similar  lines where, where it says that does there exist at least one value in the  domain of discourse where P(x) is true, it is written in this way exist there  exist xP(x). So, if I if we go back to P(x) being x greater than 3, then for all xP(x)  assuming the domain of discourse is natural numbers for all xP(x) was false, but there  exists xP(x) is true because it is true for 4, true for 5 so at least one.  So, these are the two kinds of quantifications which we often need to model there  are other kinds of quantifications also, but not so, popular or rather to put it in different  terms, they are expressible in terms of you know these quantification and the  predicate. So, we move from propositional calculus to defining predicate and quantification  and that model is what is the model for it. Is what the tuple relational calculus is. So,  in tuple relational calculus all that we do is very simple we say that the formula or the  relation is basically a set of t, tuples t where P(t) where P(t) holds good, where this  predicate holds good and predicate may have various conditions combinations of and or not,  it could have quantifiers and so on so forth. So, so, that is the basic idea. So, these are  the different component of the predicate calculus formula attributes would be there, constants  would be there, comparison operators, connectives and, or, not implication x implies  y which actually means not x or y and quantification. So, these are the possible  formula for the tuple relational calculus. Couple of quick examples, say we are talking  about obtain there is a student's database here obtain the first name of the students whose age  is greater than 21. So, what we are looking for is say if t is the relation then we are looking  for the first name is t dot first name. What will have to happen what is the domain  of discourse? The truth depends on that; the domain of discourse is a relation  student; student t student t is a predicate such that if t is a tuple of the student relation  then student t is true otherwise it is false. So, this will make sure that this is equivalent  to saying in different terms as okay this is already written here let t is an element  of truth you could be writing in this way and age is greater than So,  t dot age is greater than 21. So, that defines this answer to this  query you could write it as a set member, you could also write it like this that in  a set of tuples t set of names t such that you are there exist a tuple s with age  greater than 21 and t name equal to S name in student.There is different ways of writing  the formula means practically the same thing. So, everything that we want to query on  can be in this way written in multiple predicate calculus formula. Find the names of all  students who have taken the course name DBMS. So, what is that we want? That for every student there is a course taken by the student called DBMS. So, let us look at the  second one say s dot name, for the names. Domain of discourse has to be a student.  Then we say that there exists course c having the same ID as what the student has taken you know, the domain is getting refined, courses  that the student has taken is a s dot course ID. So, there exists a course c having the  same ID and that course has the name DBMS. And when you evaluate the c,  you do it in course table. You could look at it differently; s is a  student c is a course. So, the course ID is same and the name is DBMS and the students  name matches that is a result t. So, that is basically the way to express in terms of predicate calculus or in this case, the tuple  relational calculus. There are other queries. Let us look at this one. So, there are flights, flight number, starting point, ending point,  distance, departure time arrival time, there is aircraft with ID aircraft name, cruising range,  how far it can go, the certified so there are employees which are certified on aircrafts and the  employee details, these are the four tables. So the queries is, find the eids, employee  ID of pilots, certified for Boeing aircraft, find the employee ID of pilot, this is your  final result, certified for Boeing aircraft. So, you need the employee ID certified. So,  you need a certified, you need the Boeing. So, all these will be involved.  Now, the first thing you need is how do you say? How do you find what  are the employee IDs that are available for the Boeing aircraft that are certified for  the Boeing aircraft? Naturally, these two will have to come together. And what works for that,  if you just think the relational algebra way, the natural join between  aircraft and certified. This will give you a relationship between employee  ID and aircraft name, which could have Boeing. So now you filter this for Boeing. You are  just interested in the Boeing part of it, nothing else. No other aircrafts.  So, filter, select on Boeing. So, whatever will remain is the employee  ID of those who are certified to fly eid. Here you have been asked to  find the employee ID. If you are asked to find the name,  then what you will have to do? You'll have to again, because the  name is available in the employees, you'll get the names. So, that is if you look  at it in a relational way. Let us look at it in the calculus. It is very  simple. In calculus actually, it is easier because what you are looking for  are the certified employee IDs, c dot eid. c has to be certified, has to come from there. A has to be an aircraft which has a name  Boeing and the certification of the aircraft ID available in the aircraft table and the aircraft  ID available in the certification table has to match. That gives you the entire query. So,  this is how I mean, you need to, you need to practice a lot to be able to write this.    There are couple of things examples given round here, we can take them up in tutorials also. Now,  so that is tuple relational calculus, it is just logical thinking nothing other than that. One  point I would like to mention is before I close is that the you have to make sure  that expressions are safe. What does it mean, expression is safe, it  means that the result of your expression cannot be infinite, it has to be finite, but so,  you would say how can that happen? How come I am working with finite sets? How can it suddenly  become infinite? It can because for example, I say that this is my predicate, set of tuples  t such that t does not belong to relation r. Now, that anything in the world can belong to, not  belong to relation r. So, you have to be careful about that at least, if you have any attribute  in the relation which has an infinite domain, then you must be careful to avoid that. Normally,  it will not happen when you are working within SQL kind of situation because it is well  taken care of within the SQL itself. The domain relational calculus, I will not go in  in detail, as practically no difference between the tuple relational calculus and domain  relational calculus except the notation. In the tuple relational calculus, you have  variable for the entire tuple club together. In domain relational calculus, every attribute  is a different variable. So, you have a Cartesian product of that, which is the, so if I have an  array tuple, then in domain relational, in, in tuple relational calculus, I call it t in domain  relational calculus, I will call it the attributes x1, x2, xn and so, what becomes anywhere you  use? So, it is just a different way of, you know, syntactically writing things, which makes it  different conceptually, there is absolutely no difference between the two of them.  Now, finally the question is, I mean, the three models are the same. Now,  in some cases, we have worked out, you can there is a formal proof for everything  what the way you go is, is basically for every relational algebra operator. If you can show,  how do you write the tuple calculus expression, then you will know that that is equivalent.  That is, it is similarly for every tuple calculus predicate that is conjunction, disjunction,  negation quantification, if you can show what is equivalent in the relational algebra, then you  will know that both of them are equivalent. So, just showing you an example here that this is  a selection operator B is equal to 17 on r. So, we know that in tuple calculus,  it can be written like this, and if the relation has two attributes in  domain calculus, it can be written like this. Now, this is by example, you can try to prove it  in general, I am not going into those because, we want to keep closer to practice. These are  things that people have worked on and have proven long ago, and you can take  that, take that fact. So, all that I have done is for every operation,  I have just given one example, to elucidate that, what is the kind of structure that it  equivalently takes. So, this is a projection. So, when you take a projection, how you can  write it in terms of tuple calculus and so on. But we would not go into the detail mathematical  proof of this. The proof is given in the book if you want you can read it up.    But just go with the fact that there is equivalence for each and every  operation and their combination between relational algebra and the predicates  in the calculus. So, this is for union, set difference, you can even just see through  that when you are reading through this slides, the Cartesian product everything natural join.  So, it looks a little cumbersome, when you write down natural join, but you know,  you can you can always it is always possible to write down a natural join in tuple calculus,  because it is possible to write a Cartesian product and the rest of it is just selection  under different conditions. Division too, though division is not a fundamental operator. So, this  is not necessary for the equivalence proof. So, with this, we have discussed the tuple  relational domain relational calculus, the basic framework of that I said that I will  be at the overview level, when primarily we will continue to use the relational algebra and  we just mentioned an outline of how you can probably go around looking at the equivalence  of them. So, we will close the module here now. Thank you very much for your attention  and see you in the next module. ",
+      "content_transcript": "Welcome to Module 17 of database  management systems course in IIT Madras online BSc program. From the  last module, we have started a little formal discussion about the  foundational mathematics of relational database. We have discussed about relational  algebra and its operation in some depth. We will continue on that stream,  but just take a quick look into the calculus-based query languages through  the equivalence with relational algebra, we do not intend to really go deep on the calculus  because first of all for 2 reasons one is the calculus needs more in-depth foundation  on the results of predicate calculus, because they are based on predicate calculus  and the other is they are all equivalent to relational algebra. So, just following one model  on which particularly SQL is based would be quite okay for our future discussions.  But it will be good for you all to know that these kinds of models exist and what is their  interrelationships with between themselves. So, the first one in the formal relational query  language we have already done the second is what you get second and you know,  just glimpse of the third will take. Now, before we get into a tuple relational  calculus, the first language or the first model, let me just take a quick look at predicate logic  because I am not sure how much of predicate logic you are familiar with, but a few basic definitions  are required for the entire of this calculus. So, predicate logic or predicate calculus, these  are 2 names interchangeably used in some case places is called logic some place it is called  calculus, is an extension of propositional logic or propositional calculus or what  more simply is called Boolean algebra. So, what we have in Boolean algebra?  In Boolean algebra, we have say variables Boolean variables or propositions, which  can be either true or false either true or false. And we have a few operators, 3 operators; say something like this and  or not and we using them we can write any number of formula and  once the truth value is assigned to these Boolean variables, we evaluate  them to get a final truth result. So, that is the basic formulation of Boolean  algebra or propositional logic. So, you have propositions or variables which take true or  false value and based on that you have a result. When it comes to predicate calculus, you have,  you add a concept you still have propositions, but you add the concept of predicate and quantifiers  to better capture the meaning of the statements which cannot be captured adequately appropriately  precisely in terms of the propositional logic. So, that is the extension. So, that is these  are the key things to know, predicate and quantify plus the propositions A, B, C, D all  variables which could be true or false. Now, tuple relational calculus on the domain calculus  are completely based on predicate calculus. They are basically certain forms  of predicate calculus. Let us take a quick look at what these predicates  and quantify you may know but it is always good to discuss for completeness. So,  suppose I make a statement that x is greater than 3. If you look into the  statement, there are 2 things in this; one is the variable x, I do not know what it  values what is the variable normal variable which can take some number 17, 23, 112 and so on.  And the second part is a property, second part is actually a property.  So, it says that is greater than 3. So, I have a, I have a  variable and I have a property. Now, this part the property is called a  predicate. It refers to the property that the subject of the statement x can  have, may have or may not have. So, what I do is we denote this typically in  this kind of notation, where P is the predicate such that x is the x is the subject of that  predicate x is a variable. So, that this predicate once I put a value to x this predicate  is evaluated and becomes a proposition. So, P x is a predicate but P 5 is a  proposition which has a value true or false. P is a proposition which has  a value true or false. Naturally if my predicate P x is x greater than 3 then P 5 the proposition P 5 is  true the proposition P 2 is false. Alternatively, you can think  about a predicate as a function because it tells you the truth value  of P x at the assumed value of x. So, you have predicates, you  can again write conjunction, disjunction, negation with these predicates,  you have a predicate calculus expression. Once you put values truth value, once you put the  different variable values x, y, z whatever they become propositions. So, it becomes  now from a predicate calculus formula it becomes a propositional calculus formula a  Boolean expression which will evaluate by the rules of Boolean expression and you finally  have a truth value, the difference being that now, you are associating  properties with variables which are not necessarily Boolean which are not necessarily  binary, which can come from any domain and can have any property and combination of  those keeps you to capture the truth. So, this obviously subsumes the entire of the  propositional calculus but has a lot more. Now, suddenly it is not limited to one variable.  So, I can have any number of n number of variables for a predicate and I can denote them and if a variable if a predicate does not  every variable, it is a proposition. The predicate logic also has alongside the  predicates they have quantifiers. Quantifiers are used to talk about properties that hold over  the entire domain of discourse in a certain way. Now, I said x is greater than 3. So, what is  the domain of discourse for x, I can say it is a natural number. It is a natural number.  If I say it is a natural number, then it is the whole of the natural numbers.  Now, there are certain properties, which I want to know, whether it holds, how it  holds over the entire domain of discourse. So, the first quantifier is  known as a universal quantifier where it has a property which has to  hold over the, why is it universal, because it talks about a property  that has to universally hold true over the whole universe, which means it  must be true for all elements in the domain. Only then, that quantification  is true. So, the way I say so, it is written in terms  of this notation for all. So, I said this is a quantified  formula for all x P x. Now, P x depending on the value of x P x  may be true or may be false individually. So, what is for all x P x, it means, if I take any  value in the domain of discourse, I can specify that domain or it can be implicitly known if I  specify any value in that domain. And for that, if the x is true, then this entire statement  is true. This becomes a new predicate. So, I say that, well, I am looking at  a statement x plus 2 is greater than x. If that is my P x does this hold? Obviously, no matter what you take, the  value of x is any real number natural number x plus 2 will be always greater than  x. So, I say that for all x P x, I say my predicate M x is x is  mortal. Whether domain of discourse is a population of the world,  human population of the world, what is for all x M x it is true.  Within proverbial comes we say men are mortal, means human beings are mortal. So  that is a universal quantifier. Let us say that we were seeing  that earlier we saw that P x is x greater than 3. Now, what is for all xP(x)?  Over the domain of discourse, natural numbers. This quantified formula is not true.  Well, it is true for 4, it is true for 5 to 1000. But it is not true for  3, true for 2, true for 1 and so on. So, for all x P(x), x is greater than 3 is not  true. But if I say my domain of discourse is all positive numbers having two or more digits, let us say my  domain of discourse is all positive numbers having two or more digits then P(x), x  greater than 3 for all xP(x) is true. So, you can see that the truth is always  with respect to certain domains. And with respect to that, we are saying  that if it holds universally, then it is universal true Otherwise it is false.  So, let us move on the other is existential quantifier which is on very similar  lines where, where it says that does there exist at least one value in the  domain of discourse where P(x) is true, it is written in this way exist there  exist xP(x). So, if I if we go back to P(x) being x greater than 3, then for all xP(x)  assuming the domain of discourse is natural numbers for all xP(x) was false, but there  exists xP(x) is true because it is true for 4, true for 5 so at least one.  So, these are the two kinds of quantifications which we often need to model there  are other kinds of quantifications also, but not so, popular or rather to put it in different  terms, they are expressible in terms of you know these quantification and the  predicate. So, we move from propositional calculus to defining predicate and quantification  and that model is what is the model for it. Is what the tuple relational calculus is. So,  in tuple relational calculus all that we do is very simple we say that the formula or the  relation is basically a set of t, tuples t where P(t) where P(t) holds good, where this  predicate holds good and predicate may have various conditions combinations of and or not,  it could have quantifiers and so on so forth. So, so, that is the basic idea. So, these are  the different component of the predicate calculus formula attributes would be there, constants  would be there, comparison operators, connectives and, or, not implication x implies  y which actually means not x or y and quantification. So, these are the possible  formula for the tuple relational calculus. Couple of quick examples, say we are talking  about obtain there is a student's database here obtain the first name of the students whose age  is greater than 21. So, what we are looking for is say if t is the relation then we are looking  for the first name is t dot first name. What will have to happen what is the domain  of discourse? The truth depends on that; the domain of discourse is a relation  student; student t student t is a predicate such that if t is a tuple of the student relation  then student t is true otherwise it is false. So, this will make sure that this is equivalent  to saying in different terms as okay this is already written here let t is an element  of truth you could be writing in this way and age is greater than So,  t dot age is greater than 21. So, that defines this answer to this  query you could write it as a set member, you could also write it like this that in  a set of tuples t set of names t such that you are there exist a tuple s with age  greater than 21 and t name equal to S name in student.There is different ways of writing  the formula means practically the same thing. So, everything that we want to query on  can be in this way written in multiple predicate calculus formula. Find the names of all  students who have taken the course name DBMS. So, what is that we want? That for every student there is a course taken by the student called DBMS. So, let us look at the  second one say s dot name, for the names. Domain of discourse has to be a student.  Then we say that there exists course c having the same ID as what the student has taken you know, the domain is getting refined, courses  that the student has taken is a s dot course ID. So, there exists a course c having the  same ID and that course has the name DBMS. And when you evaluate the c,  you do it in course table. You could look at it differently; s is a  student c is a course. So, the course ID is same and the name is DBMS and the students  name matches that is a result t. So, that is basically the way to express in terms of predicate calculus or in this case, the tuple  relational calculus. There are other queries. Let us look at this one. So, there are flights, flight number, starting point, ending point,  distance, departure time arrival time, there is aircraft with ID aircraft name, cruising range,  how far it can go, the certified so there are employees which are certified on aircrafts and the  employee details, these are the four tables. So the queries is, find the eids, employee  ID of pilots, certified for Boeing aircraft, find the employee ID of pilot, this is your  final result, certified for Boeing aircraft. So, you need the employee ID certified. So,  you need a certified, you need the Boeing. So, all these will be involved.  Now, the first thing you need is how do you say? How do you find what  are the employee IDs that are available for the Boeing aircraft that are certified for  the Boeing aircraft? Naturally, these two will have to come together. And what works for that,  if you just think the relational algebra way, the natural join between  aircraft and certified. This will give you a relationship between employee  ID and aircraft name, which could have Boeing. So now you filter this for Boeing. You are  just interested in the Boeing part of it, nothing else. No other aircrafts.  So, filter, select on Boeing. So, whatever will remain is the employee  ID of those who are certified to fly eid. Here you have been asked to  find the employee ID. If you are asked to find the name,  then what you will have to do? You'll have to again, because the  name is available in the employees, you'll get the names. So, that is if you look  at it in a relational way. Let us look at it in the calculus. It is very  simple. In calculus actually, it is easier because what you are looking for  are the certified employee IDs, c dot eid. c has to be certified, has to come from there. A has to be an aircraft which has a name  Boeing and the certification of the aircraft ID available in the aircraft table and the aircraft  ID available in the certification table has to match. That gives you the entire query. So,  this is how I mean, you need to, you need to practice a lot to be able to write this.    There are couple of things examples given round here, we can take them up in tutorials also. Now,  so that is tuple relational calculus, it is just logical thinking nothing other than that. One  point I would like to mention is before I close is that the you have to make sure  that expressions are safe. What does it mean, expression is safe, it  means that the result of your expression cannot be infinite, it has to be finite, but so,  you would say how can that happen? How come I am working with finite sets? How can it suddenly  become infinite? It can because for example, I say that this is my predicate, set of tuples  t such that t does not belong to relation r. Now, that anything in the world can belong to, not  belong to relation r. So, you have to be careful about that at least, if you have any attribute  in the relation which has an infinite domain, then you must be careful to avoid that. Normally,  it will not happen when you are working within SQL kind of situation because it is well  taken care of within the SQL itself. The domain relational calculus, I will not go in  in detail, as practically no difference between the tuple relational calculus and domain  relational calculus except the notation. In the tuple relational calculus, you have  variable for the entire tuple club together. In domain relational calculus, every attribute  is a different variable. So, you have a Cartesian product of that, which is the, so if I have an  array tuple, then in domain relational, in, in tuple relational calculus, I call it t in domain  relational calculus, I will call it the attributes x1, x2, xn and so, what becomes anywhere you  use? So, it is just a different way of, you know, syntactically writing things, which makes it  different conceptually, there is absolutely no difference between the two of them.  Now, finally the question is, I mean, the three models are the same. Now,  in some cases, we have worked out, you can there is a formal proof for everything  what the way you go is, is basically for every relational algebra operator. If you can show,  how do you write the tuple calculus expression, then you will know that that is equivalent.  That is, it is similarly for every tuple calculus predicate that is conjunction, disjunction,  negation quantification, if you can show what is equivalent in the relational algebra, then you  will know that both of them are equivalent. So, just showing you an example here that this is  a selection operator B is equal to 17 on r. So, we know that in tuple calculus,  it can be written like this, and if the relation has two attributes in  domain calculus, it can be written like this. Now, this is by example, you can try to prove it  in general, I am not going into those because, we want to keep closer to practice. These are  things that people have worked on and have proven long ago, and you can take  that, take that fact. So, all that I have done is for every operation,  I have just given one example, to elucidate that, what is the kind of structure that it  equivalently takes. So, this is a projection. So, when you take a projection, how you can  write it in terms of tuple calculus and so on. But we would not go into the detail mathematical  proof of this. The proof is given in the book if you want you can read it up.    But just go with the fact that there is equivalence for each and every  operation and their combination between relational algebra and the predicates  in the calculus. So, this is for union, set difference, you can even just see through  that when you are reading through this slides, the Cartesian product everything natural join.  So, it looks a little cumbersome, when you write down natural join, but you know,  you can you can always it is always possible to write down a natural join in tuple calculus,  because it is possible to write a Cartesian product and the rest of it is just selection  under different conditions. Division too, though division is not a fundamental operator. So, this  is not necessary for the equivalence proof. So, with this, we have discussed the tuple  relational domain relational calculus, the basic framework of that I said that I will  be at the overview level, when primarily we will continue to use the relational algebra and  we just mentioned an outline of how you can probably go around looking at the equivalence  of them. So, we will close the module here now. Thank you very much for your attention  and see you in the next module.",
       "duration_minutes": 50,
       "keywords": [
         "relational calculus",
@@ -274,23 +296,7 @@
         "logical equivalence",
         "safe expressions",
         "query optimization"
-      ],
-      "LLM_Summary": {
-        "summary": "This lecture introduces relational calculus as an alternative formalism to relational algebra, focusing on tuple and domain relational calculus. It provides an overview of predicate logic, including propositional logic, predicates, and quantifiers, as foundational concepts for relational calculus. The lecture explains how queries are formulated in relational calculus using logical expressions, emphasizing universal and existential quantifiers. It also discusses the equivalence of relational algebra and relational calculus, demonstrating how relational algebra operations like selection, projection, and joins can be expressed using calculus-based query languages. Additionally, the concept of safe expressions is introduced to ensure that queries produce finite results. The lecture concludes by highlighting the practical implications of relational calculus and its role in theoretical database foundations, even though SQL is primarily based on relational algebra.",
-        "concepts_covered": [
-          "Introduction to relational calculus as an alternative to relational algebra",
-          "Understanding propositional logic and predicate logic",
-          "Definition and role of predicates in relational calculus",
-          "Use of universal and existential quantifiers in queries",
-          "Comparison between tuple relational calculus and domain relational calculus",
-          "Expressing queries using logical expressions instead of procedural operations",
-          "Equivalence of relational algebra and relational calculus",
-          "Translation of relational algebra operations into relational calculus",
-          "Concept of safe expressions to prevent infinite query results",
-          "Examples of tuple and domain relational calculus queries",
-          "Theoretical foundations of query languages and their impact on SQL"
-        ]
-      }
+      ]
     },
     {
       "lecture_id": 8,
@@ -298,618 +304,613 @@
       "order": 2,
       "title": "Formal Relational Query Languages",
       "resource_type": "pdf",
-      "resource_url": "https://drive.google.com/drive/folders/1JZG-6HoV140mJUiCu_SIw3FRc0-vMZRD",
+      "resource_url": "https://drive.google.com/file/d/1Ldj9SdHrFTxqyr5_JM32kfNhxIyjoWt4/view?usp=sharing",
       "content_extract": "Formal relational query languages play a crucial role in defining and manipulating relational databases using formal mathematical systems. These languages are based on relational algebra and relational calculus, which provide a foundation for querying relational databases in both procedural and non-procedural ways. In this module, the focus is on understanding the theoretical basis of relational calculus, including both Tuple Relational Calculus (TRC) and Domain Relational Calculus (DRC), and establishing their equivalence with relational algebra. This foundation is crucial for appreciating how modern query languages like SQL are constructed and for understanding the formal underpinnings that ensure data integrity and correctness. Predicate logic forms the foundation of relational calculus. It is an extension of propositional logic (or Boolean algebra) and introduces the concepts of predicates and quantifiers to express complex conditions more effectively. In propositional logic, statements are either true or false, and logical operators such as AND, OR, and NOT are used to combine these statements. Predicate logic extends this by associating properties with variables, allowing for a more detailed expression of relationships and conditions. For example, the statement  'x is greater than 3 ' consists of a variable (x) and a property (is greater than 3). This can be represented as P(x), where P denotes the predicate and x is the variable. By assigning values to x, P(x) becomes a proposition with a definite truth value. This formulation allows for more complex logical expressions involving multiple variables and quantifiers. Quantifiers play a critical role in predicate logic by specifying the scope of the variables involved. There are two primary types of quantifiers: the universal quantifier (∀) and the existential quantifier (∃). The universal quantifier asserts that a predicate holds true for all values within a particular domain. For example, the statement  'for all x, x + 2 > x ' is universally true for all real numbers. The existential quantifier, on the other hand, asserts that there exists at least one value within the domain for which the predicate is true. For example,  'there exists an x such that x > 5 ' is true if there is at least one real number greater than 5. These quantifiers allow for the precise definition of complex conditions and are fundamental to the formulation of relational calculus. Tuple Relational Calculus (TRC) is a non-procedural query language where queries specify the desired result without defining the exact steps to compute it. TRC queries are expressed in the form {t | P(t)}, where t represents the resulting tuples and P(t) is a predicate defining the conditions these tuples must satisfy. The language supports logical operators such as AND (∧), OR (∨), and NOT (¬) to combine conditions and also uses quantifiers to express existence and universality. For example, to retrieve the names and ages of students with a CGPA greater than 8, one could write: {P | ∃S ∈ Students (S.CGPA > 8 ∧ P.name = S.sname ∧ P.age = S.age)}. This query specifies that the result should include all tuples P where there exists a tuple S in the Students relation meeting the specified conditions. The expressive power of TRC allows for the formulation of a wide range of queries using logical constructs. Examples of TRC queries demonstrate its versatility in expressing complex database operations. For instance, to find the names of students who have taken a specific course, the query might be written as {s.name | s ∈ student ∧ ∃c ∈ course (s.courseId = c.courseId ∧ c.cname = 'DBMS')}. This query retrieves the names of students enrolled in the  'DBMS ' course by specifying the necessary join conditions and logical predicates. Similarly, more complex queries can be constructed using nested quantifiers and logical operators to capture intricate relationships between data entities. Domain Relational Calculus (DRC) is another non-procedural query language equivalent in expressive power to TRC. In DRC, queries are expressed in terms of domain variables representing individual attributes rather than entire tuples. A typical DRC query takes the form {<x1, x2, ..., xn> | P(x1, x2, ..., xn)}, where x1, x2, ..., xn are domain variables, and P is a logical formula defining the conditions these variables must satisfy. This representation allows for precise specification of desired outputs using logical and quantifier-based expressions. For example, to retrieve the names of students older than 21, a DRC query might be written as {<x> | ∃y ∈ student (y.age > 21 ∧ x = y.name)}. This query specifies that the result should include all values of x where there exists a tuple y in the student relation meeting the age condition. Like TRC, DRC supports logical operators and quantifiers, enabling the formulation of complex queries. One of the key concepts in relational calculus is the notion of safe expressions. While it is possible to write expressions that generate infinite relations, practical query languages impose restrictions to ensure safety. An expression is considered safe if every component of the resulting tuple appears in one of the relations, tuples, or constants in the predicate. This restriction prevents queries from generating unbounded results and ensures that all outputs are grounded in the database's actual data. For example, the expression {t | ¬t ∈ r} is unsafe because it defines an infinite set of tuples not present in relation r. Ensuring the safety of expressions is essential for practical database querying and guarantees that queries produce finite, meaningful results. The equivalence of relational algebra, TRC, and DRC is a fundamental result in database theory. Despite their different syntactic forms, these three query languages are equivalent in expressive power, meaning that any query expressible in one language can be translated into the others. This equivalence is significant because it demonstrates that the procedural approach of relational algebra and the declarative approaches of TRC and DRC can represent the same range of database operations. For instance, the relational algebra expression Πename, salary (σaname='Boeing' (Aircraft ⨝ Certified ⨝ Employees)) corresponds to the TRC query {P | ∃E ∈ Employees ∃C ∈ Certified ∃A ∈ Aircraft (A.aid = C.aid ∧ A.aname = 'Boeing' ∧ E.eid = C.eid ∧ P.ename = E.ename ∧ P.salary = E.salary)}. This formal equivalence provides a theoretical foundation for understanding how modern query languages like SQL are designed and implemented. In summary, formal relational query languages provide a rigorous mathematical foundation for database querying. Predicate logic forms the basis for TRC and DRC, allowing for the precise definition of complex conditions using logical operators and quantifiers. TRC expresses queries in terms of tuples, while DRC uses domain variables for individual attributes. Both languages are equivalent to relational algebra in expressive power, ensuring that any query can be represented in multiple formal systems. The concept of safe expressions ensures that queries produce finite results, a critical consideration for practical database applications. Understanding these formal languages deepens one's appreciation of the theoretical underpinnings of modern database systems and highlights the logical precision required to design and implement effective database queries.",
       "duration_minutes": 55,
-      "keywords": ["TRC", "DRC", "predicate logic", "relational calculus", "query languages", "quantifiers", "safe expressions", "relational algebra equivalence"],
-      "LLM_Summary": {
-        "summary": "This resource provides a comprehensive exploration of formal relational query languages, focusing on Tuple Relational Calculus (TRC) and Domain Relational Calculus (DRC). It explains how these non-procedural query models are derived from predicate logic and how they enable complex database queries using logical expressions. The lecture details the structure of TRC and DRC queries, emphasizing the use of logical operators (AND, OR, NOT) and quantifiers (universal and existential) to define precise query conditions. It further discusses the notion of safe expressions to prevent infinite outputs and ensure practical database querying. A significant portion of the lecture is dedicated to demonstrating the equivalence between relational algebra, TRC, and DRC by mapping operations across these models. Examples involving student and flight databases illustrate how real-world queries can be expressed in each formal system. Understanding these concepts provides a strong theoretical foundation for advanced database management and highlights how modern query languages like SQL are rooted in these formal approaches.",
-        "concepts_covered": [
-          "Tuple Relational Calculus (TRC) and its query structure",
-          "Domain Relational Calculus (DRC) and its attribute-based approach",
-          "The role of predicate logic in relational calculus",
-          "Use of universal (∀) and existential (∃) quantifiers in queries",
-          "Logical operators (AND, OR, NOT) and their application in database queries",
-          "Defining safe expressions to avoid infinite query results",
-          "Equivalence between relational algebra and relational calculus",
-          "Practical query formulation through formal languages",
-          "Examples of TRC and DRC applied to real-world scenarios (e.g., student and flight databases)"
-        ]
-      }
+      "keywords": [
+        "TRC",
+        "DRC",
+        "predicate logic",
+        "relational calculus",
+        "query languages",
+        "quantifiers",
+        "safe expressions",
+        "relational algebra equivalence"
+      ]
     }
   ],
-
-  "questions": [
-    {
-      "question_id": 2001,
-      "content": "Which of the following is NOT a consequence of data redundancy in a non-normalized database?",
-      "type": "MCQ",
-      "question_options": [
-        "Increased storage requirements",
-        "Data inconsistency",
-        "Performance optimization",
-        "Update anomalies"
-      ],
-      "correct_answer": 2,
-      "points": 12,
-      "explanation": "Performance optimization is not a direct consequence of data redundancy. Data redundancy leads to increased storage requirements, data inconsistency, and update anomalies.",
-      "course_id": 2,
-      "week_id": 1,
-      "lecture_id": 1,
-      "status": "active",
-      "tags": ["database design", "normalization", "data integrity"]
-    },
-    {
-      "question_id": 2002,
-      "content": "Which database normalization forms address partial and transitive dependencies?",
-      "type": "MCQ",
-      "question_options": [
-        "1NF and 2NF",
-        "2NF and 3NF",
-        "3NF and BCNF",
-        "4NF and 5NF"
-      ],
-      "correct_answer": 1,
-      "points": 8,
-      "explanation": "2NF addresses partial dependencies by ensuring non-key attributes depend on the entire primary key, while 3NF eliminates transitive dependencies between non-key attributes.",
-      "course_id": 2,
-      "week_id": 3,
-      "lecture_id": 6,
-      "status": "active",
-      "tags": ["normalization", "database design", "dependency"]
-    },
-    {
-      "question_id": 2003,
-      "content": "Identify the problems that can arise from improper database schema design. Select all that apply.",
-      "type": "MSQ",
-      "question_options": [
-        "Data redundancy",
-        "Update anomalies",
-        "Inconsistent data representation",
-        "Performance optimization challenges",
-        "Complex query construction"
-      ],
-      "correct_answer": [0, 1, 2, 4],
-      "points": 10,
-      "explanation": "Improper schema design can lead to data redundancy, update anomalies, inconsistent data representation, and complex query construction. Performance optimization may or may not be a direct consequence.",
-      "course_id": 2,
-      "week_id": 1,
-      "lecture_id": 1,
-      "status": "active",
-      "tags": ["database design", "schema", "data integrity"]
-    },
-    {
-      "question_id": 2004,
-      "content": "Calculate the minimum number of comparisons required for binary search in a sorted database of 500,000 records.",
-      "type": "NUMERIC",
-      "question_options": [],
-      "correct_answer": 19,
-      "points": 8,
-      "explanation": "Binary search requires log₂(n) comparisons. For 500,000 records: log₂(500,000) ≈ log₂(2¹⁹) = 19 comparisons.",
-      "course_id": 2,
-      "week_id": 2,
-      "lecture_id": 3,
-      "status": "active",
-      "tags": ["database performance", "search algorithms", "indexing"]
-    },
-    {
-      "question_id": 2005,
-      "content": "How many tables would be present in a normalized schema for a library management system?",
-      "type": "NUMERIC",
-      "question_options": [],
-      "correct_answer": 5,
-      "points": 15,
-      "explanation": "A normalized library management schema typically includes 5 tables: Books, Authors, BookAuthors, Members, and Loans, to eliminate data redundancy and maintain proper relationships.",
-      "course_id": 2,
-      "week_id": 3,
-      "lecture_id": 6,
-      "status": "active",
-      "tags": ["normalization", "database design", "schema"]
-    },
-    {
-      "question_id": 2006,
-      "content": "In Tuple Relational Calculus, which of the following expressions represents a valid query?",
-      "type": "MCQ",
-      "question_options": [
-        "{t | t ∈ Students ∧ ∀x(x ∈ Courses → t.grade > 75)}",
-        "{t.name | t ∈ Students ∧ t.gpa > 3.5}",
-        "{t | t ∈ Employees ∧ t.salary < 50000}",
-        "{t.department | t ∈ Students ∧ ∃x(x ∈ Courses)}"
-      ],
-      "correct_answer": 1,
-      "points": 10,
-      "explanation": "The second option is a valid TRC expression selecting student names with GPA greater than 3.5, using proper quantification and tuple variable notation.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 7,
-      "status": "active",
-      "tags": ["relational calculus", "query languages", "formal notation"]
-    },
-    {
-      "question_id": 2007,
-      "content": "Which characteristics define a 'safe' query in relational calculus? Select all that apply.",
-      "type": "MSQ",
-      "question_options": [
-        "Domain-independent",
-        "Guaranteed to produce a finite result set",
-        "Uses only values from the database",
-        "Can introduce arbitrary external values",
-        "Works with infinite domains"
-      ],
-      "correct_answer": [0, 1, 2],
-      "points": 12,
-      "explanation": "A safe query is domain-independent, guarantees a finite result set, and uses only values already present in the database. It cannot introduce arbitrary external values or work with infinite domains.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 7,
-      "status": "active",
-      "tags": ["relational calculus", "query safety", "domain independence"]
-    },
-    {
-      "question_id": 2008,
-      "content": "Compare the quantifiers used in Tuple and Domain Relational Calculus. Select all correct statements.",
-      "type": "MSQ",
-      "question_options": [
-        "TRC uses tuple variables",
-        "DRC operates on attribute domains",
-        "Both use universal and existential quantifiers",
-        "TRC can only use existential quantifiers",
-        "DRC works with specific attribute types"
-      ],
-      "correct_answer": [0, 1, 2],
-      "points": 10,
-      "explanation": "TRC uses tuple variables, DRC operates on attribute domains, and both can use universal (∀) and existential (∃) quantifiers in their expressions.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 7,
-      "status": "active",
-      "tags": ["relational calculus", "quantifiers", "query languages"]
-    },
-    {
-      "question_id": 2009,
-      "content": "In a multi-user database environment, how many distinct resources are typically involved in a deadlock scenario?",
-      "type": "NUMERIC",
-      "question_options": [],
-      "correct_answer": 2,
-      "points": 15,
-      "explanation": "A classic deadlock scenario involves two resources and two transactions, where each transaction holds a lock on one resource and attempts to acquire a lock on the other, creating a circular wait condition.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "concurrency control", "deadlock"]
-    },
-    {
-      "question_id": 2010,
-      "content": "Which ACID properties are violated in the following transaction scenario?",
-      "type": "MSQ",
-      "question_options": [
-        "A bank transfer fails midway, leaving accounts in an inconsistent state",
-        "Multiple concurrent transactions modify the same account balance",
-        "A system crash occurs before transaction logs are written to disk",
-        "A transaction is interrupted before all its operations complete"
-      ],
-      "correct_answer": [0, 1, 2, 3],
-      "points": 12,
-      "explanation": "The scenario violates: Atomicity (incomplete transfer), Isolation (concurrent modifications), Durability (logs not persisted), and Consistency (inconsistent account states).",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "acid properties", "database integrity"]
-    },
-    {
-      "question_id": 2011,
-      "content": "Identify the transaction isolation levels that prevent specific concurrency anomalies.",
-      "type": "MCQ",
-      "question_options": [
-        "Read Uncommitted prevents dirty reads",
-        "Repeatable Read prevents non-repeatable reads",
-        "Serializable prevents phantom reads",
-        "Read Committed prevents lost updates"
-      ],
-      "correct_answer": 2,
-      "points": 8,
-      "explanation": "Serializable isolation level prevents phantom reads by ensuring complete isolation between transactions, blocking all concurrency anomalies.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "isolation levels", "concurrency"]
-    },
-    {
-      "question_id": 2012,
-      "content": "Which mechanisms can be used to resolve database deadlocks? Select all that apply.",
-      "type": "MSQ",
-      "question_options": [
-        "Timeout mechanisms",
-        "Wait-for graph analysis",
-        "Random victim selection",
-        "Priority-based resolution",
-        "Transaction log elimination"
-      ],
-      "correct_answer": [0, 1, 2, 3],
-      "points": 12,
-      "explanation": "Deadlock resolution strategies include timeout mechanisms, wait-for graph analysis, random victim selection, and priority-based resolution. Transaction log elimination is not a standard deadlock resolution technique.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "deadlock", "concurrency control"]
-    },
-    {
-      "question_id": 2013,
-      "content": "Calculate the number of possible combinations of transaction isolation levels across two concurrent transactions.",
-      "type": "NUMERIC",
-      "question_options": [],
-      "correct_answer": 16,
-      "points": 10,
-      "explanation": "With 4 isolation levels (Read Uncommitted, Read Committed, Repeatable Read, Serializable), the number of possible combinations is 4² = 16.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "isolation levels", "combinatorics"]
-    },
-    {
-      "question_id": 2014,
-      "content": "Which of the following best describes the difference between Domain Relational Calculus and SQL?",
-      "type": "MCQ",
-      "question_options": [
-        "DRC uses table-based syntax, SQL uses predicate logic",
-        "DRC is declarative and mathematically oriented, SQL is more procedural",
-        "SQL focuses on attribute-level conditions, DRC uses explicit joins",
-        "DRC and SQL have identical query formulation approaches"
-      ],
-      "correct_answer": 1,
-      "points": 15,
-      "explanation": "Domain Relational Calculus is declarative and mathematically oriented, focusing on predicate logic, while SQL is more procedural and implementation-focused with explicit selection, projection, and join operations.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 7,
-      "status": "active",
-      "tags": ["relational calculus", "query languages", "sql comparison"]
-    },
-    {
-      "question_id": 2015,
-      "content": "In relational algebra, which operation combines relations while preserving only matching tuples?",
-      "type": "MCQ",
-      "question_options": [
-        "Natural Join",
-        "Left Outer Join",
-        "Right Outer Join",
-        "Full Outer Join"
-      ],
-      "correct_answer": 0,
-      "points": 8,
-      "explanation": "Natural Join combines relations based on common attributes, returning only tuples with matching values across those attributes.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 7,
-      "status": "active",
-      "tags": ["relational algebra", "join operations", "query processing"]
-    },
-    {
-      "question_id": 2016,
-      "content": "What is the key characteristic of the universal quantifier in relational calculus compared to the existential quantifier?",
-      "type": "MCQ",
-      "question_options": [
-        "Universal quantifier requires the condition to be true for ALL tuples",
-        "Existential quantifier is more restrictive",
-        "Universal quantifier works only with numeric attributes",
-        "Existential quantifier requires the condition to be true for no tuples"
-      ],
-      "correct_answer": 0,
-      "points": 12,
-      "explanation": "The universal quantifier (∀) requires a condition to be true for ALL tuples, while the existential quantifier (∃) requires the condition to be true for AT LEAST ONE tuple.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 7,
-      "status": "active",
-      "tags": ["relational calculus", "quantifiers", "logical operators"]
-    },
-    {
-      "question_id": 2017,
-      "content": "Which transaction recovery mechanism ensures minimal data loss during system failures?",
-      "type": "MCQ",
-      "question_options": [
-        "Write-Ahead Logging",
-        "Checkpointing",
-        "Shadow Paging",
-        "Immediate Logging"
-      ],
-      "correct_answer": 0,
-      "points": 10,
-      "explanation": "Write-Ahead Logging (WAL) ensures that log records are written to stable storage before the corresponding database modifications, providing robust recovery mechanism.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "recovery mechanisms", "logging"]
-    },
-    {
-      "question_id": 2018,
-      "content": "Which transaction recovery technique offers the most precise recovery with minimal overhead?",
-      "type": "MCQ",
-      "question_options": [
-        "Write-Ahead Logging",
-        "Checkpointing",
-        "Shadow Paging",
-        "Immediate Logging"
-      ],
-      "correct_answer": 0,
-      "points": 15,
-      "explanation": "Write-Ahead Logging offers minimal overhead and precise recovery by ensuring log records are written to stable storage before database modifications.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "recovery techniques", "system design"]
-    },
-    {
-      "question_id": 2019,
-      "content": "Select the quantifiers and operations that can be used in a valid Tuple Relational Calculus expression.",
-      "type": "MSQ",
-      "question_options": [
-        "Universal quantifier (∀)",
-        "Existential quantifier (∃)",
-        "Set membership (∈)",
-        "Logical AND (∧)",
-        "Division operator (÷)"
-      ],
-      "correct_answer": [0, 1, 2, 3],
-      "points": 10,
-      "explanation": "TRC expressions can use universal and existential quantifiers, set membership, and logical AND. The division operator is not a standard TRC operation.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 7,
-      "status": "active",
-      "tags": ["relational calculus", "quantifiers", "logical operators"]
-    },
-    {
-      "question_id": 2020,
-      "content": "How many distinct steps are typically involved in recovering a database from a system crash?",
-      "type": "NUMERIC",
-      "question_options": [],
-      "correct_answer": 5,
-      "points": 15,
-      "explanation": "Database recovery from a system crash typically involves 5 steps: (1) Analyze transaction logs, (2) Identify incomplete transactions, (3) Undo changes from incomplete transactions, (4) Redo committed transactions, (5) Restore database to consistent state.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "recovery mechanisms", "system reliability"]
-    },
-    {
-      "question_id": 2021,
-      "content": "How many unique combinations of transaction interactions can occur with three concurrent transactions?",
-      "type": "NUMERIC",
-      "question_options": [],
-      "correct_answer": 64,
-      "points": 10,
-      "explanation": "With 4 isolation levels, the number of unique transaction interaction combinations is 4³ = 64.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "concurrency", "combinatorics"]
-    },
-    {
-      "question_id": 2022,
-      "content": "Which of the following is a correct representation of a Domain Relational Calculus query to find students with a GPA above 3.5?",
-      "type": "MCQ",
-      "question_options": [
-        "{name, gpa | ∃x(x ∈ Students ∧ x.gpa > 3.5 ∧ x.name = name ∧ x.gpa = gpa)}",
-        "{x.name | x ∈ Students ∧ x.gpa < 3.5}",
-        "{t | t ∈ Students ∧ t.gpa = 3.5}",
-        "{name | name ∈ Students ∧ gpa > 3.5}"
-      ],
-      "correct_answer": 0,
-      "points": 15,
-      "explanation": "The first option demonstrates a correct Domain Relational Calculus query using domain variables, existential quantifier, and predicate logic to select students with GPA above 3.5.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 7,
-      "status": "active",
-      "tags": ["relational calculus", "query languages", "domain variables"]
-    },
-    {
-      "question_id": 2023,
-      "content": "Which transaction properties prevent data inconsistencies in multi-user database systems?",
-      "type": "MCQ",
-      "question_options": [
-        "Atomicity and Durability",
-        "Consistency and Isolation",
-        "Consistency and Durability",
-        "Atomicity and Isolation"
-      ],
-      "correct_answer": 1,
-      "points": 8,
-      "explanation": "Consistency ensures data integrity between transactions, while Isolation prevents interference between concurrent transactions, thus preventing data inconsistencies.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "acid properties", "data integrity"]
-    },
-    {
-      "question_id": 2024,
-      "content": "Explain how a phantom read can occur in a database transaction scenario.",
-      "type": "TEXT",
-      "question_options": [],
-      "correct_answer": null,
-      "points": 12,
-      "explanation": "A phantom read occurs when a transaction re-reads data and finds new rows that were inserted by another transaction, violating the expected isolation and potentially causing inconsistent results.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 8,
-      "status": "active",
-      "tags": ["transactions", "isolation levels", "concurrency anomalies"]
-    },
-    {
-      "question_id": 2025,
-      "content": "How many distinct computational transformations are typically involved in evaluating a Tuple Relational Calculus query?",
-      "type": "NUMERIC",
-      "question_options": [],
-      "correct_answer": 4,
-      "points": 15,
-      "explanation": "Evaluating a TRC query involves 4 key computational transformations: (1) Translating TRC expressions to relational algebra, (2) Checking domain independence, (3) Verifying quantifier safety, (4) Mapping to executable database operations.",
-      "course_id": 2,
-      "week_id": 4,
-      "lecture_id": 7,
-      "status": "active",
-      "tags": ["relational calculus", "query complexity", "computational theory"]
-    }
-  ],
-
-  "assignments": [
-    {
-      "assignment_id": 2001,
-      "week_id": 1,
-      "title": "Database Design and Normalization Fundamentals",
-      "description": "Practice database design principles, identify normalization challenges, and develop efficient schema strategies.",
-      "type": "practice",
-      "due_date": "2025-04-05",
-      "start_date": "2025-03-29",
-      "is_published": true,
-      "question_ids": [2001, 2002, 2003, 2005]
-    },
-    {
-      "assignment_id": 2002,
-      "week_id": 2,
-      "title": "SQL and Database Schema Optimization",
-      "description": "Apply normalization techniques, design efficient database schemas, and optimize query performance.",
-      "type": "practice",
-      "due_date": "2025-04-12",
-      "start_date": "2025-04-05",
-      "is_published": true,
-      "question_ids": [2004, 2005, 2003, 2001]
-    },
-    {
-      "assignment_id": 2003,
-      "week_id": 3,
-      "title": "Practical Database Design and Normalization",
-      "description": "Develop comprehensive strategies for reducing data redundancy and maintaining database integrity.",
-      "type": "practice",
-      "due_date": "2025-04-19",
-      "start_date": "2025-04-12",
-      "is_published": true,
-      "question_ids": [2002, 2003, 2005, 2004]
-    },
-    {
-      "assignment_id": 2004,
-      "week_id": 4,
-      "title": "Advanced Transaction Management and Recovery",
-      "description": "Explore complex transaction scenarios, ACID properties, concurrency control, and recovery mechanisms.",
-      "type": "graded",
-      "due_date": "2025-04-26",
-      "start_date": "2025-04-19",
-      "is_published": true,
-      "question_ids": [2009, 2010, 2011, 2012, 2017, 2020, 2023, 2024]
-    },
-    {
-      "assignment_id": 2005,
-      "week_id": 4,
-      "title": "Formal Query Languages and Relational Calculus",
-      "description": "Master advanced query formulation techniques using Tuple and Domain Relational Calculus.",
-      "type": "graded",
-      "due_date": "2025-05-03",
-      "start_date": "2025-04-26",
-      "is_published": true,
-      "question_ids": [2006, 2007, 2008, 2014, 2015, 2016, 2019, 2022, 2025]
-    }
-  ],
-
-
-  "personal_resources": [
-    {
-      "resource_id": 2001,
-      "name": "DBMS Study Notes",
-      "description": "Comprehensive study notes for Database Management Systems course",
-      "course_id": 2,
-      "user_id": 3001,
-      "is_active": true,
-      "LLM_Summary": {
-        "summary": "Detailed study notes covering database fundamentals, SQL queries, normalization techniques, and transaction management with practical examples and implementation tips.",
-        "concepts_covered": [
-          "Database design principles",
-          "SQL query optimization techniques",
-          "Normalization steps with examples",
-          "Transaction isolation levels",
-          "Index creation strategies"
+  
+    "questions": [
+      {
+        "question_id": 2001,
+        "content": "Which of the following is NOT a consequence of data redundancy in a non-normalized database?",
+        "type": "MCQ",
+        "question_options": [
+          "Increased storage requirements",
+          "Data inconsistency",
+          "Performance optimization",
+          "Update anomalies"
         ],
-        "concepts_not_covered": [
-          "NoSQL databases",
-          "Big data technologies",
-          "Cloud database platforms",
-          "Database administration tasks"
-        ]
-      }
-    },
-    {
-      "resource_id": 2002,
-      "name": "SQL Query Collection",
-      "description": "Collection of useful SQL queries and examples from class exercises",
-      "course_id": 2,
-      "user_id": 3001,
-      "is_active": true,
-      "LLM_Summary": {
-        "summary": "A curated collection of SQL queries ranging from basic to advanced, organized by topic with explanations and use cases.",
-        "concepts_covered": [
-          "Basic SELECT queries",
-          "JOIN operations with examples",
-          "Subquery implementations",
-          "Data manipulation statements",
-          "Query optimization examples"
+        "correct_answer": 2,
+        "points": 12,
+        "explanation": "Performance optimization is not a direct consequence of data redundancy. Data redundancy leads to increased storage requirements, data inconsistency, and update anomalies.",
+        "course_id": 1,
+        "week_id": 1,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": ["database design", "normalization", "data integrity"]
+      },
+      {
+        "question_id": 2002,
+        "content": "Which database normalization forms address partial and transitive dependencies?",
+        "type": "MCQ",
+        "question_options": [
+          "1NF and 2NF",
+          "2NF and 3NF",
+          "3NF and BCNF",
+          "4NF and 5NF"
         ],
-        "concepts_not_covered": [
-          "Database administration queries",
-          "Stored procedures",
-          "Triggers",
-          "Database-specific extensions"
-        ]
+        "correct_answer": 1,
+        "points": 8,
+        "explanation": "2NF addresses partial dependencies by ensuring non-key attributes depend on the entire primary key, while 3NF eliminates transitive dependencies between non-key attributes.",
+        "course_id": 1,
+        "week_id": 3,
+        "lecture_id": 6,
+        "status": "active",
+        "tags": ["normalization", "database design", "dependency"]
+      },
+      {
+        "question_id": 2003,
+        "content": "Identify the problems that can arise from improper database schema design. Select all that apply.",
+        "type": "MSQ",
+        "question_options": [
+          "Data redundancy",
+          "Update anomalies",
+          "Inconsistent data representation",
+          "Performance optimization challenges",
+          "Complex query construction"
+        ],
+        "correct_answer": [0, 1, 2, 4],
+        "points": 10,
+        "explanation": "Improper schema design can lead to data redundancy, update anomalies, inconsistent data representation, and complex query construction. Performance optimization may or may not be a direct consequence.",
+        "course_id": 1,
+        "week_id": 1,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": ["database design", "schema", "data integrity"]
+      },
+      {
+        "question_id": 2004,
+        "content": "Calculate the minimum number of comparisons required for binary search in a sorted database of 500,000 records.",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 19,
+        "points": 8,
+        "explanation": "Binary search requires log₂(n) comparisons. For 500,000 records: log₂(500,000) ≈ log₂(2¹⁹) = 19 comparisons.",
+        "course_id": 1,
+        "week_id": 2,
+        "lecture_id": 3,
+        "status": "active",
+        "tags": ["database performance", "search algorithms", "indexing"]
+      },
+      {
+        "question_id": 2005,
+        "content": "How many tables would be present in a normalized schema for a library management system?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 5,
+        "points": 15,
+        "explanation": "A normalized library management schema typically includes 5 tables: Books, Authors, BookAuthors, Members, and Loans, to eliminate data redundancy and maintain proper relationships.",
+        "course_id": 1,
+        "week_id": 3,
+        "lecture_id": 6,
+        "status": "active",
+        "tags": ["normalization", "database design", "schema"]
+      },
+      {
+        "question_id": 2006,
+        "content": "In Tuple Relational Calculus, which of the following expressions represents a valid query?",
+        "type": "MCQ",
+        "question_options": [
+          "{t | t ∈ Students ∧ ∀x(x ∈ Courses → t.grade > 75)}",
+          "{t.name | t ∈ Students ∧ t.gpa > 3.5}",
+          "{t | t ∈ Employees ∧ t.salary < 50000}",
+          "{t.department | t ∈ Students ∧ ∃x(x ∈ Courses)}"
+        ],
+        "correct_answer": 1,
+        "points": 10,
+        "explanation": "The second option is a valid TRC expression selecting student names with GPA greater than 3.5, using proper quantification and tuple variable notation.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["relational calculus", "query languages", "formal notation"]
+      },
+      {
+        "question_id": 2007,
+        "content": "Which characteristics define a 'safe' query in relational calculus? Select all that apply.",
+        "type": "MSQ",
+        "question_options": [
+          "Domain-independent",
+          "Guaranteed to produce a finite result set",
+          "Uses only values from the database",
+          "Can introduce arbitrary external values",
+          "Works with infinite domains"
+        ],
+        "correct_answer": [0, 1, 2],
+        "points": 12,
+        "explanation": "A safe query is domain-independent, guarantees a finite result set, and uses only values already present in the database. It cannot introduce arbitrary external values or work with infinite domains.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["relational calculus", "query safety", "domain independence"]
+      },
+      {
+        "question_id": 2008,
+        "content": "Compare the quantifiers used in Tuple and Domain Relational Calculus. Select all correct statements.",
+        "type": "MSQ",
+        "question_options": [
+          "TRC uses tuple variables",
+          "DRC operates on attribute domains",
+          "Both use universal and existential quantifiers",
+          "TRC can only use existential quantifiers",
+          "DRC works with specific attribute types"
+        ],
+        "correct_answer": [0, 1, 2],
+        "points": 10,
+        "explanation": "TRC uses tuple variables, DRC operates on attribute domains, and both can use universal (∀) and existential (∃) quantifiers in their expressions.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["relational calculus", "quantifiers", "query languages"]
+      },
+      {
+        "question_id": 2009,
+        "content": "In a multi-user database environment, how many distinct resources are typically involved in a deadlock scenario?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 2,
+        "points": 15,
+        "explanation": "A classic deadlock scenario involves two resources and two transactions, where each transaction holds a lock on one resource and attempts to acquire a lock on the other, creating a circular wait condition.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "concurrency control", "deadlock"]
+      },
+      {
+        "question_id": 2010,
+        "content": "Which ACID properties are violated in the following transaction scenario?",
+        "type": "MSQ",
+        "question_options": [
+          "A bank transfer fails midway, leaving accounts in an inconsistent state",
+          "Multiple concurrent transactions modify the same account balance",
+          "A system crash occurs before transaction logs are written to disk",
+          "A transaction is interrupted before all its operations complete"
+        ],
+        "correct_answer": [0, 1, 2, 3],
+        "points": 12,
+        "explanation": "The scenario violates: Atomicity (incomplete transfer), Isolation (concurrent modifications), Durability (logs not persisted), and Consistency (inconsistent account states).",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "acid properties", "database integrity"]
+      },
+      {
+        "question_id": 2011,
+        "content": "Identify the transaction isolation levels that prevent specific concurrency anomalies.",
+        "type": "MCQ",
+        "question_options": [
+          "Read Uncommitted prevents dirty reads",
+          "Repeatable Read prevents non-repeatable reads",
+          "Serializable prevents phantom reads",
+          "Read Committed prevents lost updates"
+        ],
+        "correct_answer": 2,
+        "points": 8,
+        "explanation": "Serializable isolation level prevents phantom reads by ensuring complete isolation between transactions, blocking all concurrency anomalies.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "isolation levels", "concurrency"]
+      },
+      {
+        "question_id": 2012,
+        "content": "Which mechanisms can be used to resolve database deadlocks? Select all that apply.",
+        "type": "MSQ",
+        "question_options": [
+          "Timeout mechanisms",
+          "Wait-for graph analysis",
+          "Random victim selection",
+          "Priority-based resolution",
+          "Transaction log elimination"
+        ],
+        "correct_answer": [0, 1, 2, 3],
+        "points": 12,
+        "explanation": "Deadlock resolution strategies include timeout mechanisms, wait-for graph analysis, random victim selection, and priority-based resolution. Transaction log elimination is not a standard deadlock resolution technique.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "deadlock", "concurrency control"]
+      },
+      {
+        "question_id": 2013,
+        "content": "Calculate the number of possible combinations of transaction isolation levels across two concurrent transactions.",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 16,
+        "points": 10,
+        "explanation": "With 4 isolation levels (Read Uncommitted, Read Committed, Repeatable Read, Serializable), the number of possible combinations is 4² = 16.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "isolation levels", "combinatorics"]
+      },
+      {
+        "question_id": 2014,
+        "content": "Which of the following best describes the difference between Domain Relational Calculus and SQL?",
+        "type": "MCQ",
+        "question_options": [
+          "DRC uses table-based syntax, SQL uses predicate logic",
+          "DRC is declarative and mathematically oriented, SQL is more procedural",
+          "SQL focuses on attribute-level conditions, DRC uses explicit joins",
+          "DRC and SQL have identical query formulation approaches"
+        ],
+        "correct_answer": 1,
+        "points": 15,
+        "explanation": "Domain Relational Calculus is declarative and mathematically oriented, focusing on predicate logic, while SQL is more procedural and implementation-focused with explicit selection, projection, and join operations.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["relational calculus", "query languages", "sql comparison"]
+      },
+      {
+        "question_id": 2015,
+        "content": "In relational algebra, which operation combines relations while preserving only matching tuples?",
+        "type": "MCQ",
+        "question_options": [
+          "Natural Join",
+          "Left Outer Join",
+          "Right Outer Join",
+          "Full Outer Join"
+        ],
+        "correct_answer": 0,
+        "points": 8,
+        "explanation": "Natural Join combines relations based on common attributes, returning only tuples with matching values across those attributes.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["relational algebra", "join operations", "query processing"]
+      },
+      {
+        "question_id": 2016,
+        "content": "What is the key characteristic of the universal quantifier in relational calculus compared to the existential quantifier?",
+        "type": "MCQ",
+        "question_options": [
+          "Universal quantifier requires the condition to be true for ALL tuples",
+          "Existential quantifier is more restrictive",
+          "Universal quantifier works only with numeric attributes",
+          "Existential quantifier requires the condition to be true for no tuples"
+        ],
+        "correct_answer": 0,
+        "points": 12,
+        "explanation": "The universal quantifier (∀) requires a condition to be true for ALL tuples, while the existential quantifier (∃) requires the condition to be true for AT LEAST ONE tuple.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["relational calculus", "quantifiers", "logical operators"]
+      },
+      {
+        "question_id": 2017,
+        "content": "Which transaction recovery mechanism ensures minimal data loss during system failures?",
+        "type": "MCQ",
+        "question_options": [
+          "Write-Ahead Logging",
+          "Checkpointing",
+          "Shadow Paging",
+          "Immediate Logging"
+        ],
+        "correct_answer": 0,
+        "points": 10,
+        "explanation": "Write-Ahead Logging (WAL) ensures that log records are written to stable storage before the corresponding database modifications, providing robust recovery mechanism.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "recovery mechanisms", "logging"]
+      },
+      {
+        "question_id": 2018,
+        "content": "Which transaction recovery technique offers the most precise recovery with minimal overhead?",
+        "type": "MCQ",
+        "question_options": [
+          "Write-Ahead Logging",
+          "Checkpointing",
+          "Shadow Paging",
+          "Immediate Logging"
+        ],
+        "correct_answer": 0,
+        "points": 15,
+        "explanation": "Write-Ahead Logging offers minimal overhead and precise recovery by ensuring log records are written to stable storage before database modifications.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "recovery techniques", "system design"]
+      },
+      {
+        "question_id": 2019,
+        "content": "Select the quantifiers and operations that can be used in a valid Tuple Relational Calculus expression.",
+        "type": "MSQ",
+        "question_options": [
+          "Universal quantifier (∀)",
+          "Existential quantifier (∃)",
+          "Set membership (∈)",
+          "Logical AND (∧)",
+          "Division operator (÷)"
+        ],
+        "correct_answer": [0, 1, 2, 3],
+        "points": 10,
+        "explanation": "TRC expressions can use universal and existential quantifiers, set membership, and logical AND. The division operator is not a standard TRC operation.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["relational calculus", "quantifiers", "logical operators"]
+      },
+      {
+        "question_id": 2020,
+        "content": "How many distinct steps are typically involved in recovering a database from a system crash?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 5,
+        "points": 15,
+        "explanation": "Database recovery from a system crash typically involves 5 steps: (1) Analyze transaction logs, (2) Identify incomplete transactions, (3) Undo changes from incomplete transactions, (4) Redo committed transactions, (5) Restore database to consistent state.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "recovery mechanisms", "system reliability"]
+      },
+      {
+        "question_id": 2021,
+        "content": "How many unique combinations of transaction interactions can occur with three concurrent transactions?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 64,
+        "points": 10,
+        "explanation": "With 4 isolation levels, the number of unique transaction interaction combinations is 4³ = 64.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "concurrency", "combinatorics"]
+      },
+      {
+        "question_id": 2022,
+        "content": "Which of the following is a correct representation of a Domain Relational Calculus query to find students with a GPA above 3.5?",
+        "type": "MCQ",
+        "question_options": [
+          "{name, gpa | ∃x(x ∈ Students ∧ x.gpa > 3.5 ∧ x.name = name ∧ x.gpa = gpa)}",
+          "{x.name | x ∈ Students ∧ x.gpa < 3.5}",
+          "{t | t ∈ Students ∧ t.gpa = 3.5}",
+          "{name | name ∈ Students ∧ gpa > 3.5}"
+        ],
+        "correct_answer": 0,
+        "points": 15,
+        "explanation": "The first option demonstrates a correct Domain Relational Calculus query using domain variables, existential quantifier, and predicate logic to select students with GPA above 3.5.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["relational calculus", "query languages", "domain variables"]
+      },
+      {
+        "question_id": 2023,
+        "content": "Which transaction properties prevent data inconsistencies in multi-user database systems?",
+        "type": "MCQ",
+        "question_options": [
+          "Atomicity and Durability",
+          "Consistency and Isolation",
+          "Consistency and Durability",
+          "Atomicity and Isolation"
+        ],
+        "correct_answer": 1,
+        "points": 8,
+        "explanation": "Consistency ensures data integrity between transactions, while Isolation prevents interference between concurrent transactions, thus preventing data inconsistencies.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "acid properties", "data integrity"]
+      },
+      {
+        "question_id": 2024,
+        "content": "Explain how a phantom read can occur in a database transaction scenario.",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 12,
+        "explanation": "A phantom read occurs when a transaction re-reads data and finds new rows that were inserted by another transaction, violating the expected isolation and potentially causing inconsistent results.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["transactions", "isolation levels", "concurrency anomalies"]
+      },
+      {
+        "question_id": 2025,
+        "content": "How many distinct computational transformations are typically involved in evaluating a Tuple Relational Calculus query?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 4,
+        "points": 15,
+        "explanation": "Evaluating a TRC query involves 4 key computational transformations: (1) Translating TRC expressions to relational algebra, (2) Checking domain independence, (3) Verifying quantifier safety, (4) Mapping to executable database operations.",
+        "course_id": 1,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["relational calculus", "query complexity", "computational theory"]
       }
-    }
-  ],
-
-  "personal_resource_files": [
-    {
-      "file_id": 2001,
-      "resource_id": 2001,
-      "name": "Week 1-2 Comprehensive Notes",
-      "type": "text",
-      "content": "# Database Management Systems Notes\n\n## Week 1: Database Fundamentals\n\n### Three Levels of Abstraction\n- **Physical Level**: How data is stored (blocks, pages)\n- **Logical Level**: What data is stored and relationships\n- **View Level**: How data is presented to users\n\n### Schema vs. Instance\n- **Schema**: Database structure definition\n- **Instance**: Actual data at a particular moment\n\n## Week 2: SQL Basics\n\n### DDL Commands\n- CREATE TABLE\n- ALTER TABLE\n- DROP TABLE\n\n### DML Commands\n- SELECT\n- INSERT\n- UPDATE\n- DELETE\n\n### Key Constraints\n- PRIMARY KEY: Unique identifier\n- FOREIGN KEY: Maintains referential integrity\n- UNIQUE: Ensures no duplicates\n- CHECK: Validates data against conditions\n\n[Additional detailed notes...]",
-      "file_type": "text/markdown",
-      "file_size": 8192
-    },
-    {
-      "file_id": 2002,
-      "resource_id": 2001,
-      "name": "Entity Relationship Diagrams",
-      "type": "file",
-      "content": "Collection of hand-drawn and digital entity-relationship diagrams for various database scenarios, including a university management system, an e-commerce platform, and a hospital management system.",
-      "file_path": "/uploads/user3001/dbms201/er_diagrams.pdf",
-      "file_type": "application/pdf",
-      "file_size": 4096
-    },
-    {
-      "file_id": 2003,
-      "resource_id": 2002,
-      "name": "Basic SQL Queries",
-      "type": "text",
-      "content": "-- Basic SELECT queries\nSELECT * FROM students;\nSELECT first_name, last_name FROM students WHERE gpa > 3.5;\n\n-- JOIN examples\nSELECT c.course_name, i.instructor_name \nFROM courses c \nJOIN instructors i ON c.instructor_id = i.id;\n\n-- Aggregation functions\nSELECT department, AVG(gpa) as avg_gpa \nFROM students \nGROUP BY department \nHAVING AVG(gpa) > 3.0;\n\n-- Subqueries\nSELECT student_name \nFROM students \nWHERE student_id IN (SELECT student_id FROM enrollments WHERE course_id = 101);\n\n[More SQL queries and examples...]",
-      "file_type": "text/plain",
-      "file_size": 6144
-    },
-    {
-      "file_id": 2004,
-      "resource_id": 2002,
-      "name": "Advanced SQL Examples",
-      "type": "file",
-      "content": "SQL script containing advanced queries with nested subqueries, complex joins, window functions, and transaction management examples from class exercises.",
-      "file_path": "/uploads/user3001/dbms201/advanced_sql.sql",
-      "file_type": "text/x-sql",
-      "file_size": 7168
-    }
-  ]
-}
+    ],
+  
+    "assignments": [
+      {
+        "assignment_id": 2001,
+        "week_id": 1,
+        "title": "Database Design and Normalization Fundamentals",
+        "description": "Practice database design principles, identify normalization challenges, and develop efficient schema strategies.",
+        "type": "practice",
+        "due_date": "2025-04-05",
+        "start_date": "2025-03-29",
+        "is_published": true,
+        "question_ids": [2001, 2002, 2003, 2005]
+      },
+      {
+        "assignment_id": 2002,
+        "week_id": 2,
+        "title": "SQL and Database Schema Optimization",
+        "description": "Apply normalization techniques, design efficient database schemas, and optimize query performance.",
+        "type": "practice",
+        "due_date": "2025-04-12",
+        "start_date": "2025-04-05",
+        "is_published": true,
+        "question_ids": [2004, 2005, 2003, 2001]
+      },
+      {
+        "assignment_id": 2003,
+        "week_id": 3,
+        "title": "Practical Database Design and Normalization",
+        "description": "Develop comprehensive strategies for reducing data redundancy and maintaining database integrity.",
+        "type": "practice",
+        "due_date": "2025-04-19",
+        "start_date": "2025-04-12",
+        "is_published": true,
+        "question_ids": [2002, 2003, 2005, 2004]
+      },
+      {
+        "assignment_id": 2004,
+        "week_id": 4,
+        "title": "Advanced Transaction Management and Recovery",
+        "description": "Explore complex transaction scenarios, ACID properties, concurrency control, and recovery mechanisms.",
+        "type": "graded",
+        "due_date": "2025-04-26",
+        "start_date": "2025-04-19",
+        "is_published": true,
+        "question_ids": [2009, 2010, 2011, 2012, 2017, 2020, 2023, 2024]
+      },
+      {
+        "assignment_id": 2005,
+        "week_id": 4,
+        "title": "Formal Query Languages and Relational Calculus",
+        "description": "Master advanced query formulation techniques using Tuple and Domain Relational Calculus.",
+        "type": "graded",
+        "due_date": "2025-05-03",
+        "start_date": "2025-04-26",
+        "is_published": true,
+        "question_ids": [2006, 2007, 2008, 2014, 2015, 2016, 2019, 2022, 2025]
+      }
+    ],
+  
+  
+    "personal_resources": [
+      {
+        "resource_id": 2001,
+        "name": "DBMS Study Notes",
+        "description": "Comprehensive study notes for Database Management Systems course",
+        "course_id": 1,
+        "user_id": 3001,
+        "is_active": true,
+        "LLM_Summary": {
+          "summary": "Detailed study notes covering database fundamentals, SQL queries, normalization techniques, and transaction management with practical examples and implementation tips.",
+          "concepts_covered": [
+            "Database design principles",
+            "SQL query optimization techniques",
+            "Normalization steps with examples",
+            "Transaction isolation levels",
+            "Index creation strategies"
+          ],
+          "concepts_not_covered": [
+            "NoSQL databases",
+            "Big data technologies",
+            "Cloud database platforms",
+            "Database administration tasks"
+          ]
+        }
+      },
+      {
+        "resource_id": 2002,
+        "name": "SQL Query Collection",
+        "description": "Collection of useful SQL queries and examples from class exercises",
+        "course_id": 1,
+        "user_id": 3001,
+        "is_active": true,
+        "LLM_Summary": {
+          "summary": "A curated collection of SQL queries ranging from basic to advanced, organized by topic with explanations and use cases.",
+          "concepts_covered": [
+            "Basic SELECT queries",
+            "JOIN operations with examples",
+            "Subquery implementations",
+            "Data manipulation statements",
+            "Query optimization examples"
+          ],
+          "concepts_not_covered": [
+            "Database administration queries",
+            "Stored procedures",
+            "Triggers",
+            "Database-specific extensions"
+          ]
+        }
+      }
+    ],
+  
+    "personal_resource_files": [
+      {
+        "file_id": 2001,
+        "resource_id": 2001,
+        "name": "Week 1-2 Comprehensive Notes",
+        "type": "text",
+        "content": "# Database Management Systems Notes\n\n## Week 1: Database Fundamentals\n\n### Three Levels of Abstraction\n- **Physical Level**: How data is stored (blocks, pages)\n- **Logical Level**: What data is stored and relationships\n- **View Level**: How data is presented to users\n\n### Schema vs. Instance\n- **Schema**: Database structure definition\n- **Instance**: Actual data at a particular moment\n\n## Week 2: SQL Basics\n\n### DDL Commands\n- CREATE TABLE\n- ALTER TABLE\n- DROP TABLE\n\n### DML Commands\n- SELECT\n- INSERT\n- UPDATE\n- DELETE\n\n### Key Constraints\n- PRIMARY KEY: Unique identifier\n- FOREIGN KEY: Maintains referential integrity\n- UNIQUE: Ensures no duplicates\n- CHECK: Validates data against conditions\n\n[Additional detailed notes...]",
+        "file_type": "text/markdown",
+        "file_size": 8192
+      },
+      {
+        "file_id": 2002,
+        "resource_id": 2001,
+        "name": "Entity Relationship Diagrams",
+        "type": "file",
+        "content": "Collection of hand-drawn and digital entity-relationship diagrams for various database scenarios, including a university management system, an e-commerce platform, and a hospital management system.",
+        "file_path": "/uploads/user3001/dbms201/er_diagrams.pdf",
+        "file_type": "application/pdf",
+        "file_size": 4096
+      },
+      {
+        "file_id": 2003,
+        "resource_id": 2002,
+        "name": "Basic SQL Queries",
+        "type": "text",
+        "content": "-- Basic SELECT queries\nSELECT * FROM students;\nSELECT first_name, last_name FROM students WHERE gpa > 3.5;\n\n-- JOIN examples\nSELECT c.course_name, i.instructor_name \nFROM courses c \nJOIN instructors i ON c.instructor_id = i.id;\n\n-- Aggregation functions\nSELECT department, AVG(gpa) as avg_gpa \nFROM students \nGROUP BY department \nHAVING AVG(gpa) > 3.0;\n\n-- Subqueries\nSELECT student_name \nFROM students \nWHERE student_id IN (SELECT student_id FROM enrollments WHERE course_id = 101);\n\n[More SQL queries and examples...]",
+        "file_type": "text/plain",
+        "file_size": 6144
+      },
+      {
+        "file_id": 2004,
+        "resource_id": 2002,
+        "name": "Advanced SQL Examples",
+        "type": "file",
+        "content": "SQL script containing advanced queries with nested subqueries, complex joins, window functions, and transaction management examples from class exercises.",
+        "file_path": "/uploads/user3001/dbms201/advanced_sql.sql",
+        "file_type": "text/x-sql",
+        "file_size": 7168
+      }
+    ]
+  }

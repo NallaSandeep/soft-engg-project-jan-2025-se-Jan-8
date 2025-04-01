@@ -1,0 +1,899 @@
+{
+    "course": {
+        "course_id": 3,
+        "code": "SE101",
+        "title": "Software Engineering",
+        "description": "A comprehensive course covering software engineering principles, processes, and best practices across the entire software development lifecycle, from requirements gathering to post-deployment maintenance. Emphasis is placed on practical applications, risk management, and modern software methodologies.",
+        "instructor_id": 1003,
+        "credits": 4,
+        "department": "Computer Science",
+        "image_url": "/assets/courses/se101/cover.jpg",
+        "prerequisites": ["Basic programming knowledge"],
+        "learning_outcomes": [
+            "Understand the Software Development Lifecycle (SDLC) and its phases",
+            "Differentiate between plan-driven and Agile methodologies",
+            "Analyze and document software requirements using SRS",
+            "Apply software design principles and architectural patterns",
+            "Develop effective project estimation and scheduling techniques",
+            "Implement software testing strategies at various levels",
+            "Manage risk, change, and version control in software projects",
+            "Ensure software quality and maintainability through best practices"
+        ],
+        "assessment_methods": ["Quizzes", "Assignments", "Project Work", "Final Exam"],
+        "delivery_mode": "Online",
+        "tools_and_technologies": ["UML", "JIRA", "Git", "Testing Frameworks"],
+        "LLM_Summary": {
+            "summary": "This course provides a comprehensive exploration of the Software Development Lifecycle (SDLC), covering the key phases: requirement gathering, system design, development, testing, deployment, and maintenance. It contrasts traditional plan-driven models (Waterfall, V-Model) with adaptive frameworks (Agile, Scrum), examining their strengths, limitations, and use cases. The course emphasizes practical applications such as documenting requirements using Software Requirements Specifications (SRS), creating design artifacts (UML diagrams, architectural blueprints), and implementing robust testing strategies (unit, integration, system, and user acceptance testing). Students learn about project estimation techniques, risk management strategies, and the importance of iterative feedback in modern agile development. Special focus is given to balancing documentation with flexibility, collaborating with stakeholders, and ensuring software quality through continuous testing and maintenance. By the end of the course, students will be equipped to design, manage, and deliver complex software systems while applying industry best practices.",
+            "concepts_covered": [
+                "Software development lifecycle phases (SDLC)",
+                "Plan-driven vs. Agile methodologies",
+                "Requirement gathering and specification (SRS creation)",
+                "Software design principles and architectural patterns",
+                "User interface and experience design best practices",
+                "Project estimation (Function Point, COCOMO models)",
+                "Scheduling techniques (Gantt charts, critical path method)",
+                "Risk identification, assessment, and mitigation strategies",
+                "Software testing methodologies (unit, integration, system, UAT)",
+                "Maintenance categories: corrective, adaptive, perfective, preventive",
+                "Change management and version control fundamentals",
+                "Software quality assurance (SQA) and code reviews",
+                "Ethical considerations and professional responsibility in software development"
+            ],
+            "concepts_not_covered": [
+                "Advanced programming techniques (e.g., multithreading, concurrency)",
+                "Specific implementation of DevOps and CI/CD pipelines",
+                "Cloud-native software development and microservices",
+                "Machine learning integration and AI-driven software engineering",
+                "Enterprise-level security frameworks (e.g., OWASP, ISO 27001)"
+            ]
+        }
+    },
+  
+    "weeks": [
+    {
+      "week_id": 1,
+      "course_id": 3,
+      "order": 1,
+      "title": "Week 1: Deconstructing the Software Development Process",
+      "estimated_hours": 25,
+      "LLM_Summary": {
+        "summary": "This week provides a comprehensive foundation in software engineering principles and methodologies. We begin by tracing the historical evolution of software development from ad-hoc coding to disciplined engineering practices. The curriculum covers both traditional (Waterfall) and modern (Agile) development methodologies in depth, examining their phases, documentation requirements, and suitability for different project types. Through case studies of large-scale systems like Amazon's platform, we explore component-based architecture, module integration patterns, and the critical role of development tools across the entire lifecycle. The week emphasizes practical application through hands-on exercises in process selection, requirements documentation, and system decomposition. Special attention is given to quality assurance practices, including test-driven development and continuous integration within different process models. The material prepares students to evaluate tradeoffs between predictability and flexibility when selecting development approaches for real-world projects.",
+        "concepts_covered": [
+          "Historical evolution of software engineering practices",
+          "Waterfall model phases and documentation requirements",
+          "Agile principles and iterative development cycles",
+          "Component-based system architecture",
+          "Module integration patterns and interface design",
+          "Development tools for requirements, coding, and testing",
+          "Test-driven development methodologies",
+          "Quality assurance in different process models",
+          "System decomposition techniques",
+          "Case study analysis of large-scale platforms"
+        ],
+        "concepts_not_covered": [
+          "Advanced DevOps toolchains and CI/CD pipelines",
+          "Microservices architecture patterns",
+          "Domain-driven design principles",
+          "Formal specification languages (Z, VDM)",
+          "Quantitative process improvement metrics (CMMI)"
+        ]
+      }
+    },
+    {
+      "week_id": 2,
+      "course_id": 3,
+      "order": 2,
+      "title": "Week 2: Software Requirements",
+      "estimated_hours": 25,
+      "LLM_Summary": {
+        "summary": "This week delves deeply into requirements engineering, covering both theoretical foundations and practical techniques. Students learn comprehensive methods for stakeholder identification and engagement, including advanced interview techniques, ethnographic observation, and requirements workshops. The curriculum contrasts functional requirements (system behaviors) with quality attributes (non-functional requirements), providing frameworks for specifying, prioritizing, and validating each type. Through hands-on exercises, students practice transforming vague stakeholder needs into precise, testable specifications using templates based on IEEE standards. Special attention is given to managing requirements volatility, tracing requirements through development, and handling conflicting stakeholder priorities. Real-world case studies demonstrate the consequences of poor requirements practices, while best practices for requirements change management in agile contexts are explored in depth. The week culminates in a comprehensive requirements specification project where students apply all learned techniques to a complex system scenario.",
+        "concepts_covered": [
+          "Stakeholder analysis and engagement strategies",
+          "Advanced elicitation techniques (interviews, observation, workshops)",
+          "Functional vs. non-functional requirements specification",
+          "Requirements prioritization methods (MoSCoW, Kano)",
+          "Software Requirements Specification (SRS) documentation",
+          "Requirements traceability matrices",
+          "Validation and verification techniques",
+          "Handling requirements conflicts and tradeoffs",
+          "Quality attributes specification (reliability, scalability, etc.)",
+          "Agile requirements management (user stories, backlog grooming)"
+        ],
+        "concepts_not_covered": [
+          "Natural language processing for requirements extraction",
+          "Goal-oriented requirements engineering (KAOS)",
+          "Formal requirements modeling (UML, SysML)",
+          "Requirements mining from legacy systems",
+          "AI-assisted requirements prioritization"
+        ]
+      }
+    },
+    {
+      "week_id": 3,
+      "course_id": 3,
+      "order": 3,
+      "title": "Week 3: Software User Interfaces",
+      "estimated_hours": 25,
+      "LLM_Summary": {
+        "summary": "This week provides a rigorous exploration of user-centered design principles and practices. Beginning with ISO 9241 usability standards, we examine the psychological foundations of human-computer interaction, including cognitive load theory and perception principles. The curriculum covers the full UI/UX design lifecycle from low-fidelity prototyping (paper, storyboards) to high-fidelity interactive mockups, with emphasis on iterative refinement through user testing. Accessibility guidelines (WCAG) and inclusive design patterns are integrated throughout all exercises. Students learn to apply design systems, evaluate information architecture, and create comprehensive style guides. Advanced topics include emotion-driven design, microinteractions, and performance optimization for responsive interfaces. Practical workshops focus on usability testing methodologies, heuristic evaluation, and analytics-driven design improvement. The week culminates in a capstone project where students design, prototype, and test a complete interface for a complex workflow, incorporating all learned principles.",
+        "concepts_covered": [
+          "ISO 9241 usability standards and metrics",
+          "Cognitive psychology principles in design",
+          "Accessibility guidelines (WCAG) implementation",
+          "Prototyping fidelity spectrum and tool selection",
+          "User testing methodologies (A/B, think-aloud)",
+          "Information architecture and navigation design",
+          "Visual hierarchy and perception principles",
+          "Design systems and component libraries",
+          "Emotion-driven design and microinteractions",
+          "Performance optimization for responsive UIs"
+        ],
+        "concepts_not_covered": [
+          "Advanced AR/VR interaction patterns",
+          "Voice user interface design principles",
+          "Neuromorphic computing interfaces",
+          "Eye-tracking based usability research",
+          "AI-powered adaptive interfaces"
+        ]
+      }
+    },
+    {
+      "week_id": 4,
+      "course_id": 3,
+      "order": 4,
+      "title": "Week 4: Software Project Management",
+      "estimated_hours": 25,
+      "LLM_Summary": {
+        "summary": "This week provides comprehensive coverage of modern software project management techniques, blending traditional and agile approaches. Students learn sophisticated estimation methods including COCOMO II, function point analysis, and planning poker, with exercises in calibrating estimates for different project contexts. The Scrum framework is examined in depth, including advanced topics like scaled agile (SAFe, LeSS) and hybrid approaches. Risk management techniques are practiced through simulated project scenarios, covering identification, assessment, and mitigation strategies. The curriculum emphasizes metrics-driven management with burn-down charts, cumulative flow diagrams, and earned value analysis. Through case studies of both successful and failed projects, students analyze the impact of leadership, communication, and stakeholder management. Special sessions cover distributed team coordination, technical debt management, and continuous improvement practices. The week culminates in a simulated project where students apply all concepts to plan, estimate, and track a complex software initiative, making adjustments based on simulated stakeholder feedback and changing requirements.",
+        "concepts_covered": [
+          "Software estimation models (COCOMO, function points)",
+          "Agile planning techniques (story points, velocity)",
+          "Scrum roles and ceremonies deep dive",
+          "Risk management frameworks",
+          "Project metrics and dashboarding",
+          "Distributed team coordination strategies",
+          "Technical debt identification and management",
+          "Stakeholder communication plans",
+          "Hybrid (agile-traditional) approaches",
+          "Continuous improvement practices"
+        ],
+        "concepts_not_covered": [
+          "AI-based project prediction models",
+          "Blockchain for project traceability",
+          "Quantitative team performance analytics",
+          "Cognitive load measurement in teams",
+          "Virtual reality project war rooms"
+        ]
+      }
+    }
+  ],
+  "lectures": [
+    {
+      "lecture_id": 1,
+      "week_id": 1,
+      "order": 1,
+      "title": "Deconstructing the Software Development Process",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=hKm_rh1RTJQ",
+      "content_transcript": "[Music] welcome to this course on software engineering we all know the importance of software today but we need to know how to build such systems and how such systems are built what do we have to do in terms of thinking about users how do we do the coding how do we do the testing and so on and so forth so this course is a primer to understanding how to design such software systems how to do some of the implementation and some aspects of the testing and so on so what are the expectations from you as a learner you are expected to put in at least six hours per week on the course so that you can get the maximum out of it and from our side we will ensure that there are activities and there are dialogues that happen throughout so that you do not feel that it is one long monolithic video that you are watching so what is software engineering so if you look at the history of software engineering it started off as an art so you had good programmers who wrote good code and you had bad programmers who did not write good code and over time the expertise of these good programmers they were documented over time which led to processes models and strategies for effective software development and thus the field of software engineering was born so in this course we will be looking at three important categories of topics so one is the software processes so what are different processes which are used in software development you will be learning about processes like the waterfall model the agile model and what are common practices in these models which are used in the industry a second category of topics is tools right so what are tools which software teams use to build software for example what tools are used to capture requirements how is software planning done how is development done how is testing done so throughout the course you will be learning about different tools which are used in the software development process and third we will also be talking about code we'll be talking about how you can organize your code what are best practices for writing clean and effective code this course has been created using a learner centric mooc model what does that mean it means that instead of simply having all the lectures in the beginning followed by all the assignments followed by the exams what we have tried to do is to interleave these in a way that is meaningful for you to maintain your engagement for example there might be a video in which there might be a pause where we ask you to think about something and maybe write down your thoughts so this pause is very important for learning and that is called the reflection spot similarly the videos might be short and immediately after the video we might want you to do some activity ok so these are learning by doing activities again which are very important for learning then there will be discussion forums in which we will post questions to focus your discussion so that you can have a focused discussion instead of a scattered one and finally there will be lot of resources which will cater to your exploration in the direction of your interest for example some people may be more interested in coding whereas some others may be more interested in how a software behaves actually in the field whereas the third set of people may be more interested in talking to users of the software another key aspect of this course is the course project and through this course project you will be able to go through the entire software development lifecycle so a software engineering course it can be very theoretical and the best way to get an understanding of what all you learn is to apply the processes the practices the tools in building an actual software so in each week you will have some intermediate milestones which you need to complete to progress towards the goal of building a software product so we hope you have a great time in this course and happy learning you [Music] we are all familiar with buying things on an online platform like amazon we are familiar with ordering things online and we are not surprised when the goods land up at our doorstep behind it there is a huge system which actually makes this happen so there is the vendor who is putting the things into the system there is a logistics person who is trying to handle ensure that the item reaches you in a timely manner and so on now how do you think this amazon system was built do you think it was built in one monolithic way so in most cases software is not built as a monolithic system but it is built incrementally one feature after the other and moreover often times we do not know at the start what all features are required to be implemented yes that is a good point so we incrementally build certain features into the application and the one the people who built amazon would have also done the same thing and even for building these features software teams have to ensure that they are divided into manageable components so components are a way of breaking the complexity of a system into manageable parts so that different teams can work on different components of the system and put everything together in a timely manner also everyone need not know the workings of all the components as long as i know that if i ask some response from a component and i know what sort of response it will give me that is sufficient for me to proceed with my work so the components can hide the complexity of the implementation and provide an interface to others who want to know what the component does now let us think about the components in the amazon system what do you think are some of the components can take a minute pause here think about what could the components in the amazon system be if you were the one of the developers of that system so i think one major component in the amazon system is of course their inventory management system so they keep track of their inventory in such an intelligent way so learners you might be wondering what do we actually mean by any by intelligent so let's think about what inventory management is so inventory management is the act of measuring the amount location pricing the mix of products available on amazon so when we go to the amazon home page we see that our inventory gets updated based on the current purchasing and seasonal trends and fluctuating customer demand and logistics and analytics also play a large part in inventory management so it is very interesting to see how my amazon home page could be very different from yours the reason being amazon customizes my home page based on my shopping and viewing history another component can be their payment gateway so the payment gateway is another component which offers ease of payment for both buyer and the seller so payment gateway is a service that authorizes the electronic payments like online banking debit cards cash cards etc so the payment gateway acts as a middleman between the bank and the merchant's website or application when a user wishes to make a payment the amazon website sends the encrypted card information to the payment gateway then the payment gateway confirms the validity of these details with the bank and the required amount of money gets transferred from the user's account to the amazon account so we looked at two components of the amazon system the inventory management and the payment gateway i am sure you can think of more components that makes up such a system so in this video we looked at components of a large system such as amazon and we looked a little more closely at two components the inventory management and the payment gateway the main thing that we have learnt is that nobody builds a system all at once for the entire functionality of the system so a system a large system is broken down into components and there are different teams that work on those different components each of these components now is called a module and they can be developed separately and integrated together later of course there is a lot of complexity in doing so because you need these modules to be able to talk to each other and so on and that we will see in the following videos you ",
+      "duration_minutes": 45,
+      "keywords": [
+        "software engineering",
+        "software processes",
+        "tools",
+        "inventory management",
+        "payment gateway",
+        "system components",
+        "module integration"
+      ]
+    },
+    {
+      "lecture_id": 2,
+      "week_id": 1,
+      "order": 2,
+      "title": "Software Development Lifecycle Models",
+      "resource_type": "pdf",
+      "resource_url": "https://drive.google.com/file/d/1PdFHpRJnJCQZe1uoBqjzA8tv2rTjmL-l/view?usp=sharing",
+      "content_extract": "Software engineering is a discipline that encompasses the design, development, testing, and maintenance of software systems. It involves breaking down complex systems into manageable components to ensure efficiency and reliability. For instance, large-scale platforms like Amazon are composed of various modules such as inventory management and payment gateways. Each component is designed to perform a specific function while integrating seamlessly with others. Inventory management involves updating stock based on real-time purchasing patterns and seasonal trends, while the payment gateway ensures secure financial transactions. Software engineering revolves around creating and maintaining these components systematically to meet client needs and achieve business goals. The first step in creating a software component is understanding the system's existing components and their interactions. Studying analogous systems, such as analyzing PayTM and PhonePe for payment solutions, provides insights into potential features and functionalities. This process is formalized through requirement specifications, which define the goals the software should achieve and ensure it aligns with client needs. Clients can be external, like customers using mobile banking applications, internal within the company, like an employee resource portal, or another software system, such as a payment gateway interfacing with an e-commerce platform. Identifying and understanding the target client is crucial in capturing the correct requirements. The software development process involves several phases: requirement specification, design, development, testing, and maintenance. The design phase provides a  'big picture 'view of the software, establishing its structure and how different components interact. This phase is critical because starting with direct coding without a design can cause integration issues and inconsistencies among developers. During the development phase, code is written based on the specified requirements and established design. Modern software development is often distributed, with multiple developers working on different components. Clear documentation and precise interface definitions are vital for seamless integration. Software testing is indispensable as it verifies that the software meets the defined requirements. Without rigorous testing, software defects can lead to substantial financial losses. For example, software errors cost the U.S. economy $59.5 billion in 2002 and escalated to $1.1 trillion by 2016. Effective testing identifies and mitigates these issues before they impact users. Various testing methodologies ensure comprehensive evaluation. Unit testing examines individual components, integration testing assesses their combined functionality, and acceptance testing verifies the system's alignment with user expectations. Alpha testing, conducted internally, aims to catch issues before public release, while beta testing involves real users in a live environment to identify problems under actual usage conditions. Maintenance is a continuous process that begins post-deployment. It involves monitoring user behavior, updating code for improvements, and adding new features based on evolving needs. This phase ensures the software remains functional, secure, and relevant over time. The software development lifecycle (SDLC) provides a structured approach to software creation, encompassing requirement specification, design, development, testing, and maintenance. Different development models offer various perspectives on how to approach these phases. The waterfall model is a sequential process where each phase must be completed before the next begins. Although straightforward, it has drawbacks such as increased costs and extended timelines if changes are needed later. Clients may not fully articulate their needs upfront, and designers might struggle to identify the most practical solution. Prototyping addresses these issues by creating a preliminary model to gather feedback. Although it helps clarify requirements and technical challenges, it can increase development costs and introduce bugs later. The spiral model adopts an iterative approach where software is incrementally built and refined based on feedback. Agile methodologies emerged to address the limitations of plan-driven models like waterfall. The Agile Manifesto emphasizes four core values: individuals and interactions over processes and tools, working software over comprehensive documentation, customer collaboration over contract negotiation, and responding to change over following a plan. Agile development emphasizes incremental progress through iterative cycles. Popular frameworks include Extreme Programming (XP), Scrum, and Kanban. Agile practices like user stories, sprints, and daily stand-ups facilitate continuous delivery and adaptability. Test-driven development (TDD) ensures code correctness by writing tests before implementing functionality. The choice between agile and plan-driven approaches depends on project characteristics. If precise specifications, regulatory compliance, or long product lifecycles are essential, plan-driven models are preferable. Conversely, agile methods are ideal for projects requiring flexibility, rapid feedback, and evolving requirements. Both perspectives have their place, and the optimal choice depends on the project's context and goals. Software engineering is an evolving discipline that integrates technical rigor with practical methodologies. By understanding the software development lifecycle, the importance of clear requirements, comprehensive testing, and effective maintenance, engineers can deliver robust and user-centric solutions. As technology advances, adopting best practices and adapting to new methodologies will remain essential for successful software development.",
+      "duration_minutes": 90,
+      "keywords": [
+        "SDLC",
+        "waterfall",
+        "prototype",
+        "spiral",
+        "plan-and-document",
+        "agile",
+        "testing methodologies",
+        "software maintenance"
+      ]
+    },
+    {
+      "lecture_id": 3,
+      "week_id": 2,
+      "order": 1,
+      "title": "Requirement Gathering and Analysis",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=L9-CUa0BlLk&t=55s",
+       "content_transcript": "foreign [Music] we looked at requirement Gathering and Analysis and we also looked at how we need to consider the primary secondary and tertiary users of a system now that we have identified these different types of users the question is now how do we gather or identify requirements from these users do we just talk to users or are there other ways to gather these requirements so let's reflect on this question for a moment and let's take the example of the Amazon Seller portal that we looked at in the previous video let's say that it's the early days of Amazon and you have been commissioned by Amazon to build this Amazon Seller portal so here are some of the users that we identified in the previous lectures so we have independent sellers we have a sales team or a sales manager of different companies we we have people from the advertising Department we have Logistics or shipping company managers of course we have buyers and we have Banks so the these are different users of the system so now the question is what are ways in which we can gather requirements from these different users for developing a seller port you can pause this video and think about these answers before proceeding so there are different requirement collection techniques and let's look at them one by one so one type of requirement collection technique is what is known as a questionnaire so questionnaire is nothing but a series of questions which are designed to elicit specific information from users and I'm sure most of you would be familiar with questionnaires as you would have filled such question as as part of you know different courses and the program as well and these questions can be of different types can be a simple yes or no question maybe you have to choose from a set of answers or it can be a longer response or a comment and questionnaires are good for getting answers to specific questions from a large group of people who are usually spread across a wide geographical area so for example you can send questionnaires to sales team managers of several mobile companies and you can ask them questions like you know what percentage of your inventory do you sell online or you know what are main difficulties you encounter in selling your product online so these answers to these specific questions can help us elicit requirements from different users and an important thing to note is that this should be used in conjunction with other techniques other requirement Gathering techniques which we'll see in the next slide so another important requirement Gathering technique is interviews right and interviews it involves asking someone a set of questions it is often face to face but it need not be we can use telephonic interviews or even online interviews to ask questions and interviews are broadly classified as structured unstructured or semi-structured interviews depending on how rigorously the interviewer sticks to a prepared set of questions so an interview can be structured which is nothing but a fixed set of questions and the interviewer asks those questions and elicit responses and in an in an unstructured interview the interviewer doesn't really know what type of questions to ask because they don't know what the user does or what exactly their needs are so in such cases we can ask users broad questions and based on their responses we can probe further into specific aspects so what are purposes of these interviews one is we it helps us get or understand issues which people have and it can be used early in the requirement Gathering process to elicit different scenarios so for example we can conduct interviews with independent Sellers and ask them you know what are different platforms which you use to sell your products this is a fairly open-ended question and they might give answers like we use WhatsApp Instagram and then we can probe them and ask you know what are disadvantages or advantages of these portals and they might say well I get customers you know it's easy to get customers but then tracking orders you know tracking payments tracking my inventory what are different selling options all of this is a huge overhead right so from from these questions we can elicit requirements which involve tracking orders you know tracking payments and all of these things so now we looked at interviews and one drawback of interviews is that it offers only one perspective and an alternative can be to get a group of stakeholders to discuss issues and requirements and the the advantages of using focus groups are one is it helps us gain consensus so if different groups of stakeholders if they highlight the same issue or the same concern then we know that this is a key requirement which we need to build into our system and this is also useful for highlighting areas of conflict or disagreement so different groups of people might not agree and this helps us get a nuanced understanding of the needs of different stakeholders so let's take an example from the Amazon Seller portal itself so we can conduct focus groups with you know different sales team Managers from different verticals and there might be different expectations from different Industries so for example a mobile sales team might be very interested in understanding what is the sales summary at the launch of a particular mobile whereas departments like furniture they might be more interested in the sales summary of the last 30 days so from such focus groups we can elicit requirements like such as the summary of the sales in the past X days or in a specific day so these are some requirements which can be elicited from focus groups so in the previous requirement Gathering techniques we looked at interviews focus groups in these techniques we are asking people questions but one thing to remember is that what people say is often different from what they do and it is very difficult for humans to actually explain what they do or describe accurately how they do a particular task so for example how do buyers buy online what are they looking for in a product this might not be very easy to articulate and hence an important technique which we can use is observe users right it involves spending time with stakeholders as they go about doing their day-to-day tasks and observing their work in their natural setting and this involves you know shadowing a stakeholder making notes occasionally asking them questions but primarily observing what they do so let's take the example of a seller the seller portal so one way in which we can gather requirements is to look at how people sell in physical shops so for example shopkeepers or customers they give recommendations the customer might ask the shopkeeper for a new product and or the shopkeeper might ask the customer to try a new product customer feedback is also very important the shop owner they appreciate feedback about a product which they sold to their custom so these can be translated into the online setting as well in the form of recommendations as well as getting timely customer feedback another type of requirement Gathering technique is documentation so there are places where you know which helps several procedures and rules for doing a particular task and these might be written down in manuals or documents or there might be steps which are involved in performing in an activity or there might be regulations which might be governing a task so in our case in case of a seller portal Bank regulations are an important requirement to consider so for example how can you add sellers bank accounts to your portal or how frequently can you deposit money to seller accounts what are practices of other online marketplaces all these can be gathered from different documents or different procedures and regulations so here's a summary of the requirement Gathering techniques which we saw till now so we looked at question as interviews focus groups observations and documentations and each of them serve a specific purpose for example questionnaires are good for answering specific questions and interviews are good for exploring issues and for which we do not really have the answers for focus groups are important for collecting multiple viewpoints and observations are good for understanding the context in which a user performs a particular task and then we looked at documentation which involves procedures regulations and standards so we looked at several requirement Gathering techniques and using thought experiments on how we can gather requirements we were able to identify several requirements for the Amazon seller put for example we understood that a catalog and inventory are necessary and it is essential for us to track different things like orders payments the sales as well as customer feedback so to conclude let us look at some basic requirement Gathering guidelines so first we need to focus on identifying stakeholders needs and we need to involve all the stakeholder groups the primary secondary as well as the tertiary users because each of these types of users have different needs and requirements and it is advisable to use a combination of different requirement Gathering techniques mainly because different techniques have different purposes and we need to use them according to our needs another important point to consider is to run a pilot session if possible to ensure that your data Gathering session is likely to go as planned many a times especially for questionnaires you might miss out on a particular question you might have wrong options might be having missing options so it is difficult to go back and ask users to fill the survey again and hence it's important to test your Gathering techniques before you actually go about and gather requirements and finally data Gathering is expensive and it is time consuming because you have to talk to different types of users and once you get their responses you need to analyze them and all of this is a time consuming and effort consuming activity and hence often at times we have to be pragmatic and we have to make certain complexes ",
+      "duration_minutes": 50,
+      "keywords": [
+        "requirements",
+        "stakeholders",
+        "interviews",
+        "questionnaires",
+        "observation",
+        "focus groups",
+        "documentation"
+      ]
+    },
+    {
+      "lecture_id": 4,
+      "week_id": 2,
+      "order": 2,
+      "title": "Functional vs Non-Functional Requirements",
+      "resource_type": "pdf",
+      "resource_url": "https://drive.google.com/file/d/1yAeY5yy8ha_1UpPPr_XnF_taoegdMotj/view?usp=sharing",
+      "content_extract": "Software engineering is a structured approach to designing, developing, testing, deploying, and maintaining software systems that meet specified requirements with efficiency and reliability. It is not merely about coding but involves applying engineering principles to ensure the delivery of robust, scalable, and maintainable software. This discipline emphasizes systematic processes that guide the entire software lifecycle from initial conception to decommissioning. At the core of software engineering lies the software development life cycle (SDLC), which typically includes phases such as requirement gathering and analysis, system design, implementation, testing, deployment, and maintenance. Each phase of the SDLC has specific goals and deliverables that ensure the progressive refinement of software, reducing errors and improving quality. Among the popular SDLC models, the Waterfall model follows a linear sequential flow where each phase must be completed before moving to the next. It is simple to implement but lacks flexibility for changing requirements. On the other hand, the Agile model embraces iterative and incremental development, promoting customer collaboration and rapid delivery of functional software through sprints. Agile methodologies like Scrum and Kanban enhance adaptability by enabling continuous feedback and improvement cycles. Another widely adopted model is the Spiral model, which combines iterative development with risk analysis, making it suitable for complex and high-risk projects. The software engineering process encompasses critical aspects such as requirements engineering, where both functional and non-functional requirements are elicited, documented, and validated. Functional requirements define what the system should do, including specific behaviors and outputs, while non-functional requirements address performance, security, usability, and other quality attributes. Effective requirements gathering involves engaging stakeholders through interviews, surveys, and use-case analysis to capture both explicit needs and implicit expectations. Design is another crucial phase where architectural decisions shape the system’s structure and behavior. Architectural patterns such as the Model-View-Controller (MVC) separate concerns, enhancing maintainability and scalability. System design considers both high-level architecture and detailed design, specifying modules, interfaces, data flow, and algorithms. Design principles like modularity, cohesion, and coupling play a vital role in building systems that are easier to extend and maintain. Object-oriented design (OOD) principles, including encapsulation, inheritance, and polymorphism, foster code reusability and abstraction. Implementation involves converting design artifacts into executable code using programming languages that align with system requirements. Best practices in coding include following style guides, writing modular code, and adopting design patterns that solve common problems efficiently. Testing ensures the correctness and quality of software through various levels such as unit testing, integration testing, system testing, and acceptance testing. Each level verifies different aspects, from individual components to the system as a whole. Automated testing frameworks facilitate consistent and repeatable tests, improving software reliability. Techniques like test-driven development (TDD) enforce writing tests before implementation, leading to better-designed code with fewer defects. Software deployment involves delivering the completed system to users through release management practices that may include continuous integration and continuous deployment (CI/CD). Maintenance is the longest phase of the SDLC, addressing bug fixes, performance enhancements, and adapting to evolving user needs. Software quality attributes encompass correctness, reliability, efficiency, maintainability, and usability. Ensuring these attributes requires rigorous validation and verification processes. Verification confirms that the system is built correctly according to specifications, while validation ensures the system meets user needs. Metrics and measurement in software engineering provide quantitative insights into project progress, code complexity, defect density, and other performance indicators. Key metrics include lines of code (LOC), cyclomatic complexity, mean time to failure (MTTF), and defect removal efficiency (DRE). Software project management involves planning, scheduling, resource allocation, risk management, and monitoring progress. Methodologies like the Critical Path Method (CPM) and Program Evaluation Review Technique (PERT) help in identifying task dependencies and optimizing project timelines. Risk management identifies potential issues, assesses their impact, and implements mitigation strategies to minimize project disruptions. Configuration management tracks and controls changes to software artifacts, ensuring consistency across versions. Version control systems like Git support collaborative development by maintaining a history of changes and facilitating code reviews. Software engineering also emphasizes ethical considerations such as user privacy, intellectual property, and responsible AI practices. The IEEE Code of Ethics outlines professional responsibilities to act in the public interest, maintain integrity, and continuously improve technical competence. Emerging trends in software engineering include DevOps, which bridges development and operations to accelerate delivery and improve system reliability through automation and monitoring. Microservices architecture decomposes large applications into independent services, enhancing scalability and fault isolation. Cloud computing provides on-demand resources for hosting and scaling applications, while edge computing processes data closer to users to reduce latency. Artificial intelligence (AI) and machine learning (ML) are transforming software systems with intelligent automation and data-driven insights. Software engineering continues to evolve, integrating new paradigms and tools to address the increasing complexity and scale of modern software systems. By adhering to systematic processes and best practices, software engineers deliver solutions that are not only functional but also sustainable and adaptable to future needs.",
+      "duration_minutes": 55,
+      "keywords": [
+        "SRS",
+        "functional",
+        "non-functional",
+        "reliability",
+        "robustness",
+        "usability",
+        "scalability",
+        "performance",
+        "requirement engineering"
+      ]
+    },
+    {
+      "lecture_id": 5,
+      "week_id": 3,
+      "order": 1,
+      "title": "Usability Principles in UI Design",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=BOCF3RefE54&t=1s",
+      "content_transcript": "foreign [Music] the previous week we looked at how we can gather and analyze requirements and we also looked at how we can create user stories which can help us understand what different users want to do within a software product which is of value to them and if you have noticed most of the user stories require you to create a user interface or a UI which implements that feature and this interface acts as the interaction point between the user and the system so the next step is to create such user interfaces like web pages which contain elements like buttons text field navigation Etc which realize these user stories and requirements and although this seems very straightforward there are principles and guidelines to create effective user interfaces and that will be the focus for this week and all of us interact with hundreds of such interfaces every day the apps that we use the websites we browse the software programs we work with and even physical objects in our day-to-day lives so ordinary objects that we use every day have undergone several rounds of discussion and deliberation to come up with the final design and this picture is shows how much discussions and deliberations are needed to come up with an effective user interface now let's discuss about websites and you know mobile app interfaces do we need to place so much emphasis about what is shown where it's shown how it can be accessed and so on if you think about it the form of your product is what the user sees first and then only comes the functionality of your product so if the form of the product or the interface as they say if that is not appealing enough or intuitive enough then its either going to be rejected by the users or they are going to find it extremely cumbersome to use so the key idea here is to give the user a good experience while using your software so the software should be easy to use it should be easy to learn it should not be confusing and so on we will learn about all this in the upcoming videos there are certain guidelines we should follow to design these websites and apps okay so now let us think about the different websites that you have been to some which have been excellent and some which you have really not liked and think about what are these experiences that frustrate a user will pause here can write a few of your ideas and then proceed so here's an example of a website and I'm sure if you go to it it will leave you frustrated right so looking at this image you can see that the layout is cluttered there is no hierarchy there is no navigation you know the typography is very poor there is random use of colors so all of these are things which can frustrate users of course this is a very extreme example not all websites are like this in addition to this other factors such as slow load time there are too many ads if the color scheme is inconsistent these can also frustrate users so we now understood that we need to take care of Designing the UI as well in software companies there are specific job profiles which look at the user interface aspects so companies have specific roles such as interaction designers user experience and user interface Developers that look at these aspects and this broad field of Designing effective user interfaces is known as interaction design by interaction design we mean designing interactive products to support people in their everyday working lives to summarize the activities involved in interaction design are identify the needs and requirements developing alternative designs that meet those requirements build interactive versions and evaluate which of these designs are actually useful usable for the user now this looks very similar to the agile process that we talked about earlier there are a lot of similarities the reason is that both of these keep the user at the center or at the focus of creating the product going on we also talked about Gathering of requirements analysis of requirements from the various stakeholders now that we have done that the next step for us is to develop alternate designs that can satisfy these requirements then evaluate them before we jump into implementing the software now how do we go about developing these alternate designs there are various techniques such as storyboarding paper prototyping and so on in the next videos we will see some of these techniques and we will also do some Hands-On activities along these lines [Music] in the previous led we looked at the importance of designing good user interfaces the user interface should realize the requirements provided by the user but it is also important that the interface is usable in this video we will be looking at what are certain goals and principles required to design usable interfaces so what does usability mean usability is an iso standard and it is defined as the extent to which a product can be used by specified users to achieve specified goals and the following are the key usability goals such as effectiveness efficiency safe to use learnability and memorability we will look at each one in detail the first usability goal is effectiveness and this is a general goal which describes how good a system is at doing what it is supposed to do so is the system capable of let's say allowing people to learn well if it's a learning system or helps people carry out their work efficiently access the information they need buy the goods they want etc and such effective systems are there all around us so let's look at some examples a common example of an effective user interface is google and i'm sure all of you have used google multiple times each day google has a minimal design and the and if you notice the main functionality which is the search is at the center amazon also has a very effective ui so all the necessary information is on a single page such as the cost when i get it get the product offers all of this is on a single page and there is no need to scroll as well now let's look at efficiency so efficiency is the way a system supports users in carrying out the tasks it lets users carry out common tasks through a minimal number of steps and let's say users have learned how to use a system can they sustain a high level of productivity using the system efficient user interfaces helps users do that for example let's say we want to buy a product at amazon so how many clicks are required to buy an item at amazon so you click on buy now first then you select a delivery address then you select the payment method and then finally you can buy that and if you notice amazon avoids repetitive tasks such as it helps us save the delivery address save the card details so that users users who come again and again can buy an item quickly the next usability goal is safety so there are two aspects to safety the first aspect is protecting the user from dangerous conditions and undesirable situations for example the user interfaces of x-ray machines chemical plants they should be safe for example therap-25 was a radiation therapy machine it was the first of its kind which had a dual treatment mode and it used software based safety systems rather than hardware controls however one day while treating a patient the operator pressed x for the x-ray mode instead of e for the electron mode and this led to excess radiation and the death of a patient however most of us won't be using or designing such safety critical systems and the second aspect of safety is helping users in any situation to avoid carrying out actions accident so these unwanted actions can be we press wrong keys by mistake or if we have made some errors we should provide means of recovery to users so let's reflect on this question so most of you have used several software applications so recall certain software applications that you use and are there ways in which these applications have helped you reduce the risk of wrong keys being pressed or it provided a means of recovery if you made errors please pause this video and write down your responses before proceed so the second aspect of safety is helping users in any situation to avoid carrying out unwanted actions so think about software applications which have reduced the risk of wrong keys being pressed most common example is when you use document systems if you notice the save button and the close button are far apart right and if we look at if let's say this we have made certain errors there are several applications which provide a means of recovery as well examples of this are let's say you accidentally deleted a file on windows or any operating system you can easily recover it from the trash let's say you are editing a document in word and the computer accidentally shut down when you open word the next time you are provided with recovery options control z or undo is a common feature in most office software and even in whatsapp if you send a message by mistake you can always delete the message the next usability goal is learnability learnability refers to how easy a system is to learn to use people usually don't like spending a long time learning how to use a system they want to get started right away and carry out tasks without much effort so common applications like facebook instagram whatsapp so did you read a manual to use these systems no right you learned on the go as you started using these systems so these are fine for simple systems but what about complex systems where you have to perform complex tasks so let's reflect on this for a moment so what are ways in which you can help users learn how to use a complex system please pause the video and write down your responses before proceed so there are several ways in which you can make your system more learnable one way is to use wizards wizards are a step-by-step process of achieving a task it breaks down a complex task into simpler tasks another way is to use a tool so tools on the web page can be used where there are lots of information of features on a single web page and the tool highlights important areas or features of the page for new learners next is templates so templates provide defaults or structure based on the specific type of task so let's say you want to make a resume the resume template can help you do or create resumes fast so in these cases you don't have to start from scratch but can use a template and start using the system another important usability goal is memorability memorability refers to how system how easy a system is to remember how to use once learned this is especially important for interactive systems that are used infrequently so let's say if users haven't used a system for a few months or even longer they should be able to remember how to use it so they shouldn't have to keep relearning how to carry out tasks a good example of memorables a memorable system is microsoft word so there are meaningful icons command names menu options all of these help users remember where to look to find a particular tool to a given stage of a task so the usability goals which we described earlier are central while designing interactive systems but apart from this based on the type of software we are building we also want to make the user experience positive emotions while using the software so these can include making them making the user interface satisfying enjoyable fun helpful etc and these are known as user experience goals so they are more subjective and they are concerned with how users experience and interact with the product from their perspective rather than assessing how useful or productive a system is from its own perspective so these goals also have to be kept in mind while building interactive software products so this diagram provides a good summary of what we discussed in this led we looked at usability goals such as effectiveness efficiency safety learnability and memorability and then we also looked at user experience goals which are subjective positive experiences that the user should have while interacting with the software so the next time you use a system that you really enjoy try to think about which usability and user experience goals were satisfied by the user interface and i hope that these usability goals and user experience goals will be useful for you as you go about designing user interfaces for your projects ",
+      "duration_minutes": 48,
+      "keywords": [
+        "usability",
+        "ISO 9241",
+        "effectiveness",
+        "efficiency",
+        "learnability",
+        "safety",
+        "memorability",
+        "interaction design",
+        "user experience"
+      ]
+    },
+    {
+      "lecture_id": 6,
+      "week_id": 3,
+      "order": 2,
+      "title": "Prototyping Techniques for UI Design",
+      "resource_type": "pdf",
+      "resource_url": "https://drive.google.com/file/d/1zpOLUk7uh570f1nvApmvQX1Q1QvSInO1/view?usp=sharing",
+      "content_extract": "Software engineering is a systematic, disciplined, and quantifiable approach to the development, operation, and maintenance of software. It involves applying engineering principles to software development to ensure reliability, maintainability, and scalability. Software engineering encompasses various stages of the software development lifecycle (SDLC), including requirement analysis, system design, implementation, testing, deployment, and maintenance. Each phase requires precise documentation, careful planning, and execution to ensure high-quality software that meets user expectations. The requirement analysis phase involves gathering, analyzing, and documenting the needs of stakeholders, ensuring the software aligns with business objectives. Functional and non-functional requirements are identified to provide a comprehensive understanding of what the software should do and how it should perform. This phase sets the foundation for the entire project, as unclear or incomplete requirements can lead to project failures. System design translates the requirements into a technical blueprint, outlining the software architecture, data flow, and component interactions. High-level design focuses on defining the system's architecture, while low-level design specifies individual modules and their implementation details. Design patterns, such as Model-View-Controller (MVC) and microservices architecture, are commonly used to enhance scalability and maintainability. During the implementation phase, developers write code based on the design specifications. This phase emphasizes code quality, maintainability, and adherence to coding standards. Version control systems like Git enable collaborative development, track changes, and facilitate code reviews. Code should be modular and reusable, following best practices to reduce technical debt and improve future maintainability. Testing is a critical phase that ensures the software meets requirements and functions correctly. Various testing methodologies, including unit testing, integration testing, system testing, and user acceptance testing (UAT), verify the software's functionality, performance, and security. Automated testing tools, such as Selenium and JUnit, streamline the process and improve test coverage. Continuous Integration and Continuous Deployment (CI/CD) pipelines automate testing and deployment, enabling rapid and reliable software delivery. Deployment involves releasing the software to production environments, where it becomes available to end-users. This phase requires careful planning to minimize downtime and ensure a smooth transition. Blue-green deployment and canary releases are strategies that mitigate risks during deployment. Post-deployment monitoring and logging help identify and resolve issues in real time, ensuring optimal performance and user satisfaction. Maintenance is an ongoing process that involves updating software to fix bugs, enhance features, and address changing user needs. Corrective maintenance fixes defects, adaptive maintenance updates the software for new environments, perfective maintenance improves performance, and preventive maintenance anticipates future issues. Effective maintenance practices extend the software's lifespan and ensure continued value delivery. Agile and DevOps methodologies have transformed software engineering by promoting collaboration, iterative development, and automation. Agile methodologies, such as Scrum and Kanban, prioritize customer feedback and deliver incremental improvements. DevOps integrates development and operations, fostering a culture of collaboration, automation, and continuous delivery. This approach accelerates software delivery, enhances quality, and reduces time to market. Software quality assurance (SQA) encompasses processes and standards that ensure software meets defined quality criteria. SQA involves process audits, code reviews, and adherence to industry standards like ISO/IEC 25010. Quality attributes, including reliability, usability, efficiency, and security, are evaluated to ensure the software meets stakeholder expectations. Software project management involves planning, executing, and controlling software development projects. It includes defining project scope, creating schedules, allocating resources, and managing risks. Project management methodologies, such as Waterfall, Agile, and Hybrid approaches, guide the project lifecycle. Effective project management ensures timely delivery, budget adherence, and alignment with business goals. Software engineering also addresses ethical considerations, including user privacy, security, and accessibility. Ethical practices ensure fair treatment of users, protection of sensitive data, and compliance with legal frameworks like the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA). Accessibility standards, such as the Web Content Accessibility Guidelines (WCAG), ensure inclusive software for users with disabilities. Emerging trends in software engineering include artificial intelligence (AI), machine learning (ML), and blockchain technology. AI and ML enhance software capabilities by enabling intelligent automation, natural language processing, and predictive analytics. Blockchain ensures secure, transparent transactions and is increasingly used in financial and supply chain applications. Cloud computing has revolutionized software deployment, offering scalable infrastructure and on-demand resources. Software-as-a-Service (SaaS) delivers applications over the internet, reducing the need for on-premises hardware and enabling rapid updates. Microservices and containerization, facilitated by Docker and Kubernetes, enable scalable, resilient software architectures. Software security is a paramount concern in software engineering, encompassing practices to protect systems from vulnerabilities and attacks. Secure coding practices, regular security assessments, and threat modeling mitigate risks. Encryption, authentication, and access control safeguard data integrity and confidentiality. Compliance with standards like the OWASP Top Ten ensures awareness and mitigation of common security threats. Software documentation is vital for understanding, maintaining, and improving software systems. It includes user manuals, API documentation, design documents, and code comments. Comprehensive documentation facilitates knowledge transfer, supports onboarding, and reduces system downtime. Software metrics measure various aspects of software development and performance. Process metrics track development efficiency, product metrics evaluate software quality, and project metrics assess timeline and budget adherence. Metrics-driven decision-making improves software quality and project outcomes. Software engineering education emphasizes core concepts, practical skills, and continuous learning. It includes programming languages, algorithms, data structures, software design, and testing methodologies. Industry certifications, workshops, and online courses provide ongoing professional development. Collaboration tools, such as Jira and GitHub, support software development by facilitating task tracking, code sharing, and team communication. Effective collaboration enhances productivity, reduces misunderstandings, and ensures alignment with project goals. Software engineering also involves addressing technical debt—the accumulated cost of shortcuts taken during development. Managing technical debt involves regular refactoring, code reviews, and adherence to best practices. Reducing technical debt improves system stability, performance, and long-term maintainability. In conclusion, software engineering is a multidisciplinary field that combines technical expertise, project management, and ethical considerations. It encompasses the entire software lifecycle, from requirements gathering to maintenance, ensuring the delivery of high-quality, user-centric software. Embracing modern methodologies, automation, and continuous learning is essential for staying competitive in the evolving software landscape.",
+      "duration_minutes": 52,
+      "keywords": [
+        "prototyping",
+        "storyboard",
+        "paper prototype",
+        "fidelity",
+        "iteration",
+        "user feedback",
+        "UI/UX",
+        "design evaluation"
+      ]
+    },
+    {
+      "lecture_id": 7,
+      "week_id": 4,
+      "order": 1,
+      "title": "Project Estimation Techniques",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=ziDmAaOrdkY",
+      "content_transcript": "foreign [Music] we looked at the practices involved in software project management right so what all are the important tasks that a software project manager does such as forming and managing the development team project scheduling project estimation risk management and so on so in this video we'll be talking about project estimation techniques so before we look at the actual techniques used for estimation let's reflect on why it is important to do project estimation so one is to establish the cost of the project right so I need to know how much money is required to build the software and this information has to be communicated to the clients second I also need to establish a schedule for the project right uh I need to know when the project is likely to get completed and as the project is moving along is it on schedule is it behind schedule how many people are required all these depend on the estimates of the project also from the client's perspective when they bid for software projects these cost and schedule estimates must be provided to the clients for the development contract and of course it is not possible to accurately establish or estimate the exact cost and the schedule and these estimates it depends on the level of information available about the project so the more detailed information we have about the project the more accurate the estimation can be so now let's reflect on this question on what all can be estimated in a project right so let's say you are running a company and you are bidding for software projects so what are the key parameters that you will provide an estimate for so what are the key parameters that are required to do project estimation you can pause this video and think about some parameters before proceeding so let's look at some key estimation parameters right so some of you might have thought about the size of the code that is the number of lines of code yes this is important to estimate the number of lines of code and the number of lines of code is usually represented as K log which is number of thousand lines of code so one k lock is thousand lines of code so this is one estimation parameter but if you think about it the size of the code alone cannot be provided to the clients right so especially to justify the cost so another key estimation parameter is effort right and this is also an important parameter and based on this we can determine how many people are required to form the team right and in the software industry effort is usually measured in terms of person month so one person month is the effort an individual can typically put in a month so let's take an example uh let's say a project it requires 12 percent months of development time right so we let's assume that we have estimated this quantity we will see how we can do this estimation but let's say we have got an estimate that this project requires 12 percent months of development time so what that means is if there are 12 people then this project and if all these 12 people work on this project for one month then this project can get completed right so if we have only four developers that means we this project will require three months and if we have just two developers then it will require six months so you might think it is better to think in terms of you know total hours how much hours does the entire project take but work is often expressed in person month units because it is easier to get a feel for how many people might be needed to finish the development work in a fixed time foreign so now that we have looked at some key estimation parameters let's look at project estimation techniques so one broad estimation technique is empirical estimation right and what this means is we ask experts we ask people who have completed similar projects in the past and they provide estimates for us for this new project another type of estimation technique is using heuristics right and what this means is relationships that exist between different parameters like we saw effort time these can be modeled using suitable mathematical expressions so we'll be looking at heuristic techniques also in this field so now let us look at some empirical estimation techniques right one popular empirical estimation technique is to use expert's judgment right so an expert if he or she makes an educated guess about the problem size after analyzing the problem thoroughly right they estimate the cost of different components in the system and then they combine all these estimate for the individual modules to arrive at the overall estimate so now that we have seen what expert judgment is what do you think are drawbacks of this method what are the drawbacks of asking an expert to give the estimates for the project you can pause this video and think about some drawbacks before proceeding okay so now let's look at some drawbacks of expert judgment right so one is these experts are humans and hence they can make errors they can have some individual biases towards a particular technology or a particular framework and hence because of this they might give some optimistic estimates based on their expertise and also maybe if they want the contract to be won then they might give even more optimistic estimates another drawback is that they might Overlook some factors right they might not have adequate knowledge in particular areas so for example they might be very knowledgeable in the database and the user interface part but they might lack knowledge about maybe additional modules or additional plugins and because of this they cannot accurately provide an estimation so but do you think this can be solved by a group of experts so yes maybe to an extent but still the entire group can also be biased right and the decision made by the group it may be dominated by some members who are overly assertive or maybe some senior members so they might influence the decision of the entire group so to overcome the drawbacks of expert judgment the Delphi technique can be used so what is a Delphi technique so in this technique we have a group of experts and we have a coordinator so the coordinator provides each expert with a copy of the SRS the requirements and a form for recording the cost estimates so the experts go through the requirements the SRS the different modules and then they provide their estimates and they submit their estimates to the coordinator note that each of these experts are submitting it individually they are not discussing with each other and what the coordinator does is the coordinator prepares a summary and distributes it to all the estimators to The Experts now the experts look at this summary and based on this they re-estimate uh based on all the comments from all the experts and note that these comments are still Anonymous experts do not know who has provided the estimation and this process is iterated over several rounds and the coordinator compiles the results and prepares the final estimate so as we saw there's no no discussion between the experts is allowed during the entire estimation process because some experts or some people can get influenced by an experienced or a senior estimate and after several rounds of iteration the coordinator takes responsibility of compiling all the results and prepares the final listing foreign type of project estimation techniques is known as heuristic techniques so in heuristic techniques we provide estimations by doing some modeling using some suitable mathematical expressions so a popular model which has been used to estimate effort is known as the constructive cost estimation model or the Cocomo model this model was proposed by bohem in 1981. and the formula which is used to estimate effort is effort is nothing but a multiplied by size raised to B where size is the size of the project in kilo lines of code and what are what is this A and B right so a the values of A and B it depends on the type of project or the type of software you are building so bohem he classified projects as one organic so an organic project involves building a very well understood application program and uh the size of the team is also small and all most of them are experienced another type of project can be a semi-detached project which has a mix of both experienced and inexperienced people and they might have some limited experience building related systems and the third type of project is an embedded project where it the project is strongly coupled with hardware and the team size also might be large and there might be many inexperienced people So based on the type of project there we assign different values for A and B and what you have seen is that the effort it not only depends on the size of the project but also the type of project the composition of the team is also an important factor in which the estimate depends on foreign empirical analysis of several projects Bowen came up with these values for a and b for each of the types of projects so you can see that the values of the constants of A and B they are based on the type of project right and for organic projects the values are the least it's 2.4 and 1.05 and it is highest for embedded projects and this makes sense because embedded projects as we saw it involves coupling with Hardware the team is large you know there might be many inexperienced people and because of this effort increases exponentially as the complexity of the project and the team increases So based on these constants the initial estimate or the nominal estimate is calculated in terms of the effort now let's take the example of the Amazon Seller portal and try to come up with the initial estimated effort to build such a system right the first thing which we need to identify is what type of system is this Amazon Seller portal right so according to me this is not a straightforward Software System there are several modules which have to interface with the main Amazon system with the banks for payment Etc so I would maybe classify it as a semi-detached system in some cases it can also be an embedded system right so now that we have identified what type of system it is now let us try to second thing to do is to estimate the number of lines of code so recall that we had identified some requirements in the previous weeks so we have adding editing deleting catalog the inventory tracking orders payments sales customer feedback so all of these things are there and for each of these modules I estimate the number of lines of code required so how how does one do it right so this itself is a very difficult task and usually the project manager looks at data from previous projects to come up with these estimates so for example in a previous project there would have been a module which captured customer feedback and based on that the software manager makes estimates for that module so I add up all the lines of codes for all the module and I get the total of 4000 lines of code which is nothing but four kilo lines of code so now let's look at uh the the estimations which we have till now we we know that the system is semi detached we have the size in kilo lines of code we plug these values in and we get the effort is roughly around 16 percent months or 15.83 percent months so what does this mean this is our initial estimate right so we require around 15.83 percent months that is around 16 people working full time can finish this project in one month and based on this we can estimate the cost right so let's say that the average salary of the 16 people is 75 000 per month so then the total cost comes up to around 12 lakhs so now apart from the size of the code you know we need to consider other factors also to estimate the effort required for a project right so let's reflect on this so what are the other factors which have to be considered to estimate the effort required for a project you can pause this video and think about some other factors before proceeding okay so apart from the size of the project so what other factors have to be considered let's look at that so some of you might have said about the people working in the project right some team members maybe experienced but not in the programming framework required for this project others may not have domain experience so in this case in the case of the Amazon Seller portal you know how an e-commerce application works and hence some time we'll go in learning about the domain so another Factor can be the technical attributes or the finer details about the product so is the database large is it complex how complicated is the entire product so is reliability an important part of the system so these factors also have to be considered when we estimate the effort and estimation also depends on the tools and practices which are used by the team right uh how if the practices and tools are not very effective then maybe more effort is required for the project so in the Kokomo model after determining this initial estimate some other factors are added in order to obtain the final estimate and these factors are known as cost drivers right so this table shows 15 such cost drivers and these attributes like the product computer attributes personal attributes these are similar to what we discussed earlier right like software reliability so if the reliability required is very high then we we have a higher cost driver compared to when it is very low Okay so let's look at our example so let's say we want to estimate the effort for the Amazon Seller portal uh let's look at some of these attributes so for example we want the system to be highly reliable because orders and money are involved right so we will choose a cost driver which is very high for reliability and maybe my database size it is also quite large so I will choose uh a cost driver which is high now if we look at some Personnel attributes uh let's say my application experience of my team is low right so I will choose this as 1.13 Which is higher than when if it is very high and let's say my team has good programming language experience so I rate it as high right so multiplying so the multiplying factor for all 15 cost drivers they are multiplied to get the effort adjustment Factor right so in this case I'm just taking four drivers for Simplicity so let's recall that our initial estimate was 15.83 percent month now I take these cost drivers multiply all of them together and this gives me the effort adjustment Factor which is 1.62 and now my final estimate is calculated by multiplying the initial estimate with this effort adjustment Factor and so I get an estimate final estimate of 25.65 percent months so to summarize the Kokomo model first we determine the type of product which has to be built then we estimate the number of lines of code for each module and based on the formula we get the initial estimate and from this initial estimate we calculate the effort adjustment Factor by considering the 15 cost drivers and then we multiply the initial estimate with this adjustment factors to get the overall estimate so if you look have if you have noticed one important thing to note is that the overall estimate it depends on the estimation of the lines of code for each module right and so it is important to get as much detail about the software and we should also be aware of our biases when estimating the size of various components so to summarize in this video we looked at several estimation techniques both empirical and heuristic and another question now to ask is which technique to use right for a particular project so what estimation techniques project managers use it depends on various factors like the type of organization the type of product which which is being built right and it depends on the practices in your organization as well so for example uh the British computer Society survey of more than thousand projects found that 92 percent of the project managers they made their estimates using experience instead of formulas so now that we have learned these estimation techniques you will encounter these or maybe some variations of these as you start working in the software industry ",
+      "duration_minutes": 55,
+      "keywords": [
+        "estimation",
+        "COCOMO",
+        "KLOC",
+        "person-month",
+        "Delphi",
+        "heuristic estimation",
+        "empirical estimation"
+      ]
+    },
+    {
+      "lecture_id": 8,
+      "week_id": 4,
+      "order": 2,
+      "title": "Agile Project Management with Scrum",
+      "resource_type": "pdf",
+      "resource_url": "https://drive.google.com/file/d/1v44rJSh3AKOFFue1nhVIIF8C2LHqVYYI/view?usp=sharing",
+      "content_extract": "Software engineering is a systematic and disciplined approach to the design, development, testing, deployment, and maintenance of software systems. It encompasses a variety of principles, methodologies, and practices aimed at ensuring software is delivered on time, within budget, and meets specified quality standards. Software engineering is distinguished from simple programming by its focus on large-scale systems, formal processes, and lifecycle management. At the core of software engineering lies the Software Development Life Cycle (SDLC), which is a structured process that guides the development of software through distinct phases including requirements gathering, system design, implementation, testing, deployment, and maintenance. Each phase is critical for ensuring that the final software product aligns with stakeholder needs and operates reliably in real-world conditions. Requirements gathering is the foundation of any software project, where business needs and user expectations are translated into detailed technical specifications. This process involves stakeholders such as clients, end-users, and development teams collaborating through interviews, surveys, and workshops to elicit both functional and non-functional requirements. Functional requirements specify what the system should do, such as processing transactions or managing user authentication, while non-functional requirements define how the system performs these tasks, including performance benchmarks, security measures, and scalability. Effective requirements gathering minimizes misunderstandings and rework, contributing to project success. System design follows the requirements phase, transforming collected requirements into a blueprint for implementation. This phase is divided into high-level and low-level design. High-level design outlines the overall system architecture, including major components, their relationships, and external interfaces. Low-level design delves into the specifics of each module, data structures, algorithms, and logic. Key design principles include modularity, which promotes separation of concerns and easier maintenance; abstraction, which hides implementation details to reduce complexity; and encapsulation, which protects data integrity by restricting direct access to internal states. Good design ensures the software is scalable, maintainable, and extensible. Implementation involves translating the design into source code using appropriate programming languages and tools. This phase adheres to best coding practices, including consistent naming conventions, meaningful comments, and modular structure. Code should be written to be both functional and readable, as future maintenance and enhancements depend on clear and understandable codebases. Modern development also employs version control systems like Git to track changes, facilitate collaboration, and ensure code integrity through branches and commits. Thorough code reviews play a vital role in identifying defects, enforcing standards, and improving overall code quality. Testing is an integral part of software engineering aimed at validating the correctness, performance, and security of the system. It encompasses multiple levels, including unit testing, integration testing, system testing, and acceptance testing. Unit testing focuses on individual components in isolation, verifying their functionality. Integration testing assesses how different modules work together, ensuring data flows correctly across interfaces. System testing evaluates the complete software against specified requirements, while acceptance testing confirms the product meets business needs and is ready for deployment. Automated testing frameworks, such as pytest for Python or JUnit for Java, enhance efficiency by executing tests rapidly and consistently. Deployment involves releasing the software to production environments where it becomes available to users. This process may follow continuous integration and continuous deployment (CI/CD) pipelines, which automate code testing, building, and deployment to reduce human error and speed up delivery. Deployment strategies include blue-green deployments, where two environments allow safe switching between new and old versions, and canary releases, where a new version is incrementally rolled out to a subset of users for monitoring before full release. Maintenance is the longest phase of the SDLC, focusing on supporting and enhancing the software after deployment. It involves corrective maintenance to fix defects, adaptive maintenance to ensure compatibility with changing environments, perfective maintenance to improve performance and usability, and preventive maintenance to address potential future issues. Effective maintenance requires comprehensive documentation and automated regression testing to validate changes without introducing new defects. Software engineering also emphasizes methodologies that guide the development process. The waterfall model is a linear, sequential approach ideal for projects with well-defined requirements. Agile methodologies, including Scrum and Kanban, prioritize iterative development, customer collaboration, and flexibility in response to changing needs. Scrum organizes work into time-boxed sprints, delivering incremental value through a product backlog and regular feedback. DevOps integrates development and operations to streamline delivery and improve collaboration through automated pipelines and infrastructure as code (IaC). Software quality assurance (SQA) encompasses activities that ensure software meets defined quality standards. It includes process audits, code inspections, and testing to detect and prevent defects. Metrics such as code coverage, defect density, and mean time to failure (MTTF) quantify software quality and guide continuous improvement. Design patterns provide reusable solutions to common design problems, enhancing code maintainability and scalability. Creational patterns, such as the Singleton and Factory Method, manage object creation. Structural patterns, like Adapter and Composite, organize relationships between entities. Behavioral patterns, including Observer and Strategy, facilitate communication between objects. Understanding these patterns allows engineers to apply proven approaches to complex problems. Modern software engineering also addresses challenges in scalability, performance, and security. Scalability ensures software can handle increasing workloads by optimizing algorithms and employing techniques like load balancing and caching. Performance optimization involves profiling code to identify bottlenecks and enhancing efficiency through parallelization and resource management. Security practices include input validation, encryption, and adherence to security frameworks like OWASP guidelines to mitigate vulnerabilities. Documentation remains a critical aspect of software engineering, ensuring knowledge transfer and facilitating future maintenance. It encompasses technical specifications, architectural diagrams, and user manuals. Clear documentation supports onboarding, troubleshooting, and compliance with industry standards. Emerging trends in software engineering include microservices architecture, which decomposes applications into independent services communicating via APIs. This approach enhances scalability, fault isolation, and technology heterogeneity. Cloud-native development leverages cloud platforms for scalability, elasticity, and global availability. Artificial intelligence and machine learning (AI/ML) are integrated into software for predictive analytics and automation. Ethical considerations in software engineering are increasingly important, emphasizing data privacy, transparency, and the mitigation of algorithmic bias. Engineers must balance innovation with ethical responsibilities, adhering to regulatory frameworks like GDPR and ensuring equitable outcomes. In conclusion, software engineering is a multifaceted discipline combining technical expertise, process management, and continuous improvement. Mastery of SDLC phases, design principles, testing strategies, and emerging methodologies equips engineers to deliver robust, efficient, and user-centered software solutions. As technology evolves, the ability to adapt to new paradigms and maintain a focus on quality and ethics remains central to successful software engineering practices.",
+      "duration_minutes": 60,
+      "keywords": [
+        "scrum",
+        "sprint",
+        "backlog",
+        "standup",
+        "velocity",
+        "retrospective",
+        "iteration",
+        "agile methodology"
+      ]
+    }
+  ],
+  
+    "questions": [
+        {
+        "question_id": 3001,
+        "content": "Which of the following is NOT a phase in the traditional Waterfall model?",
+        "type": "MCQ",
+        "question_options": [
+            "Requirements",
+            "Design",
+            "Implementation",
+            "Retrospective"
+        ],
+        "correct_answer": 3,
+        "points": 8,
+        "explanation": "Retrospective is an Agile practice, not part of the traditional Waterfall model phases.",
+        "course_id": 3,
+        "week_id": 1,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": ["SDLC", "Waterfall"]
+        },
+        {
+        "question_id": 3002,
+        "content": "Which Agile practices emphasize continuous improvement? Select all that apply.",
+        "type": "MSQ",
+        "question_options": [
+            "Sprint Retrospective",
+            "Daily Standup",
+            "Backlog Grooming",
+            "Pair Programming",
+            "Burndown Charts"
+        ],
+        "correct_answer": [0, 1],
+        "points": 10,
+        "explanation": "Sprint Retrospectives and Daily Standups focus on continuous improvement through regular reflection and adjustment.",
+        "course_id": 3,
+        "week_id": 1,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": ["Agile", "continuous improvement"]
+        },
+        {
+        "question_id": 3003,
+        "content": "Calculate the velocity of a team that completed 12 story points in Sprint 1, 15 in Sprint 2, and 13 in Sprint 3.",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 13,
+        "points": 8,
+        "explanation": "Velocity is calculated as the average of completed story points: (12+15+13)/3 = 13.33 (rounded to 13).",
+        "course_id": 3,
+        "week_id": 1,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": ["Agile", "velocity"]
+        },
+        {
+        "question_id": 3004,
+        "content": "Which requirement gathering technique is most effective for understanding user workflows?",
+        "type": "MCQ",
+        "question_options": [
+            "Questionnaires",
+            "Naturalistic Observation",
+            "Document Analysis",
+            "Focus Groups"
+        ],
+        "correct_answer": 1,
+        "points": 8,
+        "explanation": "Naturalistic Observation allows direct observation of users in their actual work environment.",
+        "course_id": 3,
+        "week_id": 2,
+        "lecture_id": 3,
+        "status": "active",
+        "tags": ["requirements", "gathering"]
+        },
+        {
+        "question_id": 3005,
+        "content": "What are characteristics of good user stories? Select all that apply.",
+        "type": "MSQ",
+        "question_options": [
+            "Independent",
+            "Negotiable",
+            "Valuable",
+            "Estimable",
+            "Small",
+            "Testable"
+        ],
+        "correct_answer": [0, 1, 2, 3, 4, 5],
+        "points": 12,
+        "explanation": "Good user stories follow the INVEST criteria: Independent, Negotiable, Valuable, Estimable, Small, and Testable.",
+        "course_id": 3,
+        "week_id": 2,
+        "lecture_id": 4,
+        "status": "active",
+        "tags": ["user stories", "Agile"]
+        },
+        {
+        "question_id": 3006,
+        "content": "How many actors would a typical ATM system use case diagram have?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 2,
+        "points": 8,
+        "explanation": "A basic ATM system typically has 2 actors: Customer and Bank (or Maintenance Personnel).",
+        "course_id": 3,
+        "week_id": 2,
+        "lecture_id": 4,
+        "status": "active",
+        "tags": ["use cases", "UML"]
+        },
+        {
+        "question_id": 3007,
+        "content": "Which of the following is an example of a non-functional requirement?",
+        "type": "MCQ",
+        "question_options": [
+            "User can search products by name",
+            "System must support 1000 concurrent users",
+            "Admin can view sales reports",
+            "Customer can add items to cart"
+        ],
+        "correct_answer": 1,
+        "points": 8,
+        "explanation": "Supporting concurrent users is a non-functional requirement about system performance.",
+        "course_id": 3,
+        "week_id": 2,
+        "lecture_id": 4,
+        "status": "active",
+        "tags": ["requirements", "non-functional"]
+        },
+        {
+        "question_id": 3008,
+        "content": "Which SDLC model would be most appropriate for a project with unclear requirements?",
+        "type": "MCQ",
+        "question_options": [
+            "Waterfall",
+            "Spiral",
+            "Prototype",
+            "V-Model"
+        ],
+        "correct_answer": 2,
+        "points": 10,
+        "explanation": "Prototype model is ideal when requirements are unclear as it allows for iterative refinement.",
+        "course_id": 3,
+        "week_id": 1,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": ["SDLC", "models"]
+        },
+        {
+        "question_id": 3009,
+        "content": "What percentage of Agile teams typically use Scrum according to recent surveys?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 58,
+        "points": 8,
+        "explanation": "Recent surveys show approximately 58% of Agile teams use Scrum as their primary methodology.",
+        "course_id": 3,
+        "week_id": 1,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": ["Agile", "Scrum"]
+        },
+        {
+        "question_id": 3010,
+        "content": "Which elements should be included in a use case description? Select all that apply.",
+        "type": "MSQ",
+        "question_options": [
+            "Preconditions",
+            "Main Flow",
+            "Alternative Flows",
+            "Postconditions",
+            "Exceptions"
+        ],
+        "correct_answer": [0, 1, 2, 3, 4],
+        "points": 12,
+        "explanation": "A complete use case description includes all these elements to fully capture the scenario.",
+        "course_id": 3,
+        "week_id": 2,
+        "lecture_id": 4,
+        "status": "active",
+        "tags": ["use cases", "requirements"]
+        },
+        {
+        "question_id": 3011,
+        "content": "Which architectural pattern separates an application into Model, View, and Controller components?",
+        "type": "MCQ",
+        "question_options": [
+            "MVC",
+            "Layered",
+            "Microservices",
+            "Event-Driven"
+        ],
+        "correct_answer": 0,
+        "points": 15,
+        "explanation": "MVC (Model-View-Controller) is the pattern that separates these concerns.",
+        "course_id": 3,
+        "week_id": 3,
+        "lecture_id": 5,
+        "status": "active",
+        "tags": ["architecture", "design patterns"]
+        },
+        {
+        "question_id": 3012,
+        "content": "Which design pattern ensures only one instance of a class exists?",
+        "type": "MCQ",
+        "question_options": [
+            "Singleton",
+            "Factory",
+            "Observer",
+            "Decorator"
+        ],
+        "correct_answer": 0,
+        "points": 15,
+        "explanation": "The Singleton pattern restricts instantiation to a single object instance.",
+        "course_id": 3,
+        "week_id": 3,
+        "lecture_id": 5,
+        "status": "active",
+        "tags": ["design patterns"]
+        },
+        {
+        "question_id": 3013,
+        "content": "How many relationships are shown in a basic Class Diagram for a simple e-commerce system?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 4,
+        "points": 15,
+        "explanation": "A basic e-commerce Class Diagram typically shows 4 core relationships: Customer-Order, Order-Product, Product-Category, and Customer-Payment.",
+        "course_id": 3,
+        "week_id": 3,
+        "lecture_id": 6,
+        "status": "active",
+        "tags": ["UML", "class diagram"]
+        },
+        {
+        "question_id": 3014,
+        "content": "Which SOLID principle states that a class should have only one reason to change?",
+        "type": "MCQ",
+        "question_options": [
+            "Single Responsibility",
+            "Open-Closed",
+            "Liskov Substitution",
+            "Interface Segregation"
+        ],
+        "correct_answer": 0,
+        "points": 15,
+        "explanation": "Single Responsibility Principle (SRP) states that a class should have only one responsibility.",
+        "course_id": 3,
+        "week_id": 3,
+        "lecture_id": 6,
+        "status": "active",
+        "tags": ["SOLID", "OOP"]
+        },
+        {
+        "question_id": 3015,
+        "content": "Which testing levels verify interactions between integrated components? Select all that apply.",
+        "type": "MSQ",
+        "question_options": [
+            "Unit Testing",
+            "Integration Testing",
+            "System Testing",
+            "Acceptance Testing"
+        ],
+        "correct_answer": [1],
+        "points": 12,
+        "explanation": "Integration Testing specifically focuses on verifying interactions between components.",
+        "course_id": 3,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["testing", "integration"]
+        },
+        {
+        "question_id": 3016,
+        "content": "What is the minimum number of test cases required for 100% branch coverage of a simple if-else statement?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 2,
+        "points": 15,
+        "explanation": "You need at least 2 test cases: one for the true branch and one for the false branch.",
+        "course_id": 3,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["testing", "coverage"]
+        },
+        {
+        "question_id": 3017,
+        "content": "Which quality attribute measures how easily a system can handle increased workload?",
+        "type": "MCQ",
+        "question_options": [
+            "Reliability",
+            "Scalability",
+            "Maintainability",
+            "Security"
+        ],
+        "correct_answer": 1,
+        "points": 15,
+        "explanation": "Scalability refers to a system's ability to handle growth in workload.",
+        "course_id": 3,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["quality attributes"]
+        },
+        {
+        "question_id": 3018,
+        "content": "Which UML diagram best shows object interactions in a specific scenario?",
+        "type": "MCQ",
+        "question_options": [
+            "Class Diagram",
+            "Sequence Diagram",
+            "Component Diagram",
+            "Deployment Diagram"
+        ],
+        "correct_answer": 1,
+        "points": 15,
+        "explanation": "Sequence Diagrams specifically show object interactions over time.",
+        "course_id": 3,
+        "week_id": 3,
+        "lecture_id": 6,
+        "status": "active",
+        "tags": ["UML", "diagrams"]
+        },
+        {
+        "question_id": 3019,
+        "content": "Which patterns are creational design patterns? Select all that apply.",
+        "type": "MSQ",
+        "question_options": [
+            "Singleton",
+            "Adapter",
+            "Factory Method",
+            "Observer",
+            "Builder"
+        ],
+        "correct_answer": [0, 2, 4],
+        "points": 12,
+        "explanation": "Singleton, Factory Method, and Builder are creational patterns. Adapter is structural, and Observer is behavioral.",
+        "course_id": 3,
+        "week_id": 3,
+        "lecture_id": 5,
+        "status": "active",
+        "tags": ["design patterns", "creational"]
+        },
+        {
+        "question_id": 3020,
+        "content": "How many test cases are needed for pairwise testing of 3 parameters with 2 values each?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 4,
+        "points": 15,
+        "explanation": "Pairwise testing for 3 binary parameters requires 4 test cases to cover all pairs.",
+        "course_id": 3,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["testing", "combinatorial"]
+        },
+        {
+        "question_id": 3021,
+        "content": "Which architectural style is most suitable for a highly scalable web application?",
+        "type": "MCQ",
+        "question_options": [
+            "Monolithic",
+            "Microservices",
+            "Client-Server",
+            "Peer-to-Peer"
+        ],
+        "correct_answer": 1,
+        "points": 15,
+        "explanation": "Microservices architecture provides the best scalability for web applications.",
+        "course_id": 3,
+        "week_id": 3,
+        "lecture_id": 5,
+        "status": "active",
+        "tags": ["architecture", "scalability"]
+        },
+        {
+        "question_id": 3022,
+        "content": "Which principles contribute to maintainable code? Select all that apply.",
+        "type": "MSQ",
+        "question_options": [
+            "Low Coupling",
+            "High Cohesion",
+            "Code Duplication",
+            "Magic Numbers",
+            "Clear Naming"
+        ],
+        "correct_answer": [0, 1, 4],
+        "points": 12,
+        "explanation": "Low Coupling, High Cohesion, and Clear Naming all contribute to maintainable code.",
+        "course_id": 3,
+        "week_id": 3,
+        "lecture_id": 6,
+        "status": "active",
+        "tags": ["maintainability", "OOP"]
+        },
+        {
+        "question_id": 3023,
+        "content": "What percentage of defects are typically found during unit testing according to industry studies?",
+        "type": "NUMERIC",
+        "question_options": [],
+        "correct_answer": 25,
+        "points": 15,
+        "explanation": "Industry studies show about 25% of defects are caught during unit testing.",
+        "course_id": 3,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["testing", "defects"]
+        },
+        {
+        "question_id": 3024,
+        "content": "Which testing technique is most effective for finding security vulnerabilities?",
+        "type": "MCQ",
+        "question_options": [
+            "Unit Testing",
+            "Penetration Testing",
+            "Regression Testing",
+            "Usability Testing"
+        ],
+        "correct_answer": 1,
+        "points": 15,
+        "explanation": "Penetration Testing specifically targets security vulnerabilities.",
+        "course_id": 3,
+        "week_id": 4,
+        "lecture_id": 7,
+        "status": "active",
+        "tags": ["testing", "security"]
+        },
+        {
+        "question_id": 3025,
+        "content": "Which quality attributes are most important for a banking system? Select all that apply.",
+        "type": "MSQ",
+        "question_options": [
+            "Security",
+            "Performance",
+            "Reliability",
+            "Scalability",
+            "Modifiability"
+        ],
+        "correct_answer": [0, 1, 2],
+        "points": 12,
+        "explanation": "Security, Performance, and Reliability are critical for banking systems.",
+        "course_id": 3,
+        "week_id": 4,
+        "lecture_id": 8,
+        "status": "active",
+        "tags": ["quality attributes", "banking"]
+        }
+    ],
+    "assignments": [
+        {
+        "assignment_id": 3001,
+        "week_id": 1,
+        "title": "SDLC and Agile Fundamentals",
+        "description": "Practice questions on software development life cycles and Agile methodologies",
+        "type": "practice",
+        "due_date": "2025-05-10",
+        "start_date": "2025-05-03",
+        "is_published": true,
+        "question_ids": [3001, 3002, 3003, 3008, 3009]
+        },
+        {
+        "assignment_id": 3002,
+        "week_id": 2,
+        "title": "Requirements and User Stories",
+        "description": "Practice identifying and documenting requirements and creating effective user stories",
+        "type": "practice",
+        "due_date": "2025-05-17",
+        "start_date": "2025-05-10",
+        "is_published": true,
+        "question_ids": [3004, 3005, 3006, 3007, 3010]
+        },
+        {
+        "assignment_id": 3003,
+        "week_id": 2,
+        "title": "Use Cases and Requirements Analysis",
+        "description": "Practice creating use case diagrams and analyzing functional/non-functional requirements",
+        "type": "practice",
+        "due_date": "2025-05-24",
+        "start_date": "2025-05-17",
+        "is_published": true,
+        "question_ids": [3006, 3007, 3010, 3004, 3005]
+        },
+        {
+        "assignment_id": 3004,
+        "week_id": 3,
+        "title": "Software Architecture and Design",
+        "description": "Graded assignment on architectural patterns, design patterns, and OOP principles",
+        "type": "graded",
+        "due_date": "2025-05-31",
+        "start_date": "2025-05-24",
+        "is_published": true,
+        "question_ids": [3011, 3012, 3014, 3018, 3019, 3021, 3022]
+        },
+        {
+        "assignment_id": 3005,
+        "week_id": 4,
+        "title": "Software Quality and Testing",
+        "description": "Graded assignment on testing techniques and software quality attributes",
+        "type": "graded",
+        "due_date": "2025-06-07",
+        "start_date": "2025-05-31",
+        "is_published": true,
+        "question_ids": [3015, 3016, 3017, 3020, 3023, 3024, 3025]
+        }
+    ],
+  
+    "personal_resources": [
+        {
+            "resource_id": 1,
+            "name": "SE Process Notes",
+            "description": "Extensive personal notes covering a range of software development models, their methodologies, strengths, limitations, and real-world applications.",
+            "course_id": 3,
+            "user_id": 2001,
+            "is_active": true,
+            "LLM_Summary": {
+            "summary": "In-depth notes on software development processes, detailing the phases, characteristics, and comparative analysis of key SDLC models, including real-world applicability and practical implications.",
+            "concepts_covered": [
+                "Waterfall model phases and their sequential nature",
+                "Prototype model benefits with iterative refinement and risk mitigation",
+                "Spiral model characteristics combining iterative development with risk analysis",
+                "Agile principles emphasizing flexibility, collaboration, and incremental delivery",
+                "Testing methodologies: Unit, Integration, System, and User Acceptance Testing",
+                "Requirement gathering and documentation best practices",
+                "Maintenance phases: corrective, adaptive, perfective, and preventive maintenance"
+            ],
+            "concepts_not_covered": [
+                "In-depth tool-specific implementation (e.g., JIRA, Git workflows)",
+                "Industry-specific case studies and real-world project comparisons",
+                "Scalability concerns in large-scale software development",
+                "Advanced SDLC hybrid models (e.g., DevOps and Scrumban)"
+            ]
+            }
+        }
+        ],
+
+        "personal_resource_files": [
+        {
+            "file_id": 1,
+            "resource_id": 1,
+            "name": "Week 1-2 Notes",
+            "type": "text",
+            "content": "# Software Engineering Notes\n\n## Development Models\n\n### 1. Waterfall Model\n- **Phases**: Requirements → Design → Implementation → Testing → Maintenance\n- **Key Features**: Sequential, phase-dependent approach\n- **Advantages**: Clear structure, well-suited for projects with well-defined requirements\n- **Limitations**: Inflexible to changes, late-stage error discovery\n\n### 2. Prototype Model\n- **Process**: Develop prototype → Gather feedback → Refine\n- **Key Features**: Emphasizes early user involvement and iterative feedback\n- **Advantages**: Reduced risk of requirement misunderstandings, rapid feedback loop\n- **Limitations**: Potential for scope creep, increased time if many iterations\n\n### 3. Spiral Model\n- **Phases**: Planning → Risk Analysis → Engineering → Evaluation (iterates)\n- **Key Features**: Risk-driven, integrates iterative and waterfall aspects\n- **Advantages**: Risk reduction, better for complex and evolving systems\n- **Limitations**: Expensive, complex management required\n\n### 4. Agile Model\n- **Principles**: Customer collaboration, incremental delivery, responsiveness to change\n- **Key Features**: Iterative development, continuous feedback, adaptive planning\n- **Advantages**: High flexibility, faster delivery of working software\n- **Limitations**: Less documentation, challenging for large teams",
+            "file_type": "text/markdown",
+            "file_size": 6144
+        },
+        {
+            "file_id": 2,
+            "resource_id": 1,
+            "name": "Requirement Templates",
+            "type": "file",
+            "content": "A curated collection of templates for documenting various software requirements, including:\n\n1. Functional and Non-Functional Requirements\n2. User Stories with Acceptance Criteria\n3. Software Requirement Specification (SRS) Outline\n4. Traceability Matrix\n\nEach template is designed to ensure comprehensive coverage and facilitate effective communication between stakeholders and development teams.",
+            "file_path": "/uploads/user2001/se101/req_templates.docx",
+            "file_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "file_size": 8192
+        },
+        {
+            "file_id": 3,
+            "resource_id": 1,
+            "name": "Testing Methodologies Overview",
+            "type": "text",
+            "content": "# Software Testing Methodologies\n\n## 1. Unit Testing\n- **Purpose**: Validate individual components or functions\n- **Tools**: pytest (Python), JUnit (Java)\n\n## 2. Integration Testing\n- **Purpose**: Ensure proper interaction between integrated components\n- **Approaches**: Top-down, bottom-up, sandwich\n\n## 3. System Testing\n- **Purpose**: Validate the complete and integrated system\n- **Types**: Functional, non-functional (performance, security)\n\n## 4. User Acceptance Testing (UAT)\n- **Purpose**: Verify system compliance with user requirements\n- **Outcome**: Approve software for deployment",
+            "file_type": "text/markdown",
+            "file_size": 5120
+        }
+    ]
+
+  }

@@ -484,31 +484,66 @@ def poll_status_in_background():
     except Exception as e:
         logger.warning(f"Could not start background status polling: {e}")
 
+# Restart FastAPI only (quick restart)
+def quick_restart():
+    """Restart only the FastAPI service without touching ChromaDB (fast restart)"""
+    logger.info("Quick-restarting FastAPI service only...")
+    
+    # Check if ChromaDB is running
+    if not is_service_running("chromadb"):
+        logger.warning("ChromaDB is not running. FastAPI depends on ChromaDB, so you may encounter issues.")
+        
+    # Stop FastAPI only
+    logger.info("Stopping FastAPI Server...")
+    result = stop_service("fastapi")
+    if not result:
+        logger.error("Failed to stop FastAPI service")
+    
+    # Start FastAPI only
+    logger.info("Starting FastAPI server...")
+    if start_service("fastapi"):
+        logger.info("FastAPI quick-restart completed successfully")
+        return True
+    else:
+        logger.error("Failed to start FastAPI service")
+        return False
+
 # Main function
 def main():
-    """Main function"""
-    load_env_files()
-    
+    """Main entry point"""
+    # Parse arguments
     parser = argparse.ArgumentParser(description="StudyIndexerNew Service Manager")
-    parser.add_argument("command", choices=["start", "stop", "restart", "status", "info", "debug-fastapi"],
-                      help="Command to execute")
+    parser.add_argument("action", choices=[
+        "start", "stop", "restart", "status", "quickstart",
+        "info", "debug_fastapi", "prerequisites", "poll_status"
+    ], help="Action to perform")
+    parser.add_argument("--force", action="store_true", help="Force stop services")
+    
     args = parser.parse_args()
     
-    if args.command == "start":
+    # Load environment variables
+    load_env_files()
+    
+    # Perform the requested action
+    if args.action == "start":
         start_all()
-    elif args.command == "stop":
-        stop_all()
-    elif args.command == "restart":
-        stop_all()
-        if start_all() is False:
-            print("\nNOTE: If FastAPI is still starting up, wait 15 seconds and check again with:")
-            print("    python manage_services.py status")
-    elif args.command == "status":
+    elif args.action == "stop":
+        stop_all(args.force)
+    elif args.action == "restart":
+        stop_all(args.force)
+        start_all()
+    elif args.action == "quickstart":
+        quick_restart()
+    elif args.action == "status":
         check_status()
-    elif args.command == "info":
+    elif args.action == "info":
         show_info()
-    elif args.command == "debug-fastapi":
+    elif args.action == "debug_fastapi":
         start_fastapi_debug()
+    elif args.action == "prerequisites":
+        check_prerequisites()
+    elif args.action == "poll_status":
+        poll_status_in_background()
     else:
         parser.print_help()
 

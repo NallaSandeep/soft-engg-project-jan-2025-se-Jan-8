@@ -31,6 +31,10 @@ import glob
 from ..models.course_selector import CourseContent, CourseInfo, CourseTopic, WeekOverview
 from ..models.base import BaseResponse, BaseSearchQuery, BaseSearchResponse
 from ..services.course_content import CourseContentService
+from ..services.chroma import ChromaService
+from ..services.course_selector import CourseSelectorService
+from ..services.personal_resource import PersonalResourceService
+from ..services.faq import FAQService
 
 # Check if in development mode
 IS_DEV_MODE = os.environ.get('ENVIRONMENT', 'development').lower() == 'development'
@@ -50,6 +54,14 @@ async def add_course_content(course_data: dict):
         # If the course data is not in the expected format, wrap it
         if "course" not in course_data:
             course_data = {"course": course_data}
+        
+        # For weeks, ensure they have the required fields
+        if "weeks" in course_data:
+            for i, week in enumerate(course_data["weeks"]):
+                if "week_id" in week and "week_number" not in week:
+                    week["week_number"] = week.get("order", i + 1)
+                if "description" not in week:
+                    week["description"] = week.get("title", f"Week {i+1}")
         
         course_id = await course_content_service.add_course_content(course_data)
         
@@ -94,7 +106,11 @@ async def list_courses(
 async def search_courses(
     query: str = Query("", description="Search query for content matching"),
     course_ids: Optional[List[str]] = Query(None, description="Optional list of course IDs to filter search results"),
-    limit: int = Query(10, description="Maximum number of results to return")
+    limit: int = Query(10, description="Maximum number of results to return"),
+    min_score: float = Query(0.01, description="Minimum relevance score threshold (0.0-1.0)"),
+    exact_match_boost: float = Query(0.1, description="Boost factor for exact term matches (0.0-1.0)"),
+    phrase_match_boost: float = Query(0.15, description="Boost for exact phrase matches (0.0-1.0)"),
+    description_threshold: float = Query(0.05, description="Threshold for including course descriptions (0.0-1.0)")
 ):
     """
     Search for course content chunks matching the query
@@ -110,12 +126,22 @@ async def search_courses(
     
     This endpoint powers the core functionality of providing relevant course materials
     to StudyAI for generating responses based on course content.
+    
+    Advanced parameters allow fine-tuning of search behavior:
+    - min_score: Controls minimum relevance needed (lower = more results)
+    - exact_match_boost: Controls boost for keyword matches
+    - phrase_match_boost: Controls boost for exact phrase matches
+    - description_threshold: Controls when to include course descriptions
     """
     try:
         results = await course_content_service.search_courses(
             query=query, 
             limit=limit,
-            course_ids=course_ids
+            course_ids=course_ids,
+            min_score=min_score,
+            exact_match_boost=exact_match_boost,
+            phrase_match_boost=phrase_match_boost,
+            description_threshold=description_threshold
         )
         
         return BaseResponse(
@@ -133,9 +159,67 @@ async def search_courses(
             detail=f"Error searching course content: {str(e)}"
         )
 
+# Development-only endpoint for resetting ChromaDB - MUST come BEFORE the parameterized routes
+if IS_DEV_MODE:
+    @router.delete("/reset", response_model=BaseResponse, tags=["Development"])
+    async def reset_chromadb(
+        confirm: bool = Query(False, description="Set to true to confirm complete reset of ChromaDB. WARNING: This will delete ALL data and cannot be undone.")
+    ):
+        """Delete ALL data from ChromaDB (DEVELOPMENT ONLY)
+        
+        WARNING: This will delete ALL data in ChromaDB including:
+        - Course content
+        - Course selector data
+        - Personal resources
+        - FAQs
+        
+        This operation cannot be undone.
+        """
+        if not confirm:
+            return BaseResponse(
+                success=False,
+                message="Operation not confirmed. Set confirm=true to proceed with reset"
+            )
+            
+        try:
+            # Get ChromaDB service
+            chroma = ChromaService()
+            
+            # Reset all collections
+            success = await chroma.reset_all()
+            
+            if not success:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Failed to reset ChromaDB"
+                )
+                
+            # Re-initialize all services to create fresh collections
+            course_content = CourseContentService()
+            course_selector = CourseSelectorService()
+            personal_resource = PersonalResourceService()
+            faq = FAQService()
+            
+            await course_content.initialize()
+            await course_selector.initialize()
+            await personal_resource.initialize()
+            await faq.initialize()
+            
+            return BaseResponse(
+                success=True,
+                message="ChromaDB reset successful. All collections deleted and reinitialized."
+            )
+            
+        except Exception as e:
+            logger.error(f"Error during cleanup: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error during cleanup: {str(e)}"
+            )
+
 @router.get("/{course_id}", response_model=BaseResponse)
 async def get_course_content(course_id: Union[int, str]):
-    """Get course content by ID"""
+    """Get course content by ID or course code"""
     try:
         result = await course_content_service.get_course_content(course_id)
         if not result:
@@ -144,10 +228,26 @@ async def get_course_content(course_id: Union[int, str]):
                 detail=f"Course content with ID {course_id} not found"
             )
             
-        return BaseResponse(
-            success=True,
-            data=result.dict()
-        )
+        # Return raw dictionary instead of trying to convert to CourseContent model
+        # This provides more flexibility if the data structure doesn't exactly match
+        if isinstance(result, dict):
+            return BaseResponse(
+                success=True,
+                data=result
+            )
+        else:
+            # If it's a CourseContent model, convert to dict
+            try:
+                return BaseResponse(
+                    success=True,
+                    data=result.dict()
+                )
+            except AttributeError:
+                # If dict() fails, return the raw result
+                return BaseResponse(
+                    success=True,
+                    data=result
+                )
     except HTTPException:
         raise
     except Exception as e:
@@ -311,58 +411,4 @@ if IS_DEV_MODE:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Error importing sample courses: {str(e)}"
-            )
-            
-    @router.delete("/cleanup", response_model=BaseResponse, tags=["Development"])
-    async def cleanup_courses(
-        course_ids: Optional[List[str]] = Query(None, description="Specific course IDs to delete"),
-        delete_all: bool = Query(False, description="Set to true to delete all courses")
-    ):
-        """Delete specific courses or all courses (DEVELOPMENT ONLY)"""
-        try:
-            if not delete_all and not course_ids:
-                return BaseResponse(
-                    success=False,
-                    message="Must specify either course_ids or delete_all=true"
-                )
-                
-            results = {
-                "success": True,
-                "deleted_count": 0,
-                "failed_items": []
-            }
-            
-            if delete_all:
-                # Get all courses
-                all_courses = await course_content_service.list_courses(limit=1000)
-                course_ids = [course["course_id"] for course in all_courses]
-                
-            for course_id in course_ids:
-                try:
-                    success = await course_content_service.delete_course_content(course_id)
-                    if success:
-                        results["deleted_count"] += 1
-                    else:
-                        results["failed_items"].append({
-                            "course_id": course_id,
-                            "error": "Course not found or could not be deleted"
-                        })
-                except Exception as e:
-                    results["failed_items"].append({
-                        "course_id": course_id,
-                        "error": str(e)
-                    })
-                    
-            if results["failed_items"]:
-                results["success"] = False
-                
-            return BaseResponse(
-                success=results["success"],
-                message=f"Deleted {results['deleted_count']} courses",
-                data=results
-            )
-        except Exception as e:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error cleaning up courses: {str(e)}"
             ) 

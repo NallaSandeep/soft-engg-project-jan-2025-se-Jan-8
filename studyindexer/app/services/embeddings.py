@@ -28,6 +28,7 @@ class EmbeddingService:
     def __init__(self):
         """Initialize the embedding model"""
         if getattr(self, '_initialized', False):
+            logger.info("EmbeddingService already initialized")
             return
             
         # Load configuration
@@ -37,9 +38,10 @@ class EmbeddingService:
         
         # Initialize model
         try:
+            logger.info(f"Loading embedding model {self.model_name} on {self.device}...")
             self.model = SentenceTransformer(self.model_name, device=self.device)
             self._initialized = True
-            logger.info(f"Embedding model {self.model_name} loaded successfully on {self.device}")
+            logger.info(f"Embedding model loaded successfully. Dimensions: {self.embedding_dim}")
         except Exception as e:
             logger.error(f"Error loading embedding model: {str(e)}")
             self.model = None
@@ -51,13 +53,16 @@ class EmbeddingService:
         if not self._initialized or self.model is None:
             raise ValueError("Embedding model not initialized")
             
+        logger.info("Generating embedding for text...")
         # Preprocess text if needed
         processed_text = self._preprocess_text(text)
+        logger.info(f"Text preprocessed, length: {len(processed_text)}")
         
         # Generate embedding
         with torch.no_grad():
             embedding = self.model.encode(processed_text)
-        
+            
+        logger.info(f"Generated embedding with shape: {embedding.shape}")
         # Convert to list of floats (compatible with ChromaDB)
         return embedding.tolist()
     
@@ -66,13 +71,16 @@ class EmbeddingService:
         if not self._initialized or self.model is None:
             raise ValueError("Embedding model not initialized")
             
+        logger.info(f"Generating embeddings for {len(texts)} texts...")
         # Preprocess texts
         processed_texts = [self._preprocess_text(text) for text in texts]
+        logger.info("Texts preprocessed")
         
         # Generate embeddings in one batch for efficiency
         with torch.no_grad():
             embeddings = self.model.encode(processed_texts)
-        
+            
+        logger.info(f"Generated {len(embeddings)} embeddings with shape: {embeddings.shape}")
         # Convert to list of floats (compatible with ChromaDB)
         return embeddings.tolist()
     
@@ -116,6 +124,38 @@ class EmbeddingService:
         """Check if the model is initialized"""
         return self._initialized and self.model is not None
 
+    def calculate_similarity(self, embedding1: List[float], embedding2: List[float]) -> float:
+        """
+        Calculate cosine similarity between two embeddings
+        
+        Args:
+            embedding1: First embedding vector
+            embedding2: Second embedding vector
+            
+        Returns:
+            Cosine similarity score between 0 and 1
+        """
+        if not embedding1 or not embedding2:
+            return 0.0
+            
+        # Convert to numpy arrays for efficient computation
+        vec1 = np.array(embedding1)
+        vec2 = np.array(embedding2)
+        
+        # Calculate cosine similarity
+        dot_product = np.dot(vec1, vec2)
+        norm1 = np.linalg.norm(vec1)
+        norm2 = np.linalg.norm(vec2)
+        
+        # Avoid division by zero
+        if norm1 == 0 or norm2 == 0:
+            return 0.0
+            
+        similarity = dot_product / (norm1 * norm2)
+        
+        # Ensure value is between 0 and 1
+        return float(max(0.0, min(1.0, similarity)))
+
 
 class TextChunker:
     """Utility for chunking documents into smaller pieces"""
@@ -124,16 +164,20 @@ class TextChunker:
         """Initialize with configuration"""
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
+        logger.info(f"TextChunker initialized with size={chunk_size}, overlap={chunk_overlap}")
     
     def chunk_text(self, text: str, metadata: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """Split text into chunks with metadata"""
         if not text:
+            logger.warning("Empty text provided to chunker")
             return []
             
+        logger.info(f"Chunking text of length {len(text)}")
         chunks = []
         
         # Split text into paragraphs first
         paragraphs = self._split_into_paragraphs(text)
+        logger.info(f"Split text into {len(paragraphs)} paragraphs")
         
         current_chunk = ""
         current_size = 0
@@ -147,12 +191,14 @@ class TextChunker:
                     "metadata": metadata.copy() if metadata else {}
                 }
                 chunks.append(chunk_data)
+                logger.debug(f"Created chunk of size {len(current_chunk)}")
                 
                 # Start new chunk with overlap
                 overlap_size = min(self.chunk_overlap, len(current_chunk))
                 if overlap_size > 0:
                     current_chunk = current_chunk[-overlap_size:]
                     current_size = len(current_chunk)
+                    logger.debug(f"Started new chunk with {overlap_size} characters overlap")
                 else:
                     current_chunk = ""
                     current_size = 0
@@ -168,12 +214,14 @@ class TextChunker:
                 "metadata": metadata.copy() if metadata else {}
             }
             chunks.append(chunk_data)
+            logger.debug(f"Added final chunk of size {len(current_chunk)}")
         
         # Add positional info to metadata
         for i, chunk in enumerate(chunks):
             chunk["metadata"]["chunk_index"] = i
             chunk["metadata"]["total_chunks"] = len(chunks)
         
+        logger.info(f"Created {len(chunks)} chunks from text")
         return chunks
     
     def _split_into_paragraphs(self, text: str) -> List[str]:
