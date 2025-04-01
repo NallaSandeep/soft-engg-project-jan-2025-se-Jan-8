@@ -58,7 +58,7 @@ class Supervisor(BaseAgent):
         metadata = {}
         for i, question in enumerate(subquestions):
             # Prevent infinite recursion by not checking if this is complex
-            routing_prompt = ROUTING_PROMPT.format(query=question)
+            routing_prompt = get_routing_prompt(query=question)
             chain = self.create_chain(routing_prompt)
             response = await chain.ainvoke({})
             route = self._parse_routing_response(response)
