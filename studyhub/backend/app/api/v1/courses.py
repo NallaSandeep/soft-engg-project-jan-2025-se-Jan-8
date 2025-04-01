@@ -440,6 +440,23 @@ def create_lecture(week_id):
         last_lecture = Lecture.query.filter_by(week_id=week_id).order_by(Lecture.order.desc()).first()
         new_order = (last_lecture.order + 1) if last_lecture else 1
         
+        # Set lecture_number (required field) from data or default to the order
+        lecture_number = data.get('lecture_number', new_order)
+        
+        # Check if lecture number already exists in this week
+        existing_lecture = Lecture.query.filter_by(
+            week_id=week_id,
+            lecture_number=lecture_number
+        ).first()
+        if existing_lecture:
+            return jsonify({
+                'success': False,
+                'message': f'Lecture {lecture_number} already exists in this week'
+            }), 400
+        
+        # Set content_type based on provided data
+        content_type = data.get('content_type', 'youtube')  # Use provided content_type or default to 'youtube'
+        
         lecture = Lecture(
             week_id=week_id,
             title=data['title'],
@@ -447,6 +464,8 @@ def create_lecture(week_id):
             youtube_url=data['youtube_url'],
             transcript=data.get('transcript', ''),
             order=new_order,
+            lecture_number=lecture_number,
+            content_type=content_type,
             is_published=data.get('is_published', False)
         )
         db.session.add(lecture)
@@ -460,6 +479,7 @@ def create_lecture(week_id):
         
     except Exception as e:
         db.session.rollback()
+        print("Error creating lecture:", str(e))  # Add debug log
         return jsonify({
             'success': False,
             'error': str(e),

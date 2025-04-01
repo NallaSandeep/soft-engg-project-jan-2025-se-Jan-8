@@ -25,14 +25,17 @@ const CourseContent = () => {
         try {
             setLoading(true);
             const response = await courseApi.getCourseContent(courseId);
-            if (response.success) {
+            console.log('Course content response:', response);
+            
+            if (response && response.success) {
                 setCourse(response.data);
             } else {
-                setError(response.message || 'Failed to load course content');
+                setError((response && response.message) || 'Failed to load course content');
+                console.error('API error:', response);
             }
         } catch (err) {
             console.error('Error fetching course content:', err);
-            setError('Failed to load course content');
+            setError('Failed to load course content. Please try again later.');
         } finally {
             setLoading(false);
         }
@@ -93,6 +96,10 @@ const CourseContent = () => {
             console.error('Error deleting week:', err);
             setError('Failed to delete week');
         }
+    };
+
+    const navigateToWeekCreate = () => {
+        navigate(`/admin/courses/${courseId}/weeks/new`);
     };
 
     if (loading) {
@@ -164,7 +171,7 @@ const CourseContent = () => {
                         <span>Edit Course</span>
                     </button>
                     <button
-                        onClick={() => navigate(`/admin/courses/${courseId}/weeks/new`)}
+                        onClick={navigateToWeekCreate}
                         className="btn-primary flex items-center space-x-1"
                     >
                         <PlusCircleIcon className="w-4 h-4" />
@@ -295,7 +302,7 @@ const CourseContent = () => {
                                                 </div>
                                                 <div className="flex space-x-1">
                                                     <button
-                                                        onClick={() => navigate(`/admin/courses/${courseId}/lectures/${lecture.id}/edit`)}
+                                                        onClick={() => navigate(`/admin/courses/${courseId}/weeks/${week.id}/lectures/${lecture.id}/edit`)}
                                                         className="p-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                                                         title="Edit Lecture"
                                                     >
@@ -372,11 +379,12 @@ const CourseContent = () => {
                     </div>
                 ))}
 
+                {/* Empty state */}
                 {(!course.weeks || course.weeks.length === 0) && (
                     <div className="glass-card p-8 text-center">
                         <p className="text-zinc-600 dark:text-zinc-400 mb-4">No weeks have been added to this course yet.</p>
                         <button
-                            onClick={() => navigate(`/admin/courses/${courseId}/weeks/new`)}
+                            onClick={navigateToWeekCreate}
                             className="btn-primary inline-flex items-center space-x-2"
                         >
                             <PlusCircleIcon className="w-5 h-5" />
@@ -389,4 +397,4 @@ const CourseContent = () => {
     );
 };
 
-export default CourseContent; 
+export default CourseContent;

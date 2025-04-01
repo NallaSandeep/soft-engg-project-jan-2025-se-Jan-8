@@ -15,6 +15,8 @@ import AssignmentView from '../components/admin/assignments/AssignmentView';
 import QuestionForm from '../components/admin/QuestionBank/QuestionForm';
 import QuestionList from '../components/admin/QuestionBank/QuestionList';
 import EnrollStudents from '../components/admin/EnrollStudTA';
+import CourseManagement from '../components/admin/CourseManagement';
+import CourseContentManagement from '../components/admin/CourseContentManagement';
 
 const adminRoutes = [
     {
@@ -34,7 +36,7 @@ const adminRoutes = [
                 children: [
                     {
                         path: '',
-                        element: <CoursesList />
+                        element: <CourseManagement />
                     },
                     {
                         path: 'new',
@@ -53,16 +55,24 @@ const adminRoutes = [
                         element: <WeekEdit />
                     },
                     {
-                        path: ':courseId/weeks/:weekId/lectures/new',
-                        element: <LectureForm />
+                        path: ':courseId/weeks/new',
+                        element: <WeekEdit mode="create" />
                     },
                     {
-                        path: ':courseId/lectures/:lectureId/edit',
+                        path: ':courseId/weeks/:weekId/lectures/new',
+                        element: <LectureForm mode="create" />
+                    },
+                    {
+                        path: ':courseId/weeks/:weekId/lectures/:lectureId/edit',
                         element: <LectureForm mode="edit" />
                     },
                     {
                         path: ':courseId/weeks/:weekId/assignments/new',
                         element: <AssignmentForm mode="create" />
+                    },
+                    {
+                        path: ':courseId/manage',
+                        element: <CourseContentManagement />
                     }
                 ]
             },
@@ -75,7 +85,7 @@ const adminRoutes = [
                     },
                     {
                         path: 'new',
-                        element: <AssignmentForm />
+                        element: <AssignmentForm mode="create" />
                     },
                     {
                         path: ':assignmentId',
@@ -96,7 +106,7 @@ const adminRoutes = [
                     },
                     {
                         path: 'new',
-                        element: <QuestionForm />
+                        element: <QuestionForm mode="create" />
                     },
                     {
                         path: ':questionId',
@@ -117,11 +127,11 @@ const adminRoutes = [
                     },
                     {
                         path: 'new',
-                        element: <UserForm />
+                        element: <UserForm mode="create" />
                     },
                     {
                         path: ':userId/edit',
-                        element: <UserForm />
+                        element: <UserForm mode="edit" />
                     }
                 ]
             },
@@ -133,4 +143,4 @@ const adminRoutes = [
     }
 ];
 
-export default adminRoutes; 
+export default adminRoutes;
