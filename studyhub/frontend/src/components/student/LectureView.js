@@ -220,7 +220,7 @@ const LectureView = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    message: `Please summarize this transcript content. Don't return any mark down characters. Instead use numbering: ${JSON.stringify(lecture.transcript)}`
+                    message: `Please summarize this transcript content in 100 words. Don't return any mark down characters. Instead use numbering: ${JSON.stringify(lecture.transcript)}`
                 })
             });
     

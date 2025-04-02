@@ -255,7 +255,8 @@ const AssignmentView = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    message: `Please provide me guidance for this assignment submission. 
+                    message: `Please provide me guidance on areas of improvements in 100 words.
+                     Don't provide question specific guidance and just give high level overview. 
                      here is the assignement ${JSON.stringify(assignment)}.
                      Here are submitted answers ${JSON.stringify(answers)}. 
                      Here is the correct answers ${JSON.stringify(correctAnswers)}
