@@ -63,7 +63,7 @@
         "order": 1,
         "title": "Control Structures in Python",
         "resource_type": "pdf",
-        "resource_url": "https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf",
+        "file_path": "CS101_Week2_Lecture1.pdf",
         "content_extract": "Understanding if statements and loops in Python.",
         "duration_minutes": 45,
         "keywords": ["Control structures", "Loops"]

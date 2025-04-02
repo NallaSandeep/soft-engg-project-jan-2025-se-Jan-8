@@ -180,8 +180,8 @@ class CourseContentService:
                 week_number = week_info.get("order", "")
                 
                 # Create metadata for chunks
-                metadata = {
-                    "course_id": course_id,
+            metadata = {
+                "course_id": course_id,
                     "course_code": course_code,
                     "course_title": course_title,
                     "week_id": week_id,
@@ -211,7 +211,7 @@ class CourseContentService:
                 
                 # Add to ChromaDB
                 self.chroma.add_documents_sync(
-                    collection_name=self.collection_name,
+                collection_name=self.collection_name,
                     documents=[chunk_content],
                     metadatas=[chunk_metadata],
                     ids=[chunk_id]
@@ -378,7 +378,7 @@ class CourseContentService:
             
             # Search by course_id
             all_results_by_id = self.chroma.search_sync(
-                collection_name=self.collection_name,
+                    collection_name=self.collection_name,
                 query="",  # Empty query to get all results
                 n_results=1000,  # Get all content chunks
                 where={"course_id": course_code}  # Use course_code as it might be the ID

@@ -206,38 +206,30 @@ def run_phase2_import_courses(db_session, admin_id):
 
 def run_phase3_create_enrollments(db_session, student_ids, courses):
     """
-    Phase 3: Create enrollments for students in courses
-    Enroll students in courses and create sample submissions and personal resources
+    Phase 3: Create enrollments and personal resources
+    - Creates enrollments for all students in all courses
+    - Creates personal resources for each student in their enrolled courses
     """
-    log("PHASE 3: CREATING ENROLLMENTS AND SUBMISSIONS")
-    
-    if not courses:
-        log("No courses found to create enrollments", "ERROR")
-        return
-    
-    if not student_ids:
-        log("No students found to enroll", "ERROR")
-        return
+    log("PHASE 3: CREATING ENROLLMENTS AND PERSONAL RESOURCES")
     
     # Create enrollments for all students in all courses
-    log(f"Creating enrollments for {len(student_ids)} students in {len(courses)} courses...")
-    
-    for course in courses:
-        for student_id in student_ids:
+    for student_id in student_ids:
+        for course in courses:
             # Skip student1 as it was enrolled during course import
             if student_id == 3:  # student1 has ID 3
                 continue
                 
             # Check if enrollment already exists
-            existing_enrollment = db_session.query(CourseEnrollment).filter_by(
-                user_id=student_id, 
-                course_id=course.id
+            existing = db_session.query(CourseEnrollment).filter_by(
+                user_id=student_id,
+                course_id=course.id,
+                status='active'
             ).first()
             
-            if existing_enrollment:
-                log(f"Enrollment already exists for student {student_id} in course {course.code}", "DEBUG")
+            if existing:
+                log(f"Student {student_id} already enrolled in course {course.code}", "INFO")
                 continue
-            
+                
             # Create enrollment
             enrollment = CourseEnrollment(
                 user_id=student_id,
@@ -249,66 +241,7 @@ def run_phase3_create_enrollments(db_session, student_ids, courses):
             db_session.add(enrollment)
             log(f"Enrolled student {student_id} in course {course.code}")
     
-    db_session.flush()
-    
-    # Create sample submissions for all enrolled students
-    log("Creating sample assignment submissions...")
-    
-    for course in courses:
-        # Get assignments for the course
-        assignments = db_session.query(Assignment).join(Week).filter(Week.course_id == course.id).all()
-        
-        if not assignments:
-            log(f"No assignments found for course {course.code}", "WARNING")
-            continue
-        
-        log(f"Found {len(assignments)} assignments for course {course.code}")
-        
-        # Create submissions for each assignment
-        for assignment in assignments:
-            for student_id in student_ids:
-                # Create a submission (for the first few assignments only)
-                if assignment.id % 3 == 0:  # Only create submissions for every 3rd assignment
-                    # Get assignment questions to create sample answers
-                    assignment_questions = db_session.query(AssignmentQuestion).filter_by(assignment_id=assignment.id).all()
-                    
-                    # Create sample answers for each question
-                    answers = {}
-                    if assignment_questions:
-                        for i, aq in enumerate(assignment_questions, 1):
-                            question_type = db_session.query(Question).filter_by(id=aq.question_id).first().type
-                            
-                            if question_type in ["MCQ", "mcq"]:
-                                # Multiple choice - select first option
-                                answers[str(i)] = {"selected_option": 0, "explanation": "Sample explanation"}
-                            elif question_type in ["MSQ", "msq"]:
-                                # Multiple select - select first two options if available
-                                answers[str(i)] = {"selected_options": [0, 1], "explanation": "Sample explanation"}
-                            else:
-                                # Text answer
-                                answers[str(i)] = {"text": "Sample answer for question " + str(i), "explanation": "Sample explanation"}
-                    
-                    # If no questions found, create a dummy answer to prevent NULL constraint
-                    if not answers:
-                        answers = {"1": {"text": "Default answer", "explanation": "This is a placeholder answer"}}
-                    
-                    submission = AssignmentSubmission(
-                        assignment_id=assignment.id,
-                        user_id=student_id,
-                        status="submitted" if assignment.type == "practice" else "graded",
-                        submitted_at=datetime.now() - timedelta(days=1),
-                        score=85 if assignment.type == "graded" else 100,
-                        feedback="Good job!" if assignment.type == "graded" else None,
-                        answers=answers  # Add the answers object
-                    )
-                    db_session.add(submission)
-                    log(f"Created submission for student {student_id} in assignment {assignment.id}")
-    
-    db_session.flush()
-    
-    # Create personal resources (notes) for all enrolled students
-    log("Creating personal resources for students...")
-    
+    # Create personal resources for all students in their enrolled courses
     for course in courses:
         # Get lectures for the course
         lectures = db_session.query(Lecture).join(Week).filter(Week.course_id == course.id).all()
@@ -319,9 +252,14 @@ def run_phase3_create_enrollments(db_session, student_ids, courses):
         
         log(f"Found {len(lectures)} lectures for course {course.code}")
         
-        # Create personal resources for the first few lectures only
-        for lecture in lectures[:5]:  # First 5 lectures only
+        # Create personal resources for all lectures for student1, first 5 for others
+        for lecture in lectures:
             for student_id in student_ids:
+                # For student1, create resources for all lectures
+                # For others, only create for first 5 lectures
+                if student_id != 3 and lecture.lecture_number > 5:
+                    continue
+                
                 # Create the personal resource
                 resource = PersonalResource(
                     user_id=student_id,
@@ -347,7 +285,6 @@ def run_phase3_create_enrollments(db_session, student_ids, courses):
                 log(f"Created personal resource for student {student_id} in course {course.code} for lecture {lecture.lecture_number}")
     
     db_session.commit()
-    log("PHASE 3 COMPLETED - ENROLLMENTS AND SUBMISSIONS CREATED")
 
 def sync_with_studyindexer(courses):
     """

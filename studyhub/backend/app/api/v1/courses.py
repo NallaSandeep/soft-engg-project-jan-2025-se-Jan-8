@@ -567,87 +567,55 @@ def get_course_content(course_id):
             'message': 'Failed to retrieve course content'
         }), 500
 
-@courses_bp.route('/lectures/<int:lecture_id>/content', methods=['GET'])
-@jwt_required()
+@courses_bp.route('/lectures/<int:lecture_id>/content', methods=['GET', 'OPTIONS'])
 def get_lecture_content(lecture_id):
     """Get lecture content"""
-    try:
-        lecture = Lecture.query.get_or_404(lecture_id)
-        
-        # Check if user has access to this lecture
-        current_user = User.query.get(get_jwt_identity())
-        if not current_user:
-            return jsonify({
-                'success': False,
-                'message': 'User not found'
-            }), 404
-            
-        # Check if user is enrolled in the course or is admin/TA
-        if current_user.role == 'admin' or current_user.role == 'teacher':
-            has_access = True
-        else:
-            enrollment = CourseEnrollment.query.filter_by(
-                user_id=current_user.id,
-                course_id=lecture.week.course_id,
-                status='active'
-            ).first()
-            has_access = enrollment is not None
-        
-        if not has_access:
-            return jsonify({
-                'success': False,
-                'message': 'Not enrolled in this course'
-            }), 403
+    # Handle OPTIONS request for CORS
+    if request.method == 'OPTIONS':
+        headers = {
+            'Access-Control-Allow-Origin': request.headers.get('Origin', 'http://localhost:3000'),
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Access-Control-Allow-Credentials': 'true'
+        }
+        return '', 200, headers
 
-        # Update lecture progress for the student
-        if current_user.role == 'student':
-            lecture_progress = LectureProgress.query.filter_by(
-                lecture_id=lecture_id,
-                user_id=current_user.id
-            ).first()
-            
-            if not lecture_progress:
-                lecture_progress = LectureProgress(
-                    lecture_id=lecture_id,
-                    user_id=current_user.id,
-                    completed=True,
-                    completed_at=datetime.utcnow()
-                )
-                db.session.add(lecture_progress)
-            else:
-                lecture_progress.completed = True
-                lecture_progress.completed_at = datetime.utcnow()
-            
-            db.session.commit()
-            
-        response_data = lecture.to_dict()
+    try:
+        print(f"\nDEBUG: Fetching lecture content for lecture_id={lecture_id}")
+        lecture = Lecture.query.get_or_404(lecture_id)
+        print(f"DEBUG: Found lecture: id={lecture.id}, type={lecture.content_type}, file_path={lecture.file_path}")
         
-        # Add content-specific data
         if lecture.content_type == 'youtube':
-            if not lecture.youtube_url:
-                return jsonify({
-                    'success': False,
-                    'message': 'YouTube URL not found for this lecture'
-                }), 404
+            print(f"DEBUG: Returning YouTube URL: {lecture.youtube_url}")
+            response = jsonify({
+                'type': 'youtube',
+                'url': lecture.youtube_url,
+                'transcript': lecture.transcript
+            })
         elif lecture.content_type == 'pdf':
-            if not lecture.file_path:
-                return jsonify({
-                    'success': False,
-                    'message': 'PDF file not found for this lecture'
-                }), 404
+            # For PDF content, return metadata that tells frontend to use the PDF endpoint
+            response = jsonify({
+                'type': 'pdf',
+                'url': f'/api/v1/courses/lectures/{lecture_id}/pdf',
+                'transcript': lecture.transcript
+            })
+        else:
+            print(f"DEBUG: Unknown content type: {lecture.content_type}")
+            response = jsonify({
+                'type': 'unknown',
+                'transcript': lecture.transcript
+            })
             
-        return jsonify({
-            'success': True,
-            'data': response_data
-        }), 200
-        
+        # Add CORS headers to the response
+        response.headers['Access-Control-Allow-Origin'] = request.headers.get('Origin', 'http://localhost:3000')
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        return response
+            
     except Exception as e:
-        import traceback
         print("Error in get_lecture_content:", str(e))
-        print("Traceback:", traceback.format_exc())
+        print(f"DEBUG: Full error details: {e.__class__.__name__}: {str(e)}")
         return jsonify({
-            'success': False,
-            'message': str(e)
+            'error': 'Failed to load content'
         }), 500
 
 @courses_bp.route('/assignments/<int:assignment_id>/content', methods=['GET'])
@@ -971,7 +939,7 @@ def get_lecture_pdf(lecture_id):
     # Handle OPTIONS request for CORS
     if request.method == 'OPTIONS':
         headers = {
-            'Access-Control-Allow-Origin': 'http://127.0.0.1:3000',
+            'Access-Control-Allow-Origin': request.headers.get('Origin', 'http://localhost:3000'),
             'Access-Control-Allow-Methods': 'GET, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             'Access-Control-Allow-Credentials': 'true'
@@ -1017,7 +985,7 @@ def get_lecture_pdf(lecture_id):
             # Set required headers for PDF display and CORS
             response.headers['Content-Type'] = 'application/pdf'
             response.headers['Content-Disposition'] = 'inline'
-            response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:3000'
+            response.headers['Access-Control-Allow-Origin'] = request.headers.get('Origin', 'http://localhost:3000')
             response.headers['Access-Control-Allow-Credentials'] = 'true'
             response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
             response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'

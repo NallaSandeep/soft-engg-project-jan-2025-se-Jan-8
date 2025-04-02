@@ -25,41 +25,6 @@ const LectureView = () => {
         fetchLectureContent();
     }, [courseId, lectureId]);
 
-    useEffect(() => {
-        setSummary(null);
-        if (lecture?.content_type === 'pdf') {
-            const loadPDF = async () => {
-                try {
-                    const token = localStorage.getItem('token');
-                    const response = await fetch(
-                        `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/v1/courses/lectures/${lecture.id}/pdf`,
-                        {
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            },
-                            credentials: 'include'
-                        }
-                    );
-                    if (!response.ok) throw new Error('Failed to load PDF');
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    setPdfUrl(url);
-                    setPdfError(false);
-                } catch (error) {
-                    console.error('Error loading PDF:', error);
-                    setPdfError(true);
-                }
-            };
-            loadPDF();
-
-            return () => {
-                if (pdfUrl) {
-                    window.URL.revokeObjectURL(pdfUrl);
-                }
-            };
-        }
-    }, [lecture?.id, lecture?.content_type]);
-
     const fetchLectureContent = async () => {
         try {
             setLoading(true);
@@ -69,13 +34,54 @@ const LectureView = () => {
                 courseApi.getCourseProgress(courseId)
             ]);
 
+            console.log('DEBUG - Lecture Response:', {
+                success: lectureResponse.success,
+                data: lectureResponse.data,
+                type: lectureResponse.type,
+                contentType: lectureResponse.data?.content_type
+            });
+
             if (courseResponse.success) {
                 setCourse(courseResponse.data);
             }
 
-            if (lectureResponse.success) {
-                setLecture(lectureResponse.data);
-                setNotes(lectureResponse.data.notes || '');
+            // Handle lecture response based on its type
+            if (lectureResponse) {
+                if (lectureResponse.type === 'pdf') {
+                    setLecture({
+                        id: parseInt(lectureId),
+                        content_type: 'pdf',
+                        title: course?.weeks?.flatMap(w => w.lectures)?.find(l => l.id === parseInt(lectureId))?.title || 'Lecture',
+                        file_path: lectureResponse.url,
+                        transcript: lectureResponse.transcript
+                    });
+                    
+                    // Immediately trigger PDF loading
+                    try {
+                        console.log('Fetching PDF file...');
+                        const pdfResponse = await courseApi.getLecturePdf(lectureId);
+                        console.log('PDF response received');
+                        
+                        if (pdfResponse && pdfResponse.data) {
+                            const blob = new Blob([pdfResponse.data], { type: 'application/pdf' });
+                            const url = window.URL.createObjectURL(blob);
+                            console.log('Created blob URL for PDF:', url);
+                            setPdfUrl(url);
+                            setPdfError(false);
+                        }
+                    } catch (error) {
+                        console.error('Error loading PDF:', error);
+                        setPdfError(true);
+                    }
+                } else if (lectureResponse.type === 'youtube') {
+                    setLecture({
+                        id: parseInt(lectureId),
+                        content_type: 'youtube',
+                        title: course?.weeks?.flatMap(w => w.lectures)?.find(l => l.id === parseInt(lectureId))?.title || 'Lecture',
+                        youtube_url: lectureResponse.url,
+                        transcript: lectureResponse.transcript
+                    });
+                }
             }
 
             if (progressResponse.success) {
@@ -124,35 +130,46 @@ const LectureView = () => {
     const videoId = getYouTubeVideoId(lecture.youtube_url);
 
     const renderPdfContent = () => {
-        if (!lecture?.content_type === 'pdf') return null;
+        if (lecture?.content_type !== 'pdf') return null;
 
         return (
             <div className="pdf-container" style={{ width: '100%', height: '600px', position: 'relative' }}>
                 {!pdfError ? (
-                    <iframe
-                        id="pdf-viewer"
-                        src={pdfUrl}
-                        style={{ width: '100%', height: '100%', border: 'none' }}
-                        title={`PDF for ${lecture.title}`}
-                    />
+                    pdfUrl ? (
+                        <object
+                            data={pdfUrl}
+                            type="application/pdf"
+                            style={{ width: '100%', height: '100%' }}
+                            allow="fullscreen"
+                        >
+                            <embed
+                                src={pdfUrl}
+                                type="application/pdf"
+                                style={{ width: '100%', height: '100%' }}
+                                className="w-full h-full"
+                                allow="fullscreen"
+                            />
+                            <p className="text-center mt-4">
+                                PDF cannot be displayed. <a href={pdfUrl} download className="text-blue-500 hover:text-blue-700">Download PDF</a>
+                            </p>
+                        </object>
+                    ) : (
+                        <div className="flex justify-center items-center h-full">
+                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                            <span className="ml-3 text-zinc-600 dark:text-zinc-400">Loading PDF...</span>
+                        </div>
+                    )
                 ) : (
-                    <div id="pdf-error" style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <p>Unable to display PDF directly. Click below to download:</p>
+                    <div id="pdf-error" className="text-center mt-8 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                        <p className="text-red-600 dark:text-red-400 mb-4">Unable to display PDF directly. Click below to download:</p>
                         <button
                             onClick={async () => {
                                 try {
-                                    const token = localStorage.getItem('token');
-                                    const response = await fetch(
-                                        `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/v1/courses/lectures/${lecture.id}/pdf`,
-                                        {
-                                            headers: {
-                                                'Authorization': `Bearer ${token}`
-                                            },
-                                            credentials: 'include'
-                                        }
-                                    );
-                                    if (!response.ok) throw new Error('Failed to download PDF');
-                                    const blob = await response.blob();
+                                    console.log('Downloading PDF...');
+                                    const response = await courseApi.getLecturePdf(lecture.id);
+                                    console.log('Download response received');
+                                    
+                                    const blob = new Blob([response.data], { type: 'application/pdf' });
                                     const url = window.URL.createObjectURL(blob);
                                     const a = document.createElement('a');
                                     a.href = url;
@@ -161,12 +178,18 @@ const LectureView = () => {
                                     a.click();
                                     window.URL.revokeObjectURL(url);
                                     document.body.removeChild(a);
+                                    console.log('PDF download completed');
                                 } catch (error) {
                                     console.error('Error downloading PDF:', error);
+                                    console.error('Download error details:', {
+                                        message: error.message,
+                                        response: error.response,
+                                        status: error.response?.status
+                                    });
                                     alert('Failed to download PDF. Please try again.');
                                 }
                             }}
-                            className="btn btn-primary"
+                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
                         >
                             Download PDF
                         </button>
@@ -350,7 +373,7 @@ const LectureView = () => {
                                 <iframe
                                     src={`https://www.youtube.com/embed/${getYouTubeVideoId(lecture.youtube_url)}`}
                                     title={lecture.title}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                                     allowFullScreen
                                     className="absolute inset-0 w-full h-full"
                                 ></iframe>

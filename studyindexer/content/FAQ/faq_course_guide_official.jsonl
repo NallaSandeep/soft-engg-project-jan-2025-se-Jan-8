@@ -1,0 +1,2765 @@
+{
+    "topic": "Course Guide",
+    "question": "Tell me about the course Business Analytics",
+    "answer": "At the end of this course, the students will be able to apply various statistical techniques to solve various business problems. Extrapolate using various techniques and with statistical robustness. Build data-centric business models [1].",
+    "tags": ["BSMS2002", "Business Analytics", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Business Analytics?",
+    "answer": "The Course ID for Business Analytics is BSMS2002 [1].",
+    "tags": ["BSMS2002", "Business Analytics", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Business Analytics?",
+    "answer": "The Business Analytics course is worth 4 credits [1].",
+    "tags": ["BSMS2002", "Business Analytics", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Business Analytics?",
+    "answer": "The Course Type of Business Analytics is Data Science [1].",
+    "tags": ["BSMS2002", "Business Analytics", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the Pre-requisites for Business Analytics?",
+    "answer": "The pre-requisite for the Business Analytics course is BSMS2001 - Business Data Management [1].",
+    "tags": ["BSMS2002", "Business Analytics", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Business Analytics?",
+    "answer": "The Business Analytics course has 8 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [1]. For details of standard course structure and assessments, students can visit the Academics page [1].",
+    "tags": ["BSMS2002", "Business Analytics", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Business Analytics?",
+    "answer": "The topic covered in Week 1 of Business Analytics is Data dashboarding Insights from data summary [2].",
+    "tags": ["BSMS2002", "Business Analytics", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Business Analytics?",
+    "answer": "The topic covered in Week 2 of Business Analytics is Can summarizing the data provide insights? [2].",
+    "tags": ["BSMS2002", "Business Analytics", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Business Analytics?",
+    "answer": "The topic covered in Week 3 of Business Analytics is Do people in different cities prefer different brand? [2].",
+    "tags": ["BSMS2002", "Business Analytics", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Business Analytics?",
+    "answer": "The topic covered in Week 4 of Business Analytics is Predicting the stock returns – Regression basics [2].",
+    "tags": ["BSMS2002", "Business Analytics", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Business Analytics?",
+    "answer": "The topic covered in Week 5 of Business Analytics is How do you pay a professor? – Regression diagnostics - Path variables [2].",
+    "tags": ["BSMS2002", "Business Analytics", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Business Analytics?",
+    "answer": "The topic covered in Week 6 of Business Analytics is Can I cure cancer? – Logistic Regression - Connection with classification problem [2].",
+    "tags": ["BSMS2002", "Business Analytics", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Business Analytics?",
+    "answer": "The topic covered in Week 7 of Business Analytics is What is the impact of repeatedly watching the same ad? Repeated measures ANOVA [2].",
+    "tags": ["BSMS2002", "Business Analytics", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Business Analytics?",
+    "answer": "The topic covered in Week 8 of Business Analytics is When the data has a time axis: Time series modeling [2].",
+    "tags": ["BSMS2002", "Business Analytics", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Business Analytics?",
+    "answer": "The instructor for the Business Analytics course is Prof. Rahul R Marathe [1, 3].",
+    "tags": ["BSMS2002", "Business Analytics", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Prof. Rahul R Marathe?",
+    "answer": "Prof. Rahul R Marathe is an Associate Professor at IIT Madras in the Department of Management Studies. He obtained his Ph. D and M.S from Iowa State University in Industrial Engineering and Statistics, and his B.E in Production Engineering from Mumbai University [3, 4].",
+    "tags": ["BSMS2002", "Business Analytics", "Rahul R Marathe", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Generative AI",
+    "answer": "This Degree Level course provides an in-depth exploration of deep generative models, including their probabilistic foundations and learning algorithms. Students will learn about various types of deep generative models such as variational autoencoders, generative adversarial networks, autoregressive models, Diffusion Models and Large Language Models. The course will cover both theoretical foundations and practical implementations of these models using popular frameworks like PyTorch. Students will gain hands-on experience through lectures and assignments, allowing them to explore deep generative models across various AI tasks [5].",
+    "tags": ["", "Generative AI", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Is there an application deadline for Generative AI?",
+    "answer": "Yes, applications for the May 2025 Batch of the Generative AI course close on May 20, 2025 [5].",
+    "tags": ["", "Generative AI", "Application Deadline"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "When is the exam for Generative AI?",
+    "answer": "The exam for the Generative AI course is on July 13, 2025 [5].",
+    "tags": ["", "Generative AI", "Exam Date"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Generative AI?",
+    "answer": "For details of standard course structure and assessments for the Generative AI course, students can visit the Academics page [6].",
+    "tags": ["", "Generative AI", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Generative AI?",
+    "answer": "The topic covered in Week 1 of Generative AI is Introduction to Probabilistic Deep Generative Modelling [6].",
+    "tags": ["", "Generative AI", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Generative AI?",
+    "answer": "The topic covered in Week 2 of Generative AI is Generative Modelling via variational Divergence Minimization [6].",
+    "tags": ["", "Generative AI", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Generative AI?",
+    "answer": "The topic covered in Week 3 of Generative AI is Generative Adversarial Networks: Part 1 (Introduction and Formulation) [6].",
+    "tags": ["", "Generative AI", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Generative AI?",
+    "answer": "The topic covered in Week 4 of Generative AI is Generative Adversarial Networks: Part 2 (WGANs and Applications) [6].",
+    "tags": ["", "Generative AI", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Generative AI?",
+    "answer": "The topic covered in Week 5 of Generative AI is Generative Modelling via Variational Auto Encoding [6].",
+    "tags": ["", "Generative AI", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Generative AI?",
+    "answer": "The topic covered in Week 6 of Generative AI is Variational Auto Encoders: Improvisations and VQVAE [6].",
+    "tags": ["", "Generative AI", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Generative AI?",
+    "answer": "The topic covered in Week 7 of Generative AI is Denoising Diffusion Probabilistic Models (DDPMs) - Formulation [6].",
+    "tags": ["", "Generative AI", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Generative AI?",
+    "answer": "The topic covered in Week 8 of Generative AI is Diffusion Models: Multiple forms and Implementation [6].",
+    "tags": ["", "Generative AI", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Generative AI?",
+    "answer": "The topic covered in Week 9 of Generative AI is Conditional Diffusion Models and Score-based models [6].",
+    "tags": ["", "Generative AI", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Generative AI?",
+    "answer": "The topic covered in Week 10 of Generative AI is Auto-Regressive Models and Large Language Models Introduction [6].",
+    "tags": ["", "Generative AI", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Generative AI?",
+    "answer": "The topic covered in Week 11 of Generative AI is LLMs: Models, Sampling, Inference and Quantization Methods [6].",
+    "tags": ["", "Generative AI", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Generative AI?",
+    "answer": "The topic covered in Week 12 of Generative AI is LLMs – Reinforcement Learning based Alignment Methods (PPO, DPO) [6].",
+    "tags": ["", "Generative AI", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the suggested books for Generative AI?",
+    "answer": "The suggested books for the Generative AI course are Generative deep learning by Foster D. \"O'Reilly Media, Inc.; 2023 and recent papers/surveys relevant to the course [7].",
+    "tags": ["", "Generative AI", "Suggested Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Generative AI?",
+    "answer": "The instructor for the Generative AI course is Prathosh A P, Assistant Professor, Division of EECS, IISc Bangalore [7].",
+    "tags": ["", "Generative AI", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Statistical Computing",
+    "answer": "This Degree Level course aims to introduce computational methods involved in statistical estimation and learning problems [8].",
+    "tags": ["BSMA3014", "Statistical Computing", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Statistical Computing?",
+    "answer": "The Course ID for Statistical Computing is BSMA3014 [8].",
+    "tags": ["BSMA3014", "Statistical Computing", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Statistical Computing?",
+    "answer": "The Statistical Computing course is worth 4 credits [8].",
+    "tags": ["BSMA3014", "Statistical Computing", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Statistical Computing?",
+    "answer": "The Course Type of Statistical Computing is Elective [8].",
+    "tags": ["BSMA3014", "Statistical Computing", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Are there any Pre-requisites for Statistical Computing?",
+    "answer": "There are no pre-requisites for the Statistical Computing course [8].",
+    "tags": ["BSMA3014", "Statistical Computing", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Statistical Computing?",
+    "answer": "The Statistical Computing course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [8]. For details of standard course structure and assessments, students can visit the Academics page [8].",
+    "tags": ["BSMA3014", "Statistical Computing", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Statistical Computing?",
+    "answer": "The topics covered in Week 1 of Statistical Computing are Introduction to R, Introduction to Monte Carlo, Pseudorandom Number Generation, Sampling Discrete Random Variables: Inverse Transform Method [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Statistical Computing?",
+    "answer": "The topics covered in Week 2 of Statistical Computing are Discrete: Accept-Reject Algorithm, Composition Method, Sampling Continuous Random Variables: Inverse Transform Method [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Statistical Computing?",
+    "answer": "The topics covered in Week 3 of Statistical Computing are Continuous: Accept-reject Algorithm with examples, Box-Muller method [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Statistical Computing?",
+    "answer": "The topics covered in Week 4 of Statistical Computing are Continuous: Ratio-of-Uniforms method, examples and code, miscellaneous methods in sampling, Sampling from multivariate distributions [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Statistical Computing?",
+    "answer": "The topics covered in Week 5 of Statistical Computing are Simple Importance Sampling: Examples, bias, variance, consistency, Optimal proposals [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Statistical Computing?",
+    "answer": "The topics covered in Week 6 of Statistical Computing are Weighted importance sampling: Examples, Review of likelihood functions, MLE examples [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Statistical Computing?",
+    "answer": "The topics covered in Week 7 of Statistical Computing are Linear regression as MLE, Penalized regression, No-closed form MLEs, Review of Taylor Series Approximations [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Statistical Computing?",
+    "answer": "The topics covered in Week 8 of Statistical Computing are Newton's optimization algorithm: examples and code, Gradient Descent algorithm, applications to logistic regression with code [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Statistical Computing?",
+    "answer": "The topics covered in Week 9 of Statistical Computing are MM algorithm, application to Bridge Regression, EM algorithm, Introduction to Gaussian Mixture Model [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Statistical Computing?",
+    "answer": "The topics covered in Week 10 of Statistical Computing are EM algorithm for GMM, Cross-validation with examples [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Statistical Computing?",
+    "answer": "The topics covered in Week 11 of Statistical Computing are Bootstrapping: examples and code. Application to bridge regression, stochastic gradient descent [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Statistical Computing?",
+    "answer": "The topics covered in Week 12 of Statistical Computing are Applications of SGD with code. Simulated annealing: examples, codes, and challenges [9].",
+    "tags": ["BSMA3014", "Statistical Computing", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the suggested books for Statistical Computing?",
+    "answer": "The suggested books for the Statistical Computing course are “Simulation” by Sheldon Ross, Elsevier, Fifth Edition and “Monte Carlo Statistical Methods” by Christian Robert and George Casella, Springer, 2004 [10].",
+    "tags": ["BSMA3014", "Statistical Computing", "Suggested Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Statistical Computing?",
+    "answer": "The instructor for the Statistical Computing course is Dootika Vats, Assistant Professor, Department of Mathematics and Statistics, IIT Kanpur [10].",
+    "tags": ["BSMA3014", "Statistical Computing", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Dootika Vats?",
+    "answer": "Dootika Vats is an Assistant Professor in the Department of Mathematics and Statistics at the Indian Institute of Technology, Kanpur. Previously, she was an NSF Postdocotoral fellow with Prof. Gareth Roberts at the University of Warwick. Her PhD was from the University of Minnesota, Twin-Cities working with Prof. Galin Jones [10].",
+    "tags": ["BSMA3014", "Statistical Computing", "Dootika Vats", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Algorithms for Data Science (ADS)",
+    "answer": "The aim of this second-level graduate course is to provide a broad overview and develop the tools and methods necessary for the large-scale problems that naturally arise in many data science-related application areas [11].",
+    "tags": ["BSDA5003", "Algorithms for Data Science", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Algorithms for Data Science (ADS)?",
+    "answer": "The Course ID for Algorithms for Data Science (ADS) is BSDA5003 [11].",
+    "tags": ["BSDA5003", "Algorithms for Data Science", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the suggested books for Algorithms for Data Science (ADS)?",
+    "answer": "The suggested books for the Algorithms for Data Science (ADS) course are A. Blum, J. Hopcroft, and R. Kannan (2020) Foundations of Data Sciences, Cambridge University Press and M. W. Mahoney (2010) Randomized Algorithms for Matrix and Data, Foundations and Trends in Machine Learning, pages 123-224 [12].",
+    "tags": ["BSDA5003", "Algorithms for Data Science", "Suggested Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Algorithms for Data Science (ADS)?",
+    "answer": "The instructor for the Algorithms for Data Science (ADS) course is Arun Rajkumar, Assistant Professor, Department of Data Science and AI, IIT Madras [12].",
+    "tags": ["BSDA5003", "Algorithms for Data Science", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Arun Rajkumar?",
+    "answer": "Arun Rajkumar is currently an Assistant Professor at the Data Science and AI department of IIT Madras. Prior to joining IIT Madras, he was a research scientist at the Xerox Research Center (now Conduent Labs), Bangalore for three years. He earned his Ph.D from the Indian Institute of Science where he worked on 'Ranking from Pairwise Comparisons'. His research interests are in the areas of Machine learning, statistical learning theory with applications to education and healthcare [12-14].",
+    "tags": ["BSDA5003", "Algorithms for Data Science", "Arun Rajkumar", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What other courses are taught by Arun Rajkumar?",
+    "answer": "Other courses taught by Arun Rajkumar include BSCS2004 - Machine Learning Foundations, BSCS2007 - Machine Learning Techniques, and BSDA5007 - Sequential Decision Making [15-17].",
+    "tags": ["Arun Rajkumar", "Other Courses"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the suggested books for the course Corporate Finance?",
+    "answer": "The suggested books for the course Corporate Finance are Corporate Finance by Ivo Welch, Investment Science by David Luenberger (Oxford University Press), and The Economics of Money, Banking, and Financial Markets Book by Frederic Mishkin (Pearson) [18].",
+    "tags": ["", "Corporate Finance", "Suggested Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for the course Corporate Finance?",
+    "answer": "The instructor for the course Corporate Finance is Dr. Bikramaditya Datta, Assistant Professor, Department of Economic Sciences, IIT Kanpur [18].",
+    "tags": ["", "Corporate Finance", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What other courses are taught by Dr. Bikramaditya Datta?",
+    "answer": "Another course taught by Dr. Bikramaditya Datta is BSMS4002 - Design Thinking for Data-Driven App Development [19].",
+    "tags": ["Bikramaditya Datta", "Other Courses"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Deep Learning",
+    "answer": "The Deep Learning course covers topics such as the history of deep learning, McCulloch Pitts Neuron, Perceptron Learning Algorithm and Convergence, Multilayer Perceptrons (MLPs), Representation Power of MLPs, Sigmoid Neurons, Gradient Descent, Feedforward Neural Networks, Backpropagation, various gradient descent optimization algorithms, Autoencoders, Regularization techniques, Convolutional Neural Networks (CNNs), Recurrent Neural Networks (RNNs), and Transformers [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Deep Learning?",
+    "answer": "The Deep Learning course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [20]. For details of standard course structure and assessments, students can visit the Academics page [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Deep Learning?",
+    "answer": "The topics covered in Week 1 of Deep Learning are History of Deep Learning, McCulloch Pitts Neuron, Thresholding Logic, Perceptron Learning Algorithm and Convergence [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Deep Learning?",
+    "answer": "The topics covered in Week 2 of Deep Learning are Multilayer Perceptrons (MLPs), Representation Power of MLPs, Sigmoid Neurons, Gradient Descent [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Deep Learning?",
+    "answer": "The topics covered in Week 3 of Deep Learning are Feedforward Neural Networks, Representation Power of Feedforward Neural Networks, Backpropagation [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Deep Learning?",
+    "answer": "The topics covered in Week 4 of Deep Learning are Gradient Descent(GD), Momentum Based GD, Nesterov Accelerated GD, Stochastic GD, Adagrad, AdaDelta,RMSProp, Adam,AdaMax,NAdam, learning rate schedulers [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Deep Learning?",
+    "answer": "The topics covered in Week 5 of Deep Learning are Autoencoders and relation to PCA , Regularization in autoencoders, Denoising autoencoders, Sparse autoencoders, Contractive autoencoders [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Deep Learning?",
+    "answer": "The topics covered in Week 6 of Deep Learning are Bias Variance Tradeoff, L2 regularization, Early stopping, Dataset augmentation, Parameter sharing and tying, Injecting noise at input, Ensemble methods, Dropout [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Deep Learning?",
+    "answer": "The topics covered in Week 7 of Deep Learning are Greedy Layer Wise Pre-training, Better activation functions, Better weight initialization methods, Batch Normalization [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Deep Learning?",
+    "answer": "The topics covered in Week 8 of Deep Learning are Learning Vectorial Representations Of Words, Convolutional Neural Networks, LeNet, AlexNet, ZF-Net, VGGNet, GoogLeNet, ResNet [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Deep Learning?",
+    "answer": "The topics covered in Week 9 of Deep Learning are Visualizing Convolutional Neural Networks, Guided Backpropagation, Deep Dream, Deep Art, Fooling Convolutional Neural Networks [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Deep Learning?",
+    "answer": "The topics covered in Week 10 of Deep Learning are Recurrent Neural Networks, Backpropagation Through Time (BPTT), Vanishing and Exploding Gradients, Truncated BPTT [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Deep Learning?",
+    "answer": "The topics covered in Week 11 of Deep Learning are Gated Recurrent Units (GRUs), Long Short Term Memory (LSTM) Cells, Solving the vanishing gradient problem with LSTM [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Deep Learning?",
+    "answer": "The topics covered in Week 12 of Deep Learning are Encoder Decoder Models, Attention Mechanism, Attention over images, Hierarchical Attention, Transformers [20].",
+    "tags": ["BSCS3004", "Deep Learning", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What other courses are taught by the instructors of Deep Learning?",
+    "answer": "Other courses by the same instructors include BSCS5001 - Large Language Models and BSDA5013 - Deep Learning Practice [21-23].",
+    "tags": ["BSCS3004", "Deep Learning", "Other Courses"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Business Data Management (Diploma Level)",
+    "answer": "This Diploma Level course provides a basic understanding of how businesses are organised and run from a data perspective. A significant source of data sets and problems for data scientists will come from the business domain [24].",
+    "tags": ["BSMS2001", "Business Data Management", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Business Data Management (Diploma Level)?",
+    "answer": "The Course ID for Business Data Management (Diploma Level) is BSMS2001 [24].",
+    "tags": ["BSMS2001", "Business Data Management", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Business Data Management (Diploma Level)?",
+    "answer": "The Business Data Management course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [25]. For details of standard course structure and assessments, students can visit the Academics page [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 1 of Business Data Management are Consumption and demand: Micro & Macro economics: the role of data, production, consumption and exchange, consumption baskets, sources of consumer survey data [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 2 of Business Data Management are Micro-economic concepts: Utility: cardinal vs ordinal, indifference curves. Demand and supply curves, changes in demand and elasticity. production cost, cost curves. Make vs buy decisions, production quantity decisions [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 3 of Business Data Management are Firm level strategies and performance data: Objectives and types of pricing strategies, analysis of firm performance - key ratios. Analysis examples: Ultratech, Page Industries, Nestle, TCS [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 4 of Business Data Management are Analysing industry level data: Industry definition and classification codes, IIP and PMI, industry market structure and concentration indices, competitive positioning in an industry - Porter's five forces. Analysis examples: Cement industry, Textile industry, FMCG industry, IT industry [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 5 of Business Data Management are Case study 1 - Fabmart (E-Commerce): Introduction to E-Commerce, Fabmart case introduction, explanation of data set & questions to be answered, revenue pareto, volume pareto, scatter plot of sales and revenue, revenue trend [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 6 of Business Data Management are Fabmart case continued: Sales analysis, organisation of distribution centre, analysis of sales trends, average days of inventory, ledger, avoiding stockouts [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 7 of Business Data Management are Case study 2 - Ace Gears (Manufacturing): Introduction to the manufacturing sector, context of the automotive industry during the years 2019-2021, explanation of data set containing monthly information on sales, production, inventory and costing. Revenue trend analysis, portfolio management [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 8 of Business Data Management are Ace Gears case study continued: Regional sales analysis, sales agent planning, production scheduling, scrap analysis, unit level profitability analysis, raw material re-ordering and safety stock [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 9 of Business Data Management are Case study 3 - Tech Enterprises (IT): Introduction to HR as a function, Introduction to the Tech Enterprises, internal sourcing, ranking of internal candidates, job description, sourcing channels and their analysis, recruitment process and onboarding [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 10 of Business Data Management are Case study 4 - PayBuddy (Fin Tech): Introduction to Finance Industry and Fintech, payment processing and money flow, new credit product introduction, nudge economics, payment transaction and customer data set, identifying rules to target the appropriate customers [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 11 of Business Data Management are Paybuddy case continued: Introduction to A/B testing, analysis of the A/B testing data, credit risk evaluation, risk-return tradeoffs [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Business Data Management (Diploma Level)?",
+    "answer": "The topics covered in Week 12 of Business Data Management are Discussion on student acquired data sets. Wrap upaWrap up (summary) of the case studies, course project work [25].",
+    "tags": ["BSMS2001", "Business Data Management", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who are the instructors for Business Data Management (Diploma Level)?",
+    "answer": "The instructors for the Business Data Management course are Dr. G Venkatesh, Prof. Suresh Babu, and Dr. Milind Gandhe [24].",
+    "tags": ["BSMS2001", "Business Data Management", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the research interests of Dr. Milind Gandhe?",
+    "answer": "Dr. Milind Gandhe's primary research interests are AI (Natural Language Processing, Mathematical Logic, Hardware acceleration for AI at the Edge) and Interaction between Society and Technology [26].",
+    "tags": ["BSMS2001", "Business Data Management", "Milind Gandhe", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Statistics for Data Science II (Foundational Level)",
+    "answer": "This second Foundational Level course will develop on the first course on statistics and further delve into the main statistical problems and solution approaches [27].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Statistics for Data Science II (Foundational Level)?",
+    "answer": "The Course ID for Statistics for Data Science II (Foundational Level) is BSMA1004 [27].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Statistics for Data Science II (Foundational Level)?",
+    "answer": "The Statistics for Data Science II course is worth 4 credits [27].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The Course Type of Statistics for Data Science II is Foundational [27].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the Pre-requisites for Statistics for Data Science II (Foundational Level)?",
+    "answer": "The pre-requisites for the Statistics for Data Science II course are BSMA1002 - Statistics for Data Science I and BSMA1001 - Mathematics for Data Science I [27].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Statistics for Data Science II (Foundational Level)?",
+    "answer": "The Statistics for Data Science II course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [28]. For details of standard course structure and assessments, students can visit the Academics page [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The topics covered in Week 1 of Statistics for Data Science II are Multiple random variables - Two random variables, Multiple random variables and distributions [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The topics covered in Week 2 of Statistics for Data Science II are Multiple random variables - Independence, Functions of random variables - Visualization, functions of multiple random variables [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The topics covered in Week 3 of Statistics for Data Science II are Expectations Casino math, Expected value of a random variable, Scatter plots and spread, Variance and standard deviation, Covariance and correlation, Inequalities [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The topics covered in Week 4 of Statistics for Data Science II are Continuous random variables Discrete vs continuous, Weight data, Density functions, Expectations [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The topics covered in Week 5 of Statistics for Data Science II are Multiple continuous random variables - Height and weight data, Two continuous random variables, Averages of random variables - Colab illustration, Limit theorems, IPL data - histograms and approximate distributions, Jointly Gaussian random variables Probability models for data - Simple models, Models based on other distributions, Models with multiple random variables, dependency, Models for IPL powerplay, Models from data [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is covered in Week 6 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "Week 6 of Statistics for Data Science II (Foundational Level) is a Refresher week [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The topic covered in Week 7 of Statistics for Data Science II is Estimation and Inference I [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The topic covered in Week 8 of Statistics for Data Science II is Estimation and Inference II [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The topic covered in Week 9 of Statistics for Data Science II is Bayesian estimation [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The topic covered in Week 10 of Statistics for Data Science II is Hypothesis testing I [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "The topic covered in Week 11 of Statistics for Data Science II is Hypothesis Testing II [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is covered in Week 12 of Statistics for Data Science II (Foundational Level)?",
+    "answer": "Week 12 of Statistics for Data Science II (Foundational Level) is a Revision week [28].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the reference documents for Statistics for Data Science II (Foundational Level)?",
+    "answer": "The reference documents for Statistics for Data Science II are Joint Discrete Distributions (VOL 1) and Joint Continuous Distributions (VOL 2) [29].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Reference Documents"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the prescribed books for Statistics for Data Science II (Foundational Level)?",
+    "answer": "The prescribed books for the Statistics for Data Science II course are Probability and Statistics with Examples using R. Author: Siva Athreya, Deepayan Sarkar and Steve Tanner [29].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Prescribed Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Statistics for Data Science II (Foundational Level)?",
+    "answer": "The instructor for the Statistics for Data Science II course is Andrew Thangaraj, Professor, Electrical Engineering Department, IIT Madras [29].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Andrew Thangaraj?",
+    "answer": "Andrew Thangaraj received his B. Tech in Electrical Engineering from IIT Madras in 1998 and Ph.D. in Electrical Engineering from the Georgia Institute of Technology, Atlanta, USA in 2003. He was a post-doctoral researcher at the GTL-CNRS Telecom lab at Georgia Tech Lorraine, Metz, France from Aug 2003 till May 2004. Since 2004, he has been a faculty at the Department of Electrical Engineering, IIT Madras, where he is currently a professor. His research interests are in the broad areas of information theory, error-control coding and information-theoretic aspects of cryptography [30]. He has also served as an Editor for the IEEE Transactions on Communications and is currently an Associate Editor for the IEEE Transactions on Information Theory [30]. He is also one of the NPTEL coordinators for IIT Madras and a National MOOCs coordinator for NPTEL under the SWAYAM project of the MHRD. Prof. Andrew is also one of the coordinators for the IIT Madras Online BSc Degree Program [31].",
+    "tags": ["BSMA1004", "Statistics for Data Science II", "Andrew Thangaraj", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Machine Learning Techniques (Diploma Level)",
+    "answer": "This Diploma Level course aims to introduce the main methods and models used in machine learning problems of regression, classification and clustering. It will study the properties of these models and methods and learn about their suitability for different problems [32].",
+    "tags": ["BSCS2007", "Machine Learning Techniques", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Machine Learning Techniques (Diploma Level)?",
+    "answer": "The Course ID for Machine Learning Techniques (Diploma Level) is BSCS2007 [32].",
+    "tags": ["BSCS2007", "Machine Learning Techniques", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the suggested books for Machine Learning Techniques (Diploma Level)?",
+    "answer": "The suggested books for the Machine Learning Techniques course are Pattern Classification by David G. Stork, Peter E. Hart, and Richard O. Duda; Pattern Recognition and Machine Learning by Christopher M. Bishop; and The Elements of Statistical Learning: Data Mining, Inference, and Prediction by Trevor Hastie, Robert Tibshirani, and Jerome Friedman [33].",
+    "tags": ["BSCS2007", "Machine Learning Techniques", "Suggested Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Machine Learning Techniques (Diploma Level)?",
+    "answer": "The instructor for the Machine Learning Techniques course is Arun Rajkumar, Assistant Professor, Department of Data Science and AI, IIT Madras [33].",
+    "tags": ["BSCS2007", "Machine Learning Techniques", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What other courses are taught by Arun Rajkumar (related to Machine Learning)?",
+    "answer": "Other courses by the same instructor, Arun Rajkumar, include BSCS2004 - Machine Learning Foundations and BSDA5007 - Sequential Decision Making [17].",
+    "tags": ["Arun Rajkumar", "Machine Learning", "Other Courses"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about Prof. Nitin Chandrachoodan's background.",
+    "answer": "Prof. Nitin Chandrachoodan received his BTech (electronics and communication engineering) from IIT Madras in 1996, and PhD from the University of Maryland at College Park in 2002, in the area of high-level synthesis techniques for mapping DSP algorithms to architectures. He has been with the department of electrical engineering at IIT Madras since 2004, where he is currently a professor [34]. He loves free and open-source software and has been an active contributor to various open-source projects. He was awarded IBM Champion in the years 2018 and 2019. Currently, he runs DataMeet – India's biggest Open Data Community and works as an Engineering Head [34, 35].",
+    "tags": ["Nitin Chandrachoodan", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What courses are taught by Prof. Nitin Chandrachoodan?",
+    "answer": "Courses taught by Prof. Nitin Chandrachoodan include BSCS2003 - Modern Application Development I and BSCS3005 - Programming in C [36, 37]. He also co-instructs BSCS2003 - Modern Application Development I with Thejesh G N [37].",
+    "tags": ["Nitin Chandrachoodan", "Courses Taught"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the suggested books for the course Managerial Economics?",
+    "answer": "The suggested books for the course Managerial Economics are Managerial Economics by Jeffery Perloff and James Brander, Intermediate Microeconomics by Hal Varian, and Managerial Economics: A Problem Solving Approach by Luke Froeb, Brian McCannm, Mikhael Shor, and Michael Ward [38].",
+    "tags": ["", "Managerial Economics", "Suggested Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for the course Managerial Economics?",
+    "answer": "The instructor for the course Managerial Economics is Vimal Kumar, Associate Professor, Department of Economic Science, IIT Kanpur [38].",
+    "tags": ["", "Managerial Economics", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Big Data and Biological Networks (Degree Level)",
+    "answer": "This Degree Level course aims to enable students to understand biological data, represent and analyze various datasets from a network perspective, encourage network thinking applied to problems across disciplines, understand various network models used to model real-world networks, apply network analytics techniques to understand biological networks, implement basic network analysis algorithms in Python, learn different AI/ML problem formulations for biological data, and apply AI/ML techniques for analysis of biological data using Python [39].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Big Data and Biological Networks (Degree Level)?",
+    "answer": "The Course ID for Big Data and Biological Networks (Degree Level) is BSBT4002 [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Big Data and Biological Networks (Degree Level)?",
+    "answer": "The Big Data and Biological Networks course is worth 4 credits [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The Course Type of Big Data and Biological Networks is Elective [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Are there any Pre-requisites for Big Data and Biological Networks (Degree Level)?",
+    "answer": "There are no pre-requisites for the Big Data and Biological Networks course [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Big Data and Biological Networks (Degree Level)?",
+    "answer": "The Big Data and Biological Networks course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [40]. For details of standard course structure and assessments, students can visit the Academics page [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 1 of Big Data and Biological Networks is Introduction to Biological Big Data. Information Flow in Biological Systems [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 2 of Big Data and Biological Networks is Omics datasets: Various flavours of big biological datasets (genomic, transcriptomic, proteomic, metabolomic, etc.) [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 3 of Big Data and Biological Networks is Introduction to Graph theory. History. Types of graphs. Representing biological networks [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 4 of Big Data and Biological Networks is Network structure: Key parameters, measures of centrality [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 5 of Big Data and Biological Networks is Key Network Models: Erdos-Renyi, Watts-Strogatz (small-world) and Barabasi-Albert (power-law models) [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 6 of Big Data and Biological Networks is Network clustering/community detection. Identifying motifs in networks. Studying network perturbations [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 7 of Big Data and Biological Networks is Applications of network biology: Predicting drug targets, predicting drug molecules, synthesis of new molecules (chemoinformatics) [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 8 of Big Data and Biological Networks is Applications of network biology: Epidemiology, Centrality-lethality hypothesis [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 9 of Big Data and Biological Networks is AI & ML for Biological Data Analysis. Introduction to AI & ML tasks in biological networks [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 10 of Big Data and Biological Networks is Biological network reconstruction from omics and literature data [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 11 of Big Data and Biological Networks is Property prediction using network data. Node classification and link prediction [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Big Data and Biological Networks (Degree Level)?",
+    "answer": "The topic covered in Week 12 of Big Data and Biological Networks is Analysis of heterogeneous and multi-layer/multiplex networks. Future Perspectives [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who are the instructors for Big Data and Biological Networks (Degree Level)?",
+    "answer": "The instructors for the Big Data and Biological Networks course are Dr. Nirav P Bhatt, Karthik Raman, and Prof. Himanshu Sinha [40].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Dr. Nirav P Bhatt?",
+    "answer": "Dr. Nirav P Bhatt earned his Bachelor in Chemical Engineering from The M S University of Baroda, Masters in Chemical Engineering from IIT Madras, and Docteur es Science (DSc) from EPFL, Switzerland. Currently, He is Assistant Professor with Bio Tech Department in IIT Madras [41].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Nirav P Bhatt", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Dr. Karthik Raman?",
+    "answer": "Dr. Karthik Raman is an Assistant Professor at the Department of Biotechnology, Indian Institute of Technology Madras since April 2011. His research interests are in the areas of metabolic network analysis, with applications in metabolic engineering and drug target identification. He received his Ph.D. in 2009 from the lab of Prof. Nagasuma Chandra at the Supercomputer Education and Research Centre at the Indian Institute of Science, Bangalore. Following his Ph.D., Karthik was a post-doctoral researcher at the lab of Prof. Dr. Andreas Wagner, at the University of Zürich, Switzerland. Karthik’s post-doctoral research was involved the analysis of signalling circuits in yeast as well as synthetic logic circuits, for their robustness and evolvability [41].",
+    "tags": ["BSBT4002", "Big Data and Biological Networks", "Karthik Raman", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Industry 4.0 (Degree Level)",
+    "answer": "This Degree Level course aims to describe various facets of Industry 4.0, to connect questions raised by Industry 4.0 with appropriate data science techniques, to develop data science tools for Industry 4.0, and to build data-centric business models [42].",
+    "tags": ["BSMS4001", "Industry 4.0", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Industry 4.0 (Degree Level)?",
+    "answer": "The Course ID for Industry 4.0 (Degree Level) is BSMS4001 [42].",
+    "tags": ["BSMS4001", "Industry 4.0", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Industry 4.0 (Degree Level)?",
+    "answer": "The instructor for the Industry 4.0 course is Prof. Rahul R Marathe [4, 42].",
+    "tags": ["BSMS4001", "Industry 4.0", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What other courses are taught by Prof. Rahul R Marathe?",
+    "answer": "Another course taught by Prof. Rahul R Marathe is BSMS2002 - Business Analytics [4].",
+    "tags": ["Rahul R Marathe", "Other Courses"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the background of Harish Guruprasad Ramaswamy.",
+    "answer": "Harish Guruprasad Ramaswamy is currently an assistant professor at the computer science and engineering (CSE) department of IIT Madras. His primary areas of interest are in machine learning, statistical learning theory and optimisation. He was previously a research scientist at IBM research labs and a post-doc at University of Michigan. He completed his PhD at the Computer Science and Automation (CSA) department of the Indian Institute of Science (IISc), Bangalore advised by Prof. Shivani Agarwal. He has been fortunate to work with Profs. Ambuj Tewari and Clayton Scott during his PhD and postdoc [43]. He received his Masters and Ph.D degrees in Computer Science and Automation from Indian Institute of Science, in 2008 and 2013, respectively. He was awarded the third prize for his Ph.D. dissertation, by the IEEE Intelligent Transportation Systems Society (ITSS). He is the coauthor of a book entitled `Stochastic Recursive Algorithms for Optimization: Simultaneous Perturbation Methods', published by Springer in 2013. His research interests are in reinforcement learning, simulation optimization and multi-armed bandits, with applications in transportation systems, wireless networks and recommendation systems [44].",
+    "tags": ["Harish Guruprasad Ramaswamy", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Modern Application Development I (Diploma Level)",
+    "answer": "The course aims to enable students to design a web application, distinguish between the frontend, the backend, and the database activities, and create such an application with Python and MySQL [37].",
+    "tags": ["BSCS2003", "Modern Application Development I", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Modern Application Development I (Diploma Level)?",
+    "answer": "The Course ID for Modern Application Development I (Diploma Level) is BSCS2003 [37].",
+    "tags": ["BSCS2003", "Modern Application Development I", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Modern Application Development I (Diploma Level)?",
+    "answer": "The Modern Application Development I course is worth 4 credits [37].",
+    "tags": ["BSCS2003", "Modern Application Development I", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Modern Application Development I (Diploma Level)?",
+    "answer": "The Course Type of Modern Application Development I is Programming [37].",
+    "tags": ["BSCS2003", "Modern Application Development I", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Are there any Pre-requisites for Modern Application Development I (Diploma Level)?",
+    "answer": "There are no pre-requisites for the Modern Application Development I course [37].",
+    "tags": ["BSCS2003", "Modern Application Development I", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Is there a Co-requisite for Modern Application Development I (Diploma Level)?",
+    "answer": "Yes, the co-requisite for Modern Application Development I is BSCS2001 - Database Management Systems [37].",
+    "tags": ["BSCS2003", "Modern Application Development I", "Co-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Modern Application Development I (Diploma Level)?",
+    "answer": "The Modern Application Development I course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [37]. For details of standard course structure and assessments, students can visit the Academics page [37].",
+    "tags": ["BSCS2003", "Modern Application Development I", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who are the instructors for Modern Application Development I (Diploma Level)?",
+    "answer": "The instructors for the Modern Application Development I course are Thejesh G N and Prof. Nitin Chandrachoodan [37].",
+    "tags": ["BSCS2003", "Modern Application Development I", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the background of Thejesh G N.",
+    "answer": "Thejesh GN is an Electronics and Communication graduate from Bangalore, India. He started his career as a software engineer at Infosys technologies limited. He was awarded Infosys Community Empathy Fellowship in 2010. He was also a senior software engineer for NPTEL / CourseBuilder team. He loves free and open-source software and has been an active contributor to various open-source projects. He was awarded IBM Champion in the years 2018 and 2019. Currently, he runs DataMeet – India's biggest Open Data Community and works as an Engineering Head [35].",
+    "tags": ["Thejesh G N", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What other courses are taught by Thejesh G N?",
+    "answer": "Other courses taught by Thejesh G N include BSCS2006 - Modern Application Development II and BSCS3005 - Programming in C [45].",
+    "tags": ["Thejesh G N", "Other Courses"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Large Language Models (Degree Level)",
+    "answer": "This Degree Level course focuses on understanding the Transformer architecture, the concept of pretraining and fine-tuning language models, comparing different types of tokenizers, understanding different LLMs architectures (encoder-decoder, encoder-only, decoder-only), exploring common datasets, addressing the challenges of applying vanilla attention mechanisms for long-range context windows, and applying different types of fine-tuning techniques [46].",
+    "tags": ["BSCS5001", "Large Language Models", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Is there an application deadline for Large Language Models (Degree Level)?",
+    "answer": "Yes, applications for the May 2025 Batch of the Large Language Models course close on May 20, 2025 [46].",
+    "tags": ["BSCS5001", "Large Language Models", "Application Deadline"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "When is the exam for Large Language Models (Degree Level)?",
+    "answer": "The exam for the Large Language Models course is on July 13, 2025 [46].",
+    "tags": ["BSCS5001", "Large Language Models", "Exam Date"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the Pre-requisites for Large Language Models (Degree Level)?",
+    "answer": "The pre-requisite for the Large Language Models course is BSCS3004 - Deep Learning [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Large Language Models (Degree Level)?",
+    "answer": "For details of standard course structure and assessments for the Large Language Models course, students can visit the Academics page [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 1 of Large Language Models is Transformers: Introduction to transformers - Self-attention - cross- attention-Masked attention-Positional encoding [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 2 of Large Language Models is A deep dive into number of parameters, computational complexity and FLOPs- Introduction to language modeling [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 3 of Large Language Models is Causal Language Modeling: What is a language model?- Generative Pretrained Transformers (GPT) - Training and inference [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 4 of Large Language Models is Masked Language Modeling : Bidirectional Encoder Representations of Transformers (BERT) - Fine-tuning - A deep dive into tokenization: BPE, SentencePiece, wordpiece [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 5 of Large Language Models is Bigger Picture: T5, A deep dive into text-to-text (genesis of prompting), taxonomy of models, road ahead [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 6 of Large Language Models is Data: Datasets, Pipelines, effectiveness of clean data, Architecture: Types of attention, positional encoding (PE) techniques, scaling techniques [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 7 of Large Language Models is Training: Revisiting optimizers, LION vs Adam, Loss functions, Learning schedules, Gradient Clipping, typical failures during training [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 8 of Large Language Models is Fine Tuning: Prompt Tuning,Multi-task Fine-tuning,Parametric Efficient Fine-Tuning, Instruction fine-tuning datasets [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 9 of Large Language Models is Benchmarks: MMLU, BigBench, HELM,OpenLLM, Evaluation Frameworks [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 10 of Large Language Models is Training Large Models: Mixed precision training,Activation checkpointing, 3D parallelism, ZERO, Bloom as a case study [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 11 of Large Language Models is Scaling Laws: Chinchilla,Gopher, Palm v2 [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Large Language Models (Degree Level)?",
+    "answer": "The topic covered in Week 12 of Large Language Models is Recent advances [47].",
+    "tags": ["BSCS5001", "Large Language Models", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the suggested books for Large Language Models (Degree Level)?",
+    "answer": "The suggested books for the Large Language Models course are Research papers and articles [48].",
+    "tags": ["BSCS5001", "Large Language Models", "Suggested Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Large Language Models (Degree Level)?",
+    "answer": "The instructor for the Large Language Models course is Prof. Mitesh M.Khapra, Associate Professor, Department of Computer Science and Engineering, IIT Madras [48].",
+    "tags": ["BSCS5001", "Large Language Models", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Prof. Mitesh M.Khapra?",
+    "answer": "Mitesh M. Khapra is an Associate Professor in the Department of Computer Science and Engineering at IIT Madras and is affiliated with the Robert Bosch Centre for Data Science and AI. He is also a co-founder of One Fourth Labs and AI4Bharat. His research interests span Deep Learning, Multimodal Multilingual Processing, Natural Language Generation, Dialog systems, Question Answering and Indic Language Processing. Prior to IIT Madras, he was a Researcher at IBM Research India. He completed his PhD and M.Tech from IIT Bombay [48].",
+    "tags": ["BSCS5001", "Large Language Models", "Mitesh M.Khapra", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What other courses are taught by Prof. Mitesh M.Khapra?",
+    "answer": "Other courses taught by Prof. Mitesh M.Khapra include BSCS3004 - Deep Learning and BSDA5013 - Deep Learning Practice [22, 49].",
+    "tags": ["Mitesh M.Khapra", "Other Courses"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Introduction to Natural Language Processing (i-NLP) (Degree Level)",
+    "answer": "This Degree Level course aims to provide knowledge and understanding of linguistics techniques, classical (statistical) approaches, and deep learning approaches (RNN and CNN) to NLP. It also covers Attention Mechanism, Transformers, and Large Language Models (LLMs). The course aims to enable participants to read and understand latest NLP research papers, identify applicable NLP techniques, implement NLP models, and develop applications based on textual generative models [50].",
+    "tags": ["", "Introduction to Natural Language Processing (i-NLP)", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Introduction to Natural Language Processing (i-NLP) (Degree Level)?",
+    "answer": "The instructor for the Introduction to Natural Language Processing (i-NLP) course is Rahul Mishra, Assistant Professor, Language Technologies Research Center (LTRC), Computer Science, IIIT Hyderabad [51].",
+    "tags": ["", "Introduction to Natural Language Processing (i-NLP)", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Rahul Mishra?",
+    "answer": "Rahul Mishra is an Assistant Professor at IIIT Hyderabad's Language Technology Research Centre (LTRC), focusing on Controllable Text Summarization, Misinformation Detection, Model Explainability, Graph Representation Learning, and Natural Language Generation. Previously, he was a senior postdoctoral researcher at the University of Geneva, Switzerland, specializing in biomedical NLP, and a Senior Staff Engineer/Researcher at Samsung Research Lab in Bangalore. He holds a PhD from the University of Stavanger, Norway and an M.Tech from IIIT Delhi [51].",
+    "tags": ["", "Introduction to Natural Language Processing (i-NLP)", "Rahul Mishra", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What other courses are associated with the instructors from the Humanities and Social Sciences department?",
+    "answer": "Prof. Rajesh Kumar teaches BSHS1001 - English I [52]. Karthika Sathyanathan teaches BSHS1002 - English II [53].",
+    "tags": ["Humanities and Social Sciences", "Courses Taught"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Speech Processing (Degree Level)",
+    "answer": "The Speech Processing course covers topics such as review of signals and systems, acoustic feature analysis of speech signals, Gaussian mixture models (GMM), Hidden Markov model (HMM), components of ASR, HMMs for acoustic modeling, speech synthesis, neural networks for building speech technologies, end-to-end approaches like CTC and encoder-decoder architectures, applications to ASR and TTS, speaker recognition/verification, speaker diarization, speaker adaptation, code-switched speech recognition, speech translation, singing voice synthesis, voice conversion, and generic voice synthesis [54].",
+    "tags": ["", "Speech Processing", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Speech Processing (Degree Level)?",
+    "answer": "The Speech Processing course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [54]. For details of standard course structure and assessments, students can visit the Academics page [54].",
+    "tags": ["", "Speech Processing", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 1 of Speech Processing are Review of Signals and Systems, Continuous time signals and transforms Discrete time signals, Discrete Fourier transform, Autocorrelation and Cross-Correlation [54].",
+    "tags": ["", "Speech Processing", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 2 of Speech Processing are Acoustic Feature Analysis of Speech Signals I, II Gaussian mixture models (GMM), universal background model (UBM-GMM), singular value decomposition (SVD) [54].",
+    "tags": ["", "Speech Processing", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 3 of Speech Processing are Hidden Markov model (HMM), Examples of HMM based approach for ASR, TTS, speaker diarization Information bottleneck (IB) based clustering for diarization [54].",
+    "tags": ["", "Speech Processing", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 4 of Speech Processing are Introduction and History of ASR and TTS Components of ASR: Acoustic Modelling, Punctuation Model (Lexicon) and language modelling (N-Gram Language models) [54].",
+    "tags": ["", "Speech Processing", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 5 of Speech Processing are HMMs for Acoustic Modelling - Monophone, Triphone Speech Synthesis: unit selection, statistical parametric synthesis (HTS) [54].",
+    "tags": ["", "Speech Processing", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 6 of Speech Processing are Neural networks for building speech technologies NN for Acoustic Modelling - Hybrid modelling- Hybrid-NN: DNN,CNN,TDNN [54].",
+    "tags": ["", "Speech Processing", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 7 of Speech Processing are End-to-End Approaches I: CTC, Encoder-decoder Architecture E2E with RNN [54].",
+    "tags": ["", "Speech Processing", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 8 of Speech Processing are Applications to ASR and TTS End-to-End Approaches II [54].",
+    "tags": ["", "Speech Processing", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 9 of Speech Processing are Encoder-decoder Architecture E2E with transformers for ASR and TTS Interesting Problems [54].",
+    "tags": ["", "Speech Processing", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 10 of Speech Processing are Speaker recognition/verification: with ivector, xvector Speaker diarization: using x-vector [54].",
+    "tags": ["", "Speech Processing", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 11 of Speech Processing are Speaker adaptation: (revisit i, x vectors) and introduce s-vectors. Code Switched Speech recognition; Speech Translation [54].",
+    "tags": ["", "Speech Processing", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Speech Processing (Degree Level)?",
+    "answer": "The topics covered in Week 12 of Speech Processing are Singing voice synthesis; voice conversion; generic voice synthesis [54].",
+    "tags": ["", "Speech Processing", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the prescribed books for Speech Processing (Degree Level)?",
+    "answer": "The prescribed books for the Speech Processing course will be announced in the class [54].",
+    "tags": ["", "Speech Processing", "Prescribed Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who are the instructors for Speech Processing (Degree Level)?",
+    "answer": "The instructors for the Speech Processing course are Prof. Hema A Murthy and Prof. S. Umesh [23, 55].",
+    "tags": ["", "Speech Processing", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Prof. Hema A Murthy?",
+    "answer": "Prof. Hema A Murthy is a faculty member at the Department of Computer Science and Engineering, Indian Institute of Technology Madras [55].",
+    "tags": ["", "Speech Processing", "Hema A Murthy", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Prof. S. Umesh?",
+    "answer": "S. Umesh is a Professor of Electrical Engineering at IIT-Madras. He completed his PhD from the University of Rhode Island, USA and his PostDoctoral Fellowship from the City University of New York. He has also been a visiting researcher at AT&T Research Laboratories, USA; at Machine Intelligence Laboratory Cambridge University Engineering Department, UK; and the Department of Computer Science, RWTH-Aachen, Germany [23]. He is a recipient of the AICTE Career Award for Young Teachers in 1997 and the Alexander von Humboldt Research Fellowship in 2004. He was part of the U.S. DARPA's EARS programme at Cambridge University and the RWTH-Aachen's TC-STAR project. He led a consortium to develop ASR systems in Indian languages and is currently leading the ASR efforts for the Natural Language Translation Mission [56, 57].",
+    "tags": ["", "Speech Processing", "S. Umesh", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Game Theory (Degree Level)",
+    "answer": "The Game Theory course covers topics such as games with simultaneous moves, games with sequential moves, combining sequential and simultaneous moves and mixed strategies, evolutionary game theory, the matching problem and Gale-Shapley Algorithm, voting, cascades, Arrow’s Impossibility Theorem, cooperative games and Shapley values, fair division and bankruptcy problems, auctions, and network effects [58].",
+    "tags": ["", "Game Theory", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Game Theory (Degree Level)?",
+    "answer": "The Game Theory course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [58]. For details of standard course structure and assessments, students can visit the Academics page [58].",
+    "tags": ["", "Game Theory", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 1 of Game Theory is Introduction and General Principles [58].",
+    "tags": ["", "Game Theory", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 2 of Game Theory is Games with Simultaneous Moves I [58].",
+    "tags": ["", "Game Theory", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 3 of Game Theory is Games with Simultaneous Move II [58].",
+    "tags": ["", "Game Theory", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 4 of Game Theory is Games with Sequential Moves [58].",
+    "tags": ["", "Game Theory", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 5 of Game Theory is Combining Sequential and Simultaneous Moves and Mixed Strategies [58].",
+    "tags": ["", "Game Theory", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 6 of Game Theory is Evolutionary game Theory [58].",
+    "tags": ["", "Game Theory", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 7 of Game Theory is Matching Problem, Gale-Shapley Algorithm [58].",
+    "tags": ["", "Game Theory", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 8 of Game Theory is Voting, Cascades, and Arrow’s Impossibility Theorem [58].",
+    "tags": ["", "Game Theory", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 9 of Game Theory is Cooperative Games, Shapley Values [58].",
+    "tags": ["", "Game Theory", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 10 of Game Theory is Fair Division, Bankruptcy Problems [58].",
+    "tags": ["", "Game Theory", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 11 of Game Theory is Auctions [58].",
+    "tags": ["", "Game Theory", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Game Theory (Degree Level)?",
+    "answer": "The topic covered in Week 12 of Game Theory is Network Effects [58].",
+    "tags": ["", "Game Theory", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the suggested books for Game Theory (Degree Level)?",
+    "answer": "The suggested books for the Game Theory course are Games of Strategy by Avinash Dixit and Susan Skeath, Insights into Game Theory: An Alternative Mathematical Experience by Ein-Ya Gura, and Michael Maschler, and Networks, Crowds and Markets: Reasoning About a Highly Connected World by David Easley, and Jon Kleinberg [59].",
+    "tags": ["", "Game Theory", "Suggested Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Game Theory (Degree Level)?",
+    "answer": "The instructor for the Game Theory course is Prof. R. Vijayaraghavan [58].",
+    "tags": ["", "Game Theory", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What other courses are associated with Prof. R. Vijayaraghavan?",
+    "answer": "Other courses by the same instructor include BSCS2003 - Modern Application Development I and BSCS2006 - Modern Application Development II [60].",
+    "tags": ["R. Vijayaraghavan", "Other Courses"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are some of the suggested readings mentioned in the context of instructors from the Department of Humanities and Social Sciences?",
+    "answer": "Suggested readings mentioned include Oxford English Dictionary, How to Analyze People by Sebastian Croft, Malgudi Days by RK Narayan, 365 Jataka Tales, 365 Panchtatra Stories, and 365 Tales from Indian Mythology [61]. These appear in the context of instructors Rajesh Kumar and Karthika Sathyanathan [61, 62].",
+    "tags": ["Humanities and Social Sciences", "Suggested Readings"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Forensic Accounting and Fraud Analytics (Degree Level)",
+    "answer": "This Degree Level course covers topics such as financial statements, fraud vulnerabilities, the role and scope of forensic accounting, Benford Law and its implementation, aging analysis, Pareto charts, outlier identification, financial transaction lifecycle, entity resolution, anomaly detection (supervised, unsupervised, and time-based), model explainability, and financial data visualization using Tableau [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The Course ID for Forensic Accounting and Fraud Analytics (Degree Level) is BSGN3002 [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The Forensic Accounting and Fraud Analytics course is worth 4 credits [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The Course Type of Forensic Accounting and Fraud Analytics is Elective [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Are there any Pre-requisites for Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "There are no pre-requisites for the Forensic Accounting and Fraud Analytics course [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The Forensic Accounting and Fraud Analytics course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [63]. For details of standard course structure and assessments, students can visit the Academics page [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topics covered in Week 1 of Forensic Accounting and Fraud Analytics are INTRODUCTION TO ACCOUNTING AND FINANCE: Financial Statements | Uses relevance of financial statements | Decision making in the financial arena | Need for finance and accounting in a business world [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topics covered in Week 2 of Forensic Accounting and Fraud Analytics are FRAUD VULNERABILITIES AND FINANCE: Types of fraud | Why do they occur | Where do they occur | Detecting red flags [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topics covered in Week 3 of Forensic Accounting and Fraud Analytics are FORENSIC ACCOUNTING - 1: Intro to Forensic Accounting | Source of assignments and referrals for a forensic accountant | Role of the forensic accountant as an expert - identify any conflicts [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topics covered in Week 4 of Forensic Accounting and Fraud Analytics are FORENSIC ACCOUNTING - 2: Scope of forensic accounting | Process of forensic accounting - Analysis [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topics covered in Week 5 of Forensic Accounting and Fraud Analytics are BENFORD LAW AND IMPLEMENTATION: Benford Law | Using Benford Law in Excel to detect audit fraud [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topics covered in Week 6 of Forensic Accounting and Fraud Analytics are AGING ANALYSIS, PARETO AND OUTLIERS: Detecting fraud using Aging Analysis in Excel | Creating a Pareto Chart | Outlier identification [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topic covered in Week 7 of Forensic Accounting and Fraud Analytics is FINANCIAL TRANSACTION LIFECYCLE: Transaction Lifecycle | Where is AI/ML used in the present world? [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topic covered in Week 8 of Forensic Accounting and Fraud Analytics is ENTITY RESOLUTION: What is an entity in a transaction? | Entity resolution [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topic covered in Week 9 of Forensic Accounting and Fraud Analytics is ANOMALY DETECTION - 1: Supervised Anomaly Detection [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topic covered in Week 10 of Forensic Accounting and Fraud Analytics is ANOMALY DETECTION - 2: Unsupervised Anomaly Detection [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topic covered in Week 11 of Forensic Accounting and Fraud Analytics is ANOMALY DETECTION - 3: Time Based Anomaly Detection [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The topic covered in Week 12 of Forensic Accounting and Fraud Analytics is Model Explainability | Financial Data Visualization using Tableau [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the prescribed books for Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The prescribed books for the Forensic Accounting and Fraud Analytics course will be announced soon [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Prescribed Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Forensic Accounting and Fraud Analytics (Degree Level)?",
+    "answer": "The instructor for the Forensic Accounting and Fraud Analytics course is Dr. Arun Kumar G [63].",
+    "tags": ["BSGN3002", "Forensic Accounting and Fraud Analytics", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Statistics for Data Science I (Foundational Level)",
+    "answer": "This Foundational Level course introduces students to large datasets and various insights that can be gleaned from them. It also introduces basic concepts of probability leading to a discussion on Random variables [64].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Statistics for Data Science I (Foundational Level)?",
+    "answer": "The Course ID for Statistics for Data Science I (Foundational Level) is BSMA1002 [65].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Statistics for Data Science I (Foundational Level)?",
+    "answer": "The Statistics for Data Science I course is worth 4 credits [65].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The Course Type of Statistics for Data Science I is Foundational [65].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Are there any Pre-requisites for Statistics for Data Science I (Foundational Level)?",
+    "answer": "There are no pre-requisites for the Statistics for Data Science I course [65].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the learning outcomes of Statistics for Data Science I (Foundational Level)?",
+    "answer": "Upon completing this course, students will be able to create, download, manipulate, and analyse data sets; frame questions that can be answered from data in terms of variables and cases; describe data using numerical summaries and visual representations; estimate chance by applying laws of probability; translate real-world problems into probability models; calculate expectation and variance of a random variable; and describe and apply the properties of the Binomial Distribution and Normal distribution [65].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Learning Outcomes"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Statistics for Data Science I (Foundational Level)?",
+    "answer": "The Statistics for Data Science I course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [66]. For details of standard course structure and assessments, students can visit the Academics page [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 1 of Statistics for Data Science I are Introduction and type of data, Types of data, Descriptive and Inferential statistics, Scales of measurement [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 2 of Statistics for Data Science I are Describing categorical data Frequency distribution of categorical data, Best practices for graphing categorical data, Mode and median for categorical variable [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 3 of Statistics for Data Science I are Describing numerical data Frequency tables for numerical data, Measures of central tendency - Mean, median and mode, Quartiles and percentiles, Measures of dispersion - Range, variance, standard deviation and IQR, Five number summary [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 4 of Statistics for Data Science I are Association between two variables - Association between two categorical variables - Using relative frequencies in contingency tables, Association between two numerical variables - Scatterplot, covariance, Pearson correlation coefficient, Point bi-serial correlation coefficient [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 5 of Statistics for Data Science I are Basic principles of counting and factorial concepts - Addition rule of counting, Multiplication rule of counting, Factorials [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 6 of Statistics for Data Science I are Permutations and combinations [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 7 of Statistics for Data Science I are Probability Basic definitions of probability, Events, Properties of probability [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 8 of Statistics for Data Science I are Conditional probability - Multiplication rule, Independence, Law of total probability, Bayes’ theorem [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 9 of Statistics for Data Science I are Random Variables - Random experiment, sample space and random variable, Discrete and continuous random variable, Probability mass function, Cumulative density function [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 10 of Statistics for Data Science I are Expectation and Variance - Expectation of a discrete random variable, Variance and standard deviation of a discrete random variable [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 11 of Statistics for Data Science I are Binomial and poisson random variables - Bernoulli trials, Independent and identically distributed random variable, Binomial random variable, Expectation and variance of abinomial random variable, Poisson distribution [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Statistics for Data Science I (Foundational Level)?",
+    "answer": "The topics covered in Week 12 of Statistics for Data Science I are Introduction to continous random variables - Area under the curve, Properties of pdf, Uniform distribution, Exponential distribution [66].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the reference documents for Statistics for Data Science I (Foundational Level)?",
+    "answer": "The reference documents for Statistics for Data Science I are Descriptive Statistics (VOL 1) and Probability and Probability Distributions (VOL 2) [67].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Reference Documents"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the prescribed books for Statistics for Data Science I (Foundational Level)?",
+    "answer": "The prescribed books for the Statistics for Data Science I course are Introductory Statistics (10th Edition) - ISBN 9780321989178, by Neil A. Weiss published by Pearson and Introductory Statistics (4th Edition) - by Sheldon M. Ross [67].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Prescribed Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Statistics for Data Science I (Foundational Level)?",
+    "answer": "The instructor for the Statistics for Data Science I course is Usha Mohan, Professor, Department of Management Studies, IIT Madras [67].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Usha Mohan?",
+    "answer": "Usha Mohan holds a Ph.D. from Indian Statistical Institute. She has worked as a researcher in ISB Hyderabad and Lecturer at University of Hyderabad prior to joining IIT Madras. She offers courses in Data analytics, Operations research, and Supply chain management. Her research interests include developing quantitative models in operations management and combinatorial optimization [67].",
+    "tags": ["BSMA1002", "Statistics for Data Science I", "Usha Mohan", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Market Research (Degree Level)",
+    "answer": "This Degree Level course aims to provide a basic understanding of research methodology and its implementation in different business domains, understand the role, scope, process, cost, and value of marketing research, match research techniques to marketing problems, analyse data and translate them into actionable findings, and enable students to do hands-on research to solve business problems [68].",
+    "tags": ["", "Market Research", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Is there an application deadline for Market Research (Degree Level)?",
+    "answer": "Yes, applications for the May 2025 Batch of the Market Research course close on May 20, 2025 [68].",
+    "tags": ["", "Market Research", "Application Deadline"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "When is the exam for Market Research (Degree Level)?",
+    "answer": "The exam for the Market Research course is on July 13, 2025 [68].",
+    "tags": ["", "Market Research", "Exam Date"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Market Research (Degree Level)?",
+    "answer": "For details of standard course structure and assessments for the Market Research course, students can visit the Academics page [69].",
+    "tags": ["", "Market Research", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Market Research (Degree Level)?",
+    "answer": "The topics covered in Week 1 of Market Research are Marketing Research, the Research Process and Problem Formulation: The Role of Research in Marketing and the Marketing Research Process, Defining the Marketing Research Problem and Developing an Approach [69].",
+    "tags": ["", "Market Research", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Market Research (Degree Level)?",
+    "answer": "The topic covered in Week 2 of Market Research is Research Design Formulation: Research Design, Exploratory Research Design, Descriptive Research Design, Causal Research Design and Test Markets [69].",
+    "tags": ["", "Market Research", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Market Research (Degree Level)?",
+    "answer": "The topic covered in Week 3 of Market Research is Designing Data Collection Methods and Forms: Surveys and Interviews, Measurement, Measurement Scales, Questionnaires, and Instruments [69].",
+    "tags": ["", "Market Research", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Market Research (Degree Level)?",
+    "answer": "The topic covered in Week 4 of Market Research is Different Market Research Applications, and the Industry Approach to each: Key marketing issues like new product development, STP, branding, etc. and the MR tools and techniques to address each [69].",
+    "tags": ["", "Market Research", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Market Research (Degree Level)?",
+    "answer": "The topic covered in Week 5 of Market Research is Data Analysis and Interpretation: Entering the Data in SPSS, Examining the Data and Univariate Data Analysis: Descriptive Statistics, Cross Tabulation, Graphical Display of Data, Chart Deception and Hypothesis Testing: Mean Differences, ANOVA, Multivariate Data Analysis: An Overview, Exploratory Factor Analysis, Cluster Analysis, Multiple Regression in SPSS [69].",
+    "tags": ["", "Market Research", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the prescribed textbooks for Market Research (Degree Level)?",
+    "answer": "The prescribed textbooks for the Market Research course are Marketing Research, An Applied Orientation by Naresh K. Malhotra and Satyabhusan Dash (Pearson Education, 7th Edition, 2019) and Business Research Methods, A South Asian Perspective by William G. Zikmund, Barry J. Babin, Jon C. Carr, Atanu Adhikari and Mitch Griffin (Cengage Learning, 9th Edition, 2013) [70].",
+    "tags": ["", "Market Research", "Prescribed Textbooks"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the reference books for Market Research (Degree Level)?",
+    "answer": "The reference books for the Market Research course include Business Research Methods by Alan Bryman and Emma Bell (Oxford Publication, 3rd Edition, 2011), Multivariate Data Analysis by Hair, Anderson, Tatham and Black (Pearson Education), Discovering Statistics using SPSS by Andy P. Field (SAGE, 5th Edition, 2000), and Basic Marketing Research by Gilbert A Churchill (Fort Worth, Dryden Press, 7th Edition, 1999) [70].",
+    "tags": ["", "Market Research", "Reference Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Market Research (Degree Level)?",
+    "answer": "The instructor for the Market Research course is Dr. Anitha S [68].",
+    "tags": ["", "Market Research", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Privacy & Security in Online Social Media (Degree Level)",
+    "answer": "This Degree Level course aims to list various privacy and security concerns on online social networks, describe different methodologies used for solving these problems, enable students to collect, analyze, and visualize data within the context of privacy and security in online social media, and potentially design a project idea to attack a problem in this domain [71].",
+    "tags": ["BSCS3007", "Privacy & Security in Online Social Media", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Privacy & Security in Online Social Media (Degree Level)?",
+    "answer": "The Course ID for Privacy & Security in Online Social Media (Degree Level) is BSCS3007 [71].",
+    "tags": ["BSCS3007", "Privacy & Security in Online Social Media", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Privacy & Security in Online Social Media (Degree Level)?",
+    "answer": "The Privacy & Security in Online Social Media course is worth 4 credits [71].",
+    "tags": ["BSCS3007", "Privacy & Security in Online Social Media", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Privacy & Security in Online Social Media (Degree Level)?",
+    "answer": "The Course Type of Privacy & Security in Online Social Media is Elective [71].",
+    "tags": ["BSCS3007", "Privacy & Security in Online Social Media", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Are there any Pre-requisites for Privacy & Security in Online Social Media (Degree Level)?",
+    "answer": "There are no pre-requisites for the Privacy & Security in Online Social Media course [71].",
+    "tags": ["BSCS3007", "Privacy & Security in Online Social Media", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Privacy & Security in Online Social Media (Degree Level)?",
+    "answer": "The instructor for the Privacy & Security in Online Social Media course is Prof. Ponnurangam Kumaraguru [71, 72].",
+    "tags": ["BSCS3007", "Privacy & Security in Online Social Media", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Prof. Ponnurangam Kumaraguru?",
+    "answer": "Prof. Ponnurangam Kumaraguru ("PK") is a Professor of Computer Science at IIIT-Hyderabad, a Visiting Faculty at IIT Kanpur, an Adjunct faculty at IIIT Delhi, and Associated Researcher at Robert Bosch Centre for Data Science and AI, IIT Madras. He received his Ph.D. from Carnegie Mellon University (CMU) and his thesis work contributed to the startup Wombat Security Technologies. He was listed in the World's 2% Scientists by Stanford University in Nov 2020. His research interests include Computational Social Science, Privacy and Security in Online Social Media, Cyber Security, Social Computing, Data Science for Social Good [72]. He started and manages PreCog, a research group at IIIT-Hyderabad [72].",
+    "tags": ["BSCS3007", "Privacy & Security in Online Social Media", "Ponnurangam Kumaraguru", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Tools in Data Science (Diploma Level)",
+    "answer": "This practical Diploma Level course will teach students to use popular tools for sourcing, transforming, analyzing, and visualizing data, communicating these as visual stories, and deploying them in production [73].",
+    "tags": ["BSSE2002", "Tools in Data Science", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Tools in Data Science (Diploma Level)?",
+    "answer": "The Course ID for Tools in Data Science (Diploma Level) is BSSE2002 [74].",
+    "tags": ["BSSE2002", "Tools in Data Science", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Tools in Data Science (Diploma Level)?",
+    "answer": "The Tools in Data Science course is worth 3 credits [74].",
+    "tags": ["BSSE2002", "Tools in Data Science", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Tools in Data Science (Diploma Level)?",
+    "answer": "The Course Type of Tools in Data Science is Data Science [74].",
+    "tags": ["BSSE2002", "Tools in Data Science", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the Pre-requisites for Tools in Data Science (Diploma Level)?",
+    "answer": "The pre-requisites for the Tools in Data Science course are Python, HTML, JavaScript, Excel, and data science basics [73].",
+    "tags": ["BSSE2002", "Tools in Data Science", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Is there a Co-requisite for Tools in Data Science (Diploma Level)?",
+    "answer": "Yes, the co-requisite for Tools in Data Science is BSCS2004 - Machine Learning Foundations [74].",
+    "tags": ["BSSE2002", "Tools in Data Science", "Co-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Tools in Data Science (Diploma Level)?",
+    "answer": "The Tools in Data Science course has 9 modules over 12 weeks of coursework, online assignments for each module, 1 remote online exam, 2 take-home projects, and 1 in-person end-term exam [74]. For details of standard course structure and assessments, students can visit the Academics page [74].",
+    "tags": ["BSSE2002", "Tools in Data Science", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the modules in Tools in Data Science (Diploma Level)?",
+    "answer": "The 9 modules in Tools in Data Science are Everyday tools, Data sourcing, Data preparation, Data analysis, Large language models, Geospatial and network analysis, Data visualization, Data storytelling, and Deployment [74].",
+    "tags": ["BSSE2002", "Tools in Data Science", "Course Modules"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Tools in Data Science (Diploma Level)?",
+    "answer": "The instructor for the Tools in Data Science course is S Anand [73].",
+    "tags": ["BSSE2002", "Tools in Data Science", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of S Anand?",
+    "answer": "S Anand is a co-founder of Gramener, a data science company, where he leads a team that tells visual stories from data. He is recognized as one of India’s top 10 scientists and is a regular TEDx speaker. He is a gold medallist from IIM Bangalore and an alumnus of IIT Madras, London Business School, IBM, Infosys Consulting, Lehman Brothers, and BCG [75].",
+    "tags": ["BSSE2002", "Tools in Data Science", "S Anand", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Database Management Systems (Diploma Level)",
+    "answer": "This Diploma Level course provides a comprehensive introduction to databases, database management, and relevant topics like database security, integrity, concurrency, and data warehousing [76].",
+    "tags": ["BSCS2001", "Database Management Systems", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Database Management Systems (Diploma Level)?",
+    "answer": "The Course ID for Database Management Systems (Diploma Level) is BSCS2001 [76].",
+    "tags": ["BSCS2001", "Database Management Systems", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Database Management Systems (Diploma Level)?",
+    "answer": "The Database Management Systems course is worth 4 credits [76].",
+    "tags": ["BSCS2001", "Database Management Systems", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Database Management Systems (Diploma Level)?",
+    "answer": "The Course Type of Database Management Systems is Programming [76].",
+    "tags": ["BSCS2001", "Database Management Systems", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Are there any Pre-requisites for Database Management Systems (Diploma Level)?",
+    "answer": "There are no pre-requisites for the Database Management Systems course [76].",
+    "tags": ["BSCS2001", "Database Management Systems", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Database Management Systems (Diploma Level)?",
+    "answer": "The instructor for the Database Management Systems course is Prof. Partha Pratim Das [76].",
+    "tags": ["BSCS2001", "Database Management Systems", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Prof. Partha Pratim Das?",
+    "answer": "Dr. Das is a regular contributor to the SWAYAM Program and has taught courses on Programming in C++, Object Oriented Analysis and Design, and Data Base Management Systems. He has also taught Compilers, Software Engineering, Image Processing, Foundations of Algorithms & Machine Learning, and Principles of Programming Languages. Dr. Das has published over 50 papers in international journals in areas including Computer Vision, Digital Learning, Digital Geometry, Human-Computer Interaction, Medical Image Analysis, Computer Analysis of Indian Classical Dance, and Productivity in Software Engineering [77].",
+    "tags": ["BSCS2001", "Database Management Systems", "Partha Pratim Das", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Deep Learning Practice (Degree Level)",
+    "answer": "This Degree Level course aims to enable students to recognize the full stack of deep learning, use tools to improve deep learning practice, apply best practices in training and deployment, build confidence in training models of real-world scale, and identify problems of social relevance solvable with deep learning [78].",
+    "tags": ["BSDA5013", "Deep Learning Practice", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Is there an application deadline for Deep Learning Practice (Degree Level)?",
+    "answer": "Yes, applications for the May 2025 Batch of the Deep Learning Practice course close on May 20, 2025 [78].",
+    "tags": ["BSDA5013", "Deep Learning Practice", "Application Deadline"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "When is the exam for Deep Learning Practice (Degree Level)?",
+    "answer": "The exam for the Deep Learning Practice course is on July 13, 2025 [78].",
+    "tags": ["BSDA5013", "Deep Learning Practice", "Exam Date"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who are the instructors for Deep Learning Practice (Degree Level)?",
+    "answer": "The instructors for the Deep Learning Practice course are Prof. Mitesh M.Khapra and Prof. S. Umesh [23, 49].",
+    "tags": ["BSDA5013", "Deep Learning Practice", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What other courses are taught by Prof. S. Umesh?",
+    "answer": "Prof. S. Umesh also teaches Speech Processing [55]. He co-teaches Deep Learning Practice with Prof. Mitesh M.Khapra [23, 49].",
+    "tags": ["S. Umesh", "Other Courses"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is Prathap Haridoss?",
+    "answer": "Prathap Haridoss is currently the Dean (Academic Courses) and a Professor in the Department of Metallurgical and Materials Engineering at IIT Madras. He was also one of the coordinators of NPTEL and the IIT Madras B.S. Degree Program [79].",
+    "tags": ["Prathap Haridoss", "Faculty"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the affiliation of Prof. Sankaran Viswanath?",
+    "answer": "Prof. Sankaran Viswanath is a mathematician at The Institute of Mathematical Science, Chennai [80].",
+    "tags": ["Sankaran Viswanath", "Affiliation"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the educational qualifications of Ranga?",
+    "answer": "Ranga has degrees in Computer Science from the University of Michigan and IIT Madras [81].",
+    "tags": ["Ranga", "Educational Qualifications"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Introduction to Programming in Python (Foundational Level)",
+    "answer": "This Foundational Level course covers basic concepts in Python programming, including introduction to algorithms, conditionals, iterations and ranges, basic collections in Python, file operations, and the module system in Python. It also introduces basic Pandas and Numpy for data processing [82].",
+    "tags": ["", "Introduction to Programming in Python", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The Introduction to Programming in Python course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [82]. For details of standard course structure and assessments, students can visit the Academics page [82].",
+    "tags": ["", "Introduction to Programming in Python", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 1 of Introduction to Programming in Python is Introduction to algorithms [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 2 of Introduction to Programming in Python is Conditionals [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 3 of Introduction to Programming in Python is Conditionals (Continued) [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 4 of Introduction to Programming in Python is Iterations and Ranges [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 5 of Introduction to Programming in Python is Iterations and Ranges (Continued) [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 6 of Introduction to Programming in Python is Basic Collections in Python [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 7 of Introduction to Programming in Python is Basic Collections in Python (Continued) [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 8 of Introduction to Programming in Python is Basic Collections in Python (Continued) [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 9 of Introduction to Programming in Python is File Operations [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 10 of Introduction to Programming in Python is File Operations (Continued) [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 11 of Introduction to Programming in Python is Module system in python [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The topic covered in Week 12 of Introduction to Programming in Python is Basic Pandas and Numpy processing of data [82].",
+    "tags": ["", "Introduction to Programming in Python", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the suggested books for Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The suggested book for the Introduction to Programming in Python course is Python for Everybody by Charles R. Severance (Shroff Publishers, ISBN: 9789352136278), with a free PDF available [83].",
+    "tags": ["", "Introduction to Programming in Python", "Suggested Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Introduction to Programming in Python (Foundational Level)?",
+    "answer": "The instructor for the Introduction to Programming in Python course is Sudarshan Iyengar, Associate Professor and Head, Department of Computer Science and Engineering, IIT Ropar [83].",
+    "tags": ["", "Introduction to Programming in Python", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Sudarshan Iyengar?",
+    "answer": "Sudarshan Iyengar has a PhD from the Indian Institute of Science and is currently working as an Associate Professor and Head of CSE at IIT Ropar [83].",
+    "tags": ["", "Introduction to Programming in Python", "Sudarshan Iyengar", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Programming, Data Structures and Algorithms using Python (Diploma Level)",
+    "answer": "This Diploma Level course aims to provide a good foundation to introduce basic concepts in the design and analysis of algorithms as well as standard data structures, using Python as a base language for implementing these [84, 85].",
+    "tags": ["BSCS2002", "Programming, Data Structures and Algorithms using Python", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Programming, Data Structures and Algorithms using Python (Diploma Level)?",
+    "answer": "The Course ID for Programming, Data Structures and Algorithms using Python (Diploma Level) is BSCS2002 [84, 85].",
+    "tags": ["BSCS2002", "Programming, Data Structures and Algorithms using Python", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Programming, Data Structures and Algorithms using Python (Diploma Level)?",
+    "answer": "The instructor for the Programming, Data Structures and Algorithms using Python course is Madhavan Mukund [84, 85].",
+    "tags": ["BSCS2002", "Programming, Data Structures and Algorithms using Python", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Madhavan Mukund?",
+    "answer": "Madhavan Mukund is a Professor of Computer Science at Chennai Mathematical Institute [84, 85].",
+    "tags": ["BSCS2002", "Programming, Data Structures and Algorithms using Python", "Madhavan Mukund", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about Dr. Prajish Prasad's background.",
+    "answer": "Dr. Prajish Prasad is an Assistant Professor in the Department of Computing and Data Sciences at FLAME University, Pune. He completed his PhD from the Interdisciplinary Programme in Educational Technology at IIT Bombay. His research specialization is in designing technology-enhanced learning environments for topics in computer science. Before his PhD, he worked as a software developer and as an engineering instructor [86].",
+    "tags": ["Prajish Prasad", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course AI: Search Methods for Problem Solving (Degree Level)",
+    "answer": "This Degree Level course looks at how an intelligent agent solves new problems, starting with blind search and moving to heuristic search. It covers algorithms for board games like Chess and Go, logical reasoning using search, domain-independent planning, and constraint processing [87].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The AI: Search Methods for Problem Solving course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [88]. For details of standard course structure and assessments, students can visit the Academics page [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 1 of AI: Search Methods for Problem Solving is Introduction and philosophy. The Turing Test. The Winograd Schema Challenge. Placing search in the landscape of AI [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 2 of AI: Search Methods for Problem Solving is Search spaces. Examples. State space search. Depth First, Breadth First, Iterative Deepening. Analysis [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 3 of AI: Search Methods for Problem Solving is Heuristic search. Heuristic functions. Solution space search. Escaping local optima. Stochastic local search [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 4 of AI: Search Methods for Problem Solving is Population based methods. Genetic Algorithms, emergent systems, Ant Colony Optimization [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 5 of AI: Search Methods for Problem Solving is Finding optimal paths. Algorithm A*. Admissibility of A* [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 6 of AI: Search Methods for Problem Solving is The monotone condition. Space saving versions of A*. Sequence alignment [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 7 of AI: Search Methods for Problem Solving is Game playing. Board games. Algorithms Minimax, Alpha-Beta, and SSS* [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 8 of AI: Search Methods for Problem Solving is Automated domain independent planning. Goal Stack Planning, Partial Order Planning [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 9 of AI: Search Methods for Problem Solving is Problem decomposition with goal trees. Algorithm AO* [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 10 of AI: Search Methods for Problem Solving is Pattern directed inference systems. Forward chaining inference engine. The Rete algorithm [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The topic covered in Week 11 of AI: Search Methods for Problem Solving is Constraint processing. Algorithm Backtracking. Arc consistency. Combining search and reasoning. Waltz algorithm. Model based diagnosis [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the prescribed books for AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The prescribed books for the AI: Search Methods for Problem Solving course will be announced in class [88].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Prescribed Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for AI: Search Methods for Problem Solving (Degree Level)?",
+    "answer": "The instructor for the AI: Search Methods for Problem Solving course is Prof. Deepak Khemani [87].",
+    "tags": ["", "AI: Search Methods for Problem Solving", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Software Testing (Degree Level)",
+    "answer": "The Software Testing course covers motivation for testing, SDLC, terminologies and processes, test automation (JUnit), graph basics and algorithms for testing, graph coverage criteria, data flow testing, design and integration testing, specification testing, FSM-based testing, classical coverage criteria, logic coverage criteria, symbolic testing, concolic execution, requirements and functional testing, mutation testing, OO integration concepts, web app testing, regression testing, software quality metrics, non-functional testing, and TDD [89].",
+    "tags": ["BSCS3002", "Software Testing", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Software Testing (Degree Level)?",
+    "answer": "The Course ID for Software Testing (Degree Level) is BSCS3002 [89].",
+    "tags": ["BSCS3002", "Software Testing", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Software Testing (Degree Level)?",
+    "answer": "The Software Testing course is worth 4 credits [89].",
+    "tags": ["BSCS3002", "Software Testing", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Software Testing (Degree Level)?",
+    "answer": "The Course Type of Software Testing is Core Option I [89].",
+    "tags": ["BSCS3002", "Software Testing", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Are there any Pre-requisites for Software Testing (Degree Level)?",
+    "answer": "There are no pre-requisites for the Software Testing course [89].",
+    "tags": ["BSCS3002", "Software Testing", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Software Testing (Degree Level)?",
+    "answer": "The Software Testing course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [89]. For details of standard course structure and assessments, students can visit the Academics page [89].",
+    "tags": ["BSCS3002", "Software Testing", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Software Testing (Degree Level)?",
+    "answer": "The instructor for the Software Testing course is Meenakshi D'Souza [89].",
+    "tags": ["BSCS3002", "Software Testing", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the prescribed books for Software Testing (Degree Level)?",
+    "answer": "The prescribed books for the Software Testing course include Introduction to Software Testing by Paul Ammann and Jeff Offutt (Cambridge University Press, 2008), The Art of Software Testing by Glenford J. Myers (Second edition, 2008), Software Testing: A Craftsman’s Approach by Paul C. Jorgensen (Fourth edition, CRC Press, 2014), and Agile Testing: A Practical Guide for Testers and Agile Teams by Lisa Crispin and Janet Gregory (Addison-Wesley, 2009), along with relevant research papers and tool information [90].",
+    "tags": ["BSCS3002", "Software Testing", "Prescribed Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Algorithmic Thinking in Bioinformatics (Degree Level)",
+    "answer": "This Degree Level course aims to prepare students to develop algorithmic thinking for bioinformatics data science challenges, acquire knowledge of various problem formulations and algorithm paradigms in biomedicine, and gain insights into key bioinformatics algorithms on strings, trees, and graphs [91].",
+    "tags": ["BSBT4001", "Algorithmic Thinking in Bioinformatics", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Algorithmic Thinking in Bioinformatics (Degree Level)?",
+    "answer": "The Course ID for Algorithmic Thinking in Bioinformatics (Degree Level) is BSBT4001 [92].",
+    "tags": ["BSBT4001", "Algorithmic Thinking in Bioinformatics", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Algorithmic Thinking in Bioinformatics (Degree Level)?",
+    "answer": "The Algorithmic Thinking in Bioinformatics course is worth 4 credits [92].",
+    "tags": ["BSBT4001", "Algorithmic Thinking in Bioinformatics", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course Type of Algorithmic Thinking in Bioinformatics (Degree Level)?",
+    "answer": "The Course Type of Algorithmic Thinking in Bioinformatics is Elective [92].",
+    "tags": ["BSBT4001", "Algorithmic Thinking in Bioinformatics", "Course Type"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Are there any Pre-requisites for Algorithmic Thinking in Bioinformatics (Degree Level)?",
+    "answer": "There are no pre-requisites for the Algorithmic Thinking in Bioinformatics course [92].",
+    "tags": ["BSBT4001", "Algorithmic Thinking in Bioinformatics", "Pre-requisites"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Algorithmic Thinking in Bioinformatics (Degree Level)?",
+    "answer": "The Algorithmic Thinking in Bioinformatics course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [92]. For details of standard course structure and assessments, students can visit the Academics page [92].",
+    "tags": ["BSBT4001", "Algorithmic Thinking in Bioinformatics", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the prescribed books for Algorithmic Thinking in Bioinformatics (Degree Level)?",
+    "answer": "The primary textbook for Algorithmic Thinking in Bioinformatics is Bioinformatics Algorithms: An Active Learning Approach, 2nd Edition, Vols. 1 and 2 by Phillip Compeau and Pavel Pevzner (2015). The primary programming practice platform is Rosalind. Optional reference books include Algorithms on Strings, Trees and Sequences by Dan Gusfield (1997) and Biological Sequence Analysis by Richard Durbin, Sean R. Eddy, Anders Krogh, and Graeme Mitchison (1998) [93].",
+    "tags": ["BSBT4001", "Algorithmic Thinking in Bioinformatics", "Prescribed Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who are the instructors for Algorithmic Thinking in Bioinformatics (Degree Level)?",
+    "answer": "The instructors for the Algorithmic Thinking in Bioinformatics course are Prof. Michael Levitt, Prof. Pavel Pevzner, and Dr. Phillip Compeau [91].",
+    "tags": ["BSBT4001", "Algorithmic Thinking in Bioinformatics", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the reference documents for Mathematics for Data Science I (Foundational Level)?",
+    "answer": "The reference documents for Mathematics for Data Science I include Sets & Functions (VOL 1), Calculus (VOL 2), and GRAPH THEORY (VOL 3) [94].",
+    "tags": ["BSMA1001", "Mathematics for Data Science I", "Reference Documents"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the prescribed book for Mathematics for Data Science I (Foundational Level)?",
+    "answer": "The prescribed book for Mathematics for Data Science I is Introductory Algebra: a real-world approach (4th Edition) by Ignacio Bello [94].",
+    "tags": ["BSMA1001", "Mathematics for Data Science I", "Prescribed Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Mathematics for Data Science I (Foundational Level)?",
+    "answer": "The instructor for Mathematics for Data Science I is Neelesh Upadhye, Associate Professor, Department of Mathematics, IIT Madras [94].",
+    "tags": ["BSMA1001", "Mathematics for Data Science I", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the professional background of Neelesh Upadhye?",
+    "answer": "Neelesh Upadhye is an Experienced Associate Professor skilled in Mathematical Modeling, R, Stochastic Modeling, and Statistical Modeling. He holds a Doctor of Philosophy (Ph.D.) in Mathematical Statistics and Probability from Indian Institute of Technology, Bombay [94].",
+    "tags": ["BSMA1001", "Mathematics for Data Science I", "Neelesh Upadhye", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Linear Statistical Models (Degree Level)",
+    "answer": "This Degree Level course aims to introduce linear statistical models and their applications in estimation and testing. The course will illustrate concepts with specific examples, data sets and numerical exercises using statistical package R [95].",
+    "tags": ["BSMA3012", "Linear Statistical Models", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the Course ID for Linear Statistical Models (Degree Level)?",
+    "answer": "The Course ID for Linear Statistical Models (Degree Level) is BSMA3012 [95].",
+    "tags": ["BSMA3012", "Linear Statistical Models", "Course ID"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "How many Course Credits for Linear Statistical Models (Degree Level)?",
+    "answer": "The Linear Statistical Models course is worth 4 credits [95].",
+    "tags": ["BSMA3012", "Linear Statistical Models", "Course Credits"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Linear Statistical Models (Degree Level)?",
+    "answer": "The instructor for the Linear Statistical Models course is Siva Athreya [95].",
+    "tags": ["BSMA3012", "Linear Statistical Models", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Data Visualization Design (Degree Level)",
+    "answer": "This Degree Level course aims to provide students with the foundations for understanding and extending data visualization, gain understanding of key techniques and theory including data models, graphical perception, visual encoding and interaction, plan for data-based storytelling, use visualization tools, and gain practical experience building and evaluating visualizations [96].",
+    "tags": ["", "Data Visualization Design", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Is there an application deadline for Data Visualization Design (Degree Level)?",
+    "answer": "Yes, applications for the May 2025 Batch of the Data Visualization Design course close on May 20, 2025 [96].",
+    "tags": ["", "Data Visualization Design", "Application Deadline"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "When is the exam for Data Visualization Design (Degree Level)?",
+    "answer": "The exam for the Data Visualization Design course is on July 13, 2025 [96].",
+    "tags": ["", "Data Visualization Design", "Exam Date"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who are the instructors for Data Visualization Design (Degree Level)?",
+    "answer": "The instructors for the Data Visualization Design course are Prof. Soumya S and Prof. Debdoot Sheet [96].",
+    "tags": ["", "Data Visualization Design", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Advanced Algorithms (Degree Level)",
+    "answer": "The Advanced Algorithms course covers greedy algorithms, matroids, dynamic programming, maximum flows, applications of flows, NP-hardness, approximation algorithms, randomized algorithms, exact algorithms, parameterized algorithms, kernelization, and practical approaches to coping with hardness [97].",
+    "tags": ["", "Advanced Algorithms", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What is the course structure and assessments for Advanced Algorithms (Degree Level)?",
+    "answer": "The Advanced Algorithms course has 12 weeks of coursework, weekly online assignments, 2 in-person invigilated quizzes, and 1 in-person invigilated end term exam [97]. For details of standard course structure and assessments, students can visit the Academics page [97].",
+    "tags": ["", "Advanced Algorithms", "Course Structure", "Assessments"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 1 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 1 of Advanced Algorithms are Greedy Algorithms: Storing Files on Tape; Scheduling Classes; Stable Matchings [97].",
+    "tags": ["", "Advanced Algorithms", "Week 1 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 2 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 2 of Advanced Algorithms are Matroids: A Generic Optimization Problem, Motivating the Definition, Examples of Matroids, Scheduling with Deadlines [97].",
+    "tags": ["", "Advanced Algorithms", "Week 2 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 3 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 3 of Advanced Algorithms are Dynamic Programming: Longest Increasing Subsequence, Edit Distance, Subset Sum, Optimal BSTs [97].",
+    "tags": ["", "Advanced Algorithms", "Week 3 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 4 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 4 of Advanced Algorithms are Maximum Flows: Flows, Cuts, Maxflow-Mincut, Augmenting Paths, Bipartite Matchings, Other Settings [97].",
+    "tags": ["", "Advanced Algorithms", "Week 4 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 5 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 5 of Advanced Algorithms are Applications of Flows: Exam Scheduling, Baseball Elimination, Project Selection [97].",
+    "tags": ["", "Advanced Algorithms", "Week 5 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 6 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 6 of Advanced Algorithms are NP-hardness: P, NP, NP-hardness, NP-completeness, Reductions and SAT, 3SAT, Maximum Independent Set, Graph Coloring, Subset Sum [97].",
+    "tags": ["", "Advanced Algorithms", "Week 6 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 7 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 7 of Advanced Algorithms are Approximation Algorithms: Introduction to Approximation Frameworks, Vertex Cover via Maximal Matchings, Vertex Cover via LP rounding, TSP, Set Cover [97].",
+    "tags": ["", "Advanced Algorithms", "Week 7 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 8 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 8 of Advanced Algorithms are Randomized Algorithms – Monte Carlo v. Las Vegas, Min-Cut Algorithm, MAX SAT via the Probabilistic Methods, 2SAT via Markov Chains, Primality Testing [97].",
+    "tags": ["", "Advanced Algorithms", "Week 8 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 9 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 9 of Advanced Algorithms are Exact Algorithms – Branch and Bound, An Inclusion-Exclusion approach to Hamiltonian Path, Dynamic Programming for TSP, Local Search [97].",
+    "tags": ["", "Advanced Algorithms", "Week 9 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 10 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 10 of Advanced Algorithms are Parameterized Algorithms – Closest String, Iterative Compression for FVS, Randomized Algorithm for k-Path, DP over subsets - Set Cover [97].",
+    "tags": ["", "Advanced Algorithms", "Week 10 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 11 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 11 of Advanced Algorithms are Kernelization – Vertex Cover, Matrix Rigidity, Feedback Arc Set on Tournaments, Max Sat, Edge Clique Cover [97].",
+    "tags": ["", "Advanced Algorithms", "Week 11 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the topics covered in Week 12 of Advanced Algorithms (Degree Level)?",
+    "answer": "The topics covered in Week 12 of Advanced Algorithms are Practical Approaches to Coping with Hardness – SAT Solvers, SAT reductions, LP solvers, LP reductions [97].",
+    "tags": ["", "Advanced Algorithms", "Week 12 Content"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What are the prescribed books for Advanced Algorithms (Degree Level)?",
+    "answer": "The prescribed books for the Advanced Algorithms course will be announced in class [97].",
+    "tags": ["", "Advanced Algorithms", "Prescribed Books"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Who is the instructor for Advanced Algorithms (Degree Level)?",
+    "answer": "The instructor for the Advanced Algorithms course is Prof. Venkatesh Raman [98].",
+    "tags": ["", "Advanced Algorithms", "Instructor Name"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the background of Prof. Balaraman Ravindran.",
+    "answer": "B. Ravindran heads the Robert Bosch Centre for Data Science & Artificial Intelligence (RBCDSAI) at IIT Madras. He is a Professor in the Department of Computer Science and Engineering at IIT Madras. His research interests span geometric deep learning and reinforcement learning. He is one of the founding executive committee members of the India chapter of ACM SIGKDD and serves on the editorial boards of multiple journals. He has published more than 100 papers. He received his PhD from the University of Massachusetts, Amherst and his Master’s degree from the Indian Institute of Science, Bangalore. He is a senior member of AAAI and an ACM Distinguished Member [99].",
+    "tags": ["Balaraman Ravindran", "Instructor Background"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "Tell me about the course Machine Learning Practice - Project (Diploma Level)",
+    "answer": "The purpose of this Diploma Level machine learning project is to apply ML models learnt in ML courses on real-world data and create an effective predictive model. It aims to help students discover patterns, make predictions, answer business questions, detect trends, and solve problems [100].",
+    "tags": ["", "Machine Learning Practice - Project", "Course Description"],
+    "source": "IITM BS website"
+  },
+  {
+    "topic": "Course Guide",
+    "question": "What will students gain from the Machine Learning Practice - Project (Diploma Level)?",
+    "answer": "After completing the project, students will gain experience in applying different ML techniques on real-world data, proficiency in numpy, panda, and sklearn libraries, and familiarity with the 5 components of an ML project (data, model, cost function, optimization, and evaluation). A viva will be conducted by an industry expert [101].",
+    "tags": ["", "Machine Learning Practice - Project", "Learning Outcomes"],
+    "source": "IITM BS website"
+  }

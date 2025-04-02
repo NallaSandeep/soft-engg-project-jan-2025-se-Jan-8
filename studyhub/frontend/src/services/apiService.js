@@ -98,7 +98,8 @@ export const courseApi = {
     getLecturePdf: (lectureId) => api.get(`/courses/lectures/${lectureId}/pdf`, {
         responseType: 'blob',
         headers: {
-            'Accept': 'application/pdf'
+            'Accept': 'application/pdf',
+            'Content-Type': 'application/pdf'
         },
         withCredentials: true
     }),
