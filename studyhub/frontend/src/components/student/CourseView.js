@@ -372,7 +372,7 @@ const CourseView = () => {
 
 
 {/* NEW: Add Practice Assignment Suggestions Section Here */}
-<div className="glass-card p-6 mb-6">
+{/* <div className="glass-card p-6 mb-6">
     <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Practice Assignment Suggestions</h2>
         <button
@@ -414,7 +414,7 @@ const CourseView = () => {
             {isFetchingSuggestions ? 'Fetching suggestions...' : 'No suggestions available. Click the button above to fetch suggestions.'}
         </div>
     )}
-</div>
+</div> */}
 
 
 
