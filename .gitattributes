@@ -1,6 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-
 # Source code
 *.py text diff=python
 *.js text
@@ -14,17 +13,14 @@
 *.yml text
 *.yaml text
 *.md text
-
 # Scripts
 *.sh text eol=lf
 *.ps1 text eol=crlf
 setup.ps1 text eol=crlf
-
 # Documentation
 *.md text
 *.txt text
 *.pdf binary
-
 # Configs
 .env* text
 .gitignore text
@@ -32,7 +28,6 @@ setup.ps1 text eol=crlf
 .dockerignore text
 Dockerfile text
 docker-compose.yml text
-
 # Binary files
 *.png binary
 *.jpg binary
@@ -41,3 +36,4 @@ docker-compose.yml text
 *.pdf binary
 *.zip binary
 *.db binary 
+**/*.pdf filter=lfs diff=lfs merge=lfs -text

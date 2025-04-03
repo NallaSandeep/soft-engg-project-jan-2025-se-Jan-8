@@ -23,6 +23,17 @@ const LectureView = () => {
     useEffect(() => {
         setSummary(null);
         fetchLectureContent();
+        // Mark lecture as completed when visited
+        courseApi.markLectureCompleted(lectureId)
+            .then(response => {
+                if (response.success) {
+                    // Update course progress
+                    setCourseProgress(response.data.course_progress);
+                }
+            })
+            .catch(err => {
+                console.error('Error marking lecture as completed:', err);
+            });
     }, [courseId, lectureId]);
 
     const fetchLectureContent = async () => {
