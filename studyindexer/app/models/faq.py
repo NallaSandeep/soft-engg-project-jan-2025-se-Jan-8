@@ -6,7 +6,7 @@ Validation Rules:
 - topic: min 2 chars, max 100 chars
 - question: min 5 chars, max 500 chars
 - answer: min 2 chars, max 5000 chars (to allow short answers like "Yes", "No", "December")
-- tags: can contain any printable characters, max 50 chars each
+- tags: can contain any printable characters, max 100 chars each
 - source: min 2 chars, max 100 chars
 - priority: integer between 0-100
 """
@@ -33,8 +33,8 @@ class FAQItem(BaseModel):
         """Validate tags format"""
         if v:
             for tag in v:
-                if len(tag) > 50:
-                    raise ValueError("Tag length must not exceed 50 characters")
+                if len(tag) > 100:
+                    raise ValueError("Tag length must not exceed 100 characters")
                 # We allow any printable character now, just check that the tag isn't empty or just whitespace
                 if not tag.strip():
                     raise ValueError("Tags cannot be empty or only whitespace")
