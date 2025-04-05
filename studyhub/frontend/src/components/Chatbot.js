@@ -34,10 +34,8 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const [showMentions, setShowMentions] = useState(false);
   const [savedChatId, setSavedChatId] = useState(null);
   const [mentionOptions] = useState([
-    { id: 1, name: 'code', prefix: '@code' },
-    { id: 2, name: 'course', prefix: '@course' },
-    { id: 3, name: 'summary', prefix: '@summary' },
-    { id: 4, name: 'faq', prefix: '@faq' },
+    { id: 1, name: 'Course', prefix: '@Course' },
+    { id: 2, name: 'FAQ', prefix: '@FAQ' },
   ]);
   const [mentionSearch, setMentionSearch] = useState('');
   const [isFirstMessage, setIsFirstMessage] = useState(true);
@@ -103,11 +101,8 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   
   // Add context management functions
   const addContext = (context) => {
-    // Remove existing context of same type (only one course at a time)
-    const filteredContexts = selectedContexts.filter(c => 
-      !(c.type === context.type && context.type === 'course')
-    );
-    setSelectedContexts([...filteredContexts, context]);
+    // Always set just one context, replacing any existing ones
+    setSelectedContexts([context]);
     setShowContextMenu(false);
   };
 
@@ -310,8 +305,8 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
       setMentionSearch(e.target.value.slice(1));
       const validCommands = mentionOptions.map(opt => opt.name);
         for (const cmd of validCommands) {
-          if (e.target.value.slice(1).startsWith(cmd)) {
-            setMentionSearch(cmd);
+          if (e.target.value.slice(1).toLowerCase().startsWith(cmd.toLowerCase())) {
+            setMentionSearch(cmd.toLowerCase());
             break;
           }
       }
@@ -323,14 +318,14 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
     setShowMentions(false);
     setShowContextMenu(false);
     
-    // Create context string for the API
+    // Create context string for the API with corrected format
     let contextString = '';
     if (selectedContexts.length > 0) {
       contextString = selectedContexts.map(context => {
         if (context.type === 'course') {
-          return `@course ${context.code}`;
+          return `Course ${context.code}:`; // Add space after "Course"
         } else {
-          return `@${context.type}`;
+          return 'FAQ:'; // Keep FAQ format the same
         }
       }).join(' ') + ' ';
     }
@@ -593,21 +588,23 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                 or use @commands for specific tasks.
                 </p>
                 <div className="flex flex-wrap justify-center gap-2 max-w-md">
-                {mentionOptions.map(option => (
-                      <button
-                        key={option.id}
-                        onClick={() => {
-                          setMessage(option.prefix + ' ');
-                          if (option.name === 'course') {
-                            setShowMentions(true);
-                            setMentionSearch('course');
-                          }
-                        }}
-                        className="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-200/50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
-                      >
-                        {option.prefix}
-                      </button>
-                    ))}
+                  {mentionOptions.map(option => (
+                    <button
+                      key={option.id}
+                      onClick={() => {
+                        if (option.name === 'Course') {
+                          setShowMentions(true);
+                          setMentionSearch('course');  // lowercase to match the comparison
+                        } else if (option.name === 'FAQ') {
+                          // Add FAQ context directly
+                          addContext({ id: uuidv4(), type: 'faq' });
+                        }
+                      }}
+                      className="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-200/50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+                    >
+                      {option.prefix}
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
@@ -632,7 +629,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                         className="flex items-center bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 rounded-full text-blue-800 dark:text-blue-300 text-xs"
                       >
                         <span className="font-medium">
-                          {context.type === 'course' ? `@course ${context.code}` : context.type}
+                          {context.type === 'course' ? `@Course: ${context.code}` : '@FAQ:'}
                         </span>
                       </div>
                     ))}
@@ -714,11 +711,14 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                   className="flex items-center bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded-full text-blue-800 dark:text-blue-300 text-xs"
                 >
                   <span className="font-medium">
-                    {context.type === 'course' ? `@course ${context.code}` : context.type}
+                    {context.type === 'course' ? `@Course: ${context.code}` : '@FAQ:'}
                   </span>
                   <button 
-                    onClick={() => removeContext(context.id)}
-                    className="ml-1 text-blue-500 hover:text-blue-700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeContext(context.id);
+                    }}
+                    className="ml-1 text-blue-500 hover:text-blue-700 z-10"
                   >
                     <XMarkIcon className="h-3 w-3" />
                   </button>
@@ -744,7 +744,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                     onClick={() => {
                       setShowMentions(true);
                       setShowContextMenu(false);
-                      setMentionSearch('course');
+                      setMentionSearch('course');  // lowercase to match the comparison
                     }}
                     className="w-full text-left px-3 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700"
                   >
@@ -792,7 +792,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
 
               {/* Mentions Menu */}
               <div className={`absolute bottom-full left-0 mb-1 ${showMentions ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0 pointer-events-none'} transform transition-all duration-200 z-50`}>
-                {mentionSearch === 'course' ? (
+                {mentionSearch.toLowerCase() === 'course' ? (
                   // Course Selection Menu - Modified for pill UI
                   <div className="w-64 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700">
                     {courses.length === 0 ? (
@@ -838,14 +838,15 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                         <button
                           key={option.id}
                           onClick={() => {
-                            if (option.name === 'course') {
+                            if (option.name === 'Course') {
                               setMentionSearch('course');
                               return;
                             }
-                            // Add as context pill instead of text
+                            // Add as context pill instead of text, replacing any existing contexts
+                            setSelectedContexts([]);
                             addContext({
                               id: uuidv4(),
-                              type: option.name
+                              type: 'faq'
                             });
                             setShowMentions(false);
                           }}
