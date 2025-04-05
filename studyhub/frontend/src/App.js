@@ -25,23 +25,9 @@ import PersonalResourcesLanding from './components/personal/PersonalResourcesLan
 
 // Admin Routes
 import adminRoutes from './routes/AdminRoutes';
+import taRoutes from './routes/TARoutes';
 
-// TA Components
-import TADashboard from './components/ta/Dashboard';
-import TAAssignments from './components/ta/AssignmentGrading';
-import TACourses from './components/ta/Courses';
 
-// TA Routes
-const taRoutes = [
-    {
-        path: '/ta',
-        children: [
-            { path: 'dashboard', element: <TADashboard /> },
-            { path: 'assignments', element: <TAAssignments /> },
-            { path: 'courses', element: <TACourses /> },
-        ]
-    }
-];
 
 const App = () => {
     const renderRoutes = (routes) => {

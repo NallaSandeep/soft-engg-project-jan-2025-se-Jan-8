@@ -37,8 +37,7 @@ const Sidebar = () => {
                 case 'ta':
                     return [
                         { to: '/ta/dashboard', text: 'Dashboard' },
-                        { to: '/ta/courses', text: 'My Courses' },
-                        { to: '/ta/grading', text: 'Grade Assignments' }
+                        { to: '/ta/courses', text: 'Courses' },
                     ];
                 case 'student':
                     return [

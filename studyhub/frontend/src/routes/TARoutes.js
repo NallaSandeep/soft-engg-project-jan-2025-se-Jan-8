@@ -1,22 +1,173 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
 import TADashboard from '../components/ta/Dashboard';
-import LectureManagement from '../components/ta/LectureManagement';
-import AssignmentManagement from '../components/ta/AssignmentManagement';
-import QuestionBank from '../components/ta/QuestionBank';
-import SystemLogs from '../components/ta/SystemLogs';
+import TAAssignments from '../components/ta/AssignmentGrading';
+import TACourses from '../components/ta/Courses';
+import TaLayout from '../components/ta/TaLayout';
+import AdminDashboard from '../components/admin/Dashboard';
+import CoursesList from '../components/admin/CoursesList';
+import CourseForm from '../components/admin/CourseForm';
+import CourseContent from '../components/admin/CourseContent';
+import WeekEdit from '../components/admin/WeekEdit';
+import LectureForm from '../components/admin/LectureForm';
+import UsersList from '../components/admin/UsersList';
+import UserForm from '../components/admin/UserForm';
+import AssignmentsList from '../components/admin/AssignmentsList';
+import AssignmentForm from '../components/admin/AssignmentForm';
+import AssignmentView from '../components/admin/assignments/AssignmentView';
+import QuestionForm from '../components/admin/QuestionBank/QuestionForm';
+import QuestionList from '../components/admin/QuestionBank/QuestionList';
+import EnrollStudents from '../components/admin/EnrollStudTA';
+import CourseManagement from '../components/admin/CourseManagement';
+import CourseContentManagement from '../components/admin/CourseContentManagement';
+import  ReportedMessagesList  from '../components/admin/ReportedMessagesList';
 
-const TARoutes = () => {
-    return (
-        <Routes>
-            <Route path="dashboard" element={<TADashboard />} />
-            <Route path="lectures" element={<LectureManagement />} />
-            <Route path="assignments" element={<AssignmentManagement />} />
-            <Route path="question-bank" element={<QuestionBank />} />
-            <Route path="system-logs" element={<SystemLogs />} />
-            <Route path="" element={<Navigate to="dashboard" replace />} />
-        </Routes>
-    );
-};
+// const taRoutes = [
+//     {
+//         path: '/ta',
+//         children: [
+//             { path: 'dashboard', element: <TADashboard /> },
+//             { path: 'assignments', element: <TAAssignments /> },
+//             { path: 'courses', element: <TACourses /> },
+//         ]
+//     }
+// ];
 
-export default TARoutes; 
+const taRoutes = [
+    {
+        path: '/ta',
+        element: <TaLayout />,
+        children: [
+            // {
+            //     path: '',
+            //     element: <Navigate to="/ta/dashboard" replace />
+            // },
+            {
+                path: 'dashboard',
+                element: <TADashboard />
+            },
+            {
+                path: 'courses',
+                children: [
+                    {
+                        path: '',
+                        element: <CourseManagement />
+                    },
+                    {
+                        path: 'new',
+                        element: <CourseForm />
+                    },
+                    {
+                        path: ':courseId/edit',
+                        element: <CourseForm />
+                    },
+                    {
+                        path: ':courseId/content',
+                        element: <CourseContent />
+                    },
+                    {
+                        path: ':courseId/weeks/:weekId/edit',
+                        element: <WeekEdit />
+                    },
+                    {
+                        path: ':courseId/weeks/new',
+                        element: <WeekEdit mode="create" />
+                    },
+                    {
+                        path: ':courseId/weeks/:weekId/lectures/new',
+                        element: <LectureForm mode="create" />
+                    },
+                    {
+                        path: ':courseId/weeks/:weekId/lectures/:lectureId/edit',
+                        element: <LectureForm mode="edit" />
+                    },
+                    {
+                        path: ':courseId/weeks/:weekId/assignments/new',
+                        element: <AssignmentForm mode="create" />
+                    },
+                    {
+                        path: ':courseId/manage',
+                        element: <CourseContentManagement />
+                    }
+                ]
+            },
+            {
+                path: 'assignments',
+                children: [
+                    {
+                        path: '',
+                        element: <AssignmentsList />
+                    },
+                    {
+                        path: 'new',
+                        element: <AssignmentForm mode="create" />
+                    },
+                    {
+                        path: ':assignmentId',
+                        element: <AssignmentView />
+                    },
+                    {
+                        path: ':assignmentId/edit',
+                        element: <AssignmentForm mode="edit" />
+                    }
+                ]
+            },
+            {
+                path: 'question-bank',
+                children: [
+                    {
+                        path: '',
+                        element: <QuestionList />
+                    },
+                    {
+                        path: 'new',
+                        element: <QuestionForm mode="create" />
+                    },
+                    {
+                        path: ':questionId',
+                        element: <QuestionForm mode="view" />
+                    },
+                    {
+                        path: ':questionId/edit',
+                        element: <QuestionForm mode="edit" />
+                    }
+                ]
+            },
+            {
+                path: 'users',
+                children: [
+                    {
+                        path: '',
+                        element: <UsersList />
+                    },
+                    {
+                        path: 'new',
+                        element: <UserForm mode="create" />
+                    },
+                    {
+                        path: ':userId/edit',
+                        element: <UserForm mode="edit" />
+                    }
+                ]
+            },
+            {
+                path: 'enroll',
+                element: <EnrollStudents />
+            },
+            {
+                path: 'reported-messages',
+                children: [
+                    {
+                        path: '',
+                        element: <ReportedMessagesList />
+                    },
+                    {
+                        path: ':questionId',
+                        element: <QuestionForm mode="view" />
+                    },
+                ]
+            },
+        ]
+    }
+];
+
+export default taRoutes; 
