@@ -8,7 +8,8 @@ import {
     UserGroupIcon,
     ClipboardDocumentListIcon,
     QuestionMarkCircleIcon,
-    ArrowRightOnRectangleIcon
+    FlagIcon,
+    ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 
 const MenuItem = ({ to, icon: Icon, children }) => (
@@ -63,6 +64,9 @@ const AdminLayout = () => {
                         </MenuItem>
                         <MenuItem to="/admin/enroll" icon={UserGroupIcon}>
                             Enroll
+                        </MenuItem>
+                        <MenuItem to="/admin/reported-messages" icon={FlagIcon}>
+                            Reported Messages
                         </MenuItem>
                         <div className="pt-4 mt-4 border-t border-zinc-200 dark:border-zinc-700">
                             <button

@@ -17,6 +17,7 @@ import QuestionList from '../components/admin/QuestionBank/QuestionList';
 import EnrollStudents from '../components/admin/EnrollStudTA';
 import CourseManagement from '../components/admin/CourseManagement';
 import CourseContentManagement from '../components/admin/CourseContentManagement';
+import  ReportedMessagesList  from '../components/admin/ReportedMessagesList';
 
 const adminRoutes = [
     {
@@ -138,7 +139,20 @@ const adminRoutes = [
             {
                 path: 'enroll',
                 element: <EnrollStudents />
-            }
+            },
+            {
+                path: 'reported-messages',
+                children: [
+                    {
+                        path: '',
+                        element: <ReportedMessagesList />
+                    },
+                    {
+                        path: ':questionId',
+                        element: <QuestionForm mode="view" />
+                    },
+                ]
+            },
         ]
     }
 ];
