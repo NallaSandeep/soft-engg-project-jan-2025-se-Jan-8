@@ -12,10 +12,9 @@ import logging
 class CourseGuideAgent(BaseAgent):
     """Agent responsible for handling course-related queries and determining relevant courses."""
 
-    def __init__(self, max_cache_size=3, use_mock_data=True):
+    def __init__(self, use_mock_data=False):
         super().__init__()
         self._course_cache = OrderedDict()
-        self._max_cache_size = max_cache_size
         self.integrity_checker = IntegrityChecker()
         self.use_mock_data = use_mock_data
 
@@ -205,13 +204,6 @@ class CourseGuideAgent(BaseAgent):
             }
         }
 
-    def _add_to_cache(self, key, value):
-        if key in self._course_cache:
-            del self._course_cache[key]
-        elif len(self._course_cache) >= self._max_cache_size:
-            self._course_cache.popitem(last=False)
-        self._course_cache[key] = value
-
     async def get_relevant_courses(
         self,
         query: str,
@@ -223,15 +215,6 @@ class CourseGuideAgent(BaseAgent):
 
         if subscribed_courses is None:
             subscribed_courses = ["CS101"]
-
-        # Use cache key based on query and parameters
-        cache_key = f"{query}_{limit}_{min_score}"
-        if cache_key in self._course_cache:
-            # Get and refresh position
-            value = self._course_cache[cache_key]
-            del self._course_cache[cache_key]
-            self._course_cache[cache_key] = value
-            return value
 
         # Use mock data if flag is set
         if self.use_mock_data:
@@ -288,8 +271,6 @@ class CourseGuideAgent(BaseAgent):
 
                 response = {"courses": formatted_courses, "summary": summary}
 
-                # Cache the results for future use
-                self._add_to_cache(cache_key, response)
                 return response
 
             except Exception as e:

@@ -37,8 +37,8 @@ def initialize_state() -> AgentState:
     return {
         "messages": [],
         "context": {"topic": "", "query": "", "sources": [], "findings": []},
-        "current_agent": "supervisor",
-        "next_step": "supervisor",
+        "current_agent": "",
+        "next_step": "",
         "metadata": {},
     }
 

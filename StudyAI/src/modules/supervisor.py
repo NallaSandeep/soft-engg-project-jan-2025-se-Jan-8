@@ -28,6 +28,9 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
                     "findings": [],
                 }
 
+            # Mark that this message is being processed by the supervisor
+            state = update_metadata(state, "from_supervisor", True)
+
             supervisor = Supervisor()
 
             if state["current_agent"] != "supervisor" and state["current_agent"] in [
@@ -55,7 +58,7 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
                         # Clear metadata and context after processing
                         state["next_step"] = END
                         state = clear_state(state)
-                        
+
                         yield state
                         return
                 else:
@@ -67,9 +70,7 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
                         state["messages"].append(
                             AIMessage(
                                 content=final_response,
-                                kwargs={
-                                    "metadata": state.get("metadata", {})
-                                },
+                                kwargs={"metadata": state.get("metadata", {})},
                             )
                         )
                         # Clear metadata and context after processing
@@ -152,9 +153,9 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
                         if "result" not in subq:
                             found_unprocessed = True
                             next_step = subq.get("route", "dismiss")
-                            state["metadata"]["active_subq_index"] = (
-                                i  # Track the active subquestion
-                            )
+                            state["metadata"][
+                                "active_subq_index"
+                            ] = i  # Track the active subquestion
                             state["context"]["query"] = subq.get(
                                 "question", ""
                             )  # Set the context query to the subquestion
@@ -184,4 +185,3 @@ async def supervisor_node(state: AgentState) -> AsyncGenerator[AgentState, None]
         state = clear_state(state)
     finally:
         yield state
-        

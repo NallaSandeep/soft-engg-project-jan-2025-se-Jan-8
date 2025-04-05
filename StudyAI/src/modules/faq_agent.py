@@ -7,7 +7,7 @@ from src.core.base import BaseAgent
 from langgraph.graph import END
 
 
-class RagAgent(BaseAgent):
+class FAQAgent(BaseAgent):
     """RAG agent for general FAQs."""
 
     def __init__(self):
@@ -16,8 +16,6 @@ class RagAgent(BaseAgent):
     async def get_relevant_docs(self, query: str) -> str:
         """Retrieve relevant documents from the knowledge base."""
         try:
-            # _ = extract_keywords(query)
-
             payload = {
                 "query": query,
                 "limit": 4,
@@ -68,15 +66,10 @@ class RagAgent(BaseAgent):
             return ""
 
 
-def extract_keywords(query: str) -> List[str]:
-    """Extract potential keywords from the query to use as topics."""
-    pass
-
-
-async def rag_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
+async def faq_agent_node(state: AgentState) -> AsyncGenerator[AgentState, None]:
     """RAG agent node that processes FAQ queries and generates responses."""
     try:
-        agent = RagAgent()
+        agent = FAQAgent()
 
         state["current_agent"] = "faq_agent"
         state["next_step"] = "supervisor"

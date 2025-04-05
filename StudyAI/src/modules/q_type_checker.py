@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Dict, Any
 from src.core.base import BaseAgent
-from src.core.state import AgentState
+from src.core.state import AgentState, update_metadata
 from langchain_core.messages import HumanMessage, SystemMessage
 from typing import AsyncGenerator
 import logging
@@ -78,11 +78,15 @@ async def check_question_type_node(
 
         if response["q_type"] == "Inappropriate":
             state["next_step"] = "dismiss"
+            # Flag that this is not coming from supervisor
+            state = update_metadata(state, "from_supervisor", False)
             state["messages"].append(
                 SystemMessage(content=f"Inappropriate: {response['reason']}")
             )
         elif response["q_type"] == "Generic":
             state["next_step"] = "dismiss"
+            # Flag that this is not coming from supervisor
+            state = update_metadata(state, "from_supervisor", False)
             state["messages"].append(
                 SystemMessage(content=f"Generic: {response['reason']}")
             )
@@ -92,10 +96,14 @@ async def check_question_type_node(
     except ValueError as ve:
         logging.error(f"Value error: {str(ve)}")
         state["next_step"] = "dismiss"
+        # Flag that this is not coming from supervisor
+        state = update_metadata(state, "from_supervisor", False)
         state["messages"].append(SystemMessage(content=str(ve)))
     except Exception as e:
         logging.error(f"Routing error: {str(e)}")
         state["next_step"] = "dismiss"
+        # Flag that this is not coming from supervisor
+        state = update_metadata(state, "from_supervisor", False)
         state["messages"].append(SystemMessage(content=str(e)))
     finally:
         # Ensure the state is yielded even in case of errors

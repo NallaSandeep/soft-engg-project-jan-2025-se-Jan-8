@@ -6,7 +6,7 @@ from IPython.display import Image, display
 
 from src.modules.supervisor import supervisor_node
 from src.core.state import AgentState
-from src.modules.faq_agent import rag_agent_node
+from src.modules.faq_agent import faq_agent_node
 from src.modules.course_guide import course_guide_node
 from src.modules.dismiss_node import dismiss_node
 from src.modules.q_type_checker import check_question_type_node
@@ -24,7 +24,7 @@ def create_workflow():
     # Add nodes for each agent
     workflow.add_node("check_question_type", check_question_type_node)
     workflow.add_node("supervisor", supervisor_node)
-    workflow.add_node("faq_agent", rag_agent_node)
+    workflow.add_node("faq_agent", faq_agent_node)
     workflow.add_node("course_guide_agent", course_guide_node)
     workflow.add_node("dismiss", dismiss_node)
 
