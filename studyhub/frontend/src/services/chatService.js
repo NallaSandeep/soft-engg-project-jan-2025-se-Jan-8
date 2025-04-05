@@ -49,8 +49,10 @@ export const chatAPI = {
     updateChat: (id, operations) => api.patch(`/chat/session/${id}`, {operations: [operations]}),
     getChats: (user_id) => api.get(`/chat/sessions?user_id=${user_id}`),
     reportMessage: (session_id, message_id) => api.post(`/chat/report/${session_id}`, { message_id }),
+    getReportedMessages: (f) => api.get(`/chat/reports`),
     // updateUser: (id, userData) => api.put(`/users/${id}`, userData),
-    deleteChat: (id) => api.delete(`/chat/session/${id}`)
+    deleteChat: (id) => api.delete(`/chat/session/${id}`),
+    updateReport: (id, operations) => api.patch(`/chat/report/${id}`, {operations: [operations]}),
 };
 
 export const messageAPI = {

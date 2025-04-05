@@ -3,22 +3,19 @@ import {
   ArrowUpIcon, 
   ClipboardDocumentIcon, 
   CheckIcon, 
-  StopIcon,
   FlagIcon,
   ChatBubbleLeftRightIcon,
   XMarkIcon,
   BookmarkIcon,
   BookmarkSlashIcon,
-  Squares2X2Icon,
   PlusIcon,
   ArrowLeftIcon,
   TrashIcon,
   ClockIcon
 } from '@heroicons/react/24/outline';
 
-// import { BookmarkIcon } from '@heroicons/react/24/solid';
 import { chatAPI, messageAPI } from '../services/chatService';
-import { personalApi } from '../services/apiService';
+import { courseApi, personalApi } from '../services/apiService';
 import { v4 as uuidv4 } from 'uuid';
 import MarkdownIt from 'markdown-it';
 import {Panel, PanelGroup, PanelResizeHandle} from 'react-resizable-panels';
@@ -26,7 +23,6 @@ import {Panel, PanelGroup, PanelResizeHandle} from 'react-resizable-panels';
 const md = new MarkdownIt();
 
 const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
-  console.log(user)
   const [firstLoad, setFirstLoad] = useState(false);
   const [message, setMessage] = useState('');
   const [currResponse, setCurrResponse] = useState('');
@@ -35,7 +31,6 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const [reportedMessageId, setReportedMessageId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [savedChats, setSavedChats] = useState(null);
-  // const [showSavedChats, setShowSavedChats] = useState(false);
   const [showMentions, setShowMentions] = useState(false);
   const [savedChatId, setSavedChatId] = useState(null);
   const [mentionOptions] = useState([
@@ -49,12 +44,20 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const [allChats, setAllChats] = useState([]);
   const [isFetchingChats, setIsFetchingChats] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [courses, setCourses] = useState([]);
 
   const messagesEndRef = useRef(null);
   const abortControllerRef = useRef(null);
   const socket = useRef(null);
   const personalResources = useRef(null);
   const chatSessionID = useRef(null);
+
+  // Load the subscribed courses
+  useEffect(() => {
+    if (firstLoad) {
+      fetchCourses();
+    }
+  }, [firstLoad]);
 
   // Load saved chats from localStorage
   useEffect(() => {
@@ -77,6 +80,24 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const fetchCourses = async () => {
+    try {
+      const response = await courseApi.getCourses();
+      console.log('Fetched courses:', response);
+      if (response.success) {
+        const formattedCourses = response.data.map(course => ({
+          id: course.id,
+          code: course.code,
+          name: course.name
+        }));
+        setCourses(formattedCourses);
+      }
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
+  
 
   const handleToggleSave = async (chatId, save) => {
     try {
@@ -168,14 +189,6 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
     } catch (error) {
       console.error('Error creating chat session or WebSocket connection:', error);
     }
-
-    // // Create websocket connection for sending and receiving messages
-    // socket.current = messageAPI.createConnection(chatSessionId)
-
-    // const defaultMessage = [
-    //   { id: Date.now(), text: "Hi! How can I help you today?", isBot: true, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
-    // ];
-    // setMessages(defaultMessage);
   };
 
   const toggleChat = async () => {
@@ -206,7 +219,6 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const handleReportMessage = async (id) => {
     setReportedMessageId(id);
     setTimeout(() => setReportedMessageId(null), 800);
-    // Add your report logic here
       try {
       chatAPI.reportMessage(chatSessionID.current, id).then(() => {
         console.log("Chat message reported:", id);
@@ -220,19 +232,11 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
 
   const handleSaveChat = () => {
     chatAPI.updateChat(chatSessionID.current, {op: "replace", path: "/is_bookmarked", value: true});
-  
-  // Show save animation
   setSavedChatId(chatSessionID.current);
   setTimeout(() => setSavedChatId(null), 800);
 };
 
-  // const handleDeleteSavedChat = (chatId) => {
-  //   setSavedChats(savedChats.filter(chat => chat.id !== chatId));
-  //   chatAPI.updateChat(chatId, {op: "replace", path: "/is_bookmarked", value: false});
-  // };
-
   const handleLoadSavedChat = async (chat) => {
-    // return
     socket.current?.close(); // Close existing socket connection if any
     setMessages([]);
     chatSessionID.current = chat.id;
@@ -258,52 +262,10 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
     }).catch((error) => {
       console.error('Error loading chat:', error);
     });
-    // console.log('Saved chat messages:', response);
-
     // Create WebSocket connection after chatSessionId is set
     socket.current = messageAPI.createConnection(chatSessionID.current);
     console.log('Saved Chat: WebSocket connection established for session:', chatSessionID.current);
   };
-
-  // const handleShowSavedChats = async () => {
-  //   if (showSavedChats) {
-  //     setShowSavedChats(false);
-  //     return;
-  //   }
-  //   setShowSavedChats(true);
-  //   try {
-  //     const response = await chatAPI.getChats(user?.id);
-  //     if (Array.isArray(response)) {
-  //       const formattedChats = response
-  //         .filter(chat => chat.is_bookmarked)
-  //         .map(chat => {
-  //           const date = new Date(chat.created_at);
-  //           const formattedDate = new Intl.DateTimeFormat('en-US', {
-  //             month: 'short',
-  //             day: 'numeric',
-  //             hour: '2-digit',
-  //             minute: '2-digit',
-  //             hour12: true
-  //           }).format(date);
-  
-  //           return {
-  //             id: chat.session_id,
-  //             name: chat.name,
-  //             messages: Array.isArray(chat.messages) ? chat.messages : [],
-  //             date: formattedDate,
-  //             timestamp: date.getTime() // Add timestamp for sorting
-  //           };
-  //         })
-  //         .sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp descending
-  
-  //       setSavedChats(formattedChats);
-  //     } else {
-  //       console.error('Expected array response from getChats:', response);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching saved chats:', error);
-  //   }
-  // };
 
   const handleKeyDown = (e) => {
     if (e.key === '@' && message.trim().length === 0) {
@@ -593,15 +555,21 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                 or use @commands for specific tasks.
                 </p>
                 <div className="flex flex-wrap justify-center gap-2 max-w-md">
-                  {mentionOptions.map(option => (
-                    <button
-                      key={option.id}
-                      onClick={() => setMessage(option.prefix + ' ')}
-                      className="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-200/50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
-                    >
-                      {option.prefix}
-                    </button>
-                  ))}
+                {mentionOptions.map(option => (
+                      <button
+                        key={option.id}
+                        onClick={() => {
+                          setMessage(option.prefix + ' ');
+                          if (option.name === 'course') {
+                            setShowMentions(true);
+                            setMentionSearch('course');
+                          }
+                        }}
+                        className="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-200/50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+                      >
+                        {option.prefix}
+                      </button>
+                    ))}
                 </div>
               </div>
             )}
@@ -611,10 +579,10 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
               className={`flex ${msg.isBot ? 'justify-start' : 'justify-end'}`}
             >
               <div
-                className={`max-w-[85%] rounded-xl p-2.5 ${
+                className={`max-w-[85%] rounded-xl py-2.5 ${
                   msg.isBot
                     ? 'dark:bg-zinc-900 text-zinc-900 dark:text-white'
-                    : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200'
+                    : 'bg-zinc-100 px-4 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200'
                 }`}
               >
                 <div className="flex justify-between items-start">
@@ -713,32 +681,74 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                 </button>
               </div>
 
-              {/* Mentions Dropdown */}
-              {showMentions && (
-                <div className="absolute bottom-full left-0 mb-1 w-48 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden">
-                  {mentionOptions
-                    .filter(option => 
-                      option.name.toLowerCase().includes(mentionSearch.toLowerCase())
-                    )
-                    .map(option => (
-                      <button
-                        key={option.id}
-                        onClick={() => {
-                          const lastAtIndex = message.lastIndexOf('@');
-                          const newMessage = 
-                            message.slice(0, lastAtIndex) + 
-                            option.prefix + ' ' + 
-                            message.slice(lastAtIndex + mentionSearch.length + 1);
-                          setMessage(newMessage);
-                          setShowMentions(false);
-                        }}
-                        className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white"
-                      >
-                        {option.name}
-                      </button>
-                    ))}
-                </div>
-              )}
+{/* Mentions Menu */}
+{/* {showMentions && ( */}
+  <div className={`absolute bottom-full left-0 mb-1 ${showMentions ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0 pointer-events-none'} transform transition-all duration-200 z-50`}>
+    {mentionSearch === 'course' ? (
+      // Course Selection Menu
+      <div className="w-64 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700">
+        {courses.length === 0 ? (
+          <div className="p-4 text-sm text-zinc-500 dark:text-zinc-400 text-center">
+            No courses available
+          </div>
+        ) : (
+          courses.map(course => (
+            <button
+              key={course.id}
+              onClick={() => {
+                const lastAtIndex = message.lastIndexOf('@');
+                const newMessage = 
+                  message.slice(0, lastAtIndex) + 
+                  `@course ${course.code} `;
+                setMessage(newMessage);
+                setShowMentions(false);
+              }}
+              className="w-full px-4 py-2 text-left hover:bg-zinc-100 dark:hover:bg-zinc-700"
+            >
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-zinc-900 dark:text-white">
+                  {course.code}
+                </span>
+                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                  {course.name}
+                </span>
+              </div>
+            </button>
+          ))
+        )}
+      </div>
+    ) : (
+      // Primary Commands Menu
+      <div className="w-48 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700">
+        {mentionOptions
+          .filter(option => 
+            option.name.toLowerCase().includes(mentionSearch.toLowerCase())
+          )
+          .map(option => (
+            <button
+              key={option.id}
+              onClick={() => {
+                if (option.name === 'course') {
+                  setMentionSearch('course');
+                  return;
+                }
+                const lastAtIndex = message.lastIndexOf('@');
+                const newMessage = 
+                  message.slice(0, lastAtIndex) + 
+                  option.prefix + ' ' + 
+                  message.slice(lastAtIndex + mentionSearch.length + 1);
+                setMessage(newMessage);
+                setShowMentions(false);
+              }}
+              className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white"
+            >
+              {option.name}
+            </button>
+          ))}
+      </div>
+    )}
+  </div>
+{/* )} */}
               </div>
             </div>
           </div>
