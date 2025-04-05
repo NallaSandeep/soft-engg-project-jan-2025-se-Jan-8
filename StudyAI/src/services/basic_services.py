@@ -234,9 +234,20 @@ def get_reported_messages(db: Session):
                 .first()
             )
 
+            # Get the associated session to retrieve user_id
+            session = None
+            if message:
+                session = (
+                    db.query(ChatSession)
+                    .filter(ChatSession.session_id == message.session_id)
+                    .first()
+                )
+
             if message:
                 report_dict = report.to_dict()
                 report_dict["message"] = message.message
+                # Include user_id if available
+                report_dict["user_id"] = session.user_id if session else None
                 results.append(report_dict)
 
         return results

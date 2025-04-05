@@ -13,9 +13,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(String(50), unique=True, default=lambda: str(uuid.uuid4()))
-    user_metadata = Column(
-        JSON, nullable=True
-    )
+    user_metadata = Column(JSON, nullable=True)
 
     def __init__(self, user_id=None, metadata=None):
         self.user_id = user_id or str(uuid.uuid4())
@@ -179,6 +177,8 @@ class ReportResponse(BaseModel):
     reason: Optional[str] = None
     report_timestamp: str
     status: str
+    message: Optional[str] = None
+    user_id: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
 
