@@ -41,6 +41,8 @@ const ReportedMessagesList = () => {
                     status: report.status || 'pending',
                     message_content: report.message || 'No message content available',
                     reporter_name: report.user_id || 'Unknown',
+                    report_message_id: report.message_id || 'Unknown',
+                    reporter_session_id: report.session_id || 'Unknown',
                 }));
                 const sortedReports = [...res].sort((a, b) => {
                     if (a.status === 'pending' && b.status !== 'pending') return -1;
@@ -162,6 +164,12 @@ const ReportedMessagesList = () => {
                                     User ID
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                                    Session ID
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                                    Message ID
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                                     Message
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
@@ -189,8 +197,15 @@ const ReportedMessagesList = () => {
                                             <div className="text-sm text-zinc-900 dark:text-white">
                                                 {report.reporter_name}
                                             </div>
-                                            <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                                                {report.reporter_email}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm text-zinc-900 dark:text-white">
+                                                {report.reporter_session_id}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm text-zinc-900 dark:text-white">
+                                                {report.report_message_id}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
@@ -252,7 +267,7 @@ const ReportedMessagesList = () => {
                 </div>
             </div>
             {showModal && selectedReport && (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowModal(false)}>
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
                 <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
                     <div className="p-6">
                         <div className="flex justify-between items-start mb-4">
@@ -279,7 +294,22 @@ const ReportedMessagesList = () => {
                                     {selectedReport.reporter_email}
                                 </p>
                             </div>
-
+                            <div>
+                                <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                                    Session ID
+                                </h3>
+                                <p className="text-zinc-900 dark:text-white">
+                                    {selectedReport.reporter_session_id}
+                                </p>
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                                    Message ID
+                                </h3>
+                                <p className="text-zinc-900 dark:text-white">
+                                    {selectedReport.report_message_id}
+                                </p>
+                            </div>
                             <div>
                                 <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
                                     Message Content
@@ -294,12 +324,12 @@ const ReportedMessagesList = () => {
                             <div className="flex justify-between items-center">
                                 <div>
                                     <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
-                                        Status
+                                            Status
                                     </h3>
                                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                         {
                                             'pending': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-                                            'resolved': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+                                            'reviewed': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
                                             'dismissed': 'bg-zinc-100 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-300'
                                         }[selectedReport.status]
                                     }`}>
