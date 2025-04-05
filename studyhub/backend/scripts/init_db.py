@@ -552,7 +552,7 @@ def run_phase5_sync_graded_assignments(db_session):
             log("No graded assignments found to sync", "WARNING")
             return
             
-        # Sync graded assignments with StudyIndexer
+        # Sync graded assignments with StudyIndexer using the existing implementation
         log("Starting graded assignment sync...")
         results = sync_graded_assignments(batch_size=SYNC_BATCH_SIZE)
         

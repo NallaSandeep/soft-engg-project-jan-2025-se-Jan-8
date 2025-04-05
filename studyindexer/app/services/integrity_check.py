@@ -105,6 +105,7 @@ class IntegrityCheckService:
             raise ValueError("Assignment ID is required")
             
         course_id = str(assignment_data.get("course_id", ""))
+        course_code = assignment_data.get("course_code", "")
         title = assignment_data.get("title", "")
         description = assignment_data.get("description", "")
         
@@ -146,6 +147,7 @@ class IntegrityCheckService:
                 "assignment_id": assignment_id,
                 "question_id": question_id,
                 "course_id": course_id,
+                "course_code": course_code,
                 "title": title[:100] if title else "",  # Truncate for metadata limits
                 "question_title": question_title[:100] if question_title else "",
                 "question_type": question_type,
@@ -356,6 +358,7 @@ class IntegrityCheckService:
                 assignment_info = {
                     "assignment_id": metadata.get("assignment_id", ""),
                     "course_id": metadata.get("course_id", ""),
+                    "course_code": metadata.get("course_code", ""),
                     "title": metadata.get("title", ""),
                 }
                 
@@ -378,4 +381,199 @@ class IntegrityCheckService:
     
     async def get_assignment(self, assignment_id: str) -> Optional[Dict[str, Any]]:
         """Async wrapper for get_assignment_sync"""
-        return self.get_assignment_sync(assignment_id) 
+        return self.get_assignment_sync(assignment_id)
+    
+    def get_all_assignments_sync(self) -> List[Dict[str, Any]]:
+        """
+        Get a list of all indexed assignments
+        
+        Returns:
+            List of assignment metadata dictionaries
+        """
+        if not self._initialized:
+            self.initialize_sync()
+            
+        try:
+            # Query all documents using search_sync instead of get_collection_sync
+            query_result = self.chroma.search_sync(
+                collection_name=self.collection_name,
+                query="",  # Empty query to match all documents
+                n_results=1000,  # Get up to 1000 documents
+                where={}  # No filters
+            )
+            
+            if not query_result or not query_result.ids:
+                return []
+                
+            # Group by assignment ID to get unique assignments
+            assignments = {}
+            
+            for doc_id, metadata in zip(query_result.ids, query_result.metadatas):
+                assignment_id = metadata.get("assignment_id")
+                if not assignment_id or assignment_id in assignments:
+                    continue
+                    
+                # Create assignment entry
+                assignments[assignment_id] = {
+                    "assignment_id": assignment_id,
+                    "title": metadata.get("title", ""),
+                    "course_id": metadata.get("course_id", ""),
+                    "course_code": metadata.get("course_code", ""),
+                    "indexed_at": metadata.get("indexed_at", ""),
+                    "question_count": 0  # Will count questions below
+                }
+            
+            # Count questions for each assignment
+            for metadata in query_result.metadatas:
+                assignment_id = metadata.get("assignment_id")
+                if assignment_id and assignment_id in assignments:
+                    assignments[assignment_id]["question_count"] += 1
+            
+            return list(assignments.values())
+            
+        except Exception as e:
+            logger.error(f"Failed to get all assignments: {str(e)}")
+            return []
+    
+    async def get_all_assignments(self) -> List[Dict[str, Any]]:
+        """Async wrapper for get_all_assignments_sync"""
+        return self.get_all_assignments_sync()
+    
+    def search_graded_assignments_sync(
+        self, 
+        search_query: Optional[str] = None, 
+        course_ids: Optional[List[int]] = None,
+        limit: int = 50,
+        threshold: float = 0.5
+    ) -> List[Dict[str, Any]]:
+        """
+        Search for graded assignments with optional filters
+        
+        Args:
+            search_query: Optional text to search for in assignment titles/content
+            course_ids: Optional list of course IDs to filter by
+            limit: Maximum number of results to return
+            threshold: Minimum similarity threshold (default 0.5)
+            
+        Returns:
+            List of matching assignment metadata dictionaries with question-level matches
+        """
+        if not self._initialized:
+            self.initialize_sync()
+            
+        # If no query provided, return empty results
+        if not search_query or search_query.strip() == "":
+            return []
+            
+        try:
+            # Clean and preprocess the query text
+            search_query = search_query.strip()
+            
+            # Validate threshold
+            threshold = min(max(0.0, threshold), 1.0)
+            
+            # Prepare search parameters
+            where_filter = {}
+            if course_ids and len(course_ids) > 0:
+                # Convert course IDs to strings
+                course_id_strings = [str(cid) for cid in course_ids]
+                if len(course_id_strings) == 1:
+                    where_filter["course_id"] = course_id_strings[0]
+                elif len(course_id_strings) > 1:
+                    where_filter["$or"] = [{"course_id": cid} for cid in course_id_strings]
+            
+            # Use semantic search with higher result count for better matching
+            query_result = self.chroma.search_sync(
+                collection_name=self.collection_name,
+                query=search_query,
+                n_results=1000,  # Get more results to process and filter
+                where=where_filter
+            )
+            
+            if not query_result or not query_result.ids:
+                return []
+            
+            # Process results with question-level matching
+            matches = []
+            processed_assignments = set()
+            
+            # Group results by assignment ID
+            assignment_matches = {}
+            
+            # Calculate similarity scores and organize by assignment
+            for idx, (doc_id, distance, metadata, document) in enumerate(zip(
+                query_result.ids, query_result.distances, query_result.metadatas, query_result.documents
+            )):
+                # Extract assignment and question info
+                assignment_id = metadata.get("assignment_id")
+                if not assignment_id:
+                    continue
+                    
+                # Calculate similarity (higher is better)
+                similarity = 1.0 - min(distance, 1.0)
+                
+                # Filter out low similarity matches
+                if similarity < threshold:  # Changed from hardcoded 0.5 to threshold parameter
+                    continue
+                
+                # Get or create assignment entry
+                if assignment_id not in assignment_matches:
+                    assignment_matches[assignment_id] = {
+                        "assignment_id": assignment_id,
+                        "title": metadata.get("title", ""),
+                        "course_id": metadata.get("course_id", ""),
+                        "course_code": metadata.get("course_code", ""),
+                        "highest_similarity": 0.0,
+                        "matched_questions": [],
+                        "question_count": 0
+                    }
+                
+                # Update assignment metadata
+                assignment_entry = assignment_matches[assignment_id]
+                assignment_entry["question_count"] += 1
+                
+                # Add question match if not already added
+                question_id = metadata.get("question_id")
+                if question_id and question_id not in [q.get("question_id") for q in assignment_entry["matched_questions"]]:
+                    # Get question title/content
+                    question_title = metadata.get("question_title", "")
+                    
+                    # Create question entry
+                    question_match = {
+                        "question_id": question_id,
+                        "title": question_title,
+                        "content": document,
+                        "similarity": similarity
+                    }
+                    
+                    # Add to matched questions
+                    assignment_entry["matched_questions"].append(question_match)
+                    
+                    # Update highest similarity
+                    if similarity > assignment_entry["highest_similarity"]:
+                        assignment_entry["highest_similarity"] = similarity
+            
+            # Convert to list and sort by highest similarity
+            result_list = list(assignment_matches.values())
+            result_list.sort(key=lambda x: x["highest_similarity"], reverse=True)
+            
+            # Sort questions within each assignment by similarity
+            for assignment in result_list:
+                assignment["matched_questions"].sort(key=lambda x: x["similarity"], reverse=True)
+            
+            # Apply overall limit
+            return result_list[:limit]
+            
+        except Exception as e:
+            logger.error(f"Failed to search graded assignments: {str(e)}")
+            return []
+    
+    async def search_graded_assignments(
+        self, 
+        search_query: Optional[str] = None, 
+        course_ids: Optional[List[int]] = None,
+        limit: int = 50,
+        threshold: float = 0.5
+    ) -> List[Dict[str, Any]]:
+        """Async wrapper for search_graded_assignments_sync"""
+        return self.search_graded_assignments_sync(search_query, course_ids, limit, threshold) 
