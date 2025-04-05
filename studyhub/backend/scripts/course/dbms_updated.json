@@ -1,0 +1,2150 @@
+{
+  "course": {
+    "course_id": 1,
+    "code": "DBMS201",
+    "title": "Advanced Database Management Systems",
+    "description": "This expanded course provides an in-depth exploration of Database Management Systems (DBMS), extending beyond introductory concepts to cover advanced database design, implementation, and management techniques. Students will delve into advanced entity-relationship (ER) modeling, relational algebra and calculus, and master advanced Structured Query Language (SQL) for complex data manipulation and optimization. The course extensively covers indexing, query processing and optimization, advanced normalization techniques, and robust transaction management and concurrency control. New topics include NoSQL databases, distributed database systems, data warehousing and OLAP, database security, and performance tuning. Mathematical underpinnings such as predicate logic and advanced topics in relational calculus are explored in detail. Through extensive practical exercises, in-depth case studies, and real-world applications, students will develop strong database management skills applicable to enterprise-level systems and emerging data technologies. The course spans 16 weeks to accommodate the expanded curriculum and provide a comprehensive and practice-oriented understanding of modern database technologies.",
+    "instructor_id": 2,
+    "credits": 4,
+    "department": "Computer Science",
+    "image_url": "/assets/courses/dbms201/cover.jpg",
+    "prerequisites": ["None"],
+    "learning_outcomes": [
+      "Master advanced database design principles and normalization techniques.",
+      "Develop advanced proficiency in ER modeling and relational algebra and calculus.",
+      "Write, execute, and optimize complex SQL queries, including advanced features.",
+      "Implement and manage transactions ensuring ACID compliance in concurrent environments.",
+      "Understand and implement various indexing strategies and advanced query optimization techniques.",
+      "Apply predicate logic and quantifiers in advanced relational calculus scenarios.",
+      "Gain a comprehensive understanding of NoSQL databases and distributed database architectures.",
+      "Learn the principles and practices of data warehousing and Online Analytical Processing (OLAP).",
+      "Implement and manage database security policies and access control mechanisms.",
+      "Develop skills in database performance tuning and optimization."
+    ],
+    "assessment_methods": ["Quizzes", "Assignments", "Midterm Exam", "Project", "Final Exam"],
+    "delivery_mode": "Online",
+    "tools_and_technologies": ["SQL", "MySQL", "PostgreSQL", "MongoDB", "Apache Cassandra", "Hadoop", "Spark"],
+    "LLM_Summary": {
+      "summary": "This advanced course provides a deep dive into the theoretical and practical aspects of database management, covering fundamental to advanced principles. It includes advanced database design, ER modeling with complex relationships, relational algebra and calculus with advanced concepts, expert-level SQL querying including window functions and stored procedures, in-depth indexing strategies and performance optimization, sophisticated normalization techniques addressing various anomalies, and comprehensive transaction management with concurrency control and recovery mechanisms. The course extends to modern database paradigms including NoSQL, distributed systems, data warehousing, and database security. Predicate logic is thoroughly explored as a foundation for relational calculus and advanced optimization techniques. Students will gain extensive hands-on experience with SQL for complex data retrieval, modification, and subqueries, while also mastering integrity constraints and ACID properties in high-concurrency environments. Practical assignments, detailed case studies, and real-world project work will reinforce enterprise-level database implementation, preparing students for advanced careers in data engineering, database administration, software architecture, and information systems management.",
+      "concepts_covered": [
+        "Advanced database design and architectural patterns.",
+        "Complex Entity-Relationship (ER) modeling and extended ER features.",
+        "Advanced relational algebra operations and query optimization.",
+        "Tuple and domain relational calculus with safety and expressiveness.",
+        "Expert-level SQL query structure, advanced subqueries, window functions, and procedural extensions.",
+        "Data definition and manipulation (DDL & DML) with advanced constraints and triggers.",
+        "Comprehensive integrity constraints, assertions, and triggers.",
+        "Advanced normalization techniques (4NF, 5NF, DKNF) and schema refinement strategies.",
+        "In-depth indexing strategies, materialized views, and advanced query performance tuning.",
+        "Comprehensive transaction management, concurrency control techniques (locking, timestamping, multi-versioning), and deadlock handling.",
+        "Detailed exploration of Predicate logic and quantification in advanced relational calculus.",
+        "Introduction to NoSQL databases: Key-Value, Document, Column-Family, and Graph databases.",
+        "Principles of distributed database architectures, data replication, and distributed query processing.",
+        "Fundamentals of data warehousing, OLAP operations, and ETL processes.",
+        "Comprehensive database security policies, authentication, authorization, and encryption techniques."
+      ],
+      "concepts_not_covered": [
+        "Specialized database systems (e.g., temporal databases, spatial databases) in great depth.",
+        "Database administration in specific cloud environments (focused on general principles).",
+        "Very cutting-edge research topics in database theory."
+      ],
+      "acronyms": {
+        "DBMS": "Database Management Systems",
+        "ER": "Entity-Relationship",
+        "SQL": "Structured Query Language",
+        "DDL": "Data Definition Language",
+        "DML": "Data Manipulation Language",
+        "ACID": "Atomicity, Consistency, Isolation, Durability",
+        "OLAP": "Online Analytical Processing",
+        "OLTP": "Online Transaction Processing",
+        "BCNF": "Boyce-Codd Normal Form",
+        "4NF": "Fourth Normal Form",
+        "5NF": "Fifth Normal Form",
+        "DKNF": "Domain-Key Normal Form",
+        "MVCC": "Multi-Version Concurrency Control",
+        "2PL": "Two-Phase Locking",
+        "2PC": "Two-Phase Commit",
+        "MOLAP": "Multidimensional OLAP",
+        "ROLAP": "Relational OLAP",
+        "HOLAP": "Hybrid OLAP",
+        "ETL": "Extract, Transform, Load"
+      }
+      ,
+      "synonyms": {
+        "Normalization": ["Schema Refinement", "Removing Data Redundancies"],
+        "Entity-Relationship (ER) Modeling": ["Relational Schema Design"],
+        "Concurrency Control": ["Locking Protocols", "Serializability Approaches"],
+        "Distributed Databases": ["Federated Databases", "Shared-Nothing Architecture"],
+        "Data Warehousing": ["Analytical Data Storage", "OLAP Systems"],
+        "NoSQL": ["Non-Relational Databases"]
+      }
+      
+    }
+  },
+  "weeks": [
+    {
+      "week_id": 1,
+      "course_id": 1,
+      "order": 1,
+      "title": "Week 1: Foundations Revisited - Data, Abstraction, and Database Architectures",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week revisits and expands upon the fundamental principles of Database Management Systems. It provides a deeper understanding of data abstraction, schema design, and explores various database system architectures. The materials cover an in-depth analysis of the three levels of abstraction (physical, logical, and view) and their implications for data independence. It contrasts traditional file systems with modern DBMS in greater detail, highlighting the advantages and disadvantages. A comprehensive introduction to different database system architectures, including centralized, client-server, and parallel systems, is provided. Detailed discussions include the roles of schema and instance, physical and logical data independence, and the evolution of database schemas. The week also introduces advanced normalization concepts and integrity constraints as essential elements of robust database design. Real-world examples and case studies are used to illustrate design challenges and optimization techniques in diverse database architectures.",
+        "concepts_covered": [
+          "In-depth analysis of the levels of data abstraction: Physical, Logical, and View levels and their importance.",
+          "Detailed differences between schema and instance, and their impact on database evolution.",
+          "Comprehensive review of fundamental data models: relational, entity-relationship, hierarchical, network, and an introduction to object-oriented models.",
+          "Advanced introduction to relational databases and their underlying mathematical structure.",
+          "Detailed overview of DDL and DML for defining and manipulating complex database schemas.",
+          "Advanced normalization principles and the role of integrity constraints in ensuring data quality.",
+          "Exploration of different database system architectures: centralized, client-server, parallel (shared memory, shared disk, shared nothing), and their characteristics.",
+          "Detailed discussion on physical and logical data independence and their benefits."
+        ],
+        "concepts_not_covered": [
+          "NoSQL database architectures in detail (covered in later weeks).",
+          "Specific implementation details of different DBMS products.",
+          "Cloud-based database services in depth (introduced later)."
+        ]
+      }
+    },
+    {
+      "week_id": 2,
+      "course_id": 1,
+      "order": 2,
+      "title": "Week 2: Advanced Relational Model, SQL Deep Dive, and Enhanced Integrity Constraints",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week delves deeply into the relational model, expanding on its theoretical foundations and practical implications. It provides a comprehensive exploration of SQL, going beyond the essentials to cover advanced query techniques and database schema manipulation. The lectures analyze the historical evolution of SQL in detail, its dual functionality as a DDL and DML, and the nuances of the standard query structure (SELECT-FROM-WHERE) with advanced clauses. The critical role of enhanced integrity constraints, including check constraints, assertions, and triggers, in ensuring database consistency and business rules enforcement is thoroughly examined. Furthermore, the material illustrates the evolution of SQL standards with a focus on features introduced in later versions. Students will gain practical experience in designing robust and complex schemas and implementing sophisticated data integrity rules using advanced SQL features. Real-world examples and case studies demonstrate the application of these concepts in building enterprise-level relational databases.",
+        "concepts_covered": [
+          "In-depth historical development and detailed standardization of SQL (SQL-86 to the latest standards).",
+          "Comprehensive analysis of the role of SQL in managing relational databases, including both declarative and procedural aspects.",
+          "Advanced Data Definition Language (DDL) and Data Manipulation Language (DML) functionalities, including views, indexes, and schema modification.",
+          "Detailed SQL query structure, including joins (inner, outer, self), set operations (union, intersect, except), and aggregate functions with grouping.",
+          "Implementation of advanced integrity constraints: check constraints, unique constraints, assertions, and triggers.",
+          "Advanced table operations: transactions, stored procedures, and user-defined functions (introduction).",
+          "Exploring advanced SQL features for data analysis and reporting."
+        ],
+        "concepts_not_covered": [
+          "NoSQL query languages (covered in later weeks).",
+          "Distributed SQL concepts in detail (introduced later).",
+          "Database security in depth (dedicated week later)."
+        ]
+      }
+    },
+    {
+      "week_id": 3,
+      "course_id": 1,
+      "order": 3,
+      "title": "Week 3: Expert SQL: Subqueries, Views, and Data Modification Mastery",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week focuses on mastering advanced SQL techniques, with a particular emphasis on complex nested subqueries and sophisticated data modification strategies. The lectures introduce expert-level SQL concepts that enable students to construct highly intricate queries by embedding subqueries in various clauses (WHERE, FROM, SELECT). A thorough understanding of existential and universal quantifiers is achieved through the practical application of EXISTS, NOT EXISTS, SOME, and ALL operators in complex scenarios. Furthermore, the content covers advanced database modification operations including INSERT (with SELECT), DELETE (with subqueries), and UPDATE (with subqueries and CASE statements). The use of scalar subqueries, correlated subqueries, and Common Table Expressions (CTEs) for enhancing query readability, maintainability, and performance in complex database environments is demonstrated extensively. The extended discussion also delves into query execution plans and basic performance tuning techniques for efficient SQL in large-scale databases.",
+        "concepts_covered": [
+          "Mastering nested and correlated subqueries in SELECT, FROM, and WHERE clauses.",
+          "Advanced use of existential (EXISTS, SOME, ANY) and universal (ALL) quantifiers in SQL predicates.",
+          "Sophisticated data modification using INSERT (SELECT), DELETE (with conditions and subqueries), and UPDATE (with subqueries and CASE).",
+          "Detailed implementation and benefits of views for data abstraction and security.",
+          "Advanced applications of scalar and correlated subqueries for complex data retrieval and modification.",
+          "In-depth exploration of Common Table Expressions (CTEs) for recursive and complex query structures.",
+          "Introduction to SQL query execution plans and basic principles of query optimization."
+        ],
+        "concepts_not_covered": [
+          "Advanced query optimization algorithms (covered later).",
+          "Database administration tasks related to performance monitoring.",
+          "Integration of SQL with specific programming frameworks in detail."
+        ]
+      }
+    },
+    {
+      "week_id": 4,
+      "course_id": 1,
+      "order": 4,
+      "title": "Week 4: Deep Dive into Indexing and Query Processing Strategies",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week provides a comprehensive exploration of indexing techniques and query processing strategies crucial for achieving high database performance. The lectures cover various types of indexing, including primary, secondary, clustered, and non-clustered indexes, and their impact on query speed. Detailed discussions include the internal structure of index data structures such as B-trees and hash indexes, and the trade-offs involved in choosing the appropriate indexing strategy for different workloads. The query processing pipeline, from parsing and optimization to execution, is examined in detail. Different query optimization techniques, including cost-based optimization and heuristic optimization, are introduced. The week also covers how the DBMS selects an execution plan and the factors influencing its efficiency. Practical considerations for index design and maintenance in real-world database systems are emphasized.",
+        "concepts_covered": [
+          "In-depth analysis of various indexing techniques: primary, secondary, clustered, non-clustered, composite indexes.",
+          "Internal structure and working principles of index data structures: B-trees, B+ trees, hash indexes.",
+          "Trade-offs in index selection: performance benefits versus storage overhead and maintenance costs.",
+          "Detailed exploration of the query processing pipeline: parsing, translation, optimization, and evaluation.",
+          "Cost-based query optimization: estimating query execution costs and choosing optimal plans.",
+          "Heuristic query optimization: applying rules and transformations to improve query efficiency.",
+          "Understanding and interpreting query execution plans.",
+          "Practical guidelines for index design, creation, and maintenance."
+        ],
+        "concepts_not_covered": [
+          "Advanced topics in distributed query processing (covered later).",
+          "Specific query optimizers of different DBMS products in detail.",
+          "Performance monitoring and tuning tools in depth."
+        ]
+      }
+    },
+    {
+      "week_id": 5,
+      "course_id": 1,
+      "order": 5,
+      "title": "Week 5: Advanced Normalization and Database Design Methodologies",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week delves into advanced database normalization techniques beyond 3NF, including 4NF, 5NF, and Domain-Key Normal Form (DKNF). The lectures provide a thorough understanding of multi-valued dependencies and join dependencies, and how these are addressed in higher normal forms to eliminate remaining data redundancies and anomalies. Practical database design methodologies, including top-down and bottom-up approaches, and the importance of data modeling in the design process are extensively covered. Students will learn how to apply normalization principles in complex real-world scenarios and understand the trade-offs between normalization levels and performance. Techniques for denormalization when performance requirements necessitate it are also discussed. The week emphasizes a systematic approach to database design, ensuring data integrity, consistency, and efficiency.",
+        "concepts_covered": [
+          "In-depth exploration of advanced normalization forms: 4NF (Fourth Normal Form), BCNF (Boyce-Codd Normal Form) revisited, 5NF (Fifth Normal Form), and DKNF (Domain-Key Normal Form).",
+          "Understanding multi-valued dependencies and their impact on database design.",
+          "Analyzing join dependencies and their role in 5NF.",
+          "Practical application of advanced normalization techniques to complex data models.",
+          "Top-down and bottom-up database design methodologies.",
+          "The role of data modeling (conceptual, logical, physical) in the database design lifecycle.",
+          "Trade-offs between normalization levels and database performance.",
+          "Introduction to denormalization techniques and their appropriate use cases."
+        ],
+        "concepts_not_covered": [
+          "Specific data modeling tools in detail.",
+          "Database design for specialized applications (e.g., time-series data).",
+          "Physical database design considerations for specific DBMS products."
+        ]
+      }
+    },
+    {
+      "week_id": 6,
+      "course_id": 1,
+      "order": 6,
+      "title": "Week 6: Transaction Management: ACID Properties and Concurrency Control",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week provides a comprehensive understanding of transaction management in DBMS, focusing on the critical ACID properties (Atomicity, Consistency, Isolation, Durability). The lectures delve into the challenges of concurrent transaction execution and the need for concurrency control mechanisms to maintain data integrity. Various concurrency control techniques, including locking (two-phase locking), timestamp-based protocols, and multi-version concurrency control (MVCC), are thoroughly explained. The concepts of serializability and conflict serializability are introduced as criteria for ensuring correct concurrent execution. Practical issues such as deadlock detection and resolution are also covered in detail. Students will gain a strong foundation in the principles and techniques used by DBMS to manage transactions efficiently and reliably in multi-user environments.",
+        "concepts_covered": [
+          "In-depth analysis of the ACID properties of transactions: Atomicity, Consistency, Isolation, Durability.",
+          "Challenges of concurrent transaction execution: lost updates, dirty reads, incorrect summaries, phantom reads.",
+          "Introduction to serializability and conflict serializability as correctness criteria for concurrent execution.",
+          "Locking-based concurrency control protocols: shared and exclusive locks, two-phase locking (2PL), strict 2PL.",
+          "Timestamp-based concurrency control protocols.",
+          "Multi-version concurrency control (MVCC) techniques.",
+          "Deadlock detection, prevention, and resolution strategies.",
+          "Granularity of locking and its impact on performance."
+        ],
+        "concepts_not_covered": [
+          "Implementation details of concurrency control in specific DBMS.",
+          "Advanced topics in distributed transaction management (covered later).",
+          "Performance implications of different concurrency control mechanisms in detail."
+        ]
+      }
+    },
+    {
+      "week_id": 7,
+      "course_id": 1,
+      "order": 7,
+      "title": "Week 7: Database Recovery Techniques and Failure Management",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week focuses on the essential techniques used by DBMS to ensure data durability and recover from various types of system failures. The lectures cover different types of failures, including transaction failures, system crashes, and disk failures. Detailed explanations of recovery mechanisms such as logging (write-ahead logging), checkpointing, and shadow paging are provided. The process of restoring the database to a consistent state after a failure is examined step-by-step. Different recovery algorithms based on deferred and immediate updates are discussed. The importance of transaction logs in the recovery process and strategies for log management are emphasized. Students will understand how DBMS guarantees data integrity and availability even in the presence of failures.",
+        "concepts_covered": [
+          "Types of database failures: transaction failures, system crashes, disk failures.",
+          "The importance of transaction logs for database recovery.",
+          "Write-Ahead Logging (WAL) protocol.",
+          "Checkpointing techniques: eager, lazy, fuzzy checkpoints.",
+          "Database recovery algorithms based on deferred update.",
+          "Database recovery algorithms based on immediate update.",
+          "Shadow paging as a recovery technique.",
+          "Log management and archiving strategies."
+        ],
+        "concepts_not_covered": [
+          "Recovery in distributed database systems (covered later).",
+          "Specific recovery procedures for different DBMS products.",
+          "Disaster recovery planning in detail."
+        ]
+      }
+    },
+    {
+      "week_id": 8,
+      "course_id": 1,
+      "order": 8,
+      "title": "Week 8: Introduction to NoSQL Databases: Concepts and Key-Value Stores",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week introduces the concepts and motivations behind NoSQL databases as an alternative to traditional relational databases for handling diverse and large-scale data. The lectures cover the key characteristics of NoSQL systems, including schema flexibility, scalability, and high availability. Different types of NoSQL databases are introduced, with a focus on Key-Value stores. The architecture, data model, advantages, and disadvantages of Key-Value databases are discussed in detail. Use cases where Key-Value stores are particularly well-suited are explored. Basic operations and common features of popular Key-Value stores are also introduced. This week provides a foundational understanding of the NoSQL landscape and the role of Key-Value databases within it.",
+        "concepts_covered": [
+          "Motivation for NoSQL databases: handling large-scale, unstructured, and semi-structured data.",
+          "Key characteristics of NoSQL systems: schema flexibility, scalability, high availability, eventual consistency.",
+          "Different types of NoSQL databases: Key-Value, Document, Column-Family, Graph.",
+          "In-depth exploration of Key-Value stores: data model, architecture, partitioning, replication.",
+          "Advantages and disadvantages of Key-Value databases.",
+          "Use cases for Key-Value stores: caching, session management, simple data storage.",
+          "Basic operations (PUT, GET, DELETE) and common features of Key-Value databases.",
+          "Introduction to consistency models in distributed systems (e.g., eventual consistency)."
+        ],
+        "concepts_not_covered": [
+          "Other NoSQL database types in detail (covered in subsequent weeks).",
+          "Specific NoSQL products beyond fundamental concepts.",
+          "Advanced topics in distributed consistency."
+        ]
+      }
+    },
+    {
+      "week_id": 9,
+      "course_id": 1,
+      "order": 9,
+      "title": "Week 9: NoSQL Databases: Document Databases and Column-Family Stores",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week continues the exploration of NoSQL databases, focusing on Document Databases and Column-Family Stores. The lectures delve into the data models, architectures, and use cases of these two prominent NoSQL types. For Document Databases, the flexibility of storing schema-less or semi-structured data in JSON-like documents is highlighted, along with their suitability for content management and web applications. The architecture and features of popular document databases are discussed. For Column-Family Stores, the concepts of column families, rows, and super columns are explained, emphasizing their scalability and suitability for large-scale data storage and analytics. The architecture and key features of widely used column-family databases are also covered. Students will gain a deeper understanding of the diversity within the NoSQL landscape and learn to identify appropriate database types for different application requirements.",
+        "concepts_covered": [
+          "In-depth exploration of Document Databases: data model (JSON, BSON), schema flexibility, querying techniques.",
+          "Architecture and key features of popular Document Databases (e.g., MongoDB, Couchbase).",
+          "Use cases for Document Databases: content management, web applications, e-commerce.",
+          "Detailed analysis of Column-Family Stores: data model (column families, rows, columns), scalability, high write performance.",
+          "Architecture and key features of popular Column-Family Stores (e.g., Apache Cassandra, HBase).",
+          "Use cases for Column-Family Stores: large-scale data storage, time-series data, IoT applications.",
+          "Comparison between Document Databases and Column-Family Stores."
+        ],
+        "concepts_not_covered": [
+          "Graph databases in detail (covered in the next week).",
+          "Polyglot persistence concepts in depth.",
+          "Administrative aspects of specific NoSQL products."
+        ]
+      }
+    },
+    {
+      "week_id": 10,
+      "course_id": 1,
+      "order": 10,
+      "title": "Week 10: NoSQL Databases: Graph Databases and Polyglot Persistence",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week concludes the detailed exploration of NoSQL databases with a focus on Graph Databases. The lectures cover the unique data model of graph databases, where data is represented as nodes and relationships, making them ideal for applications with complex interconnected data. Key concepts such as nodes, edges, properties, and graph traversal are explained. The architecture and querying techniques specific to graph databases are discussed. Use cases where graph databases excel, such as social networks, recommendation systems, and knowledge graphs, are explored. The concept of polyglot persistence, where different types of databases are used within a single application to leverage their respective strengths, is also introduced. Strategies for choosing the right database technologies for different parts of an application are discussed. Students will gain a comprehensive understanding of the NoSQL ecosystem and the principles of selecting appropriate data storage solutions.",
+        "concepts_covered": [
+          "In-depth exploration of Graph Databases: data model (nodes, edges, properties), graph traversal algorithms.",
+          "Architecture and querying techniques for Graph Databases (e.g., Cypher, Gremlin).",
+          "Use cases for Graph Databases: social networks, recommendation systems, knowledge graphs, fraud detection.",
+          "Introduction to Polyglot Persistence: motivations and benefits.",
+          "Strategies for choosing the right database technology for different application needs.",
+          "Examples of applications using a polyglot persistence approach.",
+          "Considerations for data integration and consistency in polyglot persistence environments."
+        ],
+        "concepts_not_covered": [
+          "Advanced graph algorithms in detail.",
+          "Specific graph database products beyond fundamental concepts.",
+          "Complex data integration strategies for diverse database systems."
+        ]
+      }
+    },
+    {
+      "week_id": 11,
+      "course_id": 1,
+      "order": 11,
+      "title": "Week 11: Distributed Databases: Architectures and Data Replication",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week introduces the principles and challenges of distributed database systems. The lectures cover different architectures for distributed databases, including homogeneous and heterogeneous systems, as well as client-server and peer-to-peer models. A detailed focus is placed on data replication techniques, including synchronous and asynchronous replication, and their impact on data consistency and availability. Different replication strategies such as master-slave and multi-master replication are explained. The challenges of maintaining data consistency across multiple nodes in a distributed environment and the concept of distributed transactions are introduced. Students will gain an understanding of the fundamental concepts behind distributed data management and the strategies used to achieve scalability and fault tolerance.",
+        "concepts_covered": [
+          "Introduction to Distributed Database Systems: motivations and challenges.",
+          "Architectures of Distributed Databases: homogeneous, heterogeneous, client-server, peer-to-peer.",
+          "Detailed exploration of Data Replication: synchronous vs. asynchronous replication.",
+          "Replication Strategies: master-slave replication, multi-master replication.",
+          "Consistency Models in Distributed Systems: strict consistency, eventual consistency.",
+          "Introduction to Distributed Transactions and the Two-Phase Commit (2PC) protocol.",
+          "Data Partitioning Techniques: horizontal, vertical, and hybrid partitioning.",
+          "Benefits and challenges of data replication in distributed environments."
+        ],
+        "concepts_not_covered": [
+          "Advanced protocols for distributed transaction management (e.g., three-phase commit).",
+          "Specific distributed database systems in depth.",
+          "Complex data partitioning strategies and their implementation."
+        ]
+      }
+    },
+    {
+      "week_id": 12,
+      "course_id": 1,
+      "order": 12,
+      "title": "Week 12: Distributed Databases: Query Processing and Concurrency Control",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week continues the exploration of distributed databases, focusing on the complexities of query processing and concurrency control in these systems. The lectures cover how queries are processed and optimized across multiple nodes in a distributed database. Techniques for data localization, distributed join processing, and global query optimization are discussed. The challenges of maintaining transaction atomicity and isolation in a distributed environment are examined in detail. Distributed concurrency control mechanisms, including distributed locking and timestamping, are explained. The impact of network latency and partial failures on transaction management in distributed systems is also considered. Students will gain insights into the advanced techniques required to manage data and transactions effectively in distributed database environments.",
+        "concepts_covered": [
+          "Distributed Query Processing: data localization, fragmentation, and distribution.",
+          "Distributed Join Processing: different join algorithms for distributed data.",
+          "Global Query Optimization in Distributed Databases.",
+          "Challenges of Concurrency Control in Distributed Environments.",
+          "Distributed Locking Protocols.",
+          "Distributed Timestamping Protocols.",
+          "The Two-Phase Commit (2PC) protocol in detail.",
+          "Handling Network Latency and Partial Failures in Distributed Transactions."
+        ],
+        "concepts_not_covered": [
+          "Specific distributed database management systems' query optimizers in detail.",
+          "Advanced topics in fault-tolerant distributed transaction management.",
+          "Emerging trends in distributed database technologies."
+        ]
+      }
+    },
+    {
+      "week_id": 13,
+      "course_id": 1,
+      "order": 13,
+      "title": "Week 13: Data Warehousing and OLAP: Principles and Design",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week introduces the fundamental principles of data warehousing and Online Analytical Processing (OLAP). The lectures cover the key differences between OLTP (Online Transaction Processing) and OLAP systems and the motivations for building data warehouses. The architecture of a typical data warehouse, including data sources, ETL (Extraction, Transformation, Loading) processes, and the data warehouse itself, is explained. Different data warehouse schemas, such as star schema, snowflake schema, and fact constellations, are discussed in detail. The concepts of dimensions, facts, and measures are introduced. The design process for a data warehouse, including requirements gathering and dimensional modeling, is also covered. Students will gain a solid understanding of the principles and design considerations for building effective data warehouses for business intelligence and analytics.",
+        "concepts_covered": [
+          "Introduction to Data Warehousing: motivations and characteristics.",
+          "Differences between OLTP (Online Transaction Processing) and OLAP (Online Analytical Processing) systems.",
+          "Architecture of a Data Warehouse: data sources, ETL processes, data warehouse, OLAP servers.",
+          "Data Warehouse Schemas: star schema, snowflake schema, fact constellations.",
+          "Key concepts: dimensions, facts, measures, attributes.",
+          "The ETL Process in detail: Extraction, Transformation, Loading.",
+          "Dimensional Modeling for Data Warehouses.",
+          "Design considerations for building a data warehouse."
+        ],
+        "concepts_not_covered": [
+          "Specific ETL tools in depth.",
+          "Advanced OLAP operations (covered in the next week).",
+          "Data mining techniques."
+        ]
+      }
+    },
+    {
+      "week_id": 14,
+      "course_id": 1,
+      "order": 14,
+      "title": "Week 14: Data Warehousing and OLAP: Operations and Advanced Topics",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week continues the exploration of data warehousing and OLAP, focusing on the analytical operations performed on data warehouses and advanced topics. The lectures cover various OLAP operations, including slicing, dicing, roll-up, drill-down, and pivoting, and how these facilitate multi-dimensional data analysis. Different types of OLAP servers, such as MOLAP (Multidimensional OLAP), ROLAP (Relational OLAP), and HOLAP (Hybrid OLAP), are discussed. Advanced topics such as data cube computation, data warehousing implementation challenges, and emerging trends in data warehousing are also covered. Students will gain a comprehensive understanding of how data warehouses are used for business intelligence and decision support.",
+        "concepts_covered": [
+          "OLAP Operations in detail: slicing, dicing, roll-up, drill-down, pivoting.",
+          "Types of OLAP Servers: MOLAP (Multidimensional OLAP), ROLAP (Relational OLAP), HOLAP (Hybrid OLAP).",
+          "Data Cube Computation and Materialization.",
+          "Data Warehouse Implementation Challenges: data quality, scalability, security.",
+          "Data Warehouse Maintenance and Evolution.",
+          "Emerging Trends in Data Warehousing and Business Intelligence.",
+          "Integration of Data Warehousing with Data Mining."
+        ],
+        "concepts_not_covered": [
+          "Specific OLAP tools and their usage in detail.",
+          "Advanced data mining algorithms.",
+          "Real-time data warehousing."
+        ]
+      }
+    },
+    {
+      "week_id": 15,
+      "course_id": 1,
+      "order": 15,
+      "title": "Week 15: Database Security: Principles and Implementation",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This week provides a comprehensive overview of database security principles and implementation techniques. The lectures cover the various threats to database security, including unauthorized access, data breaches, and malicious attacks. Fundamental security concepts such as confidentiality, integrity, and availability are discussed. Different security mechanisms, including authentication, authorization, access control models (e.g., DAC, MAC, RBAC), and encryption, are explained in detail. Techniques for securing the database at different levels (network, operating system, DBMS) are covered. Students will learn how to design and implement security policies to protect sensitive data and ensure the integrity of the database system.",
+        "concepts_covered": [
+          "Introduction to Database Security: threats and vulnerabilities.",
+          "Fundamental Security Concepts: confidentiality, integrity, availability.",
+          "Authentication and Authorization in DBMS.",
+          "Access Control Models: Discretionary Access Control (DAC), Mandatory Access Control (MAC), Role-Based Access Control (RBAC).",
+          "Database Encryption Techniques: data at rest, data in transit.",
+          "Security at Different Levels: network, operating system, DBMS.",
+          "Database Auditing and Monitoring.",
+          "Developing and Implementing Database Security Policies."
+        ],
+        "concepts_not_covered": [
+          "Specific security features of different DBMS products in extreme detail.",
+          "Legal and compliance aspects of data security.",
+          "Advanced cryptographic techniques."
+        ]
+      }
+    },
+    {
+      "week_id": 16,
+      "course_id": 1,
+      "order": 16,
+      "title": "Week 16: Database Performance Tuning and Emerging Trends",
+      "estimated_hours": 30,
+      "LLM_Summary": {
+        "summary": "This final week focuses on advanced database performance tuning techniques and explores emerging trends in database technologies. The lectures cover strategies for identifying and resolving performance bottlenecks in database systems. Advanced query optimization techniques, including index tuning, query rewriting, and database configuration parameters, are discussed. Tools and methodologies for performance monitoring and benchmarking are introduced. The week also explores emerging trends such as in-memory databases, NewSQL databases, database as a service (DBaaS) in the cloud, and the integration of databases with AI and machine learning. Students will gain insights into how to optimize database performance for demanding applications and understand the future landscape of database technologies.",
+        "concepts_covered": [
+          "Advanced Database Performance Tuning: identifying bottlenecks.",
+          "Index Tuning and Optimization.",
+          "Query Rewriting Techniques for Performance Improvement.",
+          "Database Configuration Parameters and their Impact on Performance.",
+          "Performance Monitoring and Benchmarking Tools.",
+          "Introduction to In-Memory Databases.",
+          "Overview of NewSQL Databases.",
+          "Database as a Service (DBaaS) in the Cloud.",
+          "Integration of Databases with AI and Machine Learning.",
+          "Emerging Trends in Database Technologies."
+        ],
+        "concepts_not_covered": [
+          "Extremely specialized performance tuning for niche database systems.",
+          "Cutting-edge research topics in database systems.",
+          "Detailed administration of specific cloud database services."
+        ]
+      }
+    }
+  ],
+  "lectures": [
+    {
+      "lecture_id": 1,
+      "week_id": 1,
+      "order": 1,
+      "title": "Foundations Revisited: Deep Dive into Data Abstraction",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=s1Jb-NJNpT4",
+      "content_transcript": "Welcome back to Advanced Database Management Systems. This module builds upon your existing knowledge by taking a much deeper dive into the levels of data abstraction: physical, logical, and view. We will explore not just what these levels are, but how they interact and the profound implications they have for data independence. Consider the physical level: how is data actually stored? We'll discuss different storage media, file organizations (heap files, sorted files), and access methods (sequential, direct). Then we move to the logical level, where we model the data and its relationships. We'll revisit the relational model and other models conceptually, but with a focus on the abstract representation, independent of physical storage details. Finally, the view level: how different users perceive the data. We'll discuss the power of views for security and customization. A significant portion of this lecture will be dedicated to understanding physical data independence – the ability to change the physical schema without affecting the logical schema – and logical data independence – the ability to change the logical schema without affecting user applications. We will use detailed examples to illustrate these crucial concepts and their importance in maintaining flexible and adaptable database systems. We will also touch upon the role of the DBMS in managing these different levels of abstraction seamlessly. Understanding these foundational concepts deeply is critical for tackling the more advanced topics we will cover in this course. We will also briefly introduce different database architectures like centralized, client-server, and the basic concepts of parallel databases, setting the stage for a more detailed discussion in a later lecture. Think about how a change in storage format (e.g., from row-major to column-major) can be hidden from the logical view. This lecture aims to provide a solid and nuanced understanding of these fundamental building blocks of DBMS.",
+      "duration_minutes": 60,
+      "keywords": [
+        "DBMS",
+        "database abstraction",
+        "physical level",
+        "logical level",
+        "view level",
+        "schema",
+        "instance",
+        "physical data independence",
+        "logical data independence",
+        "database architectures"
+      ]
+    },
+    {
+      "lecture_id": 2,
+      "week_id": 1,
+      "order": 2,
+      "title": "Database System Architectures: Centralized, Client-Server, and Parallel Systems",
+      "resource_type": "pdf",
+      "resource_url": "DBMS_Architectures.pdf",
+      "content_extract": "This lecture provides a comprehensive overview of various database system architectures. We begin by examining centralized database systems, where all DBMS functionalities, including the database itself, are located on a single computer. We will discuss the advantages (simplicity, ease of management) and disadvantages (limited scalability, single point of failure) of this architecture. Next, we delve into client-server database systems, the most common architecture today. We will differentiate between two-tier and three-tier architectures, explaining the roles of clients, application servers (in three-tier), and database servers. The benefits of client-server systems, such as improved scalability and distribution of workload, will be highlighted. A significant portion of the lecture will be dedicated to parallel database systems, designed to improve performance by executing operations across multiple processors and disks. We will explore different parallel architectures, including shared memory, shared disk, and shared nothing systems, analyzing their strengths and weaknesses in terms of scalability, cost, and complexity. We will also discuss the concepts of inter-query parallelism (executing multiple queries concurrently) and intra-query parallelism (executing a single query across multiple resources). Real-world examples of each architecture will be provided to illustrate their practical applications. Understanding these different architectural choices is crucial for designing and deploying database systems that meet specific performance and scalability requirements. We will also touch upon the basic concepts of distributed database systems as an extension of parallel architectures, paving the way for a more detailed discussion in later weeks. Consider the architectural differences required for a small departmental database versus a large-scale e-commerce platform. This lecture will equip you with a solid understanding of the architectural landscape of modern DBMS.",
+      "duration_minutes": 75,
+      "keywords": [
+        "database architecture",
+        "centralized systems",
+        "client-server systems",
+        "two-tier architecture",
+        "three-tier architecture",
+        "parallel database systems",
+        "shared memory",
+        "shared disk",
+        "shared nothing",
+        "inter-query parallelism",
+        "intra-query parallelism",
+        "distributed database systems"
+      ]
+    },
+    {
+      "lecture_id": 3,
+      "week_id": 2,
+      "order": 1,
+      "title": "Advanced Relational Model Concepts: Domains, Keys, and Relational Constraints",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=Wv6vM5rGCw0",
+      "content_transcript": "Welcome to this lecture on the advanced concepts of the relational model. We've already covered the basics, but now we're going to delve much deeper into the fundamental building blocks. Let's start with domains. A domain defines the set of permissible values for an attribute. We will discuss different types of domains, including scalar domains (integers, strings, dates) and user-defined domains. Understanding domains is crucial for enforcing data integrity. Next, we will thoroughly examine keys. We'll revisit primary keys and foreign keys, but we'll also introduce more advanced key concepts such as superkeys, candidate keys, and alternate keys. We will discuss the importance of key selection in database design and how different types of keys enforce uniqueness and relationships between tables. A significant portion of this lecture will be dedicated to relational constraints. Beyond primary and foreign key constraints, we will explore NOT NULL constraints, UNIQUE constraints, and, importantly, CHECK constraints, which allow you to specify arbitrary conditions that data in a table must satisfy. We will also introduce the concept of assertions, which are constraints that apply across multiple tables. We will use detailed examples to show how to define and enforce these constraints using SQL DDL. Understanding these advanced relational model concepts is essential for designing well-structured and robust databases that maintain data quality and consistency. We will also discuss the implications of these constraints on data manipulation operations. Think about how a well-defined set of constraints can prevent invalid data from entering your database. This lecture aims to provide you with a comprehensive understanding of how to leverage the features of the relational model to ensure data integrity at a fundamental level.",
+      "duration_minutes": 70,
+      "keywords": [
+        "relational model",
+        "domains",
+        "scalar domains",
+        "user-defined domains",
+        "data integrity",
+        "keys",
+        "primary key",
+        "foreign key",
+        "superkey",
+        "candidate key",
+        "alternate key",
+        "relational constraints",
+        "NOT NULL constraint",
+        "UNIQUE constraint",
+        "CHECK constraint",
+        "assertions",
+        "SQL DDL"
+      ]
+    },
+    {
+      "lecture_id": 4,
+      "week_id": 2,
+      "order": 2,
+      "title": "SQL DDL and Schema Manipulation: Views, Indexes, and Advanced Data Types",
+      "resource_type": "pdf",
+      "resource_url": "SQL_DDL_Advanced.pdf",
+      "content_extract": "This lecture focuses on advanced aspects of SQL Data Definition Language (DDL) and schema manipulation. We will begin by exploring the creation and management of views. Views provide a virtual table based on the result of an SQL statement. We will discuss the benefits of using views, such as data abstraction, security, and simplifying complex queries. We will cover how to create, modify, and drop views using SQL DDL. Next, we will delve into indexes. Indexes are special lookup tables that the database search engine can use to speed up data retrieval. We will examine different types of indexes, including B-tree indexes and hash indexes, and discuss the trade-offs between index creation and query performance versus storage overhead and maintenance. We will learn how to create, alter, and drop indexes using SQL DDL. A significant portion of this lecture will be dedicated to advanced data types supported by modern SQL implementations. This includes data types for storing large objects (LOBs), such as BLOBs (Binary Large Objects) and CLOBs (Character Large Objects), as well as spatial data types, JSON data types, and XML data types. We will discuss how to use these advanced data types and the SQL functions available for manipulating them. We will also touch upon the concept of schema modification, including adding, dropping, and altering columns in existing tables. Understanding these advanced DDL features is crucial for designing flexible, efficient, and feature-rich database schemas that can accommodate various types of data and support complex application requirements. We will also briefly discuss the role of the data dictionary in managing schema information. Consider how using JSON data types within your relational database can provide flexibility for semi-structured data. This lecture aims to equip you with the skills to effectively define and manage sophisticated database schemas using advanced SQL DDL.",
+      "duration_minutes": 80,
+      "keywords": [
+        "SQL DDL",
+        "schema manipulation",
+        "views",
+        "creating views",
+        "modifying views",
+        "dropping views",
+        "indexes",
+        "B-tree index",
+        "hash index",
+        "creating indexes",
+        "altering indexes",
+        "dropping indexes",
+        "advanced data types",
+        "LOB",
+        "BLOB",
+        "CLOB",
+        "spatial data types",
+        "JSON data types",
+        "XML data types",
+        "schema modification",
+        "data dictionary"
+      ]
+    },
+    {
+      "lecture_id": 5,
+      "week_id": 3,
+      "order": 1,
+      "title": "Mastering SQL Subqueries: Correlated, Nested, and Scalar Subqueries in Depth",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=Pk1j1UE3JLI",
+      "content_transcript": "Welcome to this advanced lecture on SQL subqueries. We will go far beyond the basics and explore the power and nuances of different types of subqueries. Let's start with nested subqueries. We will examine how to embed one SELECT statement within another and how the inner query's results are used by the outer query. We'll look at subqueries in the WHERE clause using operators like IN, NOT IN, EXISTS, NOT EXISTS, and comparison operators with ANY/SOME and ALL. A significant portion of this lecture will be dedicated to correlated subqueries. Unlike simple nested subqueries, a correlated subquery depends on the outer query for its values. We will see how the inner query is executed for each row of the outer query and the implications for performance. We'll use detailed examples to illustrate when and how to use correlated subqueries effectively. Next, we will explore scalar subqueries. These are subqueries that return a single value. We will see how scalar subqueries can be used in the SELECT list, FROM clause (as derived tables), and WHERE clause. It's crucial to understand when a subquery is guaranteed to return only one row and how to handle cases where it might return multiple rows or no rows. We will also discuss the use of subqueries in data modification statements (INSERT, UPDATE, DELETE). We'll see how subqueries can be used to select data to be inserted, to specify conditions for updates and deletions, and even to calculate new values for updates. Finally, we will touch upon the performance considerations of using subqueries and some basic optimization techniques. Understanding the different types of subqueries and how to use them effectively is a key skill for writing complex and powerful SQL queries. Think about how you can use a subquery to find all employees who earn more than the average salary of their department. This lecture aims to make you a master of SQL subqueries.",
+      "duration_minutes": 75,
+      "keywords": [
+        "SQL",
+        "subqueries",
+        "nested subqueries",
+        "correlated subqueries",
+        "scalar subqueries",
+        "IN",
+        "NOT IN",
+        "EXISTS",
+        "NOT EXISTS",
+        "ANY",
+        "SOME",
+        "ALL",
+        "derived tables",
+        "subqueries in INSERT",
+        "subqueries in UPDATE",
+        "subqueries in DELETE",
+        "query optimization"
+      ]
+    },
+    {
+      "lecture_id": 6,
+      "week_id": 3,
+      "order": 2,
+      "title": "Advanced SQL: Window Functions, CTEs, and Procedural SQL Extensions",
+      "resource_type": "pdf",
+      "resource_url": "SQL_Advanced_Features.pdf",
+      "content_extract": "This lecture delves into some of the most powerful advanced features of SQL. We will start by exploring window functions. Unlike regular aggregate functions that group rows into a single result row, window functions perform calculations across a set of table rows that are somehow related to the current row. We will cover different types of window functions, including ranking functions (ROW_NUMBER, RANK, DENSE_RANK), aggregate functions as window functions (SUM, AVG, MIN, MAX), and value functions (LAG, LEAD). We will discuss the OVER() clause and how to define partitions and orderings for window functions. Next, we will thoroughly examine Common Table Expressions (CTEs), also known as WITH clauses. CTEs allow you to define temporary, named result sets that you can reference within a single SQL statement. We will see how CTEs can be used to break down complex queries into smaller, more manageable parts, improving readability and maintainability. We will also explore recursive CTEs for handling hierarchical data. A significant portion of this lecture will be dedicated to procedural SQL extensions. Many modern SQL implementations provide procedural features such as stored procedures, user-defined functions (UDFs), triggers, and control flow statements (IF-THEN-ELSE, loops). We will discuss the benefits of using these procedural extensions for encapsulating business logic within the database, improving performance, and automating tasks. We will look at examples of creating stored procedures, defining UDFs, and implementing triggers that respond to database events. Understanding and utilizing these advanced SQL features can significantly enhance your ability to work with complex database systems and implement sophisticated data-driven applications. Consider how you can use window functions to calculate running totals or rank items within groups. This lecture aims to provide you with a practical understanding of these powerful SQL capabilities.",
+      "duration_minutes": 85,
+      "keywords": [
+        "SQL",
+        "window functions",
+        "ranking functions",
+        "aggregate window functions",
+        "value window functions",
+        "OVER clause",
+        "partitions",
+        "ordering",
+        "Common Table Expressions (CTEs)",
+        "WITH clause",
+        "recursive CTEs",
+        "procedural SQL",
+        "stored procedures",
+        "user-defined functions (UDFs)",
+        "triggers",
+        "control flow statements"
+      ]
+    },
+    {
+      "lecture_id": 7,
+      "week_id": 4,
+      "order": 1,
+      "title": "Indexing Strategies: B-trees, Hash Indexes, and Advanced Indexing Techniques",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=WjlbMfEqom8",
+      "content_transcript": "Welcome to this in-depth lecture on database indexing strategies. We've touched upon indexes before, but now we're going to delve into the internal workings and advanced techniques. We'll start with B-tree indexes, the most common type of index used in relational databases. We will explore the structure of B-trees, how they facilitate efficient searching, insertion, and deletion of data, and the impact of factors like fan-out and height on performance. Next, we will examine hash indexes. Unlike B-trees, hash indexes provide very fast lookups for equality conditions but are not efficient for range queries. We will discuss the advantages and limitations of hash indexes and when they are most appropriate. A significant portion of this lecture will be dedicated to advanced indexing techniques. This includes composite indexes (indexing on multiple columns), covering indexes (where the index itself contains all the data needed for a query), and full-text indexes (for efficient searching of text data). We will also discuss spatial indexes for geographic data and XML indexes for querying XML documents stored in the database. We will analyze the trade-offs involved in choosing different indexing strategies, including the impact on query performance, storage overhead, and the cost of index maintenance during data modifications. We will also discuss how to analyze query execution plans to determine if indexes are being used effectively and how to identify opportunities for creating new or modifying existing indexes. Understanding these advanced indexing techniques is crucial for optimizing database performance for complex workloads. Think about how a composite index on (department_id, salary) can speed up queries that filter on both department and salary. This lecture aims to provide you with a comprehensive understanding of how to leverage indexing to achieve optimal database performance.",
+      "duration_minutes": 80,
+      "keywords": [
+        "database indexing",
+        "B-tree index",
+        "hash index",
+        "composite index",
+        "covering index",
+        "full-text index",
+        "spatial index",
+        "XML index",
+        "index selection",
+        "query performance",
+        "storage overhead",
+        "index maintenance",
+        "query execution plans",
+        "index tuning"
+      ]
+    },
+    {
+      "lecture_id": 8,
+      "week_id": 4,
+      "order": 2,
+      "title": "Query Processing and Optimization: From Parsing to Execution",
+      "resource_type": "pdf",
+      "resource_url": "Query_Processing_Optimization.pdf",
+      "content_extract": "This lecture provides a detailed look into the query processing and optimization pipeline within a DBMS. We will start by examining the initial steps of query processing, including parsing the SQL query to check its syntax and translation into an internal representation, often a form of relational algebra. Next, we will delve into the crucial phase of query optimization. We will explore different query optimization strategies, including rule-based optimization (applying heuristic rules to transform the query) and cost-based optimization (estimating the cost of different execution plans and choosing the one with the lowest estimated cost). We will discuss the factors that influence the cost estimation, such as data statistics, index availability, and algorithm complexity. A significant portion of this lecture will be dedicated to common query optimization techniques, such as join ordering, selection pushdown, and projection pushdown. We will analyze how the DBMS chooses the most efficient join algorithms (e.g., nested loop join, sort-merge join, hash join) based on the characteristics of the data and the query. We will also discuss the role of data statistics maintained by the DBMS in the optimization process. Finally, we will examine the query execution phase, where the optimized execution plan is carried out to retrieve the desired data. We will briefly touch upon different execution models. Understanding the query processing and optimization pipeline is essential for writing efficient SQL queries and for diagnosing and resolving performance issues in database systems. We will also discuss how you as a developer can influence the optimizer through careful query formulation and the use of appropriate indexing. Consider how the order in which you join tables can drastically affect query performance. This lecture aims to provide you with a comprehensive understanding of what happens behind the scenes when you execute an SQL query and how the DBMS strives to do it efficiently.",
+      "duration_minutes": 85,
+      "keywords": [
+        "query processing",
+        "query optimization",
+        "parsing",
+        "translation",
+        "relational algebra",
+        "rule-based optimization",
+        "cost-based optimization",
+        "query execution plan",
+        "join ordering",
+        "selection pushdown",
+        "projection pushdown",
+        "join algorithms",
+        "nested loop join",
+        "sort-merge join",
+        "hash join",
+        "data statistics",
+        "query execution"
+      ]
+    },
+    {
+      "lecture_id": 9,
+      "week_id": 5,
+      "order": 1,
+      "title": "Beyond 3NF: Understanding 4NF and Boyce-Codd Normal Form (BCNF)",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=s_hu_Lkhf_w",
+      "content_transcript": "Welcome to this lecture on advanced normalization techniques. We've already covered the first three normal forms, but now we're going to go beyond and explore Fourth Normal Form (4NF) and revisit Boyce-Codd Normal Form (BCNF) in more detail. Let's start with BCNF. We'll recall its definition: for every non-trivial functional dependency X → A, X must be a superkey. We will look at examples of relations that are in 3NF but not in BCNF and understand the anomalies that can still occur in 3NF relations with multiple overlapping candidate keys. We will then delve into 4NF. 4NF addresses multi-valued dependencies. We will define multi-valued dependencies (MVDs) and understand the conditions under which they arise. We will see how the presence of MVDs can lead to data redundancy and update anomalies that are not eliminated by BCNF. The definition of 4NF is: a relation schema R is in 4NF with respect to a set of dependencies if for every non-trivial multi-valued dependency X ↠ Y, X is a superkey. We will explore the process of decomposing relations to achieve 4NF and eliminate the anomalies caused by MVDs. We will use detailed examples to illustrate the difference between functional dependencies and multi-valued dependencies and how to identify and resolve MVD violations. Understanding BCNF and 4NF is crucial for designing highly normalized databases that minimize redundancy and maximize data integrity, especially in complex data models with multiple independent multi-valued facts. We will also briefly touch upon the trade-offs between higher normal forms and potential performance implications. Think about a scenario where a student can take multiple courses and have multiple hobbies independently. How would you model this to avoid redundancy and ensure data integrity beyond 3NF? This lecture aims to provide you with a thorough understanding of BCNF and 4NF and their importance in advanced database design.",
+      "duration_minutes": 70,
+      "keywords": [
+        "normalization",
+        "Boyce-Codd Normal Form (BCNF)",
+        "Third Normal Form (3NF)",
+        "candidate keys",
+        "Fourth Normal Form (4NF)",
+        "multi-valued dependency (MVD)",
+        "trivial MVD",
+        "non-trivial MVD",
+        "data redundancy",
+        "update anomalies",
+        "decomposition to 4NF",
+        "functional dependency",
+        "database design",
+        "data integrity"
+      ]
+    },
+    {
+      "lecture_id": 10,
+      "week_id": 5,
+      "order": 2,
+      "title": "5NF and Domain-Key Normal Form (DKNF): Achieving Ultimate Normalization",
+      "resource_type": "pdf",
+      "resource_url": "Advanced_Normalization.pdf",
+      "content_extract": "This lecture concludes our discussion on advanced normalization with an exploration of Fifth Normal Form (5NF) and Domain-Key Normal Form (DKNF). Let's start with 5NF, which deals with join dependencies. We will define join dependencies and understand how they can lead to redundancy in relations that are already in 4NF. The definition of 5NF is: a relation schema R is in 5NF if every join dependency in R is implied by the candidate keys of R. Achieving 5NF involves decomposing relations in a way that preserves all join dependencies and minimizes redundancy. We will look at examples of relations in 4NF that are not in 5NF and the decomposition process to reach 5NF. Next, we will discuss Domain-Key Normal Form (DKNF). DKNF is often considered the ultimate level of normalization. A relation is in DKNF if every constraint on the relation is a logical consequence of the definition of keys and domains. In other words, DKNF aims to eliminate all data redundancies and update anomalies by ensuring that all constraints are enforced by key and domain restrictions. We will discuss the principles of DKNF and the challenges in achieving it in practice. While 5NF and DKNF represent the highest theoretical levels of normalization, it's important to understand the practical trade-offs. Achieving these higher normal forms can sometimes lead to a large number of tables, which might impact query performance due to increased join operations. Therefore, database designers often make informed decisions about the level of normalization based on the specific requirements of the application, balancing data integrity with performance considerations. Understanding 5NF and DKNF provides a complete theoretical framework for database normalization. Think about how ensuring that all constraints are based solely on keys and domains can lead to the most robust and anomaly-free database design. This lecture aims to provide you with a comprehensive understanding of 5NF and DKNF and their place in the theory of relational database design.",
+      "duration_minutes": 65,
+      "keywords": [
+        "normalization",
+        "Fifth Normal Form (5NF)",
+        "join dependency",
+        "decomposition to 5NF",
+        "Domain-Key Normal Form (DKNF)",
+        "keys",
+        "domains",
+        "data redundancy",
+        "update anomalies",
+        "theoretical normalization",
+        "practical database design",
+        "performance trade-offs",
+        "data integrity"
+      ]
+    },
+    {
+      "lecture_id": 11,
+      "week_id": 6,
+      "order": 1,
+      "title": "Deep Dive into ACID Properties: Atomicity and Consistency in Transactions",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=B7GzXPbW-1w",
+      "content_transcript": "Welcome to a detailed lecture on the ACID properties of database transactions. These properties are fundamental to ensuring the reliability and integrity of database systems, especially in multi-user environments. Today, we will focus specifically on Atomicity and Consistency. Let's begin with Atomicity. Atomicity means that a transaction is treated as a single, indivisible unit of work. Either all the operations within the transaction are successfully completed (committed), or none of them are (rolled back). We will explore the mechanisms that DBMS use to ensure atomicity, such as transaction logs and undo/redo operations. We will look at scenarios where atomicity is crucial, such as transferring funds between bank accounts, where a partial completion could lead to inconsistencies. We will discuss different types of transaction failures and how the DBMS handles them to maintain atomicity. Next, we will delve into Consistency. Consistency ensures that a transaction takes the database from one valid state to another valid state. A transaction must preserve all the database's integrity constraints. We will explore different types of integrity constraints (domain constraints, key constraints, referential integrity constraints, check constraints) and how the DBMS enforces them. We will look at how transactions must leave the database in a state that satisfies all these constraints. We will also discuss the role of application logic in maintaining consistency beyond the constraints defined in the database schema. We will use detailed examples to illustrate how transactions maintain consistency, even in the presence of concurrent operations. Understanding atomicity and consistency is crucial for building reliable database applications. Think about what would happen if a bank transfer transaction was not atomic – funds could be debited from one account but not credited to the other. This lecture aims to provide you with a thorough understanding of atomicity and consistency and their vital role in maintaining database integrity.",
+      "duration_minutes": 75,
+      "keywords": [
+        "transactions",
+        "ACID properties",
+        "Atomicity",
+        "Consistency",
+        "transaction logs",
+        "undo operation",
+        "redo operation",
+        "transaction failures",
+        "rollback",
+        "commit",
+        "integrity constraints",
+        "domain constraints",
+        "key constraints",
+        "referential integrity",
+        "check constraints",
+        "valid database state"
+      ]
+    },
+    {
+      "lecture_id": 12,
+      "week_id": 6,
+      "order": 2,
+      "title": "ACID Properties: Isolation and Durability in Concurrent Transactions",
+      "resource_type": "pdf",
+      "resource_url": "Transaction_Management_ACID.pdf",
+      "content_extract": "This lecture continues our detailed exploration of the ACID properties of database transactions, focusing on Isolation and Durability. Let's begin with Isolation. Isolation ensures that multiple transactions executing concurrently appear to do so in a serial manner. In other words, the intermediate results of one transaction are not visible to other concurrent transactions. We will explore different levels of transaction isolation defined by SQL standards (Read Uncommitted, Read Committed, Repeatable Read, Serializable) and the trade-offs between isolation levels and concurrency. We will discuss the concurrency anomalies that can occur at different isolation levels, such as dirty reads, non-repeatable reads, and phantom reads. We will also examine the locking mechanisms used by DBMS to achieve isolation. Next, we will delve into Durability. Durability ensures that once a transaction is committed, the changes made to the database are permanent and will survive any subsequent system failures. We will explore the techniques used by DBMS to ensure durability, primarily through the use of transaction logs. We will discuss how log records are written to stable storage and how they are used during database recovery. We will also look at the concept of checkpoints and their role in improving recovery time. Understanding isolation and durability is crucial for building robust database applications that can handle concurrent access and recover from failures without data loss. Think about the problems that could arise if transactions were not properly isolated – one transaction might read uncommitted data from another, leading to inconsistencies. This lecture aims to provide you with a thorough understanding of isolation levels, concurrency anomalies, and the mechanisms used to ensure durability in database systems.",
+      "duration_minutes": 80,
+      "keywords": [
+        "transactions",
+        "ACID properties",
+        "Isolation",
+        "Durability",
+        "concurrency",
+        "isolation levels",
+        "Read Uncommitted",
+        "Read Committed",
+        "Repeatable Read",
+        "Serializable",
+        "concurrency anomalies",
+        "dirty reads",
+        "non-repeatable reads",
+        "phantom reads",
+        "locking",
+        "transaction logs",
+        "stable storage",
+        "database recovery",
+        "checkpoints"
+      ]
+    },
+    {
+      "lecture_id": 13,
+      "week_id": 7,
+      "order": 1,
+      "title": "Database Logging and Write-Ahead Logging (WAL) in Recovery Systems",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=QY6o89r7z4M",
+      "content_transcript": "Welcome to a focused lecture on database logging and the crucial concept of Write-Ahead Logging (WAL) in database recovery systems. Logging is a fundamental mechanism used by DBMS to ensure durability and enable recovery from failures. Today, we will explore the different types of log records and how they are used to track transaction activities and database changes. We will discuss the information that is typically included in a log record, such as the transaction ID, the type of operation, the data item affected, and the before and after values. A significant portion of this lecture will be dedicated to Write-Ahead Logging (WAL). WAL is a protocol that dictates that log records describing the changes made by a transaction must be written to stable storage before the actual changes are applied to the database itself. We will delve into the reasons why WAL is essential for ensuring atomicity and durability. We will explore the different phases of WAL during transaction processing (writing log records, flushing logs to disk, applying changes to the database). We will also discuss the benefits of WAL in simplifying the recovery process after a system crash. We will look at how the log is used to undo uncommitted transactions and redo committed transactions during recovery. We will also touch upon different logging techniques, such as immediate update and deferred update, and how WAL interacts with these techniques. Understanding WAL is crucial for comprehending how modern DBMS guarantee data integrity and recover from failures reliably. Think about the sequence of events that must occur when you make a change to your data and how WAL ensures that these changes are persistent. This lecture aims to provide you with a thorough understanding of database logging principles and the vital role of Write-Ahead Logging in database recovery.",
+      "duration_minutes": 70,
+      "keywords": [
+        "database recovery",
+        "logging",
+        "log records",
+        "transaction ID",
+        "operation type",
+        "data item",
+        "before value",
+        "after value",
+        "Write-Ahead Logging (WAL)",
+        "stable storage",
+        "atomicity",
+        "durability",
+        "log flushing",
+        "undo",
+        "redo",
+        "immediate update",
+        "deferred update"
+      ]
+    },
+    {
+      "lecture_id": 14,
+      "week_id": 7,
+      "order": 2,
+      "title": "Checkpointing and Database Recovery Algorithms: Ensuring Data Durability",
+      "resource_type": "pdf",
+      "resource_url": "Database_Recovery_Algorithms.pdf",
+      "content_extract": "This lecture focuses on checkpointing techniques and database recovery algorithms that are essential for ensuring data durability after system failures. While logging provides a history of database operations, checkpointing helps to reduce the amount of work needed during recovery by periodically saving the current state of the database to disk. We will explore different types of checkpoints, including eager checkpoints, lazy checkpoints, and fuzzy checkpoints, and discuss their advantages and disadvantages in terms of performance and recovery time. We will delve into the process of taking a checkpoint and the information that is typically included in a checkpoint record. A significant portion of this lecture will be dedicated to database recovery algorithms. We will examine recovery based on deferred updates and immediate updates. For deferred updates, changes are not written to the database until after the transaction commits, simplifying the undo process but requiring more redo work. For immediate updates, changes are written to the database before or during the transaction, requiring both undo and redo capabilities. We will analyze the steps involved in the recovery process for each of these approaches, utilizing the transaction log and checkpoint information. We will also discuss the concept of media recovery for situations involving disk failures. Understanding checkpointing and database recovery algorithms is crucial for comprehending how DBMS ensures data durability and recovers from failures efficiently and correctly. Think about how checkpoints act as snapshots of the database state, speeding up the recovery process. This lecture aims to provide you with a thorough understanding of these vital techniques for maintaining database reliability.",
+      "duration_minutes": 75,
+      "keywords": [
+        "database recovery",
+        "checkpointing",
+        "eager checkpoint",
+        "lazy checkpoint",
+        "fuzzy checkpoint",
+        "recovery algorithms",
+        "deferred update",
+        "immediate update",
+        "undo operation",
+        "redo operation",
+        "transaction log",
+        "checkpoint record",
+        "media recovery",
+        "data durability",
+        "system failures"
+      ]
+    },
+    {
+      "lecture_id": 15,
+      "week_id": 8,
+      "order": 1,
+      "title": "The Rise of NoSQL: Motivations, Characteristics, and the CAP Theorem",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=0buKQH8mWkY",
+      "content_transcript": "Welcome to our introduction to the world of NoSQL databases. In this lecture, we will explore the motivations behind the emergence of NoSQL systems as an alternative to traditional relational databases. We will discuss the challenges posed by modern applications dealing with massive volumes of data, high velocity of data, and a wide variety of data types, including unstructured and semi-structured data. We will examine the limitations of relational databases in handling these scenarios, particularly in terms of scalability and flexibility. Next, we will delve into the key characteristics of NoSQL databases. This includes schema flexibility (or schema-less nature), horizontal scalability (the ability to distribute data across many servers), high availability (ensuring continuous operation even in the face of failures), and different consistency models (beyond the strict ACID properties of relational databases). A significant portion of this lecture will be dedicated to the CAP Theorem, also known as Brewer's Theorem. The CAP Theorem states that it is impossible for a distributed data store to simultaneously provide all three of the following guarantees: Consistency (all nodes see the same data at the same time), Availability (every request receives a response, without guarantee that it contains the most recent version), and Partition Tolerance (the system continues to operate despite arbitrary message loss or delay between nodes). We will explore the implications of the CAP Theorem for designing and choosing distributed data stores, understanding the trade-offs between consistency and availability in the presence of network partitions. We will also introduce the four main types of NoSQL databases: Key-Value stores, Document Databases, Column-Family stores, and Graph Databases, setting the stage for more detailed discussions in the following lectures. Understanding the motivations, characteristics, and the CAP Theorem is fundamental to grasping the NoSQL paradigm. Think about the architectural choices you might make for a social media platform dealing with billions of user profiles and real-time updates. This lecture aims to provide you with a solid foundation for understanding the NoSQL landscape.",
+      "duration_minutes": 70,
+      "keywords": [
+        "NoSQL databases",
+        "motivations",
+        "big data",
+        "data variety",
+        "schema flexibility",
+        "horizontal scalability",
+        "high availability",
+        "consistency models",
+        "CAP Theorem",
+        "Consistency (C)",
+        "Availability (A)",
+        "Partition Tolerance (P)",
+        "Key-Value stores",
+        "Document Databases",
+        "Column-Family stores",
+        "Graph Databases"
+      ]
+    },
+    {
+      "lecture_id": 16,
+      "week_id": 8,
+      "order": 2,
+      "title": "Exploring Key-Value Stores: Architecture, Use Cases, and Examples",
+      "resource_type": "pdf",
+      "resource_url": "KeyValue_Databases.pdf",
+      "content_extract": "This lecture provides an in-depth exploration of Key-Value stores, the simplest yet powerful type of NoSQL database. We will begin by examining the architecture of typical Key-Value systems. This often involves a distributed architecture with data partitioned across multiple nodes. We will discuss different approaches to data partitioning, such as consistent hashing, and how Key-Value stores achieve scalability and fault tolerance through replication. We will also look at the basic operations supported by Key-Value stores: typically PUT (to store a value associated with a key), GET (to retrieve the value associated with a key), and DELETE (to remove a key-value pair). We will explore the simplicity of the data model, where each item is stored as a key-value pair, and the implications for query capabilities (primarily lookups by key). A significant portion of this lecture will be dedicated to use cases where Key-Value stores are particularly well-suited. These include caching (storing frequently accessed data in memory for faster retrieval), session management (storing user session information for web applications), simple data storage (for data that doesn't require complex relationships or querying), and leaderboards or counters. We will discuss the advantages of Key-Value stores in these scenarios, such as high performance, scalability, and simplicity. Finally, we will look at examples of popular Key-Value store systems, such as Redis and Memcached. We will discuss their key features, differences, and common applications. Understanding Key-Value stores provides a foundational understanding of the NoSQL paradigm and their role in modern data architectures. Think about how a caching layer built with a Key-Value store can significantly improve the performance of a web application. This lecture aims to equip you with a comprehensive understanding of the architecture, use cases, and examples of Key-Value databases.",
+      "duration_minutes": 75,
+      "keywords": [
+        "Key-Value stores",
+        "NoSQL",
+        "architecture",
+        "distributed architecture",
+        "data partitioning",
+        "consistent hashing",
+        "replication",
+        "PUT operation",
+        "GET operation",
+        "DELETE operation",
+        "data model",
+        "query capabilities",
+        "use cases",
+        "caching",
+        "session management",
+        "simple data storage",
+        "leaderboards",
+        "counters",
+        "Redis",
+        "Memcached"
+      ]
+    },
+    {
+      "lecture_id": 17,
+      "week_id": 9,
+      "order": 1,
+      "title": "Delving into Document Databases: Data Model, Architecture, and MongoDB",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=1x71r5-GG0U",
+      "content_transcript": "Welcome to our deep dive into Document Databases, another key type of NoSQL database. In this lecture, we will thoroughly examine their data model, architecture, and explore a prominent example: MongoDB. Let's begin with the data model of document databases. Unlike the tabular structure of relational databases, document databases store data as flexible, semi-structured documents, typically in JSON (or BSON in the case of MongoDB) format. We will discuss the benefits of this flexible schema, allowing for evolution of data structures without rigid schema migrations. We will explore the concepts of collections (analogous to tables) and documents (analogous to rows), and the ability to embed nested documents and arrays within a single document. Next, we will look at the architecture of typical document database systems. These are often distributed systems designed for horizontal scalability. We will discuss concepts like sharding (partitioning data across multiple servers) and replication (creating redundant copies for fault tolerance) in the context of document databases. A significant portion of this lecture will be dedicated to MongoDB, a popular open-source document database. We will explore its key features, including its document-based data model, dynamic schema, rich query language, indexing capabilities, and support for replication and sharding. We will look at basic CRUD (Create, Read, Update, Delete) operations in MongoDB and how queries are performed on JSON-like documents. We will also discuss use cases where document databases like MongoDB are particularly well-suited, such as content management systems, e-commerce platforms, and applications with evolving data requirements. Understanding document databases and MongoDB provides a crucial perspective on handling semi-structured data at scale. Think about how storing product information with varying attributes can be easier in a document database compared to a relational database. This lecture aims to equip you with a comprehensive understanding of the data model, architecture, and the popular MongoDB system.",
+      "duration_minutes": 75,
+      "keywords": [
+        "Document Databases",
+        "NoSQL",
+        "data model",
+        "JSON",
+        "BSON",
+        "schema flexibility",
+        "collections",
+        "documents",
+        "embedded documents",
+        "arrays",
+        "architecture",
+        "distributed systems",
+        "sharding",
+        "replication",
+        "MongoDB",
+        "CRUD operations",
+        "query language",
+        "indexing",
+        "use cases",
+        "content management",
+        "e-commerce"
+      ]
+    },
+    {
+      "lecture_id": 18,
+      "week_id": 9,
+      "order": 2,
+      "title": "Exploring Column-Family Stores: Data Model, Architecture, and Apache Cassandra",
+      "resource_type": "pdf",
+      "resource_url": "ColumnFamily_Databases.pdf",
+      "content_extract": "This lecture focuses on Column-Family stores, another important category of NoSQL databases. We will delve into their unique data model, typical architecture, and explore a widely used example: Apache Cassandra. Let's begin by understanding the data model of column-family stores. Unlike relational databases with rows and fixed columns, and document databases with flexible documents, column-family stores organize data into column families, which are containers of related columns. Within a column family, data is stored in rows, and each row can have a variable number of columns. We will discuss the concepts of keyspaces, column families, rows, and columns (which consist of a name, value, and timestamp). We will highlight how this model is optimized for handling large amounts of data with high write throughput. Next, we will examine the architecture of column-family stores. They are typically designed as highly distributed systems for massive scalability and high availability, often using a peer-to-peer architecture. We will discuss concepts like data partitioning (often using consistent hashing), replication across multiple nodes, and eventual consistency models. A significant portion of this lecture will be dedicated to Apache Cassandra, a popular open-source distributed NoSQL database known for its fault tolerance and scalability. We will explore its key features, including its distributed architecture, support for tunable consistency, flexible schema within column families, and powerful query language (CQL). We will look at basic data manipulation in Cassandra and discuss use cases where column-family stores like Cassandra are particularly well-suited, such as time-series data, IoT applications, and systems requiring high write availability. Understanding column-family stores and Apache Cassandra provides another crucial perspective on handling massive datasets with specific performance requirements. Think about how collecting and storing sensor data from millions of devices might be efficiently managed using a column-family database. This lecture aims to equip you with a comprehensive understanding of the data model, architecture, and the popular Apache Cassandra system.",
+      "duration_minutes": 80,
+      "keywords": [
+        "Column-Family stores",
+        "NoSQL",
+        "data model",
+        "keyspace",
+        "column family",
+        "row",
+        "column",
+        "timestamp",
+        "architecture",
+        "distributed systems",
+        "peer-to-peer",
+        "data partitioning",
+        "replication",
+        "eventual consistency",
+        "Apache Cassandra",
+        "tunable consistency",
+        "CQL (Cassandra Query Language)",
+        "use cases",
+        "time-series data",
+        "IoT applications",
+        "high write throughput"
+      ]
+    },
+    {
+      "lecture_id": 19,
+      "week_id": 10,
+      "order": 1,
+      "title": "Graph Databases Unveiled: Data Model, Querying with Cypher, and Neo4j",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=0f-Xd7G59xw",
+      "content_transcript": "Welcome to an insightful lecture on Graph Databases, a unique type of NoSQL database designed for managing highly interconnected data. In this lecture, we will explore their distinct data model, learn about querying with Cypher, and examine a leading graph database: Neo4j. Let's begin by understanding the data model of graph databases. Data is represented as a graph consisting of nodes (representing entities) and edges (representing relationships between entities). Both nodes and edges can have properties (key-value pairs). We will discuss how this model naturally represents complex relationships and is ideal for scenarios where connections between data points are as important as the data itself. Next, we will focus on querying graph databases using Cypher, a declarative graph query language. We will learn the basic syntax of Cypher for pattern matching, traversing the graph, and retrieving information about nodes and relationships. We will look at examples of how to find paths between nodes, identify patterns of connections, and perform graph traversals. A significant portion of this lecture will be dedicated to Neo4j, a popular open-source graph database. We will explore its key features, including its property graph data model, the Cypher query language, indexing capabilities, and support for transactions. We will look at basic operations in Neo4j and discuss use cases where graph databases excel, such as social networks, recommendation systems, knowledge graphs, fraud detection, and network analysis. Understanding graph databases and Neo4j provides a powerful tool for handling interconnected data in ways that relational and other NoSQL databases may struggle with. Think about how you might model a social network where users are connected by different types of relationships (friends, followers, etc.). This lecture aims to equip you with a comprehensive understanding of the graph data model, querying with Cypher, and the Neo4j system.",
+      "duration_minutes": 80,
+      "keywords": [
+        "Graph Databases",
+        "NoSQL",
+        "data model",
+        "nodes",
+        "edges",
+        "properties",
+        "relationships",
+        "graph traversal",
+        "Cypher",
+        "graph query language",
+        "pattern matching",
+        "Neo4j",
+        "property graph",
+        "indexing",
+        "transactions",
+        "use cases",
+        "social networks",
+        "recommendation systems",
+        "knowledge graphs",
+        "fraud detection",
+        "network analysis"
+      ]
+    },
+    {
+      "lecture_id": 20,
+      "week_id": 10,
+      "order": 2,
+      "title": "Polyglot Persistence: Choosing the Right Database for the Job",
+      "resource_type": "pdf",
+      "resource_url": "Polyglot_Persistence.pdf",
+      "content_extract": "This lecture introduces the concept of Polyglot Persistence, a design approach where different types of databases are used within a single application to leverage their respective strengths and address varying data storage and retrieval requirements. We will discuss the motivations behind adopting a polyglot persistence strategy, such as optimizing for different data types, access patterns, and scalability needs. We will explore the trade-offs involved in choosing different database technologies, considering factors like data structure, query complexity, performance requirements, consistency needs, and operational overhead. We will look at examples of applications that effectively utilize polyglot persistence. For instance, an e-commerce platform might use a relational database for transactional data (orders, inventory), a document database for product catalogs with flexible attributes, a Key-Value store for caching frequently accessed data, and a graph database for managing customer relationships and recommendations. We will discuss the benefits of this approach, such as improved performance, scalability, and flexibility, as well as the challenges, such as increased complexity in data management and integration. We will also touch upon strategies for data integration and ensuring some level of consistency across different database systems in a polyglot environment. Understanding polyglot persistence is becoming increasingly important in modern software development, where applications often deal with diverse data and require high performance and scalability. Think about the different data storage needs of a complex application like a social media platform or a large-scale web application. This lecture aims to equip you with the principles and considerations for choosing the right mix of database technologies for your specific application requirements.",
+      "duration_minutes": 70,
+      "keywords": [
+        "Polyglot Persistence",
+        "database design",
+        "data storage",
+        "database selection",
+        "motivations",
+        "trade-offs",
+        "use cases",
+        "relational databases",
+        "NoSQL databases",
+        "Key-Value stores",
+        "Document Databases",
+        "Column-Family stores",
+        "Graph Databases",
+        "performance",
+        "scalability",
+        "flexibility",
+        "data integration",
+        "consistency"
+      ]
+    },
+    {
+      "lecture_id": 21,
+      "week_id": 11,
+      "order": 1,
+      "title": "Foundations of Distributed Databases: Homogeneous vs. Heterogeneous Systems",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=bvicB69E1Fw",
+      "content_transcript": "Welcome to our exploration of Distributed Databases. In this lecture, we will lay the groundwork by understanding the fundamental concepts and the distinction between homogeneous and heterogeneous distributed database systems. Let's begin by defining what a distributed database system is: a collection of multiple, logically interrelated databases distributed over a computer network. We will discuss the motivations for using distributed databases, such as improved scalability, increased availability, fault tolerance, and the ability to support geographically distributed data. Next, we will focus on the key distinction between homogeneous and heterogeneous distributed database systems. In a homogeneous system, all database sites use the same DBMS software. This simplifies system design and management but might limit flexibility. We will explore the different types of homogeneous systems, such as those with identical software and those with only compatible software. In contrast, a heterogeneous distributed database system uses different DBMS software at different sites. This offers greater flexibility but introduces significant challenges in terms of data integration, schema differences, and query processing. We will discuss the different levels of heterogeneity, including differences in data models, schema representations, and query languages. Understanding the distinction between homogeneous and heterogeneous systems is crucial for comprehending the complexities of distributed data management. We will also briefly touch upon the different architectures for distributed databases, such as client-server and peer-to-peer models, setting the stage for more detailed discussions in the following lectures. Think about the challenges of integrating data from different departments within a large organization, each using its own database system. This lecture aims to provide you with a solid foundation for understanding the architecture and heterogeneity of distributed database systems.",
+      "duration_minutes": 70,
+      "keywords": [
+        "Distributed Databases",
+        "motivations",
+        "scalability",
+        "availability",
+        "fault tolerance",
+        "geographically distributed data",
+        "homogeneous distributed database",
+        "same DBMS software",
+        "identical software",
+        "compatible software",
+        "heterogeneous distributed database",
+        "different DBMS software",
+        "data integration",
+        "schema differences",
+        "query processing",
+        "data models",
+        "schema representation",
+        "query languages",
+        "client-server",
+        "peer-to-peer"
+      ]
+    },
+    {
+      "lecture_id": 22,
+      "week_id": 11,
+      "order": 2,
+      "title": "Data Replication in Distributed Databases: Consistency and Availability Trade-offs",
+      "resource_type": "pdf",
+      "resource_url": "Distributed_Data_Replication.pdf",
+      "content_extract": "This lecture delves into the crucial concept of Data Replication in distributed database systems. Replication involves creating and maintaining multiple copies of the same data on different nodes to improve availability and performance. However, maintaining consistency across these replicas introduces significant challenges. We will explore different replication techniques, including synchronous replication and asynchronous replication. Synchronous replication ensures that all replicas are updated before a transaction commits, providing strong consistency but potentially impacting performance due to increased latency. Asynchronous replication allows updates to the primary replica to be propagated to other replicas with some delay, improving performance but potentially leading to temporary inconsistencies. We will analyze the trade-offs between consistency and availability inherent in these different replication strategies. Next, we will discuss various replication strategies, such as master-slave replication (where one primary replica handles writes and multiple secondary replicas handle reads) and multi-master replication (where multiple replicas can handle writes). We will examine the advantages and disadvantages of each strategy in terms of consistency, complexity, and fault tolerance. A significant portion of this lecture will be dedicated to the challenges of maintaining data consistency across multiple nodes, especially in the presence of network partitions. We will revisit the CAP Theorem and its implications for choosing replication strategies. We will also introduce the concept of consistency models beyond strict consistency, such as eventual consistency, causal consistency, and read-your-writes consistency. Understanding data replication and its associated consistency and availability trade-offs is fundamental to designing robust and scalable distributed database systems. Think about the replication strategies used by global services to ensure high availability and acceptable performance for users around the world. This lecture aims to provide you with a comprehensive understanding of data replication in distributed databases and the key considerations for choosing appropriate techniques.",
+      "duration_minutes": 75,
+      "keywords": [
+        "Distributed Databases",
+        "Data Replication",
+        "synchronous replication",
+        "asynchronous replication",
+        "consistency",
+        "availability",
+        "trade-offs",
+        "master-slave replication",
+        "multi-master replication",
+        "network partitions",
+        "CAP Theorem",
+        "consistency models",
+        "eventual consistency",
+        "causal consistency",
+        "read-your-writes consistency",
+        "fault tolerance",
+        "scalability"
+      ]
+    },
+    {
+      "lecture_id": 23,
+      "week_id": 12,
+      "order": 1,
+      "title": "Distributed Query Processing: Fragmentation, Data Localization, and Join Strategies",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=wK9pT3m8v8c",
+      "content_transcript": "Welcome to our lecture on Distributed Query Processing. In this lecture, we will explore the challenges and techniques involved in processing queries that access data distributed across multiple nodes in a distributed database system. We will begin by discussing data fragmentation, a key technique for dividing relations into smaller, more manageable fragments that can be stored on different sites. We will examine different types of fragmentation, including horizontal fragmentation (dividing tuples based on conditions), vertical fragmentation (dividing attributes), and hybrid fragmentation (a combination of horizontal and vertical). Next, we will focus on data localization, the process of determining which fragments are needed to answer a given query and retrieving them from the relevant sites. We will discuss how distributed query processors optimize query execution by minimizing data transfer across the network. A significant portion of this lecture will be dedicated to distributed join strategies. Joining data that resides on different nodes is a common and often expensive operation in distributed databases. We will explore various distributed join algorithms, such as semi-join based joins, bloom filter based joins, and parallel join techniques. We will analyze the cost of these different join strategies in terms of network communication and local processing. We will also touch upon the challenges of global query optimization in distributed environments, where the optimizer must consider the location of data, network costs, and the processing capabilities of different sites to generate an efficient global execution plan. Understanding distributed query processing is crucial for building high-performing applications that access distributed data. Think about how a query that needs to join data from servers located in different geographic regions might be optimized. This lecture aims to provide you with a comprehensive understanding of the techniques and considerations involved in processing queries in distributed database systems.",
+      "duration_minutes": 75,
+      "keywords": [
+        "Distributed Databases",
+        "Distributed Query Processing",
+        "data fragmentation",
+        "horizontal fragmentation",
+        "vertical fragmentation",
+        "hybrid fragmentation",
+        "data localization",
+        "distributed join strategies",
+        "semi-join",
+        "bloom filter",
+        "parallel join",
+        "network communication cost",
+        "local processing cost",
+        "global query optimization",
+        "execution plan"
+      ]
+    },
+    {
+      "lecture_id": 24,
+      "week_id": 12,
+      "order": 2,
+      "title": "Distributed Concurrency Control and Transaction Management: Ensuring Consistency",
+      "resource_type": "pdf",
+      "resource_url": "Distributed_Concurrency_Control.pdf",
+      "content_extract": "This lecture focuses on the complex challenges of Distributed Concurrency Control and Transaction Management in distributed database systems. Ensuring atomicity, consistency, isolation, and durability (ACID properties) becomes significantly more difficult when data and transactions are spread across multiple independent nodes. We will begin by discussing the need for distributed concurrency control mechanisms to prevent conflicts and maintain data consistency when multiple transactions access data at different sites concurrently. We will explore various techniques for distributed locking, including centralized locking, primary copy locking, and distributed two-phase locking (2PL). We will analyze the advantages and disadvantages of each approach in terms of performance, fault tolerance, and complexity. Next, we will delve into the complexities of distributed transaction management, particularly ensuring atomicity across multiple nodes. We will thoroughly examine the Two-Phase Commit (2PC) protocol, a widely used protocol for achieving atomic commit in distributed transactions. We will discuss the different phases of 2PC (prepare phase and commit/rollback phase), the role of the coordinator and participants, and the potential issues such as blocking. We will also briefly touch upon alternative protocols like the Three-Phase Commit (3PC), which aims to address some of the limitations of 2PC. Understanding distributed concurrency control and transaction management is critical for building reliable and consistent distributed database applications. Think about the challenges of processing a transaction that involves updating data on servers located in different countries. This lecture aims to provide you with a comprehensive understanding of the techniques and protocols used to manage concurrency and transactions in distributed database environments.",
+      "duration_minutes": 80,
+      "keywords": [
+        "Distributed Databases",
+        "Distributed Concurrency Control",
+        "Distributed Transaction Management",
+        "consistency",
+        "distributed locking",
+        "centralized locking",
+        "primary copy locking",
+        "distributed two-phase locking (2PL)",
+        "atomicity",
+        "Two-Phase Commit (2PC)",
+        "prepare phase",
+        "commit phase",
+        "rollback phase",
+        "coordinator",
+        "participants",
+        "blocking",
+        "Three-Phase Commit (3PC)"
+      ]
+    },
+    {
+      "lecture_id": 25,
+      "week_id": 13,
+      "order": 1,
+      "title": "Data Warehousing Fundamentals: OLTP vs. OLAP and the Need for Data Warehouses",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=4b0m7Rj_gHM",
+      "content_transcript": "Welcome to our introduction to Data Warehousing and Online Analytical Processing (OLAP). In this lecture, we will establish the fundamental concepts by contrasting OLTP (Online Transaction Processing) and OLAP systems and understanding the need for data warehouses. Let's begin by clearly differentiating between OLTP and OLAP. OLTP systems are designed for transaction-oriented tasks, such as inserting, updating, and deleting data in real-time, focusing on operational efficiency and concurrency. Examples include order processing systems and banking applications. In contrast, OLAP systems are designed for analytical tasks, such as querying and analyzing large volumes of historical data to support business intelligence and decision making. Examples include business reporting and data mining applications. We will discuss the key differences between these two types of systems in terms of data characteristics (current vs. historical), data volume, query complexity, and performance requirements. Next, we will explore the motivations for building data warehouses. We will discuss the limitations of using OLTP systems for analytical purposes, such as the impact of complex analytical queries on transaction processing performance and the lack of integrated historical data. We will introduce the concept of a data warehouse as a subject-oriented, integrated, time-variant, and non-volatile collection of data used to support management decision-making. We will discuss the key characteristics of a data warehouse and the benefits it provides for business analysis and reporting. Understanding the fundamental differences between OLTP and OLAP and the need for specialized data warehouses is the first crucial step in learning about data warehousing principles. Think about the types of queries you might run to generate a monthly sales report versus processing a customer order. This lecture aims to provide you with a solid foundation for understanding the purpose and characteristics of data warehouses.",
+      "duration_minutes": 70,
+      "keywords": [
+        "Data Warehousing",
+        "OLAP (Online Analytical Processing)",
+        "OLTP (Online Transaction Processing)",
+        "differences between OLTP and OLAP",
+        "transaction processing",
+        "analytical processing",
+        "historical data",
+        "real-time data",
+        "query complexity",
+        "performance requirements",
+        "data warehouse",
+        "subject-oriented",
+        "integrated",
+        "time-variant",
+        "non-volatile",
+        "business intelligence",
+        "decision making"
+      ]
+    },
+    {
+      "lecture_id": 26,
+      "week_id": 13,
+      "order": 2,
+      "title": "Data Warehouse Architecture and Dimensional Modeling: Star, Snowflake, and Fact Constellations",
+      "resource_type": "pdf",
+      "resource_url": "Data_Warehouse_Architecture.pdf",
+      "content_extract": "This lecture focuses on the architecture of a typical data warehouse and the fundamental concepts of dimensional modeling. We will begin by examining the different layers of a data warehouse architecture, including the data sources, the ETL (Extraction, Transformation, Loading) process, the data warehouse itself, and the OLAP servers or analytical tools used to access the data. We will discuss the role of each component in detail. Next, we will delve into dimensional modeling, a logical design technique specifically used for data warehouses. The core idea is to organize data around business facts and their associated dimensions. We will explore the three common dimensional models: star schema, snowflake schema, and fact constellations. In a star schema, a central fact table is surrounded by several dimension tables, creating a star-like structure. In a snowflake schema, dimension tables are normalized further, creating a more complex, snowflake-like structure. Fact constellations involve multiple fact tables sharing some dimension tables. We will discuss the characteristics, advantages, and disadvantages of each of these schemas. We will also introduce the key concepts of facts (numerical measures of business events), dimensions (contextual attributes that describe the facts), and measures (the quantitative data being analyzed). Understanding data warehouse architecture and dimensional modeling is crucial for designing effective data warehouses that support efficient analytical querying. Think about how you would model sales data, considering the facts (sales amount, quantity) and the relevant dimensions (time, product, customer, location). This lecture aims to provide you with a comprehensive understanding of the architectural components and the core dimensional modeling techniques used in data warehousing.",
+      "duration_minutes": 75,
+      "keywords": [
+        "Data Warehousing",
+        "architecture",
+        "data sources",
+        "ETL (Extraction, Transformation, Loading)",
+        "data warehouse",
+        "OLAP servers",
+        "dimensional modeling",
+        "star schema",
+        "snowflake schema",
+        "fact constellation",
+        "fact table",
+        "dimension table",
+        "facts",
+        "measures",
+        "dimensions",
+        "design process"
+      ]
+    },
+    {
+      "lecture_id": 27,
+      "week_id": 14,
+      "order": 1,
+      "title": "OLAP Operations: Slicing, Dicing, Roll-up, Drill-down, and Pivoting for Data Analysis",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=YjYjH8Yf9r0",
+      "content_transcript": "Welcome to our lecture on OLAP Operations, the analytical techniques used to explore multi-dimensional data stored in data warehouses. These operations allow business analysts to gain valuable insights from large datasets. Today, we will focus on five key OLAP operations: slicing, dicing, roll-up, drill-down, and pivoting. Let's begin with slicing, which involves selecting a subset of the data by fixing one or more dimensions. This creates a lower-dimensional view of the data. Dicing is similar to slicing but allows you to select a subset of the data by specifying ranges for multiple dimensions, creating a smaller, multi-dimensional sub-cube. Roll-up (or aggregation) involves climbing up the concept hierarchy for a dimension, providing a more summarized view of the data. For example, rolling up from 'month' to 'quarter' to 'year'. Drill-down is the reverse of roll-up, allowing you to navigate down the concept hierarchy, providing more detailed data. For example, drilling down from 'year' to 'quarter' to 'month'. Finally, pivoting (or rotation) involves changing the dimensional orientation of the data, allowing you to view it from different perspectives, often presented in a cross-tabular format. We will use examples to illustrate how each of these OLAP operations can be used to analyze business data and uncover trends and patterns. Understanding these operations is fundamental to effectively using data warehouses for business intelligence and decision support. Think about how you might use these operations to analyze sales performance across different regions and time periods. This lecture aims to equip you with a practical understanding of the key OLAP operations for multi-dimensional data analysis.",
+      "duration_minutes": 70,
+      "keywords": [
+        "OLAP (Online Analytical Processing)",
+        "OLAP Operations",
+        "slicing",
+        "dicing",
+        "roll-up",
+        "aggregation",
+        "drill-down",
+        "pivoting",
+        "rotation",
+        "multi-dimensional data",
+        "data analysis",
+        "concept hierarchy",
+        "business intelligence",
+        "decision support"
+      ]
+    },
+    {
+      "lecture_id": 28,
+      "week_id": 14,
+      "order": 2,
+      "title": "Types of OLAP Servers: MOLAP, ROLAP, and HOLAP Architectures",
+      "resource_type": "pdf",
+      "resource_url": "OLAP_Server_Architectures.pdf",
+      "content_extract": "This lecture explores the different types of OLAP Servers used in data warehousing, focusing on their underlying architectures: MOLAP (Multidimensional OLAP), ROLAP (Relational OLAP), and HOLAP (Hybrid OLAP). Let's begin with MOLAP. MOLAP servers store data in a multidimensional array structure, often referred to as a data cube. This structure is optimized for fast retrieval of summarized data. We will discuss the advantages of MOLAP, such as excellent query performance for aggregation and slicing/dicing operations, as well as the disadvantages, such as potential data redundancy and limitations in handling very large or sparse datasets. Next, we will examine ROLAP. ROLAP servers operate directly on the relational data warehouse. They translate OLAP operations into SQL queries that are executed against the relational database. We will discuss the advantages of ROLAP, such as the ability to handle large data volumes and leverage existing relational database infrastructure, as well as the potential performance limitations for complex multi-dimensional analysis. Finally, we will explore HOLAP, which attempts to combine the benefits of both MOLAP and ROLAP. HOLAP servers typically store detailed data in a relational database and aggregated data in a multidimensional format. They can then choose the most efficient storage for different types of queries. We will discuss the potential advantages of HOLAP in balancing performance and scalability. Understanding the different OLAP server architectures is crucial for choosing the right technology for your data warehousing needs based on factors like data volume, query patterns, and performance requirements. Think about the architectural choices you might make for a small business versus a large enterprise with massive amounts of data. This lecture aims to provide you with a comprehensive understanding of the characteristics and trade-offs of MOLAP, ROLAP, and HOLAP servers.",
+      "duration_minutes": 70,
+      "keywords": [
+        "OLAP Servers",
+        "MOLAP (Multidimensional OLAP)",
+        "data cube",
+        "ROLAP (Relational OLAP)",
+        "SQL queries",
+        "HOLAP (Hybrid OLAP)",
+        "data warehouse architecture",
+        "performance",
+        "scalability",
+        "data redundancy",
+        "sparse datasets",
+        "aggregation",
+        "slicing",
+        "dicing",
+        "trade-offs"
+      ]
+    },
+    {
+      "lecture_id": 29,
+      "week_id": 15,
+      "order": 1,
+      "title": "Database Security Fundamentals: Threats, Vulnerabilities, and Security Goals",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=G4bAmfWf76I",
+      "content_transcript": "Welcome to our introduction to Database Security. In this lecture, we will establish the fundamental concepts by exploring common threats and vulnerabilities that can compromise database systems and defining the key security goals. Let's begin by understanding the various threats to database security. These can include insider threats (malicious or negligent actions by authorized users), outsider attacks (unauthorized attempts to access or damage the database), SQL injection attacks, denial-of-service (DoS) attacks targeting database availability, and malware infections. We will discuss the potential impact of these threats on data confidentiality, integrity, and availability. Next, we will examine common vulnerabilities in database systems and applications that attackers can exploit. These can include weak passwords, unpatched software, misconfigured security settings, inadequate access controls, and vulnerabilities in application code that interacts with the database. Understanding these vulnerabilities is crucial for implementing effective security measures. A significant portion of this lecture will be dedicated to defining the primary security goals for database systems. These typically include confidentiality (ensuring that data is accessible only to authorized users), integrity (maintaining the accuracy and consistency of data), and availability (ensuring that authorized users can access the data and resources when needed). We will discuss how different security mechanisms contribute to achieving these goals and the trade-offs that may exist between them (e.g., strong security measures might sometimes impact availability or performance). Understanding these fundamental concepts is the first crucial step in learning how to secure database systems effectively. Think about the potential consequences of a data breach for an organization and its customers. This lecture aims to provide you with a solid foundation for understanding the landscape of database security.",
+      "duration_minutes": 70,
+      "keywords": [
+        "Database Security",
+        "threats",
+        "insider threats",
+        "outsider attacks",
+        "SQL injection",
+        "Denial-of-Service (DoS)",
+        "malware",
+        "vulnerabilities",
+        "weak passwords",
+        "unpatched software",
+        "misconfiguration",
+        "inadequate access control",
+        "security goals",
+        "confidentiality",
+        "integrity",
+        "availability",
+        "trade-offs"
+      ]
+    },
+    {
+      "lecture_id": 30,
+      "week_id": 15,
+      "order": 2,
+      "title": "Database Security Mechanisms: Authentication, Authorization, and Access Control Models",
+      "resource_type": "pdf",
+      "resource_url": "Database_Security_Mechanisms.pdf",
+      "content_extract": "This lecture focuses on the core database security mechanisms used to protect database systems: authentication, authorization, and access control models. Let's begin with authentication, the process of verifying the identity of a user or application trying to access the database. We will discuss different authentication methods, such as username/password-based authentication, multi-factor authentication, and certificate-based authentication. Next, we will explore authorization, the process of determining what actions a successfully authenticated user is allowed to perform on the database objects. We will discuss the principle of least privilege and the importance of granting only the necessary permissions. A significant portion of this lecture will be dedicated to access control models. We will examine three common models: Discretionary Access Control (DAC), where object owners grant permissions to other users; Mandatory Access Control (MAC), where system-wide security policies determine access rights; and Role-Based Access Control (RBAC), where permissions are assigned to roles, and users are assigned to roles. We will discuss the characteristics, advantages, and disadvantages of each of these models and their suitability for different security requirements. We will also touch upon the implementation of these mechanisms in modern DBMS, including user management, privilege granting and revoking, and role management. Understanding these security mechanisms is crucial for designing and implementing secure database systems. Think about how different roles within an organization should have different levels of access to sensitive data. This lecture aims to provide you with a comprehensive understanding of the core security mechanisms used to control access to databases.",
+      "duration_minutes": 75,
+      "keywords": [
+        "Database Security",
+        "authentication",
+        "username/password",
+        "multi-factor authentication",
+        "certificate-based authentication",
+        "authorization",
+        "principle of least privilege",
+        "access control models",
+        "Discretionary Access Control (DAC)",
+        "Mandatory Access Control (MAC)",
+        "Role-Based Access Control (RBAC)",
+        "permissions",
+        "privileges",
+        "roles",
+        "user management",
+        "privilege management",
+        "role management"
+      ]
+    },
+    {
+      "lecture_id": 31,
+      "week_id": 16,
+      "order": 1,
+      "title": "Advanced Query Optimization and Performance Tuning Techniques",
+      "resource_type": "youtube",
+      "video_url": "https://www.youtube.com/watch?v=Xh4f0K4-hYI",
+      "content_transcript": "Welcome to our final lecture on Advanced Query Optimization and Performance Tuning Techniques. Building upon our earlier discussion on query processing, we will now delve into more sophisticated strategies for maximizing database performance. We will begin by exploring advanced query optimization techniques. This includes understanding and leveraging query hints (directives to the optimizer), rewriting complex queries for better performance, and analyzing query execution plans in detail to identify bottlenecks. We will also discuss the impact of database schema design and normalization levels on query performance and consider strategic denormalization in specific scenarios. Next, we will focus on performance tuning techniques at various levels. This includes index tuning (identifying missing or redundant indexes, optimizing index structures), database configuration tuning (adjusting parameters related to memory management, caching, and concurrency), and operating system level tuning that can impact database performance. We will also discuss the use of partitioning to improve query performance on large tables and the benefits of materialized views. A significant portion of this lecture will be dedicated to performance monitoring and benchmarking. We will explore tools and methodologies for identifying performance bottlenecks, measuring query execution times, and establishing baselines for performance improvement. Understanding these advanced optimization and tuning techniques is crucial for building and maintaining high-performance database systems that can handle demanding workloads. Think about the steps you would take to troubleshoot a slow-running critical query in a production environment. This lecture aims to equip you with a comprehensive toolkit for optimizing database performance.",
+      "duration_minutes": 75,
+      "keywords": [
+        "Query Optimization",
+        "Performance Tuning",
+        "advanced query optimization",
+        "query hints",
+        "query rewriting",
+        "query execution plan analysis",
+        "schema design",
+        "denormalization",
+        "index tuning",
+        "database configuration tuning",
+        "operating system tuning",
+        "partitioning",
+        "materialized views",
+        "performance monitoring",
+        "benchmarking",
+        "bottleneck identification"
+      ]
+    },
+    {
+      "lecture_id": 32,
+      "week_id": 16,
+      "order": 2,
+      "title": "Emerging Trends in Database Technologies: In-Memory, NewSQL, Cloud Databases, and AI Integration",
+      "resource_type": "pdf",
+      "resource_url": "Emerging_Database_Trends.pdf",
+      "content_extract": "This final lecture provides an overview of Emerging Trends in Database Technologies that are shaping the future of data management. We will explore several key areas: In-Memory Databases, NewSQL Databases, Cloud Databases, and the Integration of Databases with AI and Machine Learning. Let's begin with In-Memory Databases, which store data primarily in RAM to achieve significantly faster data access and processing compared to traditional disk-based databases. We will discuss their architectures, use cases (e.g., real-time analytics, high-speed transaction processing), and the challenges associated with them. Next, we will examine NewSQL Databases, a class of modern relational database management systems that aim to provide the scalability of NoSQL systems while retaining the ACID guarantees and SQL interface of traditional RDBMS. We will discuss different NewSQL architectures and their approaches to achieving scalability and consistency. We will then explore the rapidly growing area of Cloud Databases, including Database as a Service (DBaaS) offerings from major cloud providers. We will discuss the benefits of cloud databases (e.g., scalability, managed services, cost-effectiveness) and different deployment models. Finally, we will touch upon the increasing integration of databases with Artificial Intelligence (AI) and Machine Learning (ML). This includes using databases to store and manage large datasets for AI/ML training and inference, as well as incorporating AI/ML techniques within database systems for tasks like query optimization and anomaly detection. Understanding these emerging trends is crucial for staying current with the evolving landscape of database technologies and anticipating future directions in data management. Think about how these trends are addressing the challenges of modern data-intensive applications. This lecture aims to provide you with a broad overview of these exciting developments in the field of database systems.",
+      "duration_minutes": 70,
+      "keywords": [
+        "Emerging Trends",
+        "In-Memory Databases",
+        "NewSQL Databases",
+        "Cloud Databases",
+        "Database as a Service (DBaaS)",
+        "AI Integration",
+        "Machine Learning Integration",
+        "real-time analytics",
+        "high-speed transaction processing",
+        "scalability",
+        "ACID guarantees",
+        "SQL interface",
+        "managed services",
+        "cost-effectiveness",
+        "query optimization",
+        "anomaly detection"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question_id": 2001,
+      "content": "Which of the following database architectures is characterized by all DBMS functionalities residing on a single computer?",
+      "type": "MCQ",
+      "question_options": [
+        "Client-Server",
+        "Parallel",
+        "Distributed",
+        "Centralized"
+      ],
+      "correct_answer": 3,
+      "points": 12,
+      "explanation": "A centralized database architecture has all DBMS components on a single computer.",
+      "course_id": 1,
+      "week_id": 1,
+      "lecture_id": 2,
+      "status": "active",
+      "tags": ["database architecture", "centralized systems"]
+    },
+    {
+      "question_id": 2002,
+      "content": "Which type of data independence allows changes to the physical storage details without affecting the logical structure of the database?",
+      "type": "MCQ",
+      "question_options": [
+        "Logical Data Independence",
+        "View Data Independence",
+        "Physical Data Independence",
+        "Schema Independence"
+      ],
+      "correct_answer": 2,
+      "points": 8,
+      "explanation": "Physical data independence allows changes to the physical schema without impacting the logical schema.",
+      "course_id": 1,
+      "week_id": 1,
+      "lecture_id": 1,
+      "status": "active",
+      "tags": ["data independence", "physical level", "logical level"]
+    },
+    {
+      "question_id": 2003,
+      "content": "Identify the key characteristics of NoSQL databases. Select all that apply.",
+      "type": "MSQ",
+      "question_options": [
+        "Schema flexibility",
+        "Horizontal scalability",
+        "Strict ACID properties",
+        "Relational data model",
+        "High availability"
+      ],
+      "correct_answer": [1, 2],
+      "points": 10,
+      "explanation": "NoSQL databases are typically characterized by schema flexibility, horizontal scalability, and high availability. They generally have different consistency models than strict ACID and use various data models beyond the relational model.",
+      "course_id": 1,
+      "week_id": 8,
+      "lecture_id": 15,
+      "status": "active",
+      "tags": ["NoSQL", "characteristics", "scalability", "availability", "schema"]
+    },
+    {
+      "question_id": 2004,
+      "content": "According to the CAP Theorem, a distributed data store can simultaneously guarantee at most how many of the following: Consistency, Availability, Partition Tolerance?",
+      "type": "NUMERIC",
+      "question_options": [],
+      "correct_answer": 2,
+      "points": 8,
+      "explanation": "The CAP Theorem states that a distributed data store can guarantee at most two out of Consistency, Availability, and Partition Tolerance.",
+      "course_id": 1,
+      "week_id": 8,
+      "lecture_id": 15,
+      "status": "active",
+      "tags": ["CAP Theorem", "distributed systems", "consistency", "availability", "partition tolerance"]
+    },
+    {
+      "question_id": 2005,
+      "content": "Which type of NoSQL database stores data in JSON-like documents?",
+      "type": "MCQ",
+      "question_options": [
+        "Key-Value Store",
+        "Column-Family Store",
+        "Document Database",
+        "Graph Database"
+      ],
+      "correct_answer": 2,
+      "points": 15,
+      "explanation": "Document Databases store data as flexible, semi-structured documents, often in JSON format.",
+      "course_id": 1,
+      "week_id": 9,
+      "lecture_id": 17,
+      "status": "active",
+      "tags": ["NoSQL", "Document Database", "JSON"]
+    },
+    {
+      "question_id": 2006,
+      "content": "In SQL, which DDL command is used to modify the structure of an existing table?",
+      "type": "MCQ",
+      "question_options": [
+        "CREATE TABLE",
+        "DROP TABLE",
+        "ALTER TABLE",
+        "MODIFY TABLE"
+      ],
+      "correct_answer": 2,
+      "points": 10,
+      "explanation": "The ALTER TABLE command is used to modify the structure of an existing table (e.g., adding or dropping columns).",
+      "course_id": 1,
+      "week_id": 2,
+      "lecture_id": 4,
+      "status": "active",
+      "tags": ["SQL", "DDL", "ALTER TABLE"]
+    },
+    {
+      "question_id": 2007,
+      "content": "Which SQL feature provides a virtual table based on the result of a SELECT statement?",
+      "type": "MCQ",
+      "question_options": [
+        "Index",
+        "View",
+        "Stored Procedure",
+        "Trigger"
+      ],
+      "correct_answer": 1,
+      "points": 12,
+      "explanation": "A view is a virtual table derived from the result of an SQL SELECT statement.",
+      "course_id": 1,
+      "week_id": 2,
+      "lecture_id": 4,
+      "status": "active",
+      "tags": ["SQL", "views", "data abstraction"]
+    },
+    {
+      "question_id": 2008,
+      "content": "Identify the isolation levels that can lead to phantom reads. Select all that apply.",
+      "type": "MSQ",
+      "question_options": [
+        "Read Uncommitted",
+        "Read Committed",
+        "Repeatable Read",
+        "Serializable"
+      ],
+      "correct_answer": [1, 3],
+      "points": 10,
+      "explanation": "Phantom reads can occur in Read Uncommitted, Read Committed, and Repeatable Read isolation levels. Serializable isolation prevents phantom reads.",
+      "course_id": 1,
+      "week_id": 6,
+      "lecture_id": 12,
+      "status": "active",
+      "tags": ["transactions", "isolation levels", "phantom reads", "concurrency"]
+    },
+    {
+      "question_id": 2009,
+      "content": "Which concurrency control technique involves using locks to prevent multiple transactions from accessing the same data concurrently?",
+      "type": "MCQ",
+      "question_options": [
+        "Timestamping",
+        "Multi-version Concurrency Control (MVCC)",
+        "Locking",
+        "Serial Execution"
+      ],
+      "correct_answer": 2,
+      "points": 15,
+      "explanation": "Locking-based concurrency control protocols use locks to manage concurrent access to data.",
+      "course_id": 1,
+      "week_id": 6,
+      "lecture_id": 11,
+      "status": "active",
+      "tags": ["concurrency control", "locking", "transactions"]
+    },
+    {
+      "question_id": 2010,
+      "content": "Which of the ACID properties ensures that once a transaction is committed, the changes are permanent?",
+      "type": "MCQ",
+      "question_options": [
+        "Atomicity",
+        "Consistency",
+        "Isolation",
+        "Durability"
+      ],
+      "correct_answer": 3,
+      "points": 12,
+      "explanation": "Durability ensures that committed transactions are permanent.",
+      "course_id": 1,
+      "week_id": 6,
+      "lecture_id": 12,
+      "status": "active",
+      "tags": ["transactions", "ACID properties", "Durability"]
+    },
+    {
+      "question_id": 2011,
+      "content": "What is the primary purpose of Write-Ahead Logging (WAL) in database systems?",
+      "type": "MCQ",
+      "question_options": [
+        "To improve query performance",
+        "To manage concurrent access",
+        "To ensure data durability and enable recovery",
+        "To optimize storage utilization"
+      ],
+      "correct_answer": 2,
+      "points": 8,
+      "explanation": "The primary purpose of Write-Ahead Logging (WAL) is to ensure data durability and enable recovery from failures.",
+      "course_id": 1,
+      "week_id": 7,
+      "lecture_id": 13,
+      "status": "active",
+      "tags": ["database recovery", "Write-Ahead Logging", "data durability"]
+    },
+    {
+      "question_id": 2012,
+      "content": "Which of the following is a technique used by DBMS for reducing the amount of work needed during recovery by periodically saving the database state to disk?",
+      "type": "MCQ",
+      "question_options": [
+        "Rollback",
+        "Checkpointing",
+        "Two-Phase Commit",
+        "Shadow Paging"
+      ],
+      "correct_answer": 1,
+      "points": 10,
+      "explanation": "Checkpointing is a technique for periodically saving the database state to disk to aid in recovery.",
+      "course_id": 1,
+      "week_id": 7,
+      "lecture_id": 14,
+      "status": "active",
+      "tags": ["database recovery", "checkpointing", "data durability"]
+    },
+    {
+      "question_id": 2013,
+      "content": "In data warehousing, which schema consists of a central fact table surrounded by several denormalized dimension tables?",
+      "type": "MCQ",
+      "question_options": [
+        "Snowflake Schema",
+        "Star Schema",
+        "Fact Constellation",
+        "Normalized Schema"
+      ],
+      "correct_answer": 1,
+      "points": 12,
+      "explanation": "A star schema has a central fact table surrounded by denormalized dimension tables.",
+      "course_id": 1,
+      "week_id": 13,
+      "lecture_id": 26,
+      "status": "active",
+      "tags": ["data warehousing", "dimensional modeling", "star schema"]
+    },
+    {
+      "question_id": 2014,
+      "content": "Which OLAP operation involves moving from a summary level of data to a more detailed level?",
+      "type": "MCQ",
+      "question_options": [
+        "Slicing",
+        "Dicing",
+        "Roll-up",
+        "Drill-down"
+      ],
+      "correct_answer": 3,
+      "points": 15,
+      "explanation": "Drill-down involves navigating from a summary to a more detailed level of data.",
+      "course_id": 1,
+      "week_id": 14,
+      "lecture_id": 27,
+      "status": "active",
+      "tags": ["data warehousing", "OLAP", "drill-down"]
+    },
+    {
+      "question_id": 2015,
+      "content": "Which of the following is a primary security goal of a database system, ensuring that data is accessible only to authorized users?",
+      "type": "MCQ",
+      "question_options": [
+        "Integrity",
+        "Availability",
+        "Confidentiality",
+        "Durability"
+      ],
+      "correct_answer": 2,
+      "points": 8,
+      "explanation": "Confidentiality ensures that data is accessible only to authorized users.",
+      "course_id": 1,
+      "week_id": 15,
+      "lecture_id": 29,
+      "status": "active",
+      "tags": ["database security", "security goals", "confidentiality"]
+    },
+    {
+      "question_id": 2016,
+      "content": "Which access control model grants permissions based on roles assigned to users?",
+      "type": "MCQ",
+      "question_options": [
+        "Discretionary Access Control (DAC)",
+        "Mandatory Access Control (MAC)",
+        "Role-Based Access Control (RBAC)",
+        "Attribute-Based Access Control (ABAC)"
+      ],
+      "correct_answer": 2,
+      "points": 10,
+      "explanation": "Role-Based Access Control (RBAC) assigns permissions to roles and users to roles.",
+      "course_id": 1,
+      "week_id": 15,
+      "lecture_id": 30,
+      "status": "active",
+      "tags": ["database security", "access control", "RBAC"]
+    },
+    {
+      "question_id": 2017,
+      "content": "What type of database primarily stores data in RAM for faster access?",
+      "type": "MCQ",
+      "question_options": [
+        "Disk-based database",
+        "Cloud database",
+        "In-memory database",
+        "NewSQL database"
+      ],
+      "correct_answer": 2,
+      "points": 12,
+      "explanation": "In-memory databases store data primarily in RAM.",
+      "course_id": 1,
+      "week_id": 16,
+      "lecture_id": 32,
+      "status": "active",
+      "tags": ["emerging trends", "in-memory database", "performance"]
+    },
+    {
+      "question_id": 2018,
+      "content": "Which category of database systems aims to provide the scalability of NoSQL with the ACID guarantees and SQL interface of traditional RDBMS?",
+      "type": "MCQ",
+      "question_options": [
+        "Document Databases",
+        "Graph Databases",
+        "Column-Family Stores",
+        "NewSQL Databases"
+      ],
+      "correct_answer": 3,
+      "points": 15,
+      "explanation": "NewSQL databases aim to combine the scalability of NoSQL with the ACID properties and SQL of RDBMS.",
+      "course_id": 1,
+      "week_id": 16,
+      "lecture_id": 32,
+      "status": "active",
+      "tags": ["emerging trends", "NewSQL", "scalability", "ACID", "SQL"]
+    },
+    {
+      "question_id": 2019,
+      "content": "In distributed databases, dividing a relation into smaller pieces and storing them across multiple sites is known as what?",
+      "type": "MCQ",
+      "question_options": [
+        "Replication",
+        "Normalization",
+        "Fragmentation",
+        "Indexing"
+      ],
+      "correct_answer": 2,
+      "points": 10,
+      "explanation": "Dividing relations into fragments for distributed storage is called fragmentation.",
+      "course_id": 1,
+      "week_id": 12,
+      "lecture_id": 23,
+      "status": "active",
+      "tags": ["distributed databases", "fragmentation", "data distribution"]
+    },
+    {
+      "question_id": 2020,
+      "content": "What is a subject-oriented, integrated, time-variant, and non-volatile collection of data used to support management decision-making?",
+      "type": "MCQ",
+      "question_options": [
+        "Operational Database",
+        "Transaction Processing System",
+        "Data Warehouse",
+        "Real-time Database"
+      ],
+      "correct_answer": 2,
+      "points": 12,
+      "explanation": "A data warehouse is characterized as subject-oriented, integrated, time-variant, and non-volatile, used for decision support.",
+      "course_id": 1,
+      "week_id": 13,
+      "lecture_id": 25,
+      "status": "active",
+      "tags": ["data warehousing", "characteristics"]
+    },
+    {
+      "question_id": 2021,
+      "content": "Which replication technique in distributed databases ensures that all replicas are updated before a transaction commits, providing strong consistency but potentially impacting performance?",
+      "type": "MCQ",
+      "question_options": [
+        "Asynchronous Replication",
+        "Eventual Consistency",
+        "Synchronous Replication",
+        "Lazy Replication"
+      ],
+      "correct_answer": 2,
+      "points": 15,
+      "explanation": "Synchronous replication provides strong consistency by updating all replicas before commit but can impact performance.",
+      "course_id": 1,
+      "week_id": 11,
+      "lecture_id": 22,
+      "status": "active",
+      "tags": ["distributed databases", "data replication", "synchronous", "consistency"]
+    },
+    {
+      "question_id": 2022,
+      "content": "What is the primary query language used with Neo4j, a popular graph database?",
+      "type": "MCQ",
+      "question_options": [
+        "SQL",
+        "Cypher",
+        "CQL",
+        "SPARQL"
+      ],
+      "correct_answer": 1,
+      "points": 10,
+      "explanation": "Cypher is the primary query language used with Neo4j.",
+      "course_id": 1,
+      "week_id": 10,
+      "lecture_id": 19,
+      "status": "active",
+      "tags": ["graph databases", "Neo4j", "Cypher", "query language"]
+    },
+    {
+      "question_id": 2023,
+      "content": "Which of the following is NOT a typical use case for Key-Value stores?",
+      "type": "MCQ",
+      "question_options": [
+        "Caching",
+        "Session Management",
+        "Complex Relational Queries",
+        "Simple Data Storage"
+      ],
+      "correct_answer": 2,
+      "points": 8,
+      "explanation": "Key-Value stores are not well-suited for complex relational queries due to their simple data model.",
+      "course_id": 1,
+      "week_id": 8,
+      "lecture_id": 16,
+      "status": "active",
+      "tags": ["NoSQL", "Key-Value stores", "use cases", "limitations"]
+    },
+    {
+      "question_id": 2024,
+      "content": "Explain the concept of 'eventual consistency' in the context of distributed databases.",
+      "type": "TEXT",
+      "question_options": [],
+      "correct_answer": null,
+      "points": 12,
+      "explanation": "Eventual consistency is a consistency model used in distributed systems where, if no new updates are made to a given data item, eventually all accesses to that item will return the last updated value. There is no guarantee as to how quickly this convergence happens.",
+      "course_id": 1,
+      "week_id": 8,
+      "lecture_id": 15,
+      "status": "active",
+      "tags": ["distributed systems", "consistency models", "eventual consistency"]
+    },
+    {
+      "question_id": 2025,
+      "content": "What are the key differences between horizontal and vertical fragmentation in distributed databases?",
+      "type": "TEXT",
+      "question_options": [],
+      "correct_answer": null,
+      "points": 15,
+      "explanation": "Horizontal fragmentation divides a relation by assigning tuples (rows) to different fragments based on some condition. Vertical fragmentation divides a relation by projecting out a subset of its attributes (columns) and grouping them into fragments.",
+      "course_id": 1,
+      "week_id": 12,
+      "lecture_id": 23,
+      "status": "active",
+      "tags": ["distributed databases", "fragmentation", "horizontal", "vertical"]
+    }
+  ],
+  "assignments": [
+    {
+      "assignment_id": 2001,
+      "week_id": 1,
+      "title": "Advanced Database Design and Architecture Analysis",
+      "description": "Analyze different database architectures and their suitability for various applications. Investigate the impact of data abstraction levels on data independence.",
+      "type": "practice",
+      "due_date": "2025-04-05",
+      "start_date": "2025-03-29",
+      "is_published": true,
+      "question_ids": [2001,2002,2004, 2007, 2010, 2013, 2016]
+    },
+    {
+      "assignment_id": 2002,
+      "week_id": 2,
+      "title": "Advanced SQL DDL and Integrity Constraints",
+      "description": "Implement complex database schemas using advanced SQL DDL features, including views, indexes, and various integrity constraints.",
+      "type": "practice",
+      "due_date": "2025-04-12",
+      "start_date": "2025-04-05",
+      "is_published": true,
+      "question_ids": [2003,2005,2008,2011,2014,2017,2020,2023,2025]
+    },
+    {
+      "assignment_id": 2003,
+      "week_id": 3,
+      "title": "Mastering SQL Subqueries and Data Modification",
+      "description": "Write complex SQL queries using nested, correlated, and scalar subqueries. Implement sophisticated data modification using subqueries and CTEs.",
+      "type": "practice",
+      "due_date": "2025-04-19",
+      "start_date": "2025-04-12",
+      "is_published": true,
+      "question_ids": [2004,2006,2009,2012,2015,2018,2021,2024]
+    },
+    {
+      "assignment_id": 2004,
+      "week_id": 4,
+      "title": "In-depth Indexing Strategies and Query Optimization",
+      "description": "Design and implement effective indexing strategies for different query workloads. Analyze query execution plans and identify optimization opportunities.",
+      "type": "practice",
+      "due_date": "2025-04-26",
+      "start_date": "2025-04-19",
+      "is_published": true,
+      "question_ids": [2010,2013,2016,2019,2022]  
+    },
+    {
+      "assignment_id": 2005,
+      "week_id": 5,
+      "title": "Advanced Normalization Forms and Design Principles",
+      "description": "Apply advanced normalization techniques (BCNF, 4NF, 5NF) to complex database design problems. Evaluate the trade-offs between normalization levels.",
+      "type": "practice",
+      "due_date": "2025-05-03",
+      "start_date": "2025-04-26",
+      "is_published": true,
+      "question_ids": [2011,2014,2017,2020,2023]
+    },
+    {
+      "assignment_id": 2006,
+      "week_id": 6,
+      "title": "Transaction Management and Concurrency Control Scenarios",
+      "description": "Analyze different transaction scenarios and identify potential concurrency issues. Apply concurrency control techniques to ensure data integrity.",
+      "type": "practice",
+      "due_date": "2025-05-10",
+      "start_date": "2025-05-03",
+      "is_published": true,
+      "question_ids": [2012,2015,2018,2021,2024]
+    },
+    {
+      "assignment_id": 2007,
+      "week_id": 7,
+      "title": "Database Recovery Planning and Failure Analysis",
+      "description": "Develop recovery plans for different types of database failures. Analyze the role of logging and checkpointing in the recovery process.",
+      "type": "practice",
+      "due_date": "2025-05-17",
+      "start_date": "2025-05-10",
+      "is_published": true,
+      "question_ids": [2013,2016,2019,2022,2025]
+    },
+    {
+      "assignment_id": 2008,
+      "week_id": 8,
+      "title": "Exploring NoSQL Databases: Key-Value Stores",
+      "description": "Design and implement a simple application using a Key-Value store. Analyze its performance characteristics and suitability for different use cases.",
+      "type": "graded",
+      "due_date": "2025-05-24",
+      "start_date": "2025-05-17",
+      "is_published": true,
+      "question_ids": [2009,2012,2015,2018,2021]
+    },
+    {
+      "assignment_id": 2009,
+      "week_id": 9,
+      "title": "Document and Column-Family Databases in Practice",
+      "description": "Compare and contrast Document Databases (e.g., MongoDB) and Column-Family Stores (e.g., Cassandra) through practical exercises.",
+      "type": "graded",
+      "due_date": "2025-05-31",
+      "start_date": "2025-05-24",
+      "is_published": true,
+      "question_ids": [2004,2007,2010,2013,2016]
+    },
+    {
+      "assignment_id": 2010,
+      "week_id": 10,
+      "title": "Graph Databases and Polyglot Persistence Design",
+      "description": "Model interconnected data using a Graph Database (e.g., Neo4j) and explore design considerations for polyglot persistence architectures.",
+      "type": "graded",
+      "due_date": "2025-06-07",
+      "start_date": "2025-05-31",
+      "is_published": true,
+      "question_ids": [2005,2008,2011,2014,2017]
+    },
+    {
+      "assignment_id": 2011,
+      "week_id": 11,
+      "title": "Distributed Database Replication Strategies",
+      "description": "Analyze different data replication techniques in distributed databases and their impact on consistency and availability.",
+      "type": "graded",
+      "due_date": "2025-06-14",
+      "start_date": "2025-06-07",
+      "is_published": true,
+      "question_ids": [2009,2012,2015,2018,2025]
+    },
+    {
+      "assignment_id": 2012,
+      "week_id": 12,
+      "title": "Distributed Query Processing and Concurrency Control Challenges",
+      "description": "Investigate the challenges of query processing and concurrency control in distributed database systems. Propose solutions for specific scenarios.",
+      "type": "graded",
+      "due_date": "2025-06-21",
+      "start_date": "2025-06-14",
+      "is_published": true,
+      "question_ids": [2004,2007,2010,2013,2014]
+    },
+    {
+      "assignment_id": 2013,
+      "week_id": 13,
+      "title": "Data Warehouse Design and Dimensional Modeling",
+      "description": "Design a data warehouse schema for a given business scenario using dimensional modeling techniques (star, snowflake).",
+      "type": "graded",
+      "due_date": "2025-06-28",
+      "start_date": "2025-06-21",
+      "is_published": true,
+      "question_ids": [2004,2007,2010,2013,2014]
+    },
+    {
+      "assignment_id": 2014,
+      "week_id": 14,
+      "title": "OLAP Operations and Data Analysis",
+      "description": "Apply OLAP operations to analyze multi-dimensional data and derive business insights.",
+      "type": "graded",
+      "due_date": "2025-07-05",
+      "start_date": "2025-06-28",
+      "is_published": true,
+      "question_ids": [2004,2007,2010,2013,2014]
+    },
+    {
+      "assignment_id": 2015,
+      "week_id": 15,
+      "title": "Implementing Database Security Policies",
+      "description": "Design and propose security policies and mechanisms for a given database system, addressing authentication, authorization, and access control.",
+      "type": "graded",
+      "due_date": "2025-07-12",
+      "start_date": "2025-07-05",
+      "is_published": true,
+      "question_ids": [2004,2007,2010,2013,2014]
+    },
+    {
+      "assignment_id": 2016,
+      "week_id": 16,
+      "title": "Database Performance Tuning and Emerging Technologies Report",
+      "description": "Research and report on advanced database performance tuning techniques and emerging trends in database technologies (in-memory, NewSQL, cloud databases, AI integration).",
+      "type": "graded",
+      "due_date": "2025-07-19",
+      "start_date": "2025-07-12",
+      "is_published": true,
+      "question_ids": [2004,2007,2010,2013,2014]
+    }
+  ],
+  "personal_resources": [
+    {
+      "resource_id": 2001,
+      "name": "Advanced DBMS Study Notes",
+      "description": "Comprehensive study notes for the Advanced Database Management Systems course, covering theoretical concepts and practical applications.",
+      "course_id": 1,
+      "user_id": 3001,
+      "is_active": true,
+      "LLM_Summary": {
+        "summary": "Detailed study notes covering advanced database design, normalization, SQL (including advanced features), transaction management, concurrency control, recovery mechanisms, NoSQL databases (Key-Value, Document, Column-Family, Graph), distributed databases, data warehousing, OLAP, database security, and performance tuning. Includes detailed explanations, examples, and implementation tips for complex concepts.",
+        "concepts_covered": [
+          "Advanced normalization techniques (BCNF, 4NF, 5NF, DKNF)",
+          "Expert-level SQL query optimization and tuning",
+          "In-depth transaction management and concurrency control protocols",
+          "Comprehensive database recovery strategies and algorithms",
+          "Detailed architectures and use cases of various NoSQL databases",
+          "Principles of distributed database systems and data replication",
+          "Data warehousing and OLAP concepts and operations",
+          "Comprehensive database security principles and implementation mechanisms",
+          "Advanced database performance tuning methodologies"
+        ],
+        "concepts_not_covered": [
+          "Very specific implementation details of niche DBMS products.",
+          "Cutting-edge research papers in specialized database areas.",
+          "Database administration tasks specific to particular cloud platforms."
+        ]
+      }
+    },
+    {
+      "resource_id": 2002,
+      "name": "Advanced SQL Query Collection and Best Practices",
+      "description": "A curated collection of advanced SQL queries, including complex joins, subqueries, window functions, CTEs, and data modification techniques, along with best practices for writing efficient and maintainable SQL.",
+      "course_id": 1,
+      "user_id": 3001,
+      "is_active": true,
+      "LLM_Summary": {
+        "summary": "A comprehensive collection of advanced SQL queries organized by topic, including complex joins (inner, outer, self), all types of subqueries (nested, correlated, scalar), window functions, Common Table Expressions (CTEs), procedural SQL elements (stored procedures, user-defined functions, triggers), and sophisticated data manipulation statements. Each query includes explanations of its functionality and potential use cases. The resource also provides a set of best practices for writing efficient, readable, and maintainable SQL code, including considerations for indexing and query optimization.",
+        "concepts_covered": [
+          "Advanced JOIN operations (all types with complex conditions)",
+          "Expert use of subqueries in all clauses of the SELECT statement",
+          "Implementation and application of window functions for analytical queries",
+          "Structuring complex queries with Common Table Expressions (CTEs)",
+          "Fundamentals of procedural SQL extensions (stored procedures, UDFs, triggers)",
+          "Best practices for SQL query writing style and efficiency",
+          "Considerations for indexing and its impact on SQL performance"
+        ],
+        "concepts_not_covered": [
+          "Database-specific SQL extensions beyond standard features.",
+          "Detailed performance analysis of specific SQL constructs on different DBMS.",
+          "Integration of SQL with specific programming languages in depth."
+        ]
+      }
+    },
+    {
+      "resource_id": 2003,
+      "name": "NoSQL Database Comparison and Use Case Analysis",
+      "description": "A detailed comparison of different types of NoSQL databases (Key-Value, Document, Column-Family, Graph) with analysis of their strengths, weaknesses, and suitability for various application use cases.",
+      "course_id": 1,
+      "user_id": 3001,
+      "is_active": true,
+      "LLM_Summary": {
+        "summary": "This resource provides a comprehensive comparison of the four main types of NoSQL databases: Key-Value stores, Document Databases, Column-Family stores, and Graph Databases. For each type, it details their data model, architecture, consistency models, scalability characteristics, query capabilities, and operational considerations. It also includes an in-depth analysis of various application use cases and provides guidance on selecting the most appropriate NoSQL database type based on specific requirements such as data structure, query patterns, consistency needs, and scalability goals. Real-world examples of popular NoSQL systems within each category are also discussed.",
+        "concepts_covered": [
+          "Detailed comparison of Key-Value, Document, Column-Family, and Graph data models.",
+          "Analysis of the architectural differences and scalability mechanisms of NoSQL types.",
+          "Understanding different consistency models beyond ACID in the NoSQL landscape.",
+          "Evaluation of query capabilities and limitations of each NoSQL type.",
+          "Guidance on selecting the right NoSQL database based on application requirements.",
+          "In-depth analysis of various use cases suitable for each NoSQL database type.",
+          "Discussion of operational considerations for managing different NoSQL systems."
+        ],
+        "concepts_not_covered": [
+          "Specific configuration and administration of individual NoSQL database products in extreme detail.",
+          "Advanced topics in distributed consensus and fault tolerance specific to NoSQL systems.",
+          "Integration of NoSQL databases with specific programming frameworks in depth."
+        ]
+      }
+    }
+  ],
+  "personal_resource_files": [
+    {
+      "file_id": 2001,
+      "resource_id": 2001,
+      "name": "Advanced DBMS Notes - Weeks 1-4",
+      "type": "text",
+      "content": "# Advanced Database Management Systems Notes - Weeks 1-4\n\n## Week 1: Foundations Revisited\n\n### Deep Dive into Data Abstraction\n- Physical Level: Detailed discussion on storage media, file organization (heap, sorted), access methods (sequential, direct), and physical schema.\n- Logical Level: In-depth exploration of data models (relational, ER, etc.) and logical schema design principles.\n- View Level: Advanced concepts of views for security, customization, and data independence.\n- Data Independence: Thorough analysis of physical and logical data independence with practical examples.\n- Database Architectures: Detailed overview of centralized, client-server (2-tier, 3-tier), and parallel systems (shared memory, shared disk, shared nothing).\n\n## Week 2: Advanced Relational Model and SQL DDL\n\n### Advanced Relational Model\n- Domains and Keys: Comprehensive study of scalar, user-defined domains, superkeys, candidate keys, and alternate keys.\n- Relational Constraints: In-depth coverage of NOT NULL, UNIQUE, CHECK constraints, and assertions.\n\n### Advanced SQL DDL\n- Views: Creating, modifying, dropping views for abstraction and security.\n- Indexes: B-tree, hash indexes, and considerations for index selection and performance.\n- Advanced Data Types: LOBs (BLOB, CLOB), spatial, JSON, and XML data types with SQL manipulation functions.\n- Schema Modification: Adding, dropping, and altering columns in existing tables.\n\n## Week 3: Mastering SQL Subqueries and Data Modification\n\n### SQL Subqueries\n- Nested Subqueries: Advanced usage in WHERE, FROM (derived tables), and SELECT clauses.\n- Correlated Subqueries: Understanding dependencies on the outer query and effective use cases.\n- Scalar Subqueries: Ensuring single-value returns and their applications.\n\n### Advanced Data Modification\n- INSERT SELECT: Inserting data based on query results.\n- DELETE with Subqueries: Conditional deletion based on subquery results.\n- UPDATE with Subqueries and CASE: Sophisticated data updates using subqueries and conditional logic.\n- Common Table Expressions (CTEs): Enhancing query readability and enabling recursive queries.\n\n## Week 4: Indexing and Query Processing Strategies\n\n### In-depth Indexing\n- Primary, Secondary, Clustered, Non-clustered Indexes: Detailed analysis of their structure and impact.\n- B-trees and Hash Indexes: Internal workings and trade-offs.\n- Composite, Covering, Full-text, Spatial, XML Indexes: Advanced indexing techniques and their applications.\n\n### Query Processing and Optimization\n- Query Processing Pipeline: Parsing, translation to relational algebra, optimization, and execution.\n- Rule-based and Cost-based Optimization: Strategies used by the DBMS.\n- Join Algorithms: Nested loop, sort-merge, hash joins and their performance implications.\n- Query Execution Plans: Understanding and interpreting execution plans for performance analysis.\n\n[Continued notes for Weeks 5-16 would be included here with similar detailed content for each week's topics]\n",
+      "file_type": "text/markdown",
+      "file_size": 20480
+    },
+    {
+      "file_id": 2002,
+      "resource_id": 2002,
+      "name": "Advanced SQL Query Examples.sql",
+      "type": "file",
+      "content": "-- Advanced JOIN Examples\nSELECT e.employee_name, d.department_name, p.project_name\nFROM employees e\nINNER JOIN departments d ON e.department_id = d.id\nLEFT JOIN projects p ON e.project_id = p.id\nWHERE d.location = 'New York';\n\n-- Complex Subquery Example\nSELECT c.customer_name\nFROM customers c\nWHERE c.customer_id IN (SELECT o.customer_id FROM orders o GROUP BY o.customer_id HAVING COUNT() > 5);\n\n-- Window Function Example\nSELECT product_name, category, price,\n       RANK() OVER (PARTITION BY category ORDER BY price DESC) as price_rank\nFROM products;\n\n-- Recursive CTE Example\nWITH RECURSIVE employee_hierarchy AS (\n    SELECT id, name, manager_id, 0 AS level\n    FROM employees\n    WHERE manager_id IS NULL\n    UNION ALL\n    SELECT e.id, e.name, e.manager_id, eh.level + 1\n    FROM employees e\n    INNER JOIN employee_hierarchy eh ON e.manager_id = eh.id\n)\nSELECT  FROM employee_hierarchy ORDER BY level;\n\n-- Stored Procedure Example (Illustrative - Syntax varies by DBMS)\n-- CREATE PROCEDURE GetEmployeesByDepartment (IN deptName VARCHAR(50))\n-- BEGIN\n--     SELECT  FROM employees WHERE department = deptName;\n-- END;\n\n-- User-Defined Function Example (Illustrative - Syntax varies by DBMS)\n-- CREATE FUNCTION CalculateTax (salary DECIMAL(10, 2)) RETURNS DECIMAL(10, 2)\n-- DETERMINISTIC\n-- BEGIN\n--     IF salary > 50000 THEN\n--         RETURN salary  0.20;\n--     ELSE\n--         RETURN salary  0.10;\n--     END IF;\n-- END;\n\n-- Trigger Example (Illustrative - Syntax varies by DBMS)\n-- CREATE TRIGGER UpdateOrderDate\n-- BEFORE INSERT ON orders\n-- FOR EACH ROW\n-- SET NEW.order_date = NOW();\n\n[More advanced SQL query examples and procedural SQL code would be included here]\n",
+      "file_type": "text/x-sql",
+      "file_size": 15360
+    },
+    {
+      "file_id": 2003,
+      "resource_id": 2003,
+      "name": "NoSQL Database Comparison Matrix.csv",
+      "type": "file",
+      "content": "Type,Data Model,Scalability,Consistency,Query Language,Examples,Use Cases\nKey-Value,Key-Value,Horizontal,Eventual/Tunable,Simple Key Lookups,Redis,Memcached,Caching,Session Management\nDocument,JSON/BSON,Horizontal,Eventual/Tunable,Document-based Queries,MongoDB,Couchbase,Content Management,E-commerce\nColumn-Family,Column Families,Horizontal,Eventual/Tunable,CQL,HBase,Cassandra,Time-Series Data,IoT\nGraph,Nodes and Edges,Scalable,ACID/Eventual,Cypher,Gremlin,Neo4j,Social Networks,Recommendations\n\n[More detailed comparisons and use case analyses would be included here]",
+      "file_type": "text/csv",
+      "file_size": 7168
+    }
+  ]
+}
