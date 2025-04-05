@@ -119,18 +119,18 @@ def run_phase1_create_users(db_session):
     db_session.flush()
     log(f"Created admin user: {admin.username} (ID: {admin.id})")
     
-    # Create teacher
-    log("Creating teacher user...")
-    teacher = User(
-        username=TEACHER_USERNAME,
-        email=TEACHER_EMAIL,
-        password=TEACHER_PASSWORD,
-        role="teacher",
-                is_active=True
-    )
-    db_session.add(teacher)
-    db_session.flush()
-    log(f"Created teacher user: {teacher.username} (ID: {teacher.id})")
+    # # Create teacher
+    # log("Creating teacher user...")
+    # teacher = User(
+    #     username=TEACHER_USERNAME,
+    #     email=TEACHER_EMAIL,
+    #     password=TEACHER_PASSWORD,
+    #     role="teacher",
+    #             is_active=True
+    # )
+    # db_session.add(teacher)
+    # db_session.flush()
+    # log(f"Created teacher user: {teacher.username} (ID: {teacher.id})")
     
     # Create students
     student_ids = []
