@@ -36,6 +36,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const [mentionOptions] = useState([
     { id: 1, name: 'Course', prefix: '@Course' },
     { id: 2, name: 'FAQ', prefix: '@FAQ' },
+    { id: 3, name: 'Notes', prefix: '@Notes' },
   ]);
   const [mentionSearch, setMentionSearch] = useState('');
   const [isFirstMessage, setIsFirstMessage] = useState(true);
@@ -43,6 +44,9 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const [isFetchingChats, setIsFetchingChats] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [courses, setCourses] = useState([]);
+  // Add new state for personal notes
+  const [personalNotes, setPersonalNotes] = useState([]);
+  const [loadingNotes, setLoadingNotes] = useState(false);
   // Add new state variables for context pills
   const [selectedContexts, setSelectedContexts] = useState([]);
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -313,6 +317,42 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
       }
   };
 
+  // Add a function to load personal notes
+  const loadPersonalNotes = async () => {
+    try {
+      setLoadingNotes(true);
+      const response = await personalApi.getResources();
+      if (response?.data) {
+        setPersonalNotes(response.data);
+      }
+    } catch (err) {
+      console.error('Error loading personal notes:', err);
+    } finally {
+      setLoadingNotes(false);
+    }
+  };
+
+  // Add this to useEffect
+  useEffect(() => {
+    // Load courses for the Course command
+    fetchCourses();
+    // Load personal notes for the Notes command
+    loadPersonalNotes();
+  }, []);
+
+  // Add the addNotesContext function
+  const addNotesContext = (note) => {
+    addContext({
+      id: uuidv4(),
+      type: 'notes',
+      resourceId: note.id,
+      name: note.name,
+      courseName: note.course?.name,
+      courseCode: note.course?.code
+    });
+    setShowMentions(false);
+  };
+
   async function handleSubmit() {
     if (!message.trim()) return;
     setShowMentions(false);
@@ -324,6 +364,8 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
       contextString = selectedContexts.map(context => {
         if (context.type === 'course') {
           return `Course ${context.code}:`; // Add space after "Course"
+        } else if (context.type === 'notes') {
+          return `Note ${context.resourceId}:`; // Format as Note [ID]: for backend
         } else {
           return 'FAQ:'; // Keep FAQ format the same
         }
@@ -595,6 +637,9 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                         if (option.name === 'Course') {
                           setShowMentions(true);
                           setMentionSearch('course');  // lowercase to match the comparison
+                        } else if (option.name === 'Notes') {
+                          setShowMentions(true);
+                          setMentionSearch('notes');  // lowercase to match the comparison
                         } else if (option.name === 'FAQ') {
                           // Add FAQ context directly
                           addContext({ id: uuidv4(), type: 'faq' });
@@ -629,7 +674,9 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                         className="flex items-center bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 rounded-full text-blue-800 dark:text-blue-300 text-xs"
                       >
                         <span className="font-medium">
-                          {context.type === 'course' ? `@Course: ${context.code}` : '@FAQ:'}
+                          {context.type === 'course' ? `@Course: ${context.code}` : 
+                           context.type === 'notes' ? `@Note: ${context.name}` : 
+                           '@FAQ:'}
                         </span>
                       </div>
                     ))}
@@ -711,7 +758,9 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                   className="flex items-center bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded-full text-blue-800 dark:text-blue-300 text-xs"
                 >
                   <span className="font-medium">
-                    {context.type === 'course' ? `@Course: ${context.code}` : '@FAQ:'}
+                    {context.type === 'course' ? `@Course: ${context.code}` : 
+                     context.type === 'notes' ? `@Note: ${context.name}` : 
+                     '@FAQ:'}
                   </span>
                   <button 
                     onClick={(e) => {
@@ -749,6 +798,16 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                     className="w-full text-left px-3 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700"
                   >
                     Course
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setShowMentions(true);
+                      setShowContextMenu(false);
+                      setMentionSearch('notes');  // show notes selection
+                    }}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                  >
+                    Notes
                   </button>
                   <button 
                     onClick={() => addContext({ id: uuidv4(), type: 'faq' })}
@@ -827,6 +886,41 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                       ))
                     )}
                   </div>
+                ) : mentionSearch.toLowerCase() === 'notes' ? (
+                  // Personal Notes Selection Menu
+                  <div className="w-80 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700 max-h-96 overflow-y-auto">
+                    {loadingNotes ? (
+                      <div className="p-4 text-sm text-zinc-500 dark:text-zinc-400 text-center">
+                        Loading your notes...
+                      </div>
+                    ) : personalNotes.length === 0 ? (
+                      <div className="p-4 text-sm text-zinc-500 dark:text-zinc-400 text-center">
+                        No personal notes available
+                      </div>
+                    ) : (
+                      personalNotes.map(note => (
+                        <button
+                          key={note.id}
+                          onClick={() => addNotesContext(note)}
+                          className="w-full px-4 py-3 text-left hover:bg-zinc-100 dark:hover:bg-zinc-700 border-b border-zinc-200 dark:border-zinc-700"
+                        >
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-zinc-900 dark:text-white">
+                              {note.name}
+                            </span>
+                            <div className="flex items-center justify-between mt-1">
+                              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                {note.course?.code}: {note.course?.name}
+                              </span>
+                              <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded">
+                                {note.files?.length || 0} files
+                              </span>
+                            </div>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
                 ) : (
                   // Primary Commands Menu
                   <div className="w-48 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700">
@@ -840,6 +934,9 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                           onClick={() => {
                             if (option.name === 'Course') {
                               setMentionSearch('course');
+                              return;
+                            } else if (option.name === 'Notes') {
+                              setMentionSearch('notes');
                               return;
                             }
                             // Add as context pill instead of text, replacing any existing contexts

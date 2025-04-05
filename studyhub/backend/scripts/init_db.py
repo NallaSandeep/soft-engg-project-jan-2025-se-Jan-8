@@ -5,7 +5,7 @@ This script initializes the StudyHub database using a modular approach:
 
 Phase 1: Create users (admin, teachers, students)
 Phase 2: Import course content from JSON files
-Phase 3: Create enrollments and personal resources
+Phase 3: Create enrollments and import personal resources from personal_notes.py
 Phase 4: Sync personal resources with StudyIndexer
 Phase 5: Sync graded assignments with StudyIndexer for integrity checking
 
@@ -13,6 +13,7 @@ This approach ensures:
 - Better separation of concerns
 - Consistent data between StudyHub and StudyIndexer
 - Maintainable and extensible initialization process
+- Personal resources are only loaded from personal_notes.py
 """
 
 import os
@@ -42,6 +43,9 @@ from scripts.import_courses import main as import_courses
 #from scripts.create_assignments import main as create_assignments
 from app.utils.sync_personal_resources import sync_personal_resources
 from app.utils.sync_graded_assignments import sync_graded_assignments
+
+# Optional import - will be imported directly in the function to handle errors gracefully
+# from scripts.personal_notes import COURSE_RESOURCES
 
 # Constants - Database credentials 
 ADMIN_EMAIL = "admin@studyhub.com"
@@ -206,9 +210,9 @@ def run_phase2_import_courses(db_session, admin_id):
 
 def run_phase3_create_enrollments(db_session, student_ids, courses):
     """
-    Phase 3: Create enrollments and personal resources
+    Phase 3: Create enrollments and personal resources from personal_notes.py only
     - Creates enrollments for all students in all courses
-    - Creates personal resources for each student in their enrolled courses
+    - Creates personal resources for each student from personal_notes.py
     """
     log("PHASE 3: CREATING ENROLLMENTS AND PERSONAL RESOURCES")
     
@@ -241,48 +245,59 @@ def run_phase3_create_enrollments(db_session, student_ids, courses):
             db_session.add(enrollment)
             log(f"Enrolled student {student_id} in course {course.code}", level="DEBUG")
     
-    # Create personal resources for all students in their enrolled courses
-    for course in courses:
-        # Get lectures for the course
-        lectures = db_session.query(Lecture).join(Week).filter(Week.course_id == course.id).all()
+    # Import personal resources from personal_notes.py instead of creating them in this function
+    log("Creating personal resources from personal_notes.py")
+    try:
+        from scripts.personal_notes import COURSE_RESOURCES
         
-        if not lectures:
-            log(f"No lectures found for course {course.code}", "WARNING")
-            continue
-        
-        log(f"Found {len(lectures)} lectures for course {course.code}")
-        
-        # Create personal resources for all lectures for student1, first 5 for others
-        for lecture in lectures:
+        # Loop through each course in COURSE_RESOURCES
+        for course_code, resources_list in COURSE_RESOURCES.items():
+            # Find course by code
+            course = db_session.query(Course).filter_by(code=course_code).first()
+            if not course:
+                log(f"Course {course_code} not found, skipping resource creation", "WARNING")
+                continue
+                
+            log(f"Processing resources for course {course_code}")
+            
+            # Assign these resources to ALL students, not just student1
             for student_id in student_ids:
-                # For student1, create resources for all lectures
-                # For others, only create for first 5 lectures
-                if student_id != 3 and lecture.lecture_number > 5:
-                    continue
+                log(f"Creating resources for student {student_id} in course {course_code}")
                 
-                # Create the personal resource
-                resource = PersonalResource(
-                    user_id=student_id,
-                    course_id=course.id,
-                    name=f"Notes on {lecture.title}",  # Use name instead of title
-                    description=f"My personal notes for {lecture.title}",
-                    is_active=True,
-                    settings={"visibility": "private"}  # Use settings instead of is_public
-                )
-                db_session.add(resource)
-                db_session.flush()  # Need to flush to get the resource.id
-                
-                # Create the resource file to hold the content
-                resource_file = ResourceFile(
-                    resource_id=resource.id,
-                    name=f"Lecture {lecture.lecture_number} Notes.txt",
-                    type="text",  # Use text type for notes
-                    content=f"My personal notes for {lecture.title}.\n\nKey points:\n- Important concept 1\n- Important concept 2\n- Remember to review this before the exam",
-                    file_type="text/plain",
-                    file_size=250  # Approximate size
-                )
-                db_session.add(resource_file)
-                log(f"Created personal resource for student {student_id} in course {course.code} for lecture {lecture.lecture_number}", level="DEBUG")
+                # Create resources for this student in this course
+                for resource_data in resources_list:
+                    # Create the personal resource
+                    resource = PersonalResource(
+                        user_id=student_id,
+                        course_id=course.id,
+                        name=resource_data["name"],
+                        description=resource_data["description"],
+                        is_active=True,
+                        settings={"visibility": "private"}
+                    )
+                    db_session.add(resource)
+                    db_session.flush()  # Need to flush to get the resource.id
+                    
+                    # Create resource files for this resource
+                    for note in resource_data["notes"]:
+                        resource_file = ResourceFile(
+                            resource_id=resource.id,
+                            name=note["name"],
+                            type="text",
+                            content=note["content"],
+                            file_type=note.get("file_type", "text/plain"),
+                            file_size=len(note["content"])
+                        )
+                        db_session.add(resource_file)
+                    
+                    log(f"Created personal resource '{resource.name}' for student {student_id} in course {course_code}", level="DEBUG")
+    
+    except ImportError as e:
+        log(f"Error importing COURSE_RESOURCES from personal_notes.py: {str(e)}", "ERROR")
+    except Exception as e:
+        log(f"Error creating personal resources from personal_notes.py: {str(e)}", "ERROR")
+        import traceback
+        log(traceback.format_exc(), "ERROR")
     
     db_session.commit()
 
@@ -499,7 +514,7 @@ def sync_with_studyindexer(courses):
 
 def run_phase4_sync_personal_resources(db_session):
     """
-    Phase 4: Sync personal resources with StudyIndexer
+    Phase 4: Sync personal resources with StudyIndexer (only those from personal_notes.py)
     """
     if not SYNC_PERSONAL_RESOURCES:
         log("Personal resource sync skipped (SYNC_PERSONAL_RESOURCES=False)")
@@ -584,13 +599,13 @@ def main():
         # Phase 2: Import courses
         courses = run_phase2_import_courses(db.session, admin_id)
         
-        # Phase 3: Create enrollments and personal resources
+        # Phase 3: Create enrollments and personal resources from personal_notes.py only
         run_phase3_create_enrollments(db.session, student_ids, courses)
         
         # Phase 4: Sync with StudyIndexer
         sync_with_studyindexer(courses)
         
-        # Phase 5: Sync personal resources with StudyIndexer
+        # Phase 5: Sync personal resources with StudyIndexer (only those from personal_notes.py)
         run_phase4_sync_personal_resources(db.session)
         
         # Phase 6: Sync graded assignments with StudyIndexer
