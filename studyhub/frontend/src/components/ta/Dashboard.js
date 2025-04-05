@@ -149,13 +149,13 @@ const TADashboard = () => {
             {/* Quick Actions */}
             <div>
                 <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-white">Quick Actions</h2>
-                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-                    <ActionButton 
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+                    {/* <ActionButton 
                         label="Create Course" 
                         icon={PlusCircleIcon} 
                         onClick={() => navigateTo('/ta/courses/new')}
                         color="blue"
-                    />
+                    /> */}
                     <ActionButton 
                         label="Create Assignment" 
                         icon={PlusCircleIcon} 
