@@ -110,12 +110,12 @@ const CourseManagement = () => {
         <div className="space-y-8">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold mb-6 text-zinc-900 dark:text-white">Course Management</h1>
-                <ActionButton 
+                {/* <ActionButton 
                     label="Add New Course" 
                     icon={PlusCircleIcon} 
                     onClick={() => setShowAddForm(true)}
                     color="green"
-                />
+                /> */}
             </div>
 
             {error && (
@@ -250,12 +250,12 @@ const CourseManagement = () => {
                                         onClick={() => navigate(`/ta/courses/${course.id}/content`)}
                                         color="blue"
                                     />
-                                    <ActionButton
+                                    {/* <ActionButton
                                         label="Edit Course"
                                         icon={PencilSquareIcon}
                                         onClick={() => navigate(`/ta/courses/${course.id}/edit`)}
                                         color="gray"
-                                    />
+                                    /> */}
                                 </div>
                             </div>
                         </div>
