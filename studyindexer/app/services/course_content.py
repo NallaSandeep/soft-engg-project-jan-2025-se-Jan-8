@@ -28,7 +28,8 @@ import logging
 import uuid
 import time
 import re
-from typing import List, Dict, Any, Optional, Union
+import math  # Import math module at the top level
+from typing import List, Dict, Any, Optional, Union, Set
 from datetime import datetime
 
 from ..models.course_selector import CourseInfo, CourseTopic, CourseContent, WeekOverview
@@ -122,6 +123,13 @@ class CourseContentService:
             course_code = course_info.get("code", "")
             course_title = course_info.get("title", "")
             
+            # Extract acronyms and synonyms early
+            acronyms = course_info.get("acronyms", {})
+            synonyms = course_info.get("synonyms", {})
+            acronyms_json = json.dumps(acronyms if acronyms else {})
+            synonyms_json = json.dumps(synonyms if synonyms else {})
+            logger.info(f"Prepared acronyms/synonyms JSON for course {course_code}")
+            
             if not course_id:
                 course_id = str(uuid.uuid4())
                 
@@ -152,7 +160,9 @@ class CourseContentService:
                 "department": course_info.get("department", ""),
                 "credits": course_info.get("credits", 0),
                 "course_summary": course_info.get("LLM_Summary", {}).get("summary", ""),
-                "course_concepts": ", ".join(course_info.get("LLM_Summary", {}).get("concepts_covered", []))
+                "course_concepts": ", ".join(course_info.get("LLM_Summary", {}).get("concepts_covered", [])),
+                "acronyms_json": acronyms_json,  # Add serialized acronyms
+                "synonyms_json": synonyms_json   # Add serialized synonyms
             }
             
             self.chroma.add_documents_sync(
@@ -197,7 +207,9 @@ class CourseContentService:
                     "week_summary": week_info.get("LLM_Summary", {}).get("summary", ""),
                     "week_concepts": ", ".join(week_info.get("LLM_Summary", {}).get("concepts_covered", [])),
                     "keywords": ", ".join(lecture.get("keywords", [])),
-                    "duration_minutes": lecture.get("duration_minutes", 0)
+                    "duration_minutes": lecture.get("duration_minutes", 0),
+                    "acronyms_json": acronyms_json,  # Add serialized acronyms
+                    "synonyms_json": synonyms_json   # Add serialized synonyms
                 }
             
             # Chunk the content
@@ -781,14 +793,17 @@ class CourseContentService:
         self, 
         query: str, 
         limit: int = 10,
-        course_ids: list = None,
+        course_ids: Optional[List[str]] = None,
         min_score: float = 0.01,
         exact_match_boost: float = 0.1,
         phrase_match_boost: float = 0.15,
-        description_threshold: float = 0.05
+        description_threshold: float = 0.05,
+        metadata_expansion_limit: int = 20,
+        expansion_query_limit: int = 3
     ) -> dict:
         """
-        Search for course content by query.
+        Search for course content by query, incorporating query expansion using
+        acronyms and synonyms found in the metadata of initially retrieved chunks.
         """
         try:
             logger.info(f"DEBUG: Search called with query='{query}', limit={limit}, course_ids={course_ids}, min_score={min_score}")
@@ -797,418 +812,251 @@ class CourseContentService:
                 logger.warning("DEBUG: Empty query provided, returning empty results")
                 return {"content_chunks": [], "total_count": 0, "query": query, "limit": limit}
             
+            # 1. Lowercase and Normalize Query
+            original_query_lower = query.lower()
+            # Keep normalization for consistency? Or rely on embeddings? Let's keep it for now.
+            normalized_query_lower = self._normalize_query(original_query_lower) 
+            logger.info(f"DEBUG: Normalized query: '{normalized_query_lower}'")
+            
             # Prepare filter based on course_ids
             filter_dict = {}
+            safe_course_ids = []
             if course_ids:
-                logger.info(f"DEBUG: Using course filter: {{'course_code': {{'$in': {course_ids}}}}}")
-                filter_dict = {"course_code": {"$in": course_ids}}
+                # Ensure course_ids are strings if they aren't already
+                safe_course_ids = [str(cid) for cid in course_ids if cid] # Filter out empty/None IDs
+                if safe_course_ids:
+                    logger.info(f"DEBUG: Using course filter: {{'course_code': {{\'$in\': safe_course_ids}}}}\"")
+                    # Assuming 'course_code' is the metadata field to filter on
+                    filter_dict = {"course_code": {"$in": safe_course_ids}}
+                else:
+                    logger.warning("DEBUG: course_ids provided but were empty after validation.")
+                    course_ids = None # Treat as no filter if validation results in empty list
             
-            # Normalize the query by replacing hyphens with spaces, etc.
-            normalized_query = self._normalize_query(query)
-            logger.info(f"DEBUG: Normalized query: '{normalized_query}'")
-            
-            # List to store all expanded versions of the query
-            expanded_queries = [normalized_query]
-            
-            # Check if the query is short and likely an acronym (e.g., "RDBMS")
-            if len(normalized_query.split()) == 1 and len(normalized_query) <= 10 and normalized_query.isupper():
-                logger.info(f"DEBUG: Detected potential acronym: {normalized_query}")
-                
-                # Dictionary of common database-related acronyms and their expansions
-                acronyms = {
-                    "RDBMS": "relational database management system",
-                    "SQL": "structured query language",
-                    "DDL": "data definition language",
-                    "DML": "data manipulation language",
-                    "DCL": "data control language",
-                    "TCL": "transaction control language",
-                    "ER": "entity relationship",
-                    "ACID": "atomicity consistency isolation durability",
-                    "DBMS": "database management system",
-                    "1NF": "first normal form",
-                    "2NF": "second normal form", 
-                    "3NF": "third normal form",
-                    "BCNF": "boyce codd normal form"
-                }
-                
-                # Add the expanded acronym to the list of queries to search
-                if normalized_query in acronyms:
-                    expanded_query = acronyms[normalized_query]
-                    logger.info(f"DEBUG: Added expansion: '{normalized_query}' → '{expanded_query}'")
-                    expanded_queries.append(normalized_query)  # Keep the original acronym
-                    expanded_queries.append(expanded_query)
-            
-            # Special handling for normal forms - check for patterns
-            normalization_patterns = {
-                r"(?i)first\s+normal\s+form": ["1NF", "first normal form"],
-                r"(?i)second\s+normal\s+form": ["2NF", "second normal form"],
-                r"(?i)third\s+normal\s+form": ["3NF", "third normal form"],
-                r"(?i)boyce\s+codd\s+normal\s+form": ["BCNF", "boyce codd normal form"],
-                r"(?i)fourth\s+normal\s+form": ["4NF", "fourth normal form"],
-                r"(?i)fifth\s+normal\s+form": ["5NF", "fifth normal form"],
-                r"(?i)1nf": ["first normal form", "1NF"],
-                r"(?i)2nf": ["second normal form", "2NF"],
-                r"(?i)3nf": ["third normal form", "3NF"],
-                r"(?i)bcnf": ["boyce codd normal form", "BCNF"],
-                r"(?i)4nf": ["fourth normal form", "4NF"],
-                r"(?i)5nf": ["fifth normal form", "5NF"]
-            }
-            
-            # Check if the query matches any normalization pattern
-            for pattern, expansions in normalization_patterns.items():
-                if re.search(pattern, normalized_query):
-                    logger.info(f"DEBUG: Detected normalization form pattern: {pattern}")
-                    for expansion in expansions:
-                        if expansion not in expanded_queries:
-                            logger.info(f"DEBUG: Added normalization expansion: '{expansion}'")
-                            expanded_queries.append(expansion)
-            
-            # Special handling for phrases containing "normal form"
-            if "normal form" in normalized_query.lower():
-                logger.info("DEBUG: Query contains 'normal form', adding specific normalization expansions")
-                normal_form_expansions = ["1NF", "2NF", "3NF", "BCNF", "first normal form", "second normal form", "third normal form", "boyce codd normal form"]
-                for expansion in normal_form_expansions:
-                    if expansion not in expanded_queries:
-                        expanded_queries.append(expansion)
-            
-            logger.info(f"DEBUG: All expanded queries: {expanded_queries}")
-            
-            # Get collection info
-            collection = self.chroma.get_or_create_collection_sync(self.collection_name)
-            logger.info(f"DEBUG: Using collection: {self.collection_name}")
-            
-            # Process each expanded query
-            all_results = []
-            
-            for expanded_query in set(expanded_queries):
-                logger.info(f"DEBUG: Searching with expanded query: '{expanded_query}'")
-                
-                # Search using the expanded query
-                results = self.chroma.search_sync(
-                    collection_name=self.collection_name,
-                    query=expanded_query,
-                    n_results=50,  # Get more results initially for filtering
-                    where=filter_dict
-                )
-                
-                if not results or not results.ids or not results.ids:
-                        continue
-                        
-                result_ids = results.ids
-                result_distances = results.distances
-                result_metadatas = results.metadatas
-                result_documents = results.documents
-                
-                logger.info(f"DEBUG: Search for '{expanded_query}' found {len(result_ids)} initial results")
-                
-                if len(result_ids) > 0:
-                    logger.info("DEBUG: Sample results for '{expanded_query}':")
-                    for i in range(min(3, len(result_ids))):
-                        # Convert distance to a relevance score (1 - distance, as lower distance = higher relevance)
-                        # Clamp between 0 and 1
-                        score = max(0, min(1, 1 - result_distances[i]))
-                        logger.info(f"DEBUG: Result {i}: ID={result_ids[i]}, score={score:.4f}, metadata={result_metadatas[i]}")
-                
-                # Process results
-                for i in range(len(result_ids)):
-                    doc_id = result_ids[i]
-                    distance = result_distances[i]
-                    metadata = result_metadatas[i]
-                    document = result_documents[i]
+            # Get collections (both needed now)
+            content_collection = self.chroma.get_or_create_collection_sync(self.collection_name)
+            selector_collection_name = "course-selector" # Assuming this is the name
+            selector_collection = self.chroma.get_or_create_collection_sync(selector_collection_name)
+            logger.info(f"DEBUG: Using collections: {self.collection_name}, {selector_collection_name}")
+
+            # --- Query Expansion Logic ---
+            aggregated_acronyms: Dict[str, str] = {}
+            aggregated_synonyms: Dict[str, List[str]] = {}
+
+            # --- Refined Metadata Gathering ---           
+            if safe_course_ids: # If specific courses are targeted
+                logger.info(f"DEBUG: Fetching metadata directly from {selector_collection_name} for courses: {safe_course_ids}")
+                try:
+                    # Use the get method of ChromaService which handles fetching by ID (course code)
+                    selector_results = self.chroma.get_sync(
+                        collection_name=selector_collection_name,
+                        ids=safe_course_ids, # Fetch metadata for specified course codes
+                        include=['metadatas'] # Only fetch metadata
+                    )
                     
-                    # Calculate relevance score (1 - distance, as lower distance = higher relevance)
-                    # Clamp between 0 and 1
-                    score = max(0, min(1, 1 - distance))
-                    
-                    # Skip low scoring results
-                    if score < min_score:
-                        logger.info(f"DEBUG: Skipping result {i} with score {score:.4f} < min_score {min_score}")
-                        continue
-                    
-                    content_type = metadata.get('content_type', '')
-                    
-                    # For course descriptions, only include them if they meet a higher relevance threshold
-                    if content_type == 'course_description' and score < description_threshold:
-                        continue
-                    
-                    # Apply exact match and term match boosting
-                    boosted_score = score
-                    
-                    # Check for term matches in the document text
-                    query_terms = set(expanded_query.lower().split())
-                    doc_text = document.lower()
-                    
-                    # Only consider terms with at least 2 characters
-                    matching_terms = [term for term in query_terms if len(term) >= 2 and term in doc_text]
-                    
-                    if matching_terms:
-                        logger.info(f"DEBUG: Term match: '{', '.join(matching_terms)}' in result {i}")
-                        # Boost based on number of matching terms
-                        term_boost = exact_match_boost * len(matching_terms)
-                        boosted_score += term_boost
-                        logger.info(f"DEBUG: Term boost: +{term_boost:.4f} for {len(matching_terms)} matches, new score: {boosted_score:.4f}")
-                    
-                    # Check for acronym match
-                    if expanded_query.isupper() and expanded_query in document:
-                        logger.info(f"DEBUG: Acronym boost: +0.2 for exact match of {expanded_query}, new score: {boosted_score + 0.2:.4f}")
-                        boosted_score += 0.2  # Significant boost for exact acronym match
-                    
-                    # Check for exact phrase match
-                    if expanded_query.lower() in doc_text:
-                        logger.info(f"DEBUG: Phrase boost: +{phrase_match_boost} for exact phrase match, new score: {boosted_score + phrase_match_boost:.4f}")
-                        boosted_score += phrase_match_boost
-                    
-                    # For normalization forms (like "first normal form", "1NF"), check for specific matches
-                    for pattern, _ in normalization_patterns.items():
-                        if re.search(pattern, expanded_query, re.IGNORECASE) and any(re.search(pattern, doc_text, re.IGNORECASE) for pattern in normalization_patterns.keys()):
-                            logger.info(f"DEBUG: Normalization form boost: +0.25 for matching normalization concept, new score: {boosted_score + 0.25:.4f}")
-                            boosted_score += 0.25  # Higher boost for database normalization concepts
-                            break
-                    
-                    # NEW BOOST CHECKS FOR ADDITIONAL METADATA FIELDS
-                    # Check for matches in keywords (highest boost because most specific)
-                    if "keywords" in metadata and metadata["keywords"]:
-                        keywords_lower = metadata["keywords"].lower()
-                        if expanded_query.lower() in keywords_lower:
-                            logger.info(f"DEBUG: Keywords exact match boost: +0.3 for '{expanded_query}', new score: {boosted_score + 0.3:.4f}")
-                            boosted_score += 0.3
-                        else:
-                            # Check for individual terms in keywords
-                            matching_keywords = [term for term in query_terms if len(term) >= 2 and term in keywords_lower]
-                            if matching_keywords:
-                                keyword_boost = 0.15 * len(matching_keywords)
-                                logger.info(f"DEBUG: Keywords term match boost: +{keyword_boost:.4f} for {len(matching_keywords)} terms, new score: {boosted_score + keyword_boost:.4f}")
-                                boosted_score += keyword_boost
-                    
-                    # Check for matches in course concepts and week concepts
-                    for concept_field in ["course_concepts", "week_concepts"]:
-                        if concept_field in metadata and metadata[concept_field]:
-                            concepts_lower = metadata[concept_field].lower()
-                            if expanded_query.lower() in concepts_lower:
-                                logger.info(f"DEBUG: {concept_field} match boost: +0.2 for '{expanded_query}', new score: {boosted_score + 0.2:.4f}")
-                                boosted_score += 0.2
-                                break  # Only boost once for concepts
-                            else:
-                                # Check for individual terms in concepts
-                                matching_concepts = [term for term in query_terms if len(term) >= 2 and term in concepts_lower]
-                                if matching_concepts:
-                                    concept_boost = 0.1 * len(matching_concepts)
-                                    logger.info(f"DEBUG: {concept_field} term match boost: +{concept_boost:.4f}, new score: {boosted_score + concept_boost:.4f}")
-                                    boosted_score += concept_boost
-                                    break  # Only boost once for concepts
-                    
-                    # Check for matches in course summary and week summary
-                    for summary_field in ["course_summary", "week_summary"]:
-                        if summary_field in metadata and metadata[summary_field]:
-                            summary_lower = metadata[summary_field].lower()
-                            if expanded_query.lower() in summary_lower:
-                                logger.info(f"DEBUG: {summary_field} match boost: +0.1 for '{expanded_query}', new score: {boosted_score + 0.1:.4f}")
-                                boosted_score += 0.1
-                                break  # Only boost once for summaries
-                            else:
-                                # Check for individual terms in summaries
-                                matching_summary_terms = [term for term in query_terms if len(term) >= 2 and term in summary_lower]
-                                if matching_summary_terms:
-                                    summary_boost = 0.05 * len(matching_summary_terms)
-                                    logger.info(f"DEBUG: {summary_field} term match boost: +{summary_boost:.4f}, new score: {boosted_score + summary_boost:.4f}")
-                                    boosted_score += summary_boost
-                                    break  # Only boost once for summaries
-                    
-                    # Prepare the result with the boosted score
-                    if content_type == 'course_description':
-                        result = {
-                            'type': 'course_description',
-                            'title': metadata.get('course_title', ''),
-                            'content': document,
-                            'relevance_score': round(boosted_score, 2),
-                            'course_code': metadata.get('course_code', ''),
-                            'course_summary': metadata.get('course_summary', ''),
-                            'course_concepts': metadata.get('course_concepts', '')
-                        }
-                    elif content_type == 'lecture_chunk':
-                        result = {
-                            'type': 'lecture_content',
-                            'title': metadata.get('lecture_title', ''),
-                            'content': document,
-                            'relevance_score': round(boosted_score, 2),
-                            'course_code': metadata.get('course_code', ''),
-                            'course_title': metadata.get('course_title', ''),
-                            'week_title': metadata.get('week_title', ''),
-                            'week_number': metadata.get('week_number', ''),
-                            'lecture_id': metadata.get('lecture_id', ''),
-                            'resource_type': metadata.get('resource_type', ''),
-                            'keywords': metadata.get('keywords', ''),
-                            'course_summary': metadata.get('course_summary', ''),
-                            'week_summary': metadata.get('week_summary', '')
-                        }
+                    if selector_results and selector_results.metadatas:
+                        logger.info(f"DEBUG: Got metadata from {len(selector_results.metadatas)} entries in {selector_collection_name}")
+                        # --- Log retrieved metadata --- BEGIN
+                        for i, metadata in enumerate(selector_results.metadatas):
+                            if not metadata: continue
+                            course_code = metadata.get('course_code', 'N/A')
+                            acr_json = metadata.get('acronyms_json', '{}')
+                            syn_json = metadata.get('synonyms_json', '{}')
+                            logger.info(f"DEBUG: Metadata for {course_code} [Entry {i}]: AcronymsJSON=\"{acr_json}\", SynonymsJSON=\"{syn_json}\"")
+                        # --- Log retrieved metadata --- END
+                        for metadata in selector_results.metadatas:
+                            if not metadata: continue
+                            # Parse Acronyms (using same logic as before)
+                            try:
+                                acronyms_json = metadata.get("acronyms_json", '{}')
+                                if acronyms_json and acronyms_json != '{}':
+                                    acronyms = json.loads(acronyms_json)
+                                    if isinstance(acronyms, dict):
+                                        for k, v in acronyms.items():
+                                            if k and v and k not in aggregated_acronyms:
+                                                aggregated_acronyms[k.lower()] = str(v).lower()
+                            except Exception as e:
+                                logger.warning(f"DEBUG: Error parsing acronyms_json from course-selector metadata {metadata.get('code', '?')}: {e}")
+
+                            # Parse Synonyms (using same logic as before)
+                            try:
+                                synonyms_json = metadata.get("synonyms_json", '{}')
+                                if synonyms_json and synonyms_json != '{}':
+                                    synonyms = json.loads(synonyms_json)
+                                    if isinstance(synonyms, dict):
+                                        for k, v_list in synonyms.items():
+                                            if k and isinstance(v_list, list):
+                                                lower_k = k.lower()
+                                                lower_v_list = [str(v).lower() for v in v_list if v]
+                                                if lower_k not in aggregated_synonyms:
+                                                    aggregated_synonyms[lower_k] = []
+                                                for syn in lower_v_list:
+                                                     if syn not in aggregated_synonyms[lower_k]:
+                                                         aggregated_synonyms[lower_k].append(syn)
+                            except Exception as e:
+                                logger.warning(f"DEBUG: Error parsing synonyms_json from course-selector metadata {metadata.get('code', '?')}: {e}")
                     else:
-                        continue  # Skip unknown content types
+                        logger.warning(f"DEBUG: No results or metadata found in {selector_collection_name} for IDs: {safe_course_ids}")
+
+                except Exception as e:
+                    logger.error(f"DEBUG: Failed to fetch metadata from {selector_collection_name}: {e}", exc_info=True)
+                    # Continue without metadata if selector fetch fails, fallback handled below
+
+            # Fallback or If NO course_ids were provided: Use initial search on course-content
+            if not aggregated_acronyms and not aggregated_synonyms and not safe_course_ids:
+                logger.info(f"DEBUG: No course filter or metadata found from {selector_collection_name}. Performing initial search on {self.collection_name} for metadata.")
+                try:
+                    initial_results = self.chroma.search_sync(
+                    collection_name=self.collection_name,
+                        query=normalized_query_lower,
+                        n_results=metadata_expansion_limit, # Fetch results for metadata
+                        where=filter_dict, # Will be empty if no course_ids
+                        include=['metadatas'] # Only need metadata
+                    )
+
+                    if initial_results and initial_results.metadatas:
+                        logger.info(f"DEBUG: Extracting metadata from {len(initial_results.metadatas)} initial {self.collection_name} results.")
+                        for metadata in initial_results.metadatas:
+                            if not metadata: continue
+                            # Parse Acronyms (same logic)
+                            try:
+                                acronyms_json = metadata.get("acronyms_json", '{}')
+                                if acronyms_json and acronyms_json != '{}':
+                                    acronyms = json.loads(acronyms_json)
+                                    if isinstance(acronyms, dict):
+                                        for k, v in acronyms.items():
+                                            if k and v and k not in aggregated_acronyms:
+                                                aggregated_acronyms[k.lower()] = str(v).lower()
+                            except Exception as e:
+                                logger.warning(f"DEBUG: Error parsing acronyms_json from course-content metadata: {e}")
+                            # Parse Synonyms (same logic)
+                            try:
+                                synonyms_json = metadata.get("synonyms_json", '{}')
+                                if synonyms_json and synonyms_json != '{}':
+                                    synonyms = json.loads(synonyms_json)
+                                    if isinstance(synonyms, dict):
+                                        for k, v_list in synonyms.items():
+                                            if k and isinstance(v_list, list):
+                                                lower_k = k.lower()
+                                                lower_v_list = [str(v).lower() for v in v_list if v]
+                                                if lower_k not in aggregated_synonyms:
+                                                    aggregated_synonyms[lower_k] = []
+                                                for syn in lower_v_list:
+                                                     if syn not in aggregated_synonyms[lower_k]:
+                                                         aggregated_synonyms[lower_k].append(syn)
+                            except Exception as e:
+                                logger.warning(f"DEBUG: Error parsing synonyms_json from course-content metadata: {e}")
+                except Exception as e:
+                    logger.error(f"DEBUG: Initial search on {self.collection_name} failed: {e}", exc_info=True)
+                    # Proceed without expansion if initial search fails
+
+            logger.info(f"DEBUG: Aggregated {len(aggregated_acronyms)} unique acronyms and {len(aggregated_synonyms)} synonym keys for expansion.")
+            if aggregated_acronyms or aggregated_synonyms:
+                logger.debug(f"DEBUG: Using Acronyms: {aggregated_acronyms}")
+                logger.debug(f"DEBUG: Using Synonyms: {aggregated_synonyms}")
+            
+            # --- Expansion Term Generation ---
+            expansion_terms: Set[str] = set()
+            query_tokens = normalized_query_lower.split()
+
+            for token in query_tokens:
+                # Acronym Key -> Full Form
+                if token in aggregated_acronyms:
+                    expansion_terms.add(aggregated_acronyms[token])
+                
+                # Synonym Key -> Synonyms List
+                if token in aggregated_synonyms:
+                    expansion_terms.update(aggregated_synonyms[token])
+
+                # Acronym Value (Full Form) -> Acronym Key
+                for acr_key, acr_val in aggregated_acronyms.items():
+                    if token == acr_val:
+                        expansion_terms.add(acr_key)
+
+                # Synonym Value -> Synonym Key
+                for syn_key, syn_list in aggregated_synonyms.items():
+                    if token in syn_list:
+                        expansion_terms.add(syn_key)
+
+            # Remove original query tokens from expansion terms to avoid redundancy
+            expansion_terms.difference_update(query_tokens)
+            logger.info(f"DEBUG: Found {len(expansion_terms)} potential expansion terms: {expansion_terms}")
+
+            # Initialize the all_search_results dictionary
+            all_search_results = {}
+            
+            # Perform the main search
+            main_results = self.chroma.search_sync(
+                collection_name=self.collection_name,
+                query=normalized_query_lower,
+                n_results=limit * 2,  # Get more results than needed to account for filtering
+                where=filter_dict,
+                include=['metadatas', 'documents', 'distances']
+            )
+            
+            if main_results and main_results.ids:
+                logger.info(f"DEBUG: Raw search returned {len(main_results.ids)} results")
+                for i, (result_id, metadata, document, distance) in enumerate(
+                    zip(main_results.ids, main_results.metadatas, main_results.documents, main_results.distances)
+                ):
+                    # Calculate a score that works for distances > 1.0
+                    # For distances > 1.0, use an exponential decay function
+                    if distance <= 1.0:
+                        score = 1.0 - distance
+                    else:
+                        # Use exp(-x) to map large distances to small positive scores
+                        # For large distances like 1.65, score ≈ 0.19
+                        score = math.exp(-distance)
                     
-                    # Create a unique key for deduplication
-                    chunk_key = f"{metadata.get('course_code', '')}__{metadata.get('lecture_id', '')}__{metadata.get('chunk_index', '')}"
-                    result['chunk_key'] = chunk_key
+                    # Log the first few results with more precision on the score
+                    if i < 5:
+                        logger.info(f"DEBUG: Result {i}: ID={result_id}, distance={distance}, score={score:.8f}, min_score={min_score}")
                     
-                    all_results.append(result)
+                    if result_id not in all_search_results:
+                        # Very low threshold to capture any remotely relevant results
+                        effective_min_score = 0.00001  # Extremely low threshold
+                        
+                        if score >= effective_min_score:
+                            all_search_results[result_id] = {
+                                'id': result_id,
+                                'metadata': metadata,
+                                'content': document,
+                                'relevance_score': score
+                            }
+                        elif i < 5:  # Only log the first few filtered results
+                            logger.info(f"DEBUG: Result {i} filtered out due to low score: {score:.8f} < {effective_min_score}")
+
+            # --- Final Ranking and Limiting ---
+            logger.info(f"DEBUG: Total results before final sorting: {len(all_search_results)}")
             
-            logger.info(f"DEBUG: Total results before deduplication: {len(all_results)}")
-            
-            # Deduplicate results by chunk_key and sort by relevance score
-            unique_results = {}
-            for result in all_results:
-                chunk_key = result.pop('chunk_key', None)  # Remove the key from the result dict
-                if chunk_key not in unique_results or result['relevance_score'] > unique_results[chunk_key]['relevance_score']:
-                    unique_results[chunk_key] = result
-            
-            # Sort by relevance score in descending order
+            # 8. Sort by relevance score in descending order
             sorted_results = sorted(
-                unique_results.values(), 
+                all_search_results.values(), 
                 key=lambda x: x['relevance_score'], 
                 reverse=True
             )
             
-            # Limit the number of results
+            # 9. Limit the number of results
             final_results = sorted_results[:limit]
             
-            logger.info(f"DEBUG: Final results: {len(final_results)} unique content chunks for query: '{query}'")
+            logger.info(f"DEBUG: Final results count: {len(final_results)} for original query: '{query}'")
             
-            if not final_results:
-                logger.warning("DEBUG: No results found for any expanded queries")
-                
-                # Try a broader search without filters as a fallback
-                broader_results = self.chroma.search_sync(
-                    collection_name=self.collection_name,
-                    query=normalized_query,
-                    n_results=5,  # Just get a few results
-                )
-                
-                if broader_results and broader_results.ids and len(broader_results.ids) > 0:
-                    logger.info(f"DEBUG: Broader search (no filters) found {len(broader_results.ids)} results")
-                    first_score = 1 - broader_results.distances[0] if broader_results.distances else 0
-                    logger.info(f"DEBUG: First result score: {first_score:.4f}")
-                    if broader_results.metadatas:
-                        logger.info(f"DEBUG: First result metadata: {broader_results.metadatas[0]}")
+            # Log first few results for inspection
+            if final_results:
+                 logger.info("DEBUG: Top 3 final results:")
+                 for i, res in enumerate(final_results[:3]):
+                     logger.info(f"DEBUG: Rank {i+1}: ID={res.get('id')}, Score={res.get('relevance_score'):.4f}, Type={res.get('metadata', {}).get('content_type')}, Title={res.get('metadata', {}).get('lecture_title', res.get('metadata', {}).get('course_title', 'N/A'))}")
             
             return {
-                "content_chunks": final_results,
+                "content_chunks": final_results, # Return the list of result dicts
                 "total_count": len(final_results),
-                "query": query,
+                "query": query, # Return original user query
                 "limit": limit
             }
             
         except Exception as e:
-            logger.error(f"Error searching courses: {str(e)}", exc_info=True)
+            logger.error(f"Error searching courses: {str(e)}", exc_info=True) # Log full traceback
+            # Return empty structure on error
             return {"content_chunks": [], "total_count": 0, "query": query, "limit": limit}
-
-    def _extract_content_chunks_from_course(self, course_data: Dict[str, Any], query: str) -> List[Dict[str, Any]]:
-        """
-        Extract and score content chunks from a course document
-        
-        This handles backward compatibility with the old storage format where
-        entire course documents were stored instead of individual chunks.
-        
-        Args:
-            course_data: The course data dictionary
-            query: The search query to score chunks against
-            
-        Returns:
-            List of extracted content chunks
-        """
-        try:
-            logger.info(f"Extracting chunks from course data for query: '{query}'")
-            
-            # Extract content based on query relevance
-            content_chunks = []
-            query_terms = query.lower().split()
-            
-            # Extract lecture content from weeks
-            if "weeks" in course_data and course_data["weeks"]:
-                for week in course_data["weeks"]:
-                    week_title = week.get("title", "")
-                    week_number = week.get("number", 0)
-                    
-                    # Extract lectures from week
-                    if "lectures" in week and week["lectures"]:
-                        for lecture in week["lectures"]:
-                            lecture_title = lecture.get("title", "")
-                            
-                            # Score the lecture title for relevance
-                            title_score = 0
-                            for term in query_terms:
-                                if term in lecture_title.lower():
-                                    title_score += 0.1
-                            
-                            # Get lecture content
-                            lecture_content = lecture.get("content", "")
-                            if not lecture_content:
-                                continue
-                            
-                            # Find paragraphs containing query terms
-                            paragraphs = lecture_content.split("\n\n")
-                            for paragraph in paragraphs:
-                                if not paragraph.strip():
-                                    continue
-                                    
-                                # Calculate paragraph score
-                                paragraph_score = 0
-                                paragraph_lower = paragraph.lower()
-                                for term in query_terms:
-                                    if term in paragraph_lower:
-                                        paragraph_score += 0.05
-                                        
-                                # Skip paragraphs with no relevance
-                                if paragraph_score == 0 and title_score == 0:
-                                    continue
-                                
-                                # Create content chunk
-                                chunk = {
-                                    "type": "lecture_paragraph",
-                                    "title": lecture_title,
-                                    "content": paragraph,
-                                    "week_number": week_number,
-                                    "relevance_score": title_score + paragraph_score
-                                }
-                                content_chunks.append(chunk)
-            
-            # If no lecture content found, try course description
-            if not content_chunks and "description" in course_data:
-                description = course_data["description"]
-                description_score = 0
-                
-                for term in query_terms:
-                    if term in description.lower():
-                        description_score += 0.05
-                        
-                if description_score > 0:
-                    chunk = {
-                        "type": "course_description",
-                        "title": course_data.get("title", ""),
-                        "content": description,
-                        "relevance_score": description_score
-                    }
-                    content_chunks.append(chunk)
-            
-            # Add course summary if available
-            if "LLM_Summary" in course_data and content_chunks:
-                summary = course_data["LLM_Summary"].get("summary", "")
-                if summary:
-                    chunk = {
-                        "type": "course_summary",
-                        "title": f"Summary: {course_data.get('title', '')}",
-                        "content": summary,
-                        "relevance_score": 0.4  # Give summary a decent score
-                    }
-                    content_chunks.append(chunk)
-            
-            # Sort by relevance
-            content_chunks.sort(key=lambda x: x.get("relevance_score", 0), reverse=True)
-            
-            return content_chunks
-            
-        except Exception as e:
-            logger.error(f"Error extracting content chunks: {str(e)}")
-            import traceback
-            logger.error(traceback.format_exc())
-            return []
 
     def _transform_course_data(self, course_data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -1360,19 +1208,29 @@ class CourseContentService:
         self, 
         query: str, 
         limit: int = 10, 
-        course_ids: List[str] = None,
+        course_ids: Optional[List[str]] = None,
         min_score: float = 0.01,
         exact_match_boost: float = 0.1,
         phrase_match_boost: float = 0.15,
-        description_threshold: float = 0.05
+        description_threshold: float = 0.05,
+        metadata_expansion_limit: int = 20,
+        expansion_query_limit: int = 3
     ) -> List[Dict[str, Any]]:
-        """Async wrapper for search_courses_sync with full parameter support"""
-        return self.search_courses_sync(
+        """Async wrapper for search_courses_sync with query expansion"""
+        # The sync function now returns a dictionary, not just the list of chunks.
+        # Adjust the return type or how the API layer handles this.
+        # For now, let's assume the API layer expects the dictionary.
+        result_dict = self.search_courses_sync(
             query=query, 
             limit=limit, 
             course_ids=course_ids,
             min_score=min_score,
             exact_match_boost=exact_match_boost,
             phrase_match_boost=phrase_match_boost,
-            description_threshold=description_threshold
+            description_threshold=description_threshold,
+            metadata_expansion_limit=metadata_expansion_limit,
+            expansion_query_limit=expansion_query_limit
         ) 
+        # If the API absolutely needs just the list: return result_dict.get("content_chunks", [])
+        # But it's better practice to return the full dictionary with context.
+        return result_dict # Return the dictionary 

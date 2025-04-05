@@ -18,7 +18,7 @@ class CourseMetadata(BaseModel):
 
 class WeekOverview(BaseModel):
     """Week overview model"""
-    week_number: int = Field(..., ge=1, le=15, description="Week number")
+    week_number: int = Field(..., ge=1, le=100, description="Week number")
     title: str = Field(..., min_length=2, max_length=200, description="Week title")
     description: str = Field(..., min_length=10, description="Week description")
     topics: List[str] = Field(default_factory=list, description="Topics covered in this week")
@@ -35,6 +35,8 @@ class CourseInfo(BaseModel):
     credits: Optional[int] = Field(None, description="Number of credits")
     summary: Optional[str] = Field(None, description="LLM-generated summary of the course")
     concepts: Optional[List[str]] = Field(default_factory=list, description="Key concepts covered in the course")
+    acronyms: Optional[Dict[str, str]] = Field(None, description="Dictionary of acronyms and their full forms")
+    synonyms: Optional[Dict[str, List[str]]] = Field(None, description="Dictionary of key terms and their synonyms")
 
 class CourseTopic(BaseModel):
     """Course topic model"""

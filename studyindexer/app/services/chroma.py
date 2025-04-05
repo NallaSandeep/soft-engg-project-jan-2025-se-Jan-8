@@ -136,8 +136,7 @@ class ChromaService:
         n_results: int = 10,
         where: Optional[Dict[str, Any]] = None,
         query_embedding: Optional[List[float]] = None,
-        include_metadata: bool = True,
-        include_values: bool = False
+        include: Optional[List[str]] = None
     ) -> ChromadbResult:
         """Synchronous wrapper for search"""
         try:
@@ -150,7 +149,7 @@ class ChromaService:
                 
             collection = self.get_or_create_collection_sync(collection_name)
             
-            # Basic query parameters
+            # Prepare query parameters
             query_params = {
                 "n_results": n_results
             }
@@ -158,8 +157,15 @@ class ChromaService:
             # Add where filter if provided
             if where is not None:
                 query_params["where"] = where
+
+            # Add include parameter if provided
+            if include is not None:
+                query_params["include"] = include
+            else:
+                # Default include values if not specified
+                query_params["include"] = ["metadatas", "documents", "distances"]
             
-            # Determine which query method to use - prefer embeddings if available
+            # Determine which query method to use
             if query_embedding is not None:
                 logger.info("Using embedding-based search")
                 # Use embedding search
@@ -177,16 +183,49 @@ class ChromaService:
                 # Execute query directly
                 logger.info(f"Executing search with parameters: {query_params}")
                 result = collection.query(**query_params)
-                logger.info(f"Search returned {len(result['ids'][0])} results")
+                logger.info(f"Search returned {len(result.get('ids',[[]])[0]) if result.get('ids') else 0} results")
             except Exception as e:
                 # Provide detailed error for debugging
                 raise Exception(f"ChromaDB query failed: {str(e)} with params: {query_params}")
                 
+            # Check if result is None or missing expected keys
+            if result is None or not isinstance(result, dict):
+                logger.error("ChromaDB query returned None or unexpected type")
+                # Return an empty result to prevent downstream errors
+                return ChromadbResult(ids=[], documents=[], metadatas=[], distances=[])
+
+            # Process results, handling potential missing keys or None values gracefully
+            # Always expect 'ids' to be present in a valid non-error response
+            ids_list = result.get("ids")
+            ids = ids_list[0] if ids_list and isinstance(ids_list, list) and len(ids_list) > 0 else []
+            num_results = len(ids)
+
+            # Safely get other fields based on potential inclusion
+            distances_list = result.get("distances")
+            distances = distances_list[0] if distances_list and isinstance(distances_list, list) and len(distances_list) > 0 else ([0.0] * num_results)
+            
+            metadatas_list = result.get("metadatas")
+            metadatas = metadatas_list[0] if metadatas_list and isinstance(metadatas_list, list) and len(metadatas_list) > 0 else ([{}] * num_results)
+            
+            documents_list = result.get("documents")
+            documents = documents_list[0] if documents_list and isinstance(documents_list, list) and len(documents_list) > 0 else ([""] * num_results)
+            
+            embeddings_list = result.get("embeddings")
+            embeddings = embeddings_list[0] if embeddings_list and isinstance(embeddings_list, list) and len(embeddings_list) > 0 else None
+
+            # Ensure all mandatory lists have the same length as ids, providing defaults if necessary
+            distances = distances if len(distances) == num_results else ([0.0] * num_results)
+            metadatas = metadatas if len(metadatas) == num_results else ([{}] * num_results)
+            documents = documents if len(documents) == num_results else ([""] * num_results)
+            # Embeddings are optional
+            embeddings = embeddings if embeddings and len(embeddings) == num_results else None
+
             return ChromadbResult(
-                ids=result["ids"][0],
-                distances=result["distances"][0],
-                metadatas=result["metadatas"][0],
-                documents=result["documents"][0] if "documents" in result else []
+                ids=ids,
+                distances=distances,
+                metadatas=metadatas,
+                documents=documents,
+                embeddings=embeddings
             )
         except Exception as e:
             logger.error(f"Error in search_sync: {str(e)}")
@@ -196,8 +235,7 @@ class ChromaService:
         self,
         collection_name: str,
         ids: List[str],
-        include_metadata: bool = True,
-        include_values: bool = False
+        include: Optional[List[str]] = None
     ) -> ChromadbResult:
         """Synchronous wrapper for get"""
         try:
@@ -206,20 +244,42 @@ class ChromaService:
                 
             collection = self.get_or_create_collection_sync(collection_name)
             
-            # Get documents directly
-            result = collection.get(ids=ids)
-                
-            # Process the result
-            result_ids = result["ids"] if "ids" in result else []
-            documents = result["documents"] if "documents" in result else []
-            metadatas = result["metadatas"] if "metadatas" in result else []
-            embeddings = result["embeddings"] if "embeddings" in result else None
+            # Determine default include if not provided
+            if include is None:
+                include = ["metadatas", "documents"]  # Default to metadatas and documents
             
+            # Get documents directly using the include parameter
+            result = collection.get(ids=ids, include=include)
+                
+            # Process the result safely, handling potentially missing keys
+            if result is None or not isinstance(result, dict):
+                logger.error("ChromaDB get returned None or unexpected type")
+                return ChromadbResult(ids=[], documents=[], metadatas=[], distances=[])
+
+            result_ids = result.get("ids")
+            ids_list = result_ids if result_ids and isinstance(result_ids, list) else []
+            num_results = len(ids_list)
+            
+            # Safely get other fields based on what was included
+            metadatas_list = result.get("metadatas")
+            metadatas = metadatas_list if metadatas_list and isinstance(metadatas_list, list) else ([{}] * num_results)
+            
+            documents_list = result.get("documents")
+            documents = documents_list if documents_list and isinstance(documents_list, list) else ([""] * num_results)
+            
+            embeddings_list = result.get("embeddings")
+            embeddings = embeddings_list[0] if embeddings_list and isinstance(embeddings_list, list) and len(embeddings_list) > 0 and embeddings_list[0] is not None else None # get can return [None]
+            
+            # Ensure lists have the correct length
+            metadatas = metadatas if len(metadatas) == num_results else ([{}] * num_results)
+            documents = documents if len(documents) == num_results else ([""] * num_results)
+            embeddings = embeddings if embeddings and len(embeddings) == num_results else None
+
             return ChromadbResult(
-                ids=result_ids,
+                ids=ids_list,
                 documents=documents,
                 metadatas=metadatas,
-                distances=[0.0] * len(result_ids),  # Placeholder for distances
+                distances=[0.0] * num_results,  # get doesn't return distances
                 embeddings=embeddings
             )
         except Exception as e:
@@ -320,8 +380,7 @@ class ChromaService:
         n_results: int = 10,
         where: Optional[Dict[str, Any]] = None,
         query_embedding: Optional[List[float]] = None,
-        include_metadata: bool = True,
-        include_values: bool = False
+        include: Optional[List[str]] = None
     ) -> ChromadbResult:
         """Search for documents in a collection"""
         if not self._initialized or self.client is None:
@@ -337,6 +396,13 @@ class ChromaService:
         # Add where filter if provided
         if where is not None:
             query_params["where"] = where
+
+        # Add include parameter if provided
+        if include is not None:
+            query_params["include"] = include
+        else:
+            # Default include values if not specified
+            query_params["include"] = ["metadatas", "documents", "distances"]
         
         # Determine which query method to use - prefer embeddings if available
         if query_embedding is not None:
@@ -353,6 +419,7 @@ class ChromaService:
             # Run in a thread pool
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 loop = asyncio.get_event_loop()
+                logger.debug(f"Executing async ChromaDB query with params: {query_params}")
                 result = await loop.run_in_executor(
                     executor,
                     lambda: collection.query(**query_params)
@@ -360,48 +427,43 @@ class ChromaService:
         except Exception as e:
             # Provide detailed error for debugging
             raise Exception(f"ChromaDB query failed: {str(e)} with params: {query_params}")
+
+        # Check if result is None or missing expected keys
+        if result is None or not isinstance(result, dict):
+            logger.error("Async ChromaDB query returned None or unexpected type")
+            # Return an empty result to prevent downstream errors
+            return ChromadbResult(ids=[], documents=[], metadatas=[], distances=[])
             
-        return ChromadbResult(
-            ids=result["ids"][0],
-            distances=result["distances"][0],
-            metadatas=result["metadatas"][0],
-            documents=result["documents"][0] if "documents" in result else []
-        )
-    
-    async def get(
-        self,
-        collection_name: str,
-        ids: List[str],
-        include_metadata: bool = True,
-        include_values: bool = False
-    ) -> ChromadbResult:
-        """Get documents from a collection by IDs"""
-        if not self._initialized or self.client is None:
-            raise ValueError("ChromaDB client not initialized")
-            
-        collection = await self.get_or_create_collection(collection_name)
+        # Process results, handling potential missing keys or None values gracefully
+        ids_list = result.get("ids")
+        ids = ids_list[0] if ids_list and isinstance(ids_list, list) and len(ids_list) > 0 else []
+        num_results = len(ids)
+
+        # Safely get other fields based on potential inclusion
+        distances_list = result.get("distances")
+        distances = distances_list[0] if distances_list and isinstance(distances_list, list) and len(distances_list) > 0 else ([0.0] * num_results)
         
-        # Run in a thread pool
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            loop = asyncio.get_event_loop()
-            result = await loop.run_in_executor(
-                executor,
-                lambda: collection.get(
-                    ids=ids
-                )
-            )
-            
-        # Process the result
-        result_ids = result["ids"] if "ids" in result else []
-        documents = result["documents"] if "documents" in result else []
-        metadatas = result["metadatas"] if "metadatas" in result else []
-        embeddings = result["embeddings"] if "embeddings" in result else None
+        metadatas_list = result.get("metadatas")
+        metadatas = metadatas_list[0] if metadatas_list and isinstance(metadatas_list, list) and len(metadatas_list) > 0 else ([{}] * num_results)
         
+        documents_list = result.get("documents")
+        documents = documents_list[0] if documents_list and isinstance(documents_list, list) and len(documents_list) > 0 else ([""] * num_results)
+        
+        embeddings_list = result.get("embeddings")
+        embeddings = embeddings_list[0] if embeddings_list and isinstance(embeddings_list, list) and len(embeddings_list) > 0 else None
+
+        # Ensure all mandatory lists have the same length as ids, providing defaults if necessary
+        distances = distances if len(distances) == num_results else ([0.0] * num_results)
+        metadatas = metadatas if len(metadatas) == num_results else ([{}] * num_results)
+        documents = documents if len(documents) == num_results else ([""] * num_results)
+        # Embeddings are optional
+        embeddings = embeddings if embeddings and len(embeddings) == num_results else None
+
         return ChromadbResult(
-            ids=result_ids,
-            documents=documents,
+            ids=ids,
+            distances=distances,
             metadatas=metadatas,
-            distances=[0.0] * len(result_ids),  # Placeholder for distances
+            documents=documents,
             embeddings=embeddings
         )
     

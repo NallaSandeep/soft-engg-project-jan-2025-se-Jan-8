@@ -151,7 +151,7 @@ def run_phase1_create_users(db_session):
         db_session.add(student)
         db_session.flush()
         student_ids.append(student.id)
-        log(f"Created student: {username} (ID: {student.id})")
+        log(f"Created student: {username} (ID: {student.id})", level="DEBUG")
     
     # Store admin_id before committing
     admin_id = admin.id
@@ -239,7 +239,7 @@ def run_phase3_create_enrollments(db_session, student_ids, courses):
                 enrolled_at=datetime.now()
             )
             db_session.add(enrollment)
-            log(f"Enrolled student {student_id} in course {course.code}")
+            log(f"Enrolled student {student_id} in course {course.code}", level="DEBUG")
     
     # Create personal resources for all students in their enrolled courses
     for course in courses:
@@ -282,7 +282,7 @@ def run_phase3_create_enrollments(db_session, student_ids, courses):
                     file_size=250  # Approximate size
                 )
                 db_session.add(resource_file)
-                log(f"Created personal resource for student {student_id} in course {course.code} for lecture {lecture.lecture_number}")
+                log(f"Created personal resource for student {student_id} in course {course.code} for lecture {lecture.lecture_number}", level="DEBUG")
     
     db_session.commit()
 
@@ -312,7 +312,7 @@ def sync_with_studyindexer(courses):
         course_selector_success = 0
         
         for course in courses:
-            log(f"Syncing course {course.code} with StudyIndexer...")
+            log(f"Syncing course {course.code} with StudyIndexer...", level="DEBUG")
             
             # Get course weeks
             weeks = db.session.query(Week).filter_by(course_id=course.id).all()
@@ -388,12 +388,18 @@ def sync_with_studyindexer(courses):
                     "instructor_id": course.created_by_id,
                     "credits": getattr(course, 'credits', 3),  # Default to 3 if not present
                     "department": getattr(course, 'department', "Computer Science"),
-                    "LLM_Summary": llm_summary
+                    "LLM_Summary": llm_summary,
+                    "acronyms": course.acronyms or {}, # Add acronyms
+                    "synonyms": course.synonyms or {}  # Add synonyms
                 },
                 "weeks": week_data,
                 "lectures": lectures_data
             }
             
+            # --- Log Payload --- BEGIN
+            log(f"DEBUG: Payload for {course.code} - Acronyms: {json.dumps(course_data['course']['acronyms'])}, Synonyms: {json.dumps(course_data['course']['synonyms'])}", "DEBUG")
+            # --- Log Payload --- END
+
             # Add assignments if they exist
             assignment_data = []
             for week in weeks:
@@ -426,37 +432,47 @@ def sync_with_studyindexer(courses):
                 
             # 1. Sync with StudyIndexer CourseContent API
             try:
+                log(f"Calling StudyIndexer CourseContent API for {course.code}...", "DEBUG")
                 content_response = requests.post(
                     COURSE_CONTENT_URL, 
                     json=course_data,
-                    headers={"Content-Type": "application/json"}
+                    headers={"Content-Type": "application/json"},
+                    timeout=10  # Add 10 second timeout
                 )
                 
                 if content_response.status_code == 200:
-                    log(f"Successfully synced course {course.code} with CourseContent API")
+                    log(f"Successfully synced course {course.code} with CourseContent API", level="DEBUG")
                     course_content_success += 1
                 else:
                     log(f"Failed to sync course {course.code} with CourseContent API. Status: {content_response.status_code}", "ERROR")
                     log(f"Response: {content_response.text}", "ERROR")
                     
+            except requests.exceptions.Timeout:
+                log(f"Timeout connecting to StudyIndexer CourseContent API for course {course.code}", "ERROR")
+                log("Please ensure StudyIndexer is running before running init_db.py", "ERROR")
             except RequestException as e:
                 log(f"Error connecting to StudyIndexer CourseContent API for course {course.code}: {str(e)}", "ERROR")
                 
             # 2. Sync with StudyIndexer CourseSelector API
             try:
+                log(f"Calling StudyIndexer CourseSelector API for {course.code}...", "DEBUG")
                 selector_response = requests.post(
                     COURSE_SELECTOR_URL, 
                     json=course_data,
-                    headers={"Content-Type": "application/json"}
+                    headers={"Content-Type": "application/json"},
+                    timeout=10  # Add 10 second timeout
                 )
                 
                 if selector_response.status_code == 200:
-                    log(f"Successfully synced course {course.code} with CourseSelector API")
+                    log(f"Successfully synced course {course.code} with CourseSelector API", level="DEBUG")
                     course_selector_success += 1
                 else:
                     log(f"Failed to sync course {course.code} with CourseSelector API. Status: {selector_response.status_code}", "ERROR")
                     log(f"Response: {selector_response.text}", "ERROR")
                     
+            except requests.exceptions.Timeout:
+                log(f"Timeout connecting to StudyIndexer CourseSelector API for course {course.code}", "ERROR")
+                log("Please ensure StudyIndexer is running before running init_db.py", "ERROR")
             except RequestException as e:
                 log(f"Error connecting to StudyIndexer CourseSelector API for course {course.code}: {str(e)}", "ERROR")
                 

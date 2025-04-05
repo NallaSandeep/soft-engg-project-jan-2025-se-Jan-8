@@ -53,6 +53,8 @@ class Course(db.Model):
     max_students = db.Column(db.Integer)
     enrollment_type = db.Column(db.String(20), default='open')  # open, closed, invite_only
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    acronyms = db.Column(db.JSON)
+    synonyms = db.Column(db.JSON)
 
     # Relationships
     created_by = db.relationship('User', 

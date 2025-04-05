@@ -173,6 +173,14 @@ class CourseSelectorService:
             safe_metadata["concepts_covered"] = ""
             logger.warning(f"No concepts found for course {code}")
             
+        # Extract and serialize acronyms and synonyms
+        acronyms = course_info.get("acronyms", {})
+        synonyms = course_info.get("synonyms", {})
+        
+        safe_metadata["acronyms_json"] = json.dumps(acronyms if acronyms else {})
+        safe_metadata["synonyms_json"] = json.dumps(synonyms if synonyms else {})
+        logger.info(f"Added acronyms and synonyms JSON to metadata for course {code}")
+
         # Add timestamp
         safe_metadata["added_on"] = datetime.utcnow().isoformat()
         

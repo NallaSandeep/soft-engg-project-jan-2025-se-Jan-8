@@ -27,6 +27,7 @@ import os
 import time
 import json
 import glob
+import logging
 
 from ..models.course_selector import CourseContent, CourseInfo, CourseTopic, WeekOverview
 from ..models.base import BaseResponse, BaseSearchQuery, BaseSearchResponse
@@ -35,6 +36,9 @@ from ..services.chroma import ChromaService
 from ..services.course_selector import CourseSelectorService
 from ..services.personal_resource import PersonalResourceService
 from ..services.faq import FAQService
+
+# Set up standard logger
+logger = logging.getLogger(__name__)
 
 # Check if in development mode
 IS_DEV_MODE = os.environ.get('ENVIRONMENT', 'development').lower() == 'development'
@@ -54,6 +58,13 @@ async def add_course_content(course_data: dict):
         # If the course data is not in the expected format, wrap it
         if "course" not in course_data:
             course_data = {"course": course_data}
+        
+        # --- Log Received Payload --- BEGIN
+        received_acronyms = course_data.get('course', {}).get('acronyms', 'MISSING')
+        received_synonyms = course_data.get('course', {}).get('synonyms', 'MISSING')
+        course_code = course_data.get('course', {}).get('code', 'UNKNOWN')
+        logger.debug(f"DEBUG: API /course-content received for {course_code} - Acronyms: {json.dumps(received_acronyms)}, Synonyms: {json.dumps(received_synonyms)}")
+        # --- Log Received Payload --- END
         
         # For weeks, ensure they have the required fields
         if "weeks" in course_data:
@@ -134,7 +145,7 @@ async def search_courses(
     - description_threshold: Controls when to include course descriptions
     """
     try:
-        results = await course_content_service.search_courses(
+        raw_results = await course_content_service.search_courses(
             query=query, 
             limit=limit,
             course_ids=course_ids,
@@ -144,16 +155,79 @@ async def search_courses(
             description_threshold=description_threshold
         )
         
+        # Extract content chunks
+        content_chunks = raw_results.get("content_chunks", [])
+        
+        # Group results by course
+        courses_map = {}
+        for chunk in content_chunks:
+            metadata = chunk.get("metadata", {})
+            course_id = metadata.get("course_id", "unknown")
+            course_code = metadata.get("course_code", "unknown")
+            course_title = metadata.get("course_title", "Unknown Course")
+            
+            # Create source_course if not exists
+            if course_id not in courses_map:
+                courses_map[course_id] = {
+                    "source_course": {
+                        "code": course_code,
+                        "title": course_title,
+                        "match_score": chunk.get("relevance_score", 0)
+                    },
+                    "content_chunks": [],
+                    "score": chunk.get("relevance_score", 0)
+                }
+            
+            # Determine chunk type and extract relevant info
+            content_type = metadata.get("content_type", "unknown")
+            
+            if content_type == "lecture_chunk":
+                chunk_data = {
+                    "type": "lecture",
+                    "title": metadata.get("lecture_title", ""),
+                    "description": metadata.get("description", ""),
+                    "content": chunk.get("content", ""),
+                    "week_number": metadata.get("week_number", 0)
+                }
+            elif content_type == "course_description":
+                chunk_data = {
+                    "type": "course",
+                    "title": course_title,
+                    "description": metadata.get("description", ""),
+                    "content": chunk.get("content", "")
+                }
+            else:
+                # Generic chunk type
+                chunk_data = {
+                    "type": content_type,
+                    "title": metadata.get("title", ""),
+                    "description": metadata.get("description", ""),
+                    "content": chunk.get("content", "")
+                }
+            
+            # Add to course's content chunks
+            courses_map[course_id]["content_chunks"].append(chunk_data)
+            
+            # Update score if higher
+            if chunk.get("relevance_score", 0) > courses_map[course_id]["score"]:
+                courses_map[course_id]["score"] = chunk.get("relevance_score", 0)
+                courses_map[course_id]["source_course"]["match_score"] = chunk.get("relevance_score", 0)
+        
+        # Convert to list and sort by score
+        formatted_results = list(courses_map.values())
+        formatted_results.sort(key=lambda x: x["score"], reverse=True)
+        
         return BaseResponse(
             success=True,
             data={
-                "content_chunks": results,
-                "total_count": len(results),
+                "content_chunks": formatted_results,
+                "total_count": len(formatted_results),
                 "query": query,
                 "limit": limit
             }
         )
     except Exception as e:
+        logger.error(f"Error searching course content: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error searching course content: {str(e)}"

@@ -192,12 +192,12 @@ def process_weeks(db_session, course, data):
         # If LLM_Summary exists in the JSON data, add it to the week object
         if "LLM_Summary" in w_data:
             week.LLM_Summary = w_data["LLM_Summary"]
-            log(f"Added LLM_Summary to week {week.number}")
+            log(f"Added LLM_Summary to week {week.number}", level="DEBUG")
 
         db_session.add(week)
         db_session.flush()  # This assigns a unique DB ID
         
-        log(f"Created week {week.number}: {week.title} (DB ID: {week.id})")
+        log(f"Created week {week.number}: {week.title} (DB ID: {week.id})", level="DEBUG")
         weeks.append(week)
         
         # Add to map for later reference
@@ -277,14 +277,14 @@ def process_weeks(db_session, course, data):
             # Add keywords if present in the lecture data
             if "keywords" in l_data:
                 lecture.keywords = l_data["keywords"]
-                log(f"Added keywords to lecture {lecture.lecture_number}")
+                log(f"Added keywords to lecture {lecture.lecture_number}", level="DEBUG")
             else:
                 # Default keywords if none provided
                 lecture.keywords = [course.code, "lecture", week.title.split(':')[0] if ':' in week.title else week.title]
-                log(f"Added default keywords to lecture {lecture.lecture_number}")
+                log(f"Added default keywords to lecture {lecture.lecture_number}", level="DEBUG")
 
             db_session.add(lecture)
-            log(f"Created lecture {lecture.lecture_number}: {lecture.title} for week {week.number}")
+            log(f"Created lecture {lecture.lecture_number}: {lecture.title} for week {week.number}", level="DEBUG")
             
     db_session.commit()
     log(f"Processed {len(weeks)} weeks and {len(lectures_data)} lectures for course {course.code}")
@@ -370,7 +370,7 @@ def create_question_bank(db, course, data, week_map, created_by_id=None):
         db.add(question)
         db.flush()  # Get the ID
         
-        log(f"  Created question {question.id}: {title[:30]}...")
+        log(f"  Created question {question.id}: {title[:30]}...", level="DEBUG")
         
         # Store with the question_id from JSON as the key for lookup
         if question_id:
@@ -413,7 +413,7 @@ def create_assignments_from_json(db, course, data, question_map, week_map):
                 log(f"  Assignment {assignment_id} already exists, skipping")
                 assignments.append(existing)
                 continue
-        
+
         # Get required fields
         title = a_data.get("title")
         json_week_id = a_data.get("week_id")
@@ -421,7 +421,7 @@ def create_assignments_from_json(db, course, data, question_map, week_map):
         if not title or not json_week_id:
             log(f"  Missing required fields for assignment: {a_data}", "ERROR")
             continue
-        
+
         # Get week using our week map
         week = None
         if json_week_id in week_map:
@@ -434,16 +434,16 @@ def create_assignments_from_json(db, course, data, question_map, week_map):
         if not week:
             log(f"  Week {json_week_id} not found for assignment {title}", "ERROR")
             continue
-        
+
         # Get other fields
         description = a_data.get("description", "")
         assignment_type = a_data.get("type", "practice")  # Default to practice
         start_date = parse_date(a_data.get("start_date"))
         due_date = parse_date(a_data.get("due_date"))
         is_published = a_data.get("is_published", True)
-        
-        log(f"  Creating assignment: {title} (Week {week.number}, Type: {assignment_type})")
-        
+
+        log(f"  Creating assignment: {title} (Week {week.number}, Type: {assignment_type})", level="DEBUG")
+
         # Create assignment - DON'T use the assignment_id from JSON
         assignment = Assignment(
             title=title,
@@ -454,13 +454,13 @@ def create_assignments_from_json(db, course, data, question_map, week_map):
             due_date=due_date,
             is_published=is_published
         )
-        
+
         db.add(assignment)
         db.flush()  # Get the ID
-        
+
         # Link questions to assignment
         question_ids = a_data.get("question_ids", [])
-        
+
         # If no question_ids specified, use questions from this week
         if not question_ids and week.id in week_questions:
             available_questions = week_questions[week.id]
@@ -473,13 +473,23 @@ def create_assignments_from_json(db, course, data, question_map, week_map):
             log(f"  No question_ids specified, using {num_questions} questions from week {week.number}")
             
             for order, question in enumerate(question_objects, 1):
+                # Check if this question is already linked to this assignment
+                existing_link = db.query(AssignmentQuestion).filter_by(
+                    assignment_id=assignment.id,
+                    question_id=question.id
+                ).first()
+                
+                if existing_link:
+                    log(f"    Question {question.id} is already linked to assignment {assignment.title}, skipping duplicate.", level="WARNING")
+                    continue
+                    
                 assignment_question = AssignmentQuestion(
                     assignment_id=assignment.id,
                     question_id=question.id,
                     order=order
                 )
                 db.add(assignment_question)
-                log(f"    Added question {question.id} to assignment {assignment.title}")
+                log(f"    Added question {question.id} to assignment {assignment.title}", level="DEBUG")
         elif question_ids:
             log(f"  Adding {len(question_ids)} questions to assignment {assignment.title}")
             
@@ -494,6 +504,16 @@ def create_assignments_from_json(db, course, data, question_map, week_map):
                     continue
                 
                 # Create assignment question link
+                # Check if this question is already linked to this assignment
+                existing_link = db.query(AssignmentQuestion).filter_by(
+                    assignment_id=assignment.id,
+                    question_id=question.id
+                ).first()
+                
+                if existing_link:
+                    log(f"    Question {question.id} is already linked to assignment {assignment.title}, skipping duplicate.", level="WARNING")
+                    continue
+                    
                 assignment_question = AssignmentQuestion(
                     assignment_id=assignment.id,
                     question_id=question.id,
@@ -501,12 +521,12 @@ def create_assignments_from_json(db, course, data, question_map, week_map):
                 )
                 
                 db.add(assignment_question)
-                log(f"    Added question {question.id} to assignment {assignment.title}")
+                log(f"    Added question {question.id} to assignment {assignment.title}", level="DEBUG")
         else:
             log(f"  WARNING: No questions added to assignment {assignment.title} - no question_ids and no questions for week {week.number}")
         
         assignments.append(assignment)
-        log(f"  Created assignment {assignment.id}: {assignment.title}")
+        log(f"  Created assignment {assignment.id}: {assignment.title}", level="DEBUG")
     
     db.commit()
     log(f"Created {len(assignments)} assignments for course {course.code}")
@@ -547,7 +567,7 @@ def create_sample_enrollment(db_session, course):
         )
         db_session.add(enrollment)
         db_session.commit()
-        log(f"Enrolled student {student.username} in course {course.code}")
+        log(f"Enrolled student {student.username} in course {course.code}", level="DEBUG")
         return True
     except Exception as e:
         log(f"Error creating sample enrollment: {str(e)}", "ERROR")
@@ -581,18 +601,36 @@ def process_single_file(db_session, json_file, admin):
         if code in existing_courses:
             course = existing_courses[code]
             log(f"Course {code} already exists", "INFO")
-            
-            # For existing courses, check if we should update content
             log(f"Updating content for existing course {code}")
+            # Update relevant fields from JSON, including acronyms/synonyms
+            course.name = course_info.get("title", course.name)
+            course.description = course_info.get("description", course.description)
+            course.acronyms = course_info.get("acronyms", course.acronyms or {})
+            course.synonyms = course_info.get("synonyms", course.synonyms or {})
+            log(f"  Updating existing course {code} - Acronyms: {len(course.acronyms)}, Synonyms: {len(course.synonyms)}", "DEBUG")
+            # Update other potential fields like instructor_id, credits, etc. if needed
+            # course.instructor_id = course_info.get("instructor_id", course.instructor_id)
+            # course.credits = course_info.get("credits", course.credits)
+            log(f"  Course model {code} (before commit) - Acronyms: {json.dumps(course.acronyms)}, Synonyms: {json.dumps(course.synonyms)}", "DEBUG") # Log before commit
+            db_session.commit() # Commit updates for existing course
         else:
             # Create new course
             title = course_info.get("title", "")
             description = course_info.get("description", "")
+            # Get LLM_Summary and extract acronyms/synonyms from there
+            llm_summary = course_info.get("LLM_Summary", {})
+            acronyms = llm_summary.get("acronyms", {})
+            synonyms = llm_summary.get("synonyms", {})
+            
+            # Log what we extracted for debugging
+            log(f"  Extracting from LLM_Summary - Found acronyms: {len(acronyms) if isinstance(acronyms, dict) else 0}, synonyms: {len(synonyms) if isinstance(synonyms, dict) else 0}", "DEBUG")
             
             course = Course(
                 code=code,
                 name=title,
                 description=description,
+                acronyms=acronyms,  # Add acronyms
+                synonyms=synonyms, # Add synonyms
                 created_by_id=admin.id,
                 is_active=True,
                 enrollment_type='open',
@@ -600,6 +638,8 @@ def process_single_file(db_session, json_file, admin):
                 start_date=datetime.now().date(),
                 end_date=(datetime.now() + timedelta(days=90)).date()
             )
+            log(f"  Creating new course {code} - Acronyms: {len(acronyms)}, Synonyms: {len(synonyms)}", "DEBUG")
+            log(f"  Course model {code} (before adding) - Acronyms: {json.dumps(acronyms)}, Synonyms: {json.dumps(synonyms)}", "DEBUG") # Log before add
             
             db_session.add(course)
             db_session.commit() 
