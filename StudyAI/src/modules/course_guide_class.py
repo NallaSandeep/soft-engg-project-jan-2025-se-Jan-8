@@ -333,8 +333,6 @@ class CourseGuideAgent(BaseAgent):
 
             response = {"courses": formatted_courses, "summary": summary}
 
-            # Cache the results for future use
-            self._add_to_cache(cache_key, response)
             return response
 
         except Exception as e:
