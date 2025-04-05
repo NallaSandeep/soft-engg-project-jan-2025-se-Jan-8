@@ -1,49 +1,27 @@
 import React from 'react';
-import TADashboard from '../components/ta/Dashboard';
-import TAAssignments from '../components/ta/AssignmentGrading';
-import TACourses from '../components/ta/Courses';
+import TADashboard from '../components/ta/TADashboard';
+import Dashboard from '../components/ta/Dashboard';
 import TaLayout from '../components/ta/TaLayout';
-import AdminDashboard from '../components/admin/Dashboard';
-import CoursesList from '../components/admin/CoursesList';
-import CourseForm from '../components/admin/CourseForm';
-import CourseContent from '../components/admin/CourseContent';
-import WeekEdit from '../components/admin/WeekEdit';
-import LectureForm from '../components/admin/LectureForm';
-import UsersList from '../components/admin/UsersList';
-import UserForm from '../components/admin/UserForm';
-import AssignmentsList from '../components/admin/AssignmentsList';
-import AssignmentForm from '../components/admin/AssignmentForm';
-import AssignmentView from '../components/admin/assignments/AssignmentView';
-import QuestionForm from '../components/admin/QuestionBank/QuestionForm';
-import QuestionList from '../components/admin/QuestionBank/QuestionList';
-import EnrollStudents from '../components/admin/EnrollStudTA';
-import CourseManagement from '../components/admin/CourseManagement';
-import CourseContentManagement from '../components/admin/CourseContentManagement';
-import  ReportedMessagesList  from '../components/admin/ReportedMessagesList';
-
-// const taRoutes = [
-//     {
-//         path: '/ta',
-//         children: [
-//             { path: 'dashboard', element: <TADashboard /> },
-//             { path: 'assignments', element: <TAAssignments /> },
-//             { path: 'courses', element: <TACourses /> },
-//         ]
-//     }
-// ];
+import CourseForm from '../components/ta/CourseForm';
+import CourseContent from '../components/ta/CourseContent';
+import WeekEdit from '../components/ta/WeekEdit';
+import LectureForm from '../components/ta/LectureForm';
+import AssignmentsList from '../components/ta/AssignmentsList';
+import AssignmentForm from '../components/ta/AssignmentForm';
+import AssignmentView from '../components/ta/assignments/AssignmentView';
+import QuestionForm from '../components/ta/QuestionBank/QuestionForm';
+import QuestionList from '../components/ta/QuestionBank/QuestionList';
+import CourseManagement from '../components/ta/CourseManagement';
+import CourseContentManagement from '../components/ta/CourseContentManagement';
 
 const taRoutes = [
     {
         path: '/ta',
         element: <TaLayout />,
         children: [
-            // {
-            //     path: '',
-            //     element: <Navigate to="/ta/dashboard" replace />
-            // },
             {
                 path: 'dashboard',
-                element: <TADashboard />
+                element: <Dashboard />
             },
             {
                 path: 'courses',
@@ -130,40 +108,6 @@ const taRoutes = [
                         path: ':questionId/edit',
                         element: <QuestionForm mode="edit" />
                     }
-                ]
-            },
-            {
-                path: 'users',
-                children: [
-                    {
-                        path: '',
-                        element: <UsersList />
-                    },
-                    {
-                        path: 'new',
-                        element: <UserForm mode="create" />
-                    },
-                    {
-                        path: ':userId/edit',
-                        element: <UserForm mode="edit" />
-                    }
-                ]
-            },
-            {
-                path: 'enroll',
-                element: <EnrollStudents />
-            },
-            {
-                path: 'reported-messages',
-                children: [
-                    {
-                        path: '',
-                        element: <ReportedMessagesList />
-                    },
-                    {
-                        path: ':questionId',
-                        element: <QuestionForm mode="view" />
-                    },
                 ]
             },
         ]
