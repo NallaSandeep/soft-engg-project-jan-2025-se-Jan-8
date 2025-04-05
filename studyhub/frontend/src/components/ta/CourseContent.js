@@ -163,13 +163,13 @@ const CourseContent = () => {
                     <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">{course.name} - Content</h1>
                 </div>
                 <div className="flex space-x-2">
-                    <button
+                    {/* <button
                         onClick={() => navigate(`/ta/courses/${courseId}/edit`)}
                         className="btn-secondary flex items-center space-x-1"
                     >
                         <PencilSquareIcon className="w-4 h-4" />
                         <span>Edit Course</span>
-                    </button>
+                    </button> */}
                     <button
                         onClick={navigateToWeekCreate}
                         className="btn-primary flex items-center space-x-1"

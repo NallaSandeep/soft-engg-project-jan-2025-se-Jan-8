@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { courseApi, userApi, assignmentApi, adminApi } from '../../services/apiService';
+import { courseApi, userApi, assignmentApi, taApi } from '../../services/apiService';
 import { formatDate } from '../../utils/dateUtils';
 import { 
     PlusCircleIcon,
@@ -65,7 +65,7 @@ const TADashboard = () => {
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
-            const response = await adminApi.getDashboardStats();
+            const response = await taApi.getDashboardStats();
             
             if (response.success) {
                 const { stats, recentCourses, recentAssignments } = response.data;
@@ -119,7 +119,7 @@ const TADashboard = () => {
                 <DashboardCard 
                     title="Total Courses" 
                     value={stats.totalCourses} 
-                    description="Active courses in the platform"
+                    description="Assiged courses"
                     icon={AcademicCapIcon}
                     onClick={() => navigateTo('/ta/courses')}
                 />
