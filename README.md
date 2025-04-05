@@ -35,7 +35,7 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
 │   ├── logs/             # Service logs
 │   └── setup.ps1         # Service setup
 │
-├── studyai/   q          # Document processing service
+├── studyai/              # Document processing service
 │   ├── app.py            # FastAPI application
 │   ├── src/             
 │   │   ├── core/         # Core components (agents, workflow)
@@ -65,7 +65,14 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
       cd studyindexer
       ```
 
-   b. Run the setup script:
+   b Create and activate a virtual environment:
+      ```powershell
+      python -m venv .venv
+      .\.venv\Scripts\activate  # Windows
+      # or
+      source .venv/bin/activate     # Linux/macOS
+
+   c. Run the setup script:
       ```bash
       ./setup.sh
       ```
@@ -73,7 +80,7 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
       - Create required directories
       - Install dependencies
 
-   c. Run the application:
+   d. Run the application:
       ```bash
       python manage_services.py setup
       ```
