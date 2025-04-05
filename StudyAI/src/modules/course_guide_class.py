@@ -3,7 +3,6 @@ from src.core.base import BaseAgent
 from src.modules.integerity_tool import IntegrityChecker
 from langgraph.graph import END
 from config import Config
-from collections import OrderedDict
 import json
 import pprint
 import logging
@@ -14,7 +13,6 @@ class CourseGuideAgent(BaseAgent):
 
     def __init__(self, use_mock_data=False):
         super().__init__()
-        self._course_cache = OrderedDict()
         self.integrity_checker = IntegrityChecker()
         self.use_mock_data = use_mock_data
 
