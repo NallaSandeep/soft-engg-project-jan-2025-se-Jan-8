@@ -394,7 +394,7 @@
         "order": 1,
         "title": "Advanced JavaScript Syntax and ES6+ Features",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=JjZAmtxbY-g",
+        "video_url": "https://www.youtube.com/watch?v=SE-Vb1A-VY8",
         "content_transcript": "Welcome back to Modern Application Development II! This lecture dives deep into the modern syntax of JavaScript, specifically focusing on the features introduced in ECMAScript 2015 (ES6) and beyond. We'll start by revisiting variable declarations with `let` and `const`, emphasizing block scope and their advantages over `var`. Then, we'll explore arrow functions, highlighting their concise syntax and lexical `this` binding. Destructuring assignment for both arrays and objects will be covered in detail, showing how to extract values efficiently. We'll also discuss the spread and rest operators and their versatile applications in function arguments and data manipulation. The lecture will then move on to template literals for enhanced string interpolation and the powerful new data structures like Maps and Sets. Finally, we'll introduce the ES6 module system with `import` and `export` statements, laying the foundation for modular and organized JavaScript code. This session aims to solidify your understanding of modern JavaScript, enabling you to write cleaner, more readable, and maintainable code for your frontend applications.",
         "duration_minutes": 55,
         "keywords": [
@@ -443,7 +443,7 @@
         "order": 3,
         "title": "Asynchronous JavaScript: Promises and Async/Await",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=V_Z8PHdY4gA",
+        "video_url": "https://www.youtube.com/watch?v=DT1NE0pUfeQ",
         "content_transcript": "In this lecture, we tackle the crucial topic of asynchronous JavaScript. We'll start by understanding why asynchronicity is essential for modern web applications to avoid blocking the main thread and ensure a responsive user experience. We'll then dive into the Promise API, learning how to create, resolve, and reject promises to handle asynchronous operations. We'll cover promise chaining for executing sequential asynchronous tasks and error handling with `.catch()`. The lecture will then introduce the `async/await` syntax, which provides a more synchronous-looking way to write asynchronous code, making it easier to read and maintain. We'll explore how `async/await` builds on top of Promises and how to handle errors using `try...catch` blocks in `async` functions. Practical examples of using `async/await` for fetching data from APIs will be demonstrated.",
         "duration_minutes": 60,
         "keywords": [
@@ -488,7 +488,7 @@
         "order": 2,
         "title": "JavaScript Events: Bubbling, Capturing, and Delegation",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=ni4s0L-E1YQ",
+        "video_url": "https://www.youtube.com/watch?v=1pSu5k1XxmI",
         "content_transcript": "This lecture focuses on event handling in JavaScript, a fundamental aspect of creating interactive web applications. We'll begin by understanding the event flow, specifically the bubbling and capturing phases, and how they affect the order in which event listeners are triggered. We'll then explore the concept of event delegation, a powerful technique for efficiently handling events on a large number of elements by attaching a single event listener to a common ancestor. We'll discuss the benefits of event delegation in terms of performance and code maintainability. The lecture will also cover how to prevent default event behavior using `preventDefault()` and stop event propagation using `stopPropagation()`. Practical examples of implementing various event listeners and handling different types of DOM events will be provided.",
         "duration_minutes": 55,
         "keywords": [
@@ -536,7 +536,7 @@
         "order": 1,
         "title": "Semantic HTML5 and Accessibility (A11y)",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=awiF-D549-E",
+        "video_url": "https://www.youtube.com/watch?v=bu564DhPTKw",
         "content_transcript": "This lecture focuses on the importance of semantic HTML5 in creating well-structured and accessible web content. We'll explore the various semantic elements introduced in HTML5, such as `<article>`, `<nav>`, `<aside>`, `<header>`, `<footer>`, `<main>`, and `<section>`, and understand how their proper usage enhances the meaning and structure of web documents for both browsers and assistive technologies. The lecture will then delve into web accessibility (A11y) best practices, covering topics such as providing alternative text for images (`alt` attribute), using ARIA attributes to improve accessibility for dynamic content, ensuring keyboard navigation, using semantic headings, and understanding WCAG (Web Content Accessibility Guidelines). We'll discuss the benefits of building accessible websites for all users, including those with disabilities.",
         "duration_minutes": 50,
         "keywords": [
@@ -581,7 +581,7 @@
         "order": 3,
         "title": "Responsive Design with Flexbox and Grid",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=5L-Zz37_HwI",
+        "video_url": "https://www.youtube.com/watch?v=41ZBkZUVApc",
         "content_transcript": "This lecture focuses on two powerful CSS layout systems: Flexbox and Grid, which are essential for creating responsive web designs that adapt seamlessly to different screen sizes and devices. We'll start with CSS Flexbox, exploring its concepts of flex containers and flex items, and learn how to use properties like `display: flex`, `flex-direction`, `justify-content`, `align-items`, and `flex-grow`/`flex-shrink`/`flex-basis` to create flexible one-dimensional layouts. We'll then move on to CSS Grid, a two-dimensional layout system that allows for creating complex grid-based layouts using properties like `display: grid`, `grid-template-columns`, `grid-template-rows`, `grid-gap`, and named grid areas. We'll discuss when to use Flexbox versus Grid and how to combine them effectively to build sophisticated and responsive web interfaces. We'll also cover the use of media queries for applying different styles based on screen characteristics.",
         "duration_minutes": 60,
         "keywords": [
@@ -604,7 +604,7 @@
         "order": 1,
         "title": "Vue.js Fundamentals: Instance and Component Basics",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=qZXt1Aom3Cs",
+        "video_url": "https://www.youtube.com/watch?v=jtH0_hXp-co",
         "content_transcript": "Welcome to the Vue.js section of the course! This lecture will introduce you to the fundamental concepts of the Vue.js framework. We'll begin by understanding the Vue instance, the root of every Vue application, and explore its options such as `data`, `methods`, `computed`, and `watch`. We'll then dive into the core concept of component-based architecture in Vue.js, learning how to create reusable UI building blocks. We'll cover component registration (global and local), component templates, and how to pass data to components using props. We'll also introduce basic data binding using directives like `v-bind` and `v-model`, which allow for dynamic updates to the user interface based on changes in the underlying data. This session lays the foundation for building interactive web applications with Vue.js.",
         "duration_minutes": 55,
         "keywords": [
@@ -646,7 +646,7 @@
         "order": 3,
         "title": "Component Communication in Vue.js: Props and Events",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=gq_BqLHlMfo",
+        "video_url": "https://www.youtube.com/watch?v=rCwJhWeS_aQ",
         "content_transcript": "This lecture focuses on the crucial aspect of component communication in Vue.js applications. We'll delve deeper into how to pass data down from parent components to child components using props, including prop validation and default values. We'll then explore how child components can communicate back up to their parent components using custom events emitted with the `$emit` method and handled with `v-on` (or `@`) in the parent. We'll discuss different patterns for component communication in more complex component hierarchies and understand the importance of maintaining a clear and predictable data flow in Vue.js applications.",
         "duration_minutes": 45,
         "keywords": [
@@ -667,7 +667,7 @@
         "order": 1,
         "title": "Vue.js Composition API: Setup and Reactive Primitives",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=y2v1YwnXQ_k",
+        "video_url": "https://www.youtube.com/watch?v=leAP_ISStTM",
         "content_transcript": "Welcome to the advanced Vue.js section focusing on the Composition API! This lecture introduces the Composition API as a modern way to organize component logic in Vue 3. We'll start by understanding the `setup` function, which serves as the entry point for Composition API logic within a component. We'll then dive into the core reactive primitives: `ref` for creating reactive variables holding primitive or object values, and `reactive` for creating reactive objects. We'll explore how to access and modify the values of refs and reactive objects within the `setup` function and how these changes trigger updates in the component's template. We'll also discuss the benefits of using the Composition API for better code organization, reusability, and maintainability, especially in larger Vue.js applications.",
         "duration_minutes": 50,
         "keywords": [
@@ -708,7 +708,7 @@
         "order": 3,
         "title": "Vuex State Management: Core Concepts and Store Setup",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=3j4cq3D6f5s",
+        "video_url": "https://www.youtube.com/watch?v=yyh0kjqA5_Q",
         "content_transcript": "This lecture introduces Vuex, a state management pattern + library for Vue.js applications. We'll discuss the need for centralized state management in larger applications and how Vuex helps manage complex data flows predictably. We'll delve into the core concepts of Vuex: State (the single source of truth), Mutations (synchronous functions for modifying state), Actions (asynchronous functions for committing mutations), and Getters (derived state based on the store's state). We'll learn how to set up a Vuex store in a Vue.js application, define state, mutations, actions, and getters, and understand the fundamental principles of how data flows through a Vuex application. We'll also cover basic integration of Vuex with Vue components.",
         "duration_minutes": 55,
         "keywords": [
@@ -730,7 +730,7 @@
         "order": 1,
         "title": "Introduction to React Components and JSX",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=RVFAyFWOcGo",
+        "video_url": "https://www.youtube.com/watch?v=Y2hgEGPzTZY",
         "content_transcript": "Welcome to the React section of the course! This lecture introduces the fundamental concept of components in React, which are the building blocks of React user interfaces. We'll explore how to create both functional components (using arrow functions) and class components (using ES6 classes). We'll then dive into JSX (JavaScript XML), a syntax extension that allows you to write HTML-like structures directly within your JavaScript code, making it more intuitive to define UI. We'll understand how JSX gets transformed into regular JavaScript function calls. We'll also cover how to render React components to the DOM and the basic structure of a React application. This session sets the stage for building interactive UIs with React.",
         "duration_minutes": 50,
         "keywords": [
@@ -774,7 +774,7 @@
         "order": 3,
         "title": "State in React: useState Hook and Class Component State",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=hQAHYDOZ_1g",
+        "video_url": "https://www.youtube.com/watch?v=oecI26cWqzk",
         "content_transcript": "This lecture introduces the concept of state in React, which allows components to manage and update their own data over time, leading to dynamic and interactive UIs. We'll start by exploring the `useState` Hook, a fundamental Hook in functional components that enables them to have state variables and update their values. We'll learn how to declare state variables and the updater functions returned by `useState`. We'll also cover how to manage state in class components using the `this.state` property and the `this.setState()` method. We'll discuss the differences between state and props and when to use each. Understanding state management is crucial for building interactive React applications.",
         "duration_minutes": 55,
         "keywords": [
@@ -797,7 +797,7 @@
         "order": 1,
         "title": "React Hooks: useEffect for Side Effects",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=MX3aCnf9lEQ",
+        "video_url": "https://www.youtube.com/watch?v=oecI26cWqzk",
         "content_transcript": "This lecture focuses on the `useEffect` Hook in React, which is used to handle side effects in functional components. Side effects include data fetching, subscriptions, timers, manual DOM manipulations, and more. We'll explore how `useEffect` works, how to define effect functions, and how to specify dependency arrays to control when the effect runs. We'll also cover cleanup functions within `useEffect` to prevent memory leaks and manage resources properly. Understanding `useEffect` is essential for performing asynchronous operations and interacting with the outside world within React functional components.",
         "duration_minutes": 50,
         "keywords": [
@@ -839,7 +839,7 @@
         "order": 3,
         "title": "Introduction to Redux: Actions, Reducers, and Store",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=93_E-YmR52s",
+        "video_url": "https://www.youtube.com/watch?v=bcmes6hUO3U",
         "content_transcript": "This lecture provides an introduction to Redux, a popular library for managing global state in JavaScript applications, especially with React. We'll discuss the core principles of Redux: the single source of truth (Store), actions (plain JavaScript objects describing events), and reducers (pure functions that specify how the state changes in response to actions). We'll learn how to create a Redux store, define actions and action creators, and write reducers that update the state immutably. We'll also cover how to dispatch actions to the store and how React components can connect to the Redux store to access state and dispatch actions using the `react-redux` library (brief overview). This session lays the foundation for understanding more advanced Redux concepts in subsequent learning.",
         "duration_minutes": 55,
         "keywords": [
@@ -883,7 +883,7 @@
         "order": 2,
         "title": "Frontend Performance Optimization Techniques",
         "resource_type": "youtube",
-        "video_url": "https://www.youtube.com/watch?v=rIG_hjH9_fQ",
+        "video_url": "https://www.youtube.com/watch?v=yqn9Fkv7f2M",
         "content_transcript": "This lecture focuses on various techniques for optimizing the performance of frontend web applications. We'll cover strategies such as code splitting to reduce initial load time, lazy loading of components and images, optimizing images and other assets, leveraging browser caching, and using Content Delivery Networks (CDNs) to serve static assets efficiently. We'll also discuss performance monitoring and profiling tools that can help identify bottlenecks in frontend code. Best practices for writing efficient JavaScript and CSS will be highlighted, along with considerations for minimizing DOM manipulations and optimizing rendering performance in frameworks like Vue.js and React.",
         "duration_minutes": 55,
         "keywords": [
