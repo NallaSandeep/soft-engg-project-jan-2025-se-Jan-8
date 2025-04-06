@@ -158,8 +158,14 @@ Week 8: Software Engineering Best Practices and Ethics: code quality, documentat
 
 
 def get_routing_prompt(query: str, covered_course=COVERED_COURSE_TOPICS) -> str:
+    query_lower = query.lower().strip().split(":")[0]
+    if query_lower.startswith("faq"):
+        return "faq_agent"
+    elif query_lower.startswith("course"):
+        return "course_guide"
+
     return f"""Analyze this query and respond with only one word: faq_agent, course_guide, or dismiss.
-- faq_agent: for general FAQs about exam dates, grading policy, credit clearing capacity, eligibility criteria, student Handbook of IITM BS program.
+- faq_agent: for general FAQs about exam dates, grading policy, credit clearing capacity, eligibility criteria, fee structure, student Handbook of IITM BS program.
 - course_guide: for course/curriculum content related questions from the below mentioned course  topics.
     {covered_course}
 

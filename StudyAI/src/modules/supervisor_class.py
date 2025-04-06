@@ -30,9 +30,15 @@ class Supervisor(BaseAgent):
                 return "supervisor"  # Complex query, route to supervisor
 
             # Regular routing for simple queries
-            routing_prompt = get_routing_prompt(query=message)
-            chain = self.create_chain(routing_prompt)
-            response = await chain.ainvoke({})
+            if get_routing_prompt(message) is not None and get_routing_prompt(message) == "faq_agent": 
+                response = "faq_agent"  # Route to FAQ agent    
+            elif get_routing_prompt(message) is not None and get_routing_prompt(message) == "course_guide":
+                response =  "course_guide"
+            else:  
+                routing_prompt = get_routing_prompt(query=message)
+                chain = self.create_chain(routing_prompt)
+                response = await chain.ainvoke({})
+                
             return self._parse_routing_response(response)
 
         except Exception as e:

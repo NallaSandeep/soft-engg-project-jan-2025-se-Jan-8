@@ -18,7 +18,7 @@ class FAQAgent(BaseAgent):
         try:
             payload = {
                 "query": query,
-                "limit": 4,
+                "limit": 6,
                 "min_score": 0.3,
                 "tags": [""],
                 "topic": "",
