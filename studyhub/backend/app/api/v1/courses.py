@@ -428,7 +428,7 @@ def create_lecture(week_id):
     """Create a new lecture in a week"""
     try:
         data = request.get_json()
-        if not all(k in data for k in ['title', 'youtube_url']):
+        if not all(k in data for k in ['title', 'youtube_url', 'lecture_number']):
             return jsonify({
                 'success': False,
                 'message': 'Missing required fields'
@@ -436,14 +436,28 @@ def create_lecture(week_id):
             
         week = Week.query.get_or_404(week_id)
         
+        # Check if lecture number already exists in this week
+        existing_lecture = Lecture.query.filter_by(
+            week_id=week_id,
+            lecture_number=data['lecture_number']
+        ).first()
+        
+        if existing_lecture:
+            return jsonify({
+                'success': False,
+                'message': f'Lecture number {data["lecture_number"]} already exists in this week'
+            }), 409
+        
         # Get the highest order number and add 1
         last_lecture = Lecture.query.filter_by(week_id=week_id).order_by(Lecture.order.desc()).first()
         new_order = (last_lecture.order + 1) if last_lecture else 1
         
         lecture = Lecture(
             week_id=week_id,
+            lecture_number=data['lecture_number'],
             title=data['title'],
             description=data.get('description', ''),
+            content_type='youtube',
             youtube_url=data['youtube_url'],
             transcript=data.get('transcript', ''),
             order=new_order,
