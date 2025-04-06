@@ -79,7 +79,6 @@ class CourseGuideAgent(BaseAgent):
             logging.info(
                 f"Response from course content search: {result.get('success', False)}"
             )
-            pprint.pprint(result)
 
             if isinstance(result, str):
                 result = json.loads(result)
@@ -87,7 +86,8 @@ class CourseGuideAgent(BaseAgent):
             if not result.get("success", False):
                 return f"Error retrieving content for course {course_id}: {result.get('message', 'Unknown error')}"
 
-            data = result.get("data", {})
+            # Updated to handle nested data structure
+            data = result.get("data", {}).get("data", {})
             content_chunks = data.get("content_chunks", [])
 
             if not content_chunks:
@@ -120,6 +120,16 @@ class CourseGuideAgent(BaseAgent):
                     if description:
                         summary_parts.append(f"  Description: {description}")
 
+                    # Add content preview (first 100 characters)
+                    content_text = content.get("content", "")
+                    if content_text:
+                        preview = (
+                            content_text[:300] + "..."
+                            if len(content_text) > 400
+                            else content_text
+                        )
+                        summary_parts.append(f"  Preview: {preview}")
+
             return (
                 "\n".join(summary_parts)
                 if summary_parts
@@ -135,48 +145,44 @@ class CourseGuideAgent(BaseAgent):
 
         course_info = await self.get_relevant_courses(query)
 
-        # Replace print with proper logging
-        logging.debug(f"Course Info: {course_info}")
+        print(course_info)
 
         if not course_info["courses"]:
             return {"courses": [], "content": {}, "summary": course_info["summary"]}
 
-        # Since get_relevant_courses only returns one course, we can simplify this
         content_results = {}
 
         try:
-            # Get the single course directly
-            course = course_info["courses"][0]
-            course_id = course["id"]
-            content = await self.get_course_content(course_id, query)
+            # Only proceed if we have at least one course
+            if course_info["courses"]:
+                course = course_info["courses"][0]
+                course_id = course["id"]
+                content = await self.get_course_content(course_id, query)
 
-            # Combine course details with content
-            content_results[course_id] = {
-                "name": course.get("name", "Unknown Course"),
-                "summary": course.get("summary", "No summary provided"),
-                "content": content,
-            }
+                content_results[course_id] = {
+                    "name": course.get("name", "Unknown Course"),
+                    "summary": course.get("summary", "No summary provided"),
+                    "content": content,
+                }
+            else:
+                # This is a safeguard in case the earlier check is bypassed
+                return {"courses": [], "content": {}, "summary": course_info["summary"]}
         except Exception as e:
             logging.error(f"Error fetching content for course: {str(e)}")
-            course_id = (
-                course_info["courses"][0]["id"] if course_info["courses"] else "unknown"
-            )
-            content_results[course_id] = {
-                "name": (
-                    course_info["courses"][0].get("name", "Unknown Course")
-                    if course_info["courses"]
-                    else "Unknown Course"
-                ),
-                "summary": (
-                    course_info["courses"][0].get("summary", "No summary provided")
-                    if course_info["courses"]
-                    else "No summary provided"
-                ),
-                "content": f"Error retrieving content: {str(e)}",
-            }
+            # Handle exception case safely by checking if courses exist first
+            if course_info["courses"]:
+                course_id = course_info["courses"][0]["id"]
+                content_results[course_id] = {
+                    "name": course_info["courses"][0].get("name", "Unknown Course"),
+                    "summary": course_info["courses"][0].get(
+                        "summary", "No summary provided"
+                    ),
+                    "content": f"Error retrieving content: {str(e)}",
+                }
 
-        return {
-            "courses": course_info["courses"],
-            "content": content_results,
-            "summary": course_info["summary"],
-        }
+        finally:
+            return {
+                "courses": course_info["courses"],
+                "content": content_results,
+                "summary": course_info["summary"],
+            }

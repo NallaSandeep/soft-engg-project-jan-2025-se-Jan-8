@@ -48,10 +48,9 @@ async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, Non
             yield state
             return
 
-        # Get relevant courses and their content in one optimized call
+        # Get relevant courses and their content
         courses_data = await agent.get_courses_with_content(query_to_process)
 
-        # Initialize context structure if it doesn't exist
         if "context" not in state or state["context"] is None:
             state["context"] = {
                 "topic": "Course Guide",
@@ -81,26 +80,22 @@ async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, Non
         courses_found = courses_data["courses"]
         response_parts = []
         response_parts.append(courses_data["summary"])
-        response_parts.append("\nRelevant courses:")
+        response_parts.append("\nRelevant course:")
 
-        course_details = []
-        for course in courses_found:
-            course_id = course["id"]
-            course_content_data = courses_data["content"].get(course_id, {})
+        course = courses_found[0]  # Get the course
+        course_id = course["id"]
+        course_content_data = courses_data["content"].get(course_id, {})
 
-            # Extract the content string from the nested dictionary structure
-            if isinstance(course_content_data, dict):
-                content_str = course_content_data.get("content", "No content available")
-            else:
-                content_str = "No content available"
+        if isinstance(course_content_data, dict):
+            content_str = course_content_data.get("content", "No content available")
+        else:
+            content_str = "No content available"
 
-            course_details.append(f"- {course['id']}: {course['name']}")
-            course_details.append(f"  {content_str}")
+        response_parts.append(f"- {course['id']}: {course['name']}")
+        response_parts.append(f"  {content_str}")
 
-        response_parts.extend(course_details)
         response = "\n".join(response_parts)
 
-        # Create the finding with the expected structure
         finding = {
             "query": query_to_process,
             "content": response,
@@ -120,8 +115,6 @@ async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, Non
             if f"subq_{subq_index}" in state["metadata"]:
                 state["metadata"][f"subq_{subq_index}"]["result"] = response
         else:
-            # state["messages"].append(AIMessage(content=response))
-            # state["next_step"] = "supervisor"
             pass
 
     except Exception as e:

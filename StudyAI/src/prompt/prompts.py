@@ -15,17 +15,145 @@ Response:"""
 COVERED_COURSE_TOPICS = """
 These are courses currently being offered by BS Degree (Data science and Programming) and are part of the curriculum.
 
-1. BA201: Topics Included:COURSE: 
-(Business Analytics\nDESCRIPTION: A comprehensive course providing in-depth coverage of data visualization techniques, statistical distribution fitting, association analysis, Bayesian inference, and advanced demand modeling for informed business decision-making.\nDEPARTMENT: Computer Science\nALL CONCEPTS: Week 4, Week 2, BA201, Week 3, Week 1, lecture\nWEEKLY CONTENT: Week 1: Week 1: Data Visualization | Week 2: Week 2: Distribution Fitting | Week 3: Week 3: Association Analysis | Week 4: Week 4: Demand Response Curves\nLECTURES: Principles of Effective Data Visualization | Visualization Types and Applications | Understanding Probability Distributions | Distribution Fitting Techniques | Statistical Association Analysis | Bayesian Analysis in Business | Demand Response Curve Fundamentals | Advanced Demand Modeling Techniques)
+Course Code: BA201 
+Course name: Business Analytics 
+Course description: The Business Analytics course (BA201) offers a comprehensive and expanded exploration of analytical techniques essential for data-driven decision-making. It covers data visualization for effective communication, fitting probability distributions to business data, statistical association analysis, and Bayesian inference for probabilistic reasoning. The curriculum includes advanced demand modeling and price optimization, regression analysis for predictive modeling, time series forecasting for analyzing temporal data, principles of experimental design for causal inference, and an introduction to optimization techniques for resource allocation. Real-world case studies and practical exercises reinforce these methodologies.
 
-2. DBMS101: Topics Included:COURSE:
-(COURSE: Database Management Systems\nDESCRIPTION: This course provides a comprehensive introduction to Database Management Systems (DBMS), covering foundational and advanced database concepts. Students will explore database design, entity-relationship (ER) modeling, relational algebra, and relational calculus. The course includes hands-on experience with Structured Query Language (SQL) for data retrieval, modification, and optimization. Topics such as indexing, query processing, normalization techniques, and transaction management are explored in depth. Advanced topics include data constraints, integrity rules, and security considerations. The course also introduces mathematical underpinnings such as predicate logic and quantifiers in relational calculus. Through practical exercises, case studies, and real-world applications, students will develop strong database management skills applicable to various industries. The course spans 12 weeks and is structured to provide a systematic and practice-oriented understanding of modern database technologies.\nDEPARTMENT: Computer Science\nALL CONCEPTS: Week 4, Week 2, DBMS101, Week 3, Week 1, lecture\nWEEKLY CONTENT: Week 1: Week 1: Introduction to Databases, Abstraction, and DBMS | Week 2: Week 2: Relational Model, SQL Essentials, and Integrity Constraints | Week 3: Week 3: Advanced SQL, Subqueries, and Database Modification | Week 4: Week 4: Indexing, Transactions, and Relational Calculus\nLECTURES: Foundations of Database Systems: Abstraction, Schema, and Data Models | Introduction to DBMS | Introduction to SQL: History, Syntax, and Query Structure | Introduction to SQL | Advanced SQL Techniques: Data Modification and Nested Subqueries | Intermediate SQL & Subqueries | Formal Query Languages: Tuple and Domain Relational Calculus | Formal Relational Query Languages)
+Weeks names/Topics covered in the content:
 
-3.MAD201: Topics Included:COURSE:
-(COURSE: Modern Application Development - II\nDESCRIPTION: An advanced course that dives deep into modern frontend development using JavaScript and Vue.js, focusing on building dynamic, interactive web applications. The course emphasizes the principles of reactive programming, component-based architecture, and advanced client-side state management. It covers essential techniques for working with the Document Object Model (DOM), handling asynchronous operations, and applying best practices in frontend architecture and design. Students will gain hands-on experience through practical implementations and real-world projects.\nDEPARTMENT: Computer Science\nALL CONCEPTS: Week 4, Week 2, Week 3, MAD201, Week 1, lecture\nWEEKLY CONTENT: Week 1: Week 1: JavaScript Fundamentals | Week 2: Week 2: JavaScript Collections and Modularity | Week 3: Week 3: Frontend Implementation | Week 4: Week 4: Vue.js and Reactive Programming\nLECTURES: Introduction to JavaScript: History and Origins | JavaScript Language Fundamentals | JavaScript Collections and Iteration | JavaScript Modules and Object-Oriented Programming | Frontend Architecture and Design Principles | Frontend Development Best Practices | Vue.js Reactive Programming Fundamentals | Advanced Vue.js Components and State Management)
+Week 1: Foundations of Data Visualization: principles, techniques for effective communication, chart selection and design.
 
-4.SE101: Topics Included:COURSE:
-(COURSE: Software Engineering\nDESCRIPTION: A comprehensive course covering software engineering principles, processes, and best practices across the entire software development lifecycle, from requirements gathering to post-deployment maintenance. Emphasis is placed on practical applications, risk management, and modern software methodologies.\nDEPARTMENT: Computer Science\nALL CONCEPTS: Week 4, Week 2, Week 3, Week 1, lecture, SE101\nWEEKLY CONTENT: Week 1: Week 1: Deconstructing the Software Development Process | Week 2: Week 2: Software Requirements | Week 3: Week 3: Software User Interfaces | Week 4: Week 4: Software Project Management\nLECTURES: Deconstructing the Software Development Process | Software Development Lifecycle Models | Requirement Gathering and Analysis | Functional vs Non-Functional Requirements | Usability Principles in UI Design | Prototyping Techniques for UI Design | Project Estimation Techniques | Agile Project Management with Scrum)
+Week 2: Probability Distribution Fitting: fitting distributions, parameter estimation (MLE), goodness-of-fit testing.
+
+Week 3: Comprehensive Statistical Association Analysis and Bayesian Inference: analyzing relationships, contingency tables, Bayes' theorem.
+
+Week 4: Advanced Demand Modeling and Price Optimization: demand curves, elasticity estimation, pricing strategies, revenue management.
+
+Week 5: Regression Analysis: building, interpreting, and evaluating simple linear regression models.
+
+Week 6: Multiple Linear Regression Analysis: modeling with multiple predictors, coefficient interpretation, multicollinearity.
+
+Week 7: Introduction to Time Series Forecasting: time series data, components (trends, seasonality), basic forecasting methods.
+
+Week 8: Principles of Experimental Design: causal inference, A/B testing, randomization, control groups, validity.
+
+Week 9: Introduction to Optimization Techniques: defining optimization problems, linear programming concepts, constraints.
+
+================
+
+Course Code: DBMS201 
+Course name: Advanced Database Management Systems 
+Course description: This expanded course provides an in-depth exploration of DBMS, covering advanced database design, implementation, and management. Students will master advanced ER modeling, relational algebra and calculus, and complex SQL. The course extensively covers indexing, query processing, normalization, transaction management, and concurrency control. New topics include NoSQL databases, distributed database systems, data warehousing, OLAP, database security, and performance tuning. Through practical exercises and case studies, students will develop strong database management skills for enterprise-level systems.
+
+Weeks names/Topics covered in the content:
+
+Week 1: Foundations Revisited: data abstraction levels (physical, logical, view), database architectures, data independence.
+
+Week 2: Advanced Relational Model, SQL Deep Dive, and Enhanced Integrity Constraints: domains, keys, SQL DDL, constraints.
+
+Week 3: Expert SQL: Subqueries, Views, and Data Modification Mastery: nested, correlated, scalar subqueries, CTEs, data modification.
+
+Week 4: Deep Dive into Indexing and Query Processing Strategies: index types (B-tree, hash), query optimization.
+
+Week 5: Advanced Normalization and Database Design Methodologies: BCNF, 4NF, 5NF, DKNF, design approaches.
+
+Week 6: Transaction Management and Concurrency Control: ACID properties, isolation levels, concurrency anomalies, locking.
+
+Week 7: Database Recovery Techniques and Failure Management: logging (WAL), checkpoints, recovery algorithms.
+
+Week 8: Introduction to NoSQL Databases: Concepts and Key-Value Stores: characteristics, architecture, operations, use cases.
+
+Week 9: NoSQL Databases: Document Databases and Column-Family Stores: data models, MongoDB, Cassandra.
+
+Week 10: NoSQL Databases: Graph Databases and Polyglot Persistence: Neo4j, Cypher, graph querying, database selection.
+
+Week 11: Distributed Databases: Architectures and Data Replication: homogeneous, heterogeneous, replication strategies, consistency.
+
+Week 12: Distributed Databases: Query Processing and Concurrency Control: fragmentation, join strategies, distributed locking, 2PC.
+
+Week 13: Data Warehousing and OLAP: Principles and Design: OLTP vs. OLAP, data warehouse architecture, schemas.
+
+Week 14: Data Warehousing and OLAP: Operations and Advanced Topics: OLAP operations, server types, data cube computation.
+
+Week 15: Database Security: Principles and Implementation: threats, security goals, authentication, authorization.
+
+Week 16: Database Performance Tuning and Emerging Trends: query optimization, indexing, in-memory, cloud databases, AI integration.
+
+
+================
+
+
+Course Code: JAVA101 
+Course name: Introduction to Java Programming 
+Course description: A foundational course in Java programming principles, this course introduces basic syntax, data types, operators, and control flow statements. Students will learn object-oriented programming concepts including classes, objects, constructors, access modifiers, inheritance, polymorphism, and abstract classes. The course also covers exception handling for runtime errors and provides an introduction to the Java collections framework with basic collection types. The goal is to equip students with a solid understanding of the fundamentals of Java programming.
+
+Weeks names/Topics covered in the content:
+
+Week 1: Introduction to Java and Setup: Java history, JDK installation, basic syntax, JVM.
+
+Week 2: Data Types, Variables, and Operators: primitive types, variable declaration, arithmetic, comparison.
+
+Week 3: Control Flow Statements: if-else, switch statements, for, while, do-while loops.
+
+Week 4: Introduction to Classes and Objects: class definition, object creation, instance variables, methods.
+
+Week 5: Constructors and Access Modifiers: default, parameterized constructors, public, private, protected, default.
+
+Week 6: Inheritance: superclass, subclass, extends keyword, method overriding, super keyword.
+
+Week 7: Polymorphism and Abstract Classes: upcasting, downcasting, abstract classes, abstract methods.
+
+Week 8: Exception Handling: try-catch blocks, finally block, throwing exceptions, built-in hierarchy.
+
+Week 9: Introduction to Collections: ArrayList, LinkedList, HashSet, basic operations.
+
+================
+
+Course Code: MAD201 
+Course name: Modern Application Development II 
+Course description: This course focuses on modern web application development, building upon foundational knowledge with advanced JavaScript, HTML5, and CSS3. Students will explore advanced JavaScript features (ES6+), DOM manipulation, event handling, and asynchronous operations. The course covers advanced CSS3 for responsive design and UI enhancements. It also introduces modern frontend frameworks, specifically Vue.js and React, covering components, reactivity, state management, and architectural patterns. Best practices for frontend development, including testing and performance optimization, are also emphasized.
+
+Weeks names/Topics covered in the content:
+
+Week 1: Advanced JavaScript Fundamentals and ES6+: syntax, scope, data types, functions, modules.
+
+Week 2: DOM Manipulation, Events, and Asynchronous JavaScript: DOM traversal, event handling, Fetch API.
+
+Week 3: Introduction to HTML5 and Advanced CSS3: semantic HTML, advanced selectors, box model, Flexbox, Grid.
+
+Week 4: Introduction to Vue.js: Components and Reactivity: Vue components, Options API, reactivity, data binding.
+
+Week 5: Advanced Vue.js: Composition API and State Management: setup, ref, reactive, Vuex store.
+
+Week 6: Introduction to React: Components and JSX: React components, JSX syntax, props, event handling.
+
+Week 7: Advanced React: Hooks and State Management: useState, useEffect, Context API.
+
+Week 8: Frontend Architecture, Best Practices, and Testing: patterns, clean code, performance, accessibility, testing.
+
+================
+
+Course Code: SE101 
+Course name: Software Engineering 
+Course description: This comprehensive course covers software engineering principles, processes, and best practices across the entire software development lifecycle. It contrasts traditional plan-driven models (Waterfall, V-Model) with adaptive frameworks (Agile, Scrum). Students will learn about requirements gathering (SRS), software design (UML, architectural patterns), robust testing strategies, project estimation, risk management, and agile development practices. The course also addresses software deployment (DevOps), maintenance and evolution, and software engineering ethics, equipping students for effective software development and management.
+
+Weeks names/Topics covered in the content:
+
+Week 1: Deconstructing the Software Development Process: SDLC models, traditional and Agile methodologies, processes.
+
+Week 2: Software Requirements Engineering: stakeholder identification, functional/non-functional requirements, SRS documentation.
+
+Week 3: Software Architecture and Design: architectural styles, design principles (SOLID), design patterns, UML.
+
+Week 4: Software Testing and Quality Assurance: testing levels, techniques (black/white-box), quality attributes, TDD.
+
+Week 5: Software Deployment and DevOps: deployment strategies, infrastructure as code, CI/CD, containerization.
+
+Week 6: Software Maintenance and Evolution: types of maintenance, refactoring, technical debt management.
+
+Week 7: Agile Project Management - Advanced Topics: scaled agile frameworks, Kanban, backlog and release planning.
+
+Week 8: Software Engineering Best Practices and Ethics: code quality, documentation, ethical considerations, future trends.
 """
 
 
@@ -46,7 +174,7 @@ def get_relevent_course_prompt(
 ) -> str:
     return f"""Analyze this query and determine which course it relates to based on the topics covered in each course.
 Return the most relevant course in the following format: "COURSE_CODE|COURSE_NAME|BRIEF_SUMMARY"
-For example: "DBMS101|Database Management Systems|This course covers database concepts and SQL fundamentals..."
+For example: "DBMS201|Database Management Systems|This course covers database concepts and SQL fundamentals..."
 If the query doesn't match any course topics, respond with 'None'.
 
 Course Topics:
@@ -118,4 +246,5 @@ For technical questions:
     - Explain theoretical concepts needed to find solution
     
 At the end, add relevent sources, topics and course code that you have reffered to from the context.
+If no context is available supplement with your knowledge, don't mention that no context is available.
 """
