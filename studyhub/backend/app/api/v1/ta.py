@@ -28,10 +28,16 @@ def get_dashboard_stats():
 
         # Get total counts specific to the TA's courses
         total_courses = len(courses)
-        total_students = sum(
-            CourseEnrollment.query.filter_by(course_id=course.id, role='student').count()
+        # total_students = sum(
+        #     CourseEnrollment.query.filter_by(course_id=course.id, role='student').count()
+        #     for course in courses
+        # )
+        student_ids = set(
+            enrollment.user_id
             for course in courses
+            for enrollment in CourseEnrollment.query.filter_by(course_id=course.id, role='student').all()
         )
+        total_students = len(student_ids)
         
         # Get total assignments by mapping course_id with weeks and then week_id with assignments
         total_assignments = sum(
