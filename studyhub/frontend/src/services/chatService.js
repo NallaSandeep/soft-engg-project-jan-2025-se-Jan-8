@@ -44,7 +44,16 @@ api.interceptors.response.use(
 
 // studyAI API
 export const chatAPI = {
-    createChat: (user_id, personalResources) => api.post(`/chat/${user_id}/session`, { personalResources }),
+    createChat: (user_id, courses) => {
+        // Extract only code and name from each course
+        const simplifiedCourses = courses.map(course => ({
+          code: course.code, 
+          name: course.name
+        }));
+        
+        return api.post(`/chat/${user_id}/session`, { courses: simplifiedCourses });
+      },    
+
     getChat: (id) => api.get(`/chat/session/${id}`),
     updateChat: (id, operations) => api.patch(`/chat/session/${id}`, {operations: [operations]}),
     getChats: (user_id) => api.get(`/chat/sessions?user_id=${user_id}`),
