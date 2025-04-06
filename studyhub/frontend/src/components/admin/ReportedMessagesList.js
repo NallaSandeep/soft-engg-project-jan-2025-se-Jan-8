@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { chatAPI } from '../../services/chatService';
 import { EyeIcon, ExclamationTriangleIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import MarkdownIt from 'markdown-it';
+const md = new MarkdownIt();
 
 const ReportedMessagesList = () => {
     const [reports, setReports] = useState([]);
@@ -195,7 +197,12 @@ const ReportedMessagesList = () => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                                                {truncateText(report.message_content)}
+                                                <div 
+                                                    dangerouslySetInnerHTML={{ 
+                                                        __html: md.render(truncateText(report.message_content)) 
+                                                    }}
+                                                    className="prose prose-sm dark:prose-invert max-w-none overflow-x-auto"
+                                                />
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
@@ -285,9 +292,12 @@ const ReportedMessagesList = () => {
                                     Message Content
                                 </h3>
                                 <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4">
-                                    <p className="text-zinc-900 dark:text-white whitespace-pre-wrap">
-                                        {selectedReport.message_content}
-                                    </p>
+                                    <div 
+                                        dangerouslySetInnerHTML={{ 
+                                            __html: md.render(selectedReport.message_content) 
+                                        }}
+                                        className="prose prose-sm dark:prose-invert max-w-none overflow-x-auto text-zinc-900 dark:text-white"
+                                    />
                                 </div>
                             </div>
 
