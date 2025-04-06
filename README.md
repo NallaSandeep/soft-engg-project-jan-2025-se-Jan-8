@@ -86,7 +86,7 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
       ```
       ```bash
       python manage_services.py start
-      ```
+      ```      
    This will:
       - Starts ChromaDB
       - Starts FastAPI (This takes 2-3 mins)
@@ -97,11 +97,54 @@ StudyHub is a SEEK-like learning management system that provides a comprehensive
       ```
       - Keep checking status (for 2-3 mins)
       - Check logs if the issue persists even after 3 mins
-
+      Use this when the data structure inside **ChromaDB** changes:
       ```bash
       python manage_services.py restart
       ```
-      - Restarts chroma db and FastAPI
+      Use this for a faster restart (only restarts **FastAPI**):
+      ```bash
+      python manage_services.py quickstart
+      ```
+      To check if **StudyIndexer** is running:
+      ```bash
+      python manage_services.py status
+      ```
+
+   e. Reset ChromaDB
+      - Open the Swagger Interface in your browser:
+         [http://127.0.0.1:8081/docs](http://127.0.0.1:8081/docs)
+      - Navigate to the `Development` section.
+      - Locate the following endpoint:
+         ```
+         DELETE /api/v1/course-content/reset
+         ```
+      - Execute this endpoint to completely delete all data from ChromaDB.
+
+      > ⚠️ **Note:** This step is only required when major changes occur (e.g., today). It is **not** necessary to run this every time.
+
+   f. Start loading the course data
+      - Once the **StudyIndexer** is running, proceed to the next step.
+      - In the **PowerShell terminal**, navigate to `studyhub/backend` and run the following commands:
+         ```powershell
+         .\setup.ps1 
+         (or)
+         python .\scripts\init_db.py
+         ```
+         > **Note:** This process may take some time.  
+         > It loads all the course files from `studyhub/backend/scripts/course` one by one into **StudyHub**, and also ingests them into the **StudyIndexer APIs**.
+
+         Check the logs for any **Errors** — these need immediate attention.
+
+   g. Load the FAQ Data
+      - Add the 4 `*.jsonl` files located in `studyindexer/content/FAQ` **one by one** through the Swagger interface.
+      - Navigate to: `FAQ -> Import JSON`
+      - Use the following endpoint:
+         ```
+         POST /api/v1/faq/import
+         ```
+   h. Start All Other Services
+   
+      - Now that everything is set up, go ahead and start the rest of the services.
 
 3. **Backend Setup**:
 
