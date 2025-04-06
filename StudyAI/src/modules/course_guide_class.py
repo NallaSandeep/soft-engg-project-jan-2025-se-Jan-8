@@ -79,7 +79,6 @@ class CourseGuideAgent(BaseAgent):
             logging.info(
                 f"Response from course content search: {result.get('success', False)}"
             )
-            print(result)
 
             if isinstance(result, str):
                 result = json.loads(result)
@@ -87,7 +86,8 @@ class CourseGuideAgent(BaseAgent):
             if not result.get("success", False):
                 return f"Error retrieving content for course {course_id}: {result.get('message', 'Unknown error')}"
 
-            data = result.get("data", {})
+            # Updated to handle nested data structure
+            data = result.get("data", {}).get("data", {})
             content_chunks = data.get("content_chunks", [])
 
             if not content_chunks:
@@ -120,6 +120,16 @@ class CourseGuideAgent(BaseAgent):
                     if description:
                         summary_parts.append(f"  Description: {description}")
 
+                    # Add content preview (first 100 characters)
+                    content_text = content.get("content", "")
+                    if content_text:
+                        preview = (
+                            content_text[:300] + "..."
+                            if len(content_text) > 400
+                            else content_text
+                        )
+                        summary_parts.append(f"  Preview: {preview}")
+
             return (
                 "\n".join(summary_parts)
                 if summary_parts
@@ -135,7 +145,7 @@ class CourseGuideAgent(BaseAgent):
 
         course_info = await self.get_relevant_courses(query)
 
-        pprint.pprint(course_info)
+        print(course_info)
 
         if not course_info["courses"]:
             return {"courses": [], "content": {}, "summary": course_info["summary"]}
