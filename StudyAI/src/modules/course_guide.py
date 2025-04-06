@@ -60,45 +60,6 @@ async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, Non
                 "findings": [],
             }
 
-        # Check if there's an integrity violation
-        if courses_data.get("is_integrity_violation", False):
-            
-            if "integrity_warnings" not in state["context"]:
-                state["context"]["integrity_warnings"] = []
-
-            warning_data = {
-                "query": query_to_process,
-                "warning": courses_data["integrity_warning"],
-            }
-
-            # Add related educational topics if available
-            if "related_topics" in courses_data and courses_data["related_topics"]:
-                warning_data["related_topics"] = courses_data["related_topics"]
-
-            # Add educational content to the context
-            if "content" in courses_data and courses_data["content"]:
-                warning_data["educational_content"] = courses_data["content"]
-
-            state["context"]["integrity_warnings"].append(warning_data)
-
-            # Create response based on the integrity warning and educational content
-            response = courses_data["integrity_warning"]
-
-            # Include the response in the state
-            if is_subquestion:
-                # This is a subquestion - mark it as processed with the warning and educational content
-                subq_index = state["metadata"]["active_subq_index"]
-                if f"subq_{subq_index}" in state["metadata"]:
-                    state["metadata"][f"subq_{subq_index}"]["result"] = response
-            else:
-                # This is a standalone query - add the warning message with educational content directly
-                state["messages"].append(AIMessage(content=response))
-                state["next_step"] = END
-                state = clear_state(state)
-
-            yield state
-            return
-
         if not courses_data["courses"]:
             response_message = "I couldn't find specific courses related to your query. Please try a more specific course-related question or topic."
 
@@ -124,13 +85,17 @@ async def course_guide_node(state: AgentState) -> AsyncGenerator[AgentState, Non
 
         course_details = []
         for course in courses_found:
-            course_content = courses_data["content"].get(
-                course["id"], "No content available"
-            )
-            course_details.append(
-                f"- {course['id']}: {course['name']})"
-            )
-            course_details.append(f"  {course_content}")
+            course_id = course["id"]
+            course_content_data = courses_data["content"].get(course_id, {})
+
+            # Extract the content string from the nested dictionary structure
+            if isinstance(course_content_data, dict):
+                content_str = course_content_data.get("content", "No content available")
+            else:
+                content_str = "No content available"
+
+            course_details.append(f"- {course['id']}: {course['name']}")
+            course_details.append(f"  {content_str}")
 
         response_parts.extend(course_details)
         response = "\n".join(response_parts)
