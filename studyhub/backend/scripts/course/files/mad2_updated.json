@@ -1,0 +1,1579 @@
+{
+    "course": {
+      "course_id": 2,
+      "code": "MAD201",
+      "title": "Modern Application Development - II",
+      "description": "An advanced course that extensively explores modern frontend development using JavaScript, Vue.js, React, HTML5, and CSS3, focusing on building dynamic, interactive web applications with a strong emphasis on best practices and performance optimization. The course delves deep into reactive programming, component-based architecture, advanced client-side state management in both Vue.js and React, and modern frontend architectural patterns. Students will acquire comprehensive hands-on experience in DOM manipulation, asynchronous operations, advanced JavaScript concepts, and the effective application of various frontend tools and technologies through practical projects and real-world scenarios.",
+      "instructor_id": 1002,
+      "credits": 3,
+      "department": "Computer Science",
+      "image_url": "/assets/courses/mad2/cover.jpg",
+      "prerequisites": [
+        "MAD-I (Modern Application Development - I)",
+        "Basic understanding of HTML and CSS",
+        "Familiarity with Python or another programming language"
+      ],
+      "learning_outcomes": [
+        "Design and develop complex modern web applications using JavaScript, Vue.js, and React.",
+        "Implement advanced reactive programming concepts for building highly dynamic and performant user interfaces.",
+        "Create, manage, and test highly reusable components in Vue.js and React with sophisticated state management techniques.",
+        "Apply advanced JavaScript techniques including functional programming, asynchronous programming patterns, and ES6+ features effectively.",
+        "Master asynchronous operations using callbacks, promises, async/await, and modern state management solutions for data fetching.",
+        "Optimize frontend performance, ensure application scalability, and implement effective memory management strategies.",
+        "Understand and implement industry best practices for frontend architecture, design patterns (e.g., MVC, MVVM, Flux/Redux), and application security.",
+        "Utilize modern frontend tooling for development, testing, debugging, and version control.",
+        "Build responsive and accessible web applications following WCAG guidelines."
+      ],
+      "assessment_methods": [
+        "Quizzes",
+        "Project",
+        "End-term"
+      ],
+      "delivery_mode": "Online",
+      "tools_and_technologies": [
+        "JavaScript (ES6+)",
+        "Vue.js Framework (Composition API and Options API)",
+        "React Library (Hooks and Class Components)",
+        "HTML5 and CSS3",
+        "Developer Tools (Repl.it, VS Code, Chrome/Firefox DevTools)",
+        "Git for version control",
+        "Browser-based debugging techniques",
+        "npm or yarn package managers",
+        "ESLint and Prettier for code quality",
+        "Testing frameworks (e.g., Jest, Mocha, Vue Test Utils, React Testing Library)"
+      ],
+      "LLM_Summary": {
+        "summary": "An in-depth, project-intensive course focusing on the advanced aspects of modern web application development using JavaScript and leading frameworks such as Vue.js and React. The curriculum provides a comprehensive understanding of reactive programming principles, sophisticated component-based architectures, and robust client-side state management solutions. Through extensive hands-on exercises and complex real-world project simulations, students will gain mastery over advanced JavaScript functionalities, intricate iteration techniques, and diverse asynchronous programming paradigms. The course also emphasizes critical best practices for achieving optimal frontend performance, implementing scalable architectural design patterns, and constructing highly maintainable and testable applications. By the course's conclusion, students will be adept at architecting and developing sophisticated, interactive web applications leveraging cutting-edge technologies and contemporary design methodologies.",
+        "concepts_covered": [
+          "Advanced JavaScript fundamentals and modern ES6+ syntax and features",
+          "Vue.js framework: Deep dive into Composition API and Options API, advanced component patterns",
+          "React library: Fundamentals of JSX, Hooks, Class Components, component lifecycle methods",
+          "Core principles of reactive programming and reactivity systems in Vue.js and React",
+          "Advanced component-based development and modular design principles",
+          "Comprehensive client-side state management: Local component state, Vuex, React Context API, Redux (introduction)",
+          "Advanced iteration methods (map, filter, reduce) and functional programming techniques in JavaScript",
+          "Mastering asynchronous programming: Callbacks, Promises, async/await, handling complex asynchronous flows",
+          "In-depth DOM manipulation and efficient event handling strategies",
+          "Detailed comparison of declarative vs. imperative programming paradigms in frontend development",
+          "Advanced frontend design patterns: MVC, MVVM, Flux/Redux architectures and their application",
+          "Sophisticated component communication techniques (props, events, emit, custom events, state management integration)",
+          "Comprehensive understanding and optimization of component lifecycles in Vue.js and React",
+          "Advanced performance optimization techniques, including code splitting, lazy loading, and memory management",
+          "Robust error handling and effective debugging strategies for frontend applications",
+          "Building highly scalable, maintainable, and testable web applications",
+          "HTML5 semantic elements and modern form handling",
+          "CSS3 advanced selectors, Flexbox, Grid, and responsive design principles",
+          "Accessibility (A11y) best practices and WCAG compliance",
+          "Frontend testing strategies: Unit testing, integration testing, end-to-end testing (introduction)",
+          "Introduction to frontend build tools and module bundlers (Webpack, Parcel, Vite)"
+        ],
+        "concepts_not_covered": [
+          "Backend development (in-depth API design, server-side frameworks, databases beyond client-side interactions)",
+          "Full-stack architecture and complex backend integrations",
+          "Advanced server-side rendering (SSR) techniques and frameworks beyond basic concepts",
+          "Detailed database design and query optimization",
+          "Comprehensive DevOps practices and CI/CD pipelines",
+          "Advanced security practices in web applications (beyond basic frontend considerations)",
+          "Native mobile application development"
+        ]
+      },
+      "acronyms": {
+        "DOM": "Document Object Model",
+        "ES6+": "ECMAScript 2015 and Above",
+        "MVC": "Model-View-Controller",
+        "MVVM": "Model-View-ViewModel",
+        "CI/CD": "Continuous Integration/Continuous Deployment",
+        "API": "Application Programming Interface",
+        "WCAG": "Web Content Accessibility Guidelines",
+        "CSS": "Cascading Style Sheets",
+        "HTML": "HyperText Markup Language",
+        "UI": "User Interface",
+        "UX": "User Experience"
+      }
+      ,
+      "synonyms": {
+        "Reactive Programming": ["Reactivity", "Observer Pattern"],
+        "Component-Based Architecture": ["Modular UI Design"],
+        "State Management": ["Vuex Store", "React Context", "Redux"],
+        "Asynchronous Programming": ["Non-Blocking I/O", "Async/Await Usage"],
+        "Frontend Architectural Patterns": ["MVC", "MVVM", "Flux/Redux Patterns"],
+        "Accessibility": ["A11y", "WCAG Compliance"]
+      }
+      
+    },
+    "weeks": [
+      {
+        "week_id": 1,
+        "course_id": 2,
+        "order": 1,
+        "title": "Week 1: Advanced JavaScript Fundamentals and ES6+",
+        "estimated_hours": 25,
+        "LLM_Summary": {
+          "summary": "This week revisits and deepens the understanding of JavaScript, focusing on its advanced fundamentals and the significant enhancements introduced with ES6+ (ECMAScript 2015 and later). Lectures will cover the evolution of JavaScript and the core principles of the language, with a strong emphasis on modern syntax, variable declarations (let, const), scope management (block-level scope), and the intricacies of data types, including primitive and complex types. The week also explores advanced function concepts such as closure, higher-order functions, and different function types (arrow functions, generator functions). Additionally, topics like destructuring, spread/rest operators, and the module system (import/export) will be thoroughly discussed, laying a robust foundation for modern frontend development.",
+          "concepts_covered": [
+            "In-depth review of JavaScript historical context and ECMAScript standardization",
+            "Advanced exploration of core syntax and language structure, focusing on modern features",
+            "Comprehensive understanding of variable declarations: var, let, const, and their implications",
+            "Advanced scope management: Block-level, function-level, and lexical scoping in detail",
+            "Thorough examination of dynamic typing, implicit and explicit type coercion",
+            "Deep dive into comparison operators: Loose (==) vs. strict (===) equality and their nuances",
+            "Advanced string manipulation techniques, including template literals and tagged templates",
+            "Best practices for naming identifiers and understanding reserved words in modern JavaScript",
+            "Detailed analysis of primitive and complex data types, including Symbols and BigInt",
+            "Advanced control flow constructs and sophisticated function declarations and expressions",
+            "In-depth understanding of anonymous functions, arrow functions, and Immediately Invoked Function Expressions (IIFEs)",
+            "Introduction to JavaScript modules: ES6 module syntax (import/export) and module bundlers (brief overview)",
+            "Closures and their applications in maintaining state and creating private variables",
+            "Higher-order functions and their use in functional programming paradigms",
+            "Generator functions and their role in asynchronous programming and iteration",
+            "Destructuring assignment for arrays and objects: Advanced usage and patterns",
+            "Spread and rest operators: Applications in function arguments and array/object manipulation"
+          ],
+          "concepts_not_covered": [
+            "JavaScript engine internals and advanced garbage collection mechanisms",
+            "Very advanced performance optimization techniques (e.g., assembly-level optimizations)",
+            "In-depth security vulnerabilities and advanced mitigation strategies",
+            "Detailed exploration of purely functional programming libraries",
+            "Design patterns in JavaScript beyond foundational modularity and common functional patterns"
+          ]
+        }
+      },
+      {
+        "week_id": 2,
+        "course_id": 2,
+        "order": 2,
+        "title": "Week 2: DOM Manipulation, Events, and Asynchronous JavaScript",
+        "estimated_hours": 25,
+        "LLM_Summary": {
+          "summary": "This week focuses on the crucial aspects of frontend development: interacting with the Document Object Model (DOM), handling user interactions through events, and managing asynchronous operations effectively. Lectures will cover advanced techniques for traversing and manipulating the DOM, understanding the event bubbling and capturing phases, and implementing sophisticated event delegation patterns. A significant portion of the week will be dedicated to mastering asynchronous JavaScript, including callbacks, the Promise API, and the async/await syntax. Error handling in asynchronous operations, managing concurrent tasks, and understanding the JavaScript event loop in detail will also be covered. Furthermore, the week will touch upon making HTTP requests using the Fetch API and handling responses, setting the stage for interacting with backend services.",
+          "concepts_covered": [
+            "Advanced techniques for traversing and manipulating the Document Object Model (DOM)",
+            "Understanding the DOM tree structure and node properties",
+            "Efficiently selecting and modifying DOM elements",
+            "Introduction to the concept of virtual DOM and its benefits (brief overview)",
+            "Comprehensive understanding of JavaScript events: Event listeners, event objects, and event types",
+            "Event bubbling and capturing phases in detail",
+            "Implementing effective event delegation for optimized performance",
+            "Preventing default event behavior and stopping event propagation",
+            "Advanced techniques for handling form events and user input",
+            "Deep dive into asynchronous JavaScript: Callbacks and callback hell",
+            "The Promise API: Creating, resolving, and rejecting promises",
+            "Chaining promises for sequential asynchronous operations",
+            "Error handling in promises using .catch() and try...catch with async/await",
+            "The async/await syntax for writing cleaner asynchronous code",
+            "Understanding the JavaScript event loop, call stack, and message queue",
+            "Making HTTP requests using the Fetch API: Sending and receiving data",
+            "Handling different types of responses (JSON, text, etc.)",
+            "Introduction to handling common HTTP errors"
+          ],
+          "concepts_not_covered": [
+            "Advanced animation techniques using requestAnimationFrame and Canvas API",
+            "WebSockets and real-time communication in detail",
+            "Service Workers and their role in Progressive Web Apps (PWAs)",
+            "Detailed exploration of different state management libraries for asynchronous data handling",
+            "Server-Sent Events (SSE)"
+          ]
+        }
+      },
+      {
+        "week_id": 3,
+        "course_id": 2,
+        "order": 3,
+        "title": "Week 3: Introduction to HTML5 and Advanced CSS3",
+        "estimated_hours": 25,
+        "LLM_Summary": {
+          "summary": "This week transitions to the foundational technologies for structuring and styling web content: HTML5 and CSS3. The lectures will cover the semantic elements introduced in HTML5, emphasizing their role in creating accessible and well-structured documents. Advanced CSS3 topics will be explored, including sophisticated selectors, the box model in detail, positioning schemes, Flexbox and Grid layout systems for creating responsive designs, CSS transitions and animations for enhancing user experience, and media queries for adapting layouts to different devices. Best practices for writing maintainable and scalable CSS, along with an introduction to CSS preprocessors (e.g., Sass, Less), will also be discussed. The goal is to equip students with the skills to create modern, responsive, and visually appealing web interfaces.",
+          "concepts_covered": [
+            "HTML5 semantic elements and their proper usage (e.g., <article>, <nav>, <aside>, <header>, <footer>)",
+            "HTML5 forms: Advanced input types, validation attributes, and accessibility considerations",
+            "HTML5 multimedia: Embedding audio and video",
+            "Introduction to the HTML5 Canvas API (brief overview)",
+            "Advanced CSS3 selectors: Attribute selectors, pseudo-classes, and pseudo-elements",
+            "The CSS box model in detail: Understanding margin, padding, border, and content",
+            "CSS positioning schemes: Static, relative, absolute, fixed, and sticky positioning",
+            "Mastering Flexbox layout: Creating complex and responsive layouts with flex containers and items",
+            "Mastering CSS Grid layout: Building two-dimensional layouts with grid containers and grid items",
+            "Responsive design principles: Viewport meta tag, fluid grids, and flexible images",
+            "Utilizing media queries for adapting styles to different screen sizes and devices",
+            "CSS transitions: Creating smooth visual effects when property values change",
+            "CSS animations: Defining more complex and keyframe-based animations",
+            "Introduction to CSS preprocessors (Sass, Less): Variables, nesting, mixins, and inheritance",
+            "Best practices for CSS organization, naming conventions (e.g., BEM), and maintainability",
+            "Introduction to CSS methodologies and architectural patterns"
+          ],
+          "concepts_not_covered": [
+            "Advanced Canvas API techniques and game development",
+            "WebGL and 3D graphics in the browser",
+            "Detailed exploration of different CSS-in-JS solutions",
+            "In-depth performance optimization for CSS rendering",
+            "Advanced topics in CSS Houdini"
+          ]
+        }
+      },
+      {
+        "week_id": 4,
+        "course_id": 2,
+        "order": 4,
+        "title": "Week 4: Introduction to Vue.js: Components and Reactivity",
+        "estimated_hours": 25,
+        "LLM_Summary": {
+          "summary": "This week marks the introduction to the Vue.js framework, focusing on its core concepts of component-based architecture and the reactivity system. Lectures will cover the fundamentals of creating and using Vue components, understanding the options API (data, methods, computed properties, watchers, lifecycle hooks), and the principles of Vue's reactivity system, including data binding and dependency tracking. Component communication using props and events will be thoroughly explained. The week also introduces the concept of local state management within components and the role of Vue's virtual DOM in optimizing updates. Students will gain practical experience in building interactive UIs by composing reusable Vue components and leveraging Vue's reactivity features.",
+          "concepts_covered": [
+            "Introduction to the Vue.js framework and its core principles",
+            "Setting up a Vue.js development environment",
+            "Creating and registering Vue components (global and local registration)",
+            "Understanding the Vue instance and its lifecycle",
+            "The Options API: data, methods, computed properties, watchers, and lifecycle hooks",
+            "Deep dive into Vue's reactivity system and data binding (v-bind, v-model)",
+            "Component communication using props (passing data down)",
+            "Component communication using events (emitting data up)",
+            "Local state management within Vue components",
+            "Dynamic content rendering with v-if, v-show, and v-for directives",
+            "Handling user input with v-on directive",
+            "Understanding and using component slots for flexible content composition",
+            "Introduction to the Virtual DOM and its role in efficient UI updates",
+            "Basic component testing strategies in Vue.js (brief overview)",
+            "Styling Vue components: Inline styles, class bindings, and scoped CSS",
+            "Introduction to Vue Router for single-page application navigation (basic concepts)"
+          ],
+          "concepts_not_covered": [
+            "Advanced features of Vue Router (nested routes, dynamic routes, navigation guards)",
+            "In-depth exploration of Vuex for global state management",
+            "Server-Side Rendering (SSR) with Nuxt.js",
+            "Advanced component composition patterns",
+            "Custom directives and plugins in Vue.js"
+          ]
+        }
+      },
+      {
+        "week_id": 5,
+        "course_id": 2,
+        "order": 5,
+        "title": "Week 5: Advanced Vue.js: Composition API and State Management",
+        "estimated_hours": 25,
+        "LLM_Summary": {
+          "summary": "Building upon the foundational knowledge of Vue.js, this week delves into the Composition API, a modern approach to organizing component logic. Lectures will cover the setup function, reactive primitives (ref, reactive), computed properties, and watchers within the Composition API. The week also focuses on advanced state management in Vue.js, with a detailed exploration of Vuex for managing global application state. Topics include the Vuex store (state, mutations, actions, getters), modularizing the store, and best practices for state management in larger applications. Integration of asynchronous operations with Vuex actions will also be covered, providing students with the tools to build complex, stateful Vue.js applications.",
+          "concepts_covered": [
+            "Introduction to the Vue.js Composition API: Motivation and benefits",
+            "The setup function: Entry point for Composition API logic",
+            "Reactive primitives: ref and reactive for creating reactive data",
+            "Computed properties and watchers with the Composition API",
+            "Lifecycle hooks in the Composition API",
+            "Organizing and reusing component logic with composable functions",
+            "Comparison between Options API and Composition API",
+            "Detailed exploration of Vuex for global state management",
+            "Vuex Store: State, Mutations (synchronous updates), Actions (asynchronous operations)",
+            "Vuex Getters: Deriving reactive data from the store",
+            "Mutations vs. Actions: Understanding the flow of data in Vuex",
+            "Modularizing the Vuex store for larger applications",
+            "Connecting Vue components to the Vuex store using mapState, mapMutations, mapActions, and mapGetters",
+            "Best practices for state management in Vue.js applications",
+            "Handling asynchronous operations within Vuex actions",
+            "Introduction to other state management patterns and libraries in the Vue.js ecosystem (e.g., Pinia - brief overview)"
+          ],
+          "concepts_not_covered": [
+            "Advanced testing strategies for Vuex modules",
+            "Time-travel debugging with Vuex",
+            "Integration of Vuex with server-side data fetching patterns in depth",
+            "State management in server-rendered Vue.js applications (beyond basic concepts)",
+            "Advanced patterns for complex state interactions and side effects"
+          ]
+        }
+      },
+      {
+        "week_id": 6,
+        "course_id": 2,
+        "order": 6,
+        "title": "Week 6: Introduction to React: Components and JSX",
+        "estimated_hours": 25,
+        "LLM_Summary": {
+          "summary": "This week introduces the React library, a popular alternative for building user interfaces. Lectures will cover the fundamental concepts of React, including component-based architecture, the use of JSX (JavaScript XML) for defining UI structure, and the core principles of how React manages and updates the DOM. Students will learn to create functional and class components, understand the concept of props for passing data between components, and explore basic event handling in React. The week lays the groundwork for understanding React's component lifecycle and state management in subsequent weeks.",
+          "concepts_covered": [
+            "Introduction to the React library and its core principles and benefits",
+            "Setting up a React development environment (using Create React App or similar tools)",
+            "Understanding JSX (JavaScript XML) syntax and its role in React",
+            "Creating functional components in React (using arrow functions)",
+            "Creating class components in React (using ES6 classes)",
+            "Props: Passing data from parent to child components",
+            "Rendering lists and conditional content in React",
+            "Basic event handling in React: Synthetic events and event listeners",
+            "The concept of the virtual DOM in React and its reconciliation process",
+            "Understanding the unidirectional data flow in React",
+            "Component composition in React: Building UIs by nesting components",
+            "Styling React components: Inline styles, CSS classes, and CSS modules (introduction)",
+            "Introduction to React Hooks (useState - brief overview)",
+            "Basic component testing with React Testing Library (brief overview)",
+            "Key differences and similarities between Vue.js and React"
+          ],
+          "concepts_not_covered": [
+            "In-depth exploration of various React Hooks (useEffect, useContext, useReducer, etc.)",
+            "React Router for handling navigation in single-page applications",
+            "Advanced state management with Context API and Redux",
+            "Server-Side Rendering (SSR) with Next.js",
+            "Advanced component patterns and higher-order components"
+          ]
+        }
+      },
+      {
+        "week_id": 7,
+        "course_id": 2,
+        "order": 7,
+        "title": "Week 7: Advanced React: Hooks and State Management",
+        "estimated_hours": 25,
+        "LLM_Summary": {
+          "summary": "This week delves deeper into advanced React concepts, primarily focusing on React Hooks and state management. Lectures will provide a comprehensive understanding of various built-in Hooks such as useState, useEffect, useContext, and useReducer, and how they enable functional components to manage state and side effects. The week also explores different approaches to state management in React, including local component state, the Context API for sharing state across components, and an introduction to global state management libraries like Redux. Students will learn to choose appropriate state management solutions based on application complexity and build dynamic and interactive user interfaces with advanced React features.",
+          "concepts_covered": [
+            "In-depth exploration of React Hooks:",
+            "  useState: Managing local component state effectively",
+            "  useEffect: Handling side effects (data fetching, subscriptions, etc.)",
+            "  useContext: Accessing context values for global data sharing",
+            "  useReducer: Managing complex state logic with reducers",
+            "  useRef: Accessing DOM elements and persisting values",
+            "  Custom Hooks: Creating reusable logic across components",
+            "Understanding the rules of Hooks and best practices for their usage",
+            "State management in React:",
+            "  Local component state: When and how to use it effectively",
+            "  The Context API: Providing and consuming global state",
+            "  Introduction to Redux: Core concepts (store, actions, reducers, dispatch)",
+            "  Connecting React components to the Redux store using react-redux library",
+            "  Choosing the right state management solution for different scenarios",
+            "Handling asynchronous operations in React with Hooks and state management libraries",
+            "Performance optimization techniques in React using memoization (React.memo, useCallback, useMemo)",
+            "Advanced component patterns with Hooks",
+            "Introduction to testing React Hooks"
+          ],
+          "concepts_not_covered": [
+            "Advanced Redux middleware and asynchronous action creators (e.g., Redux Thunk, Redux Saga in detail)",
+            "Server-side rendering with Next.js in depth",
+            "Advanced patterns for optimizing re-renders in complex React applications",
+            "Integration of GraphQL or other data fetching libraries with React state management",
+            "Detailed comparison of different global state management libraries beyond Redux"
+          ]
+        }
+      },
+      {
+        "week_id": 8,
+        "course_id": 2,
+        "order": 8,
+        "title": "Week 8: Frontend Architecture, Best Practices, and Testing",
+        "estimated_hours": 25,
+        "LLM_Summary": {
+          "summary": "This final week focuses on the broader aspects of frontend development, including architectural patterns, best practices for building scalable and maintainable applications, and the crucial role of testing. Lectures will cover common frontend architectural patterns (e.g., MVC, MVVM, Flux/Redux), principles of clean code and component design, performance optimization strategies, accessibility (A11y) guidelines, and security best practices in frontend development. A significant portion of the week will be dedicated to frontend testing, including unit testing, integration testing, and end-to-end testing (introduction), along with an overview of popular testing frameworks for Vue.js and React. The goal is to equip students with a holistic understanding of building robust, high-quality modern web applications.",
+          "concepts_covered": [
+            "Frontend architectural patterns: MVC, MVVM, Flux/Redux - comparative analysis and when to use each",
+            "Principles of clean code and maintainable frontend development",
+            "Best practices for component design and reusability in Vue.js and React",
+            "Advanced performance optimization techniques: Code splitting, lazy loading, image optimization, browser caching, CDNs",
+            "Accessibility (A11y) best practices and WCAG guidelines for creating inclusive web applications",
+            "Security best practices in frontend development: Preventing XSS attacks, handling sensitive data",
+            "Introduction to frontend testing:",
+            "  Unit testing: Testing individual components and functions",
+            "  Integration testing: Testing the interaction between different units",
+            "  End-to-end (E2E) testing: Simulating user flows (brief overview)",
+            "Testing frameworks for Vue.js (e.g., Jest, Vue Test Utils)",
+            "Testing frameworks for React (e.g., Jest, React Testing Library, Enzyme - brief overview)",
+            "Writing effective test cases and achieving good test coverage",
+            "Introduction to frontend build tools and module bundlers (Webpack, Parcel, Vite) - advanced configurations (brief overview)",
+            "Introduction to CI/CD for frontend applications (brief overview)",
+            "Strategies for debugging and profiling frontend applications effectively"
+          ],
+          "concepts_not_covered": [
+            "In-depth configuration and customization of frontend build tools",
+            "Advanced CI/CD pipeline setup and automation",
+            "Detailed exploration of various E2E testing frameworks (e.g., Cypress, Selenium)",
+            "Performance monitoring and analytics in production environments",
+            "Advanced security vulnerabilities and penetration testing for web applications"
+          ]
+        }
+      }
+    ],
+    "lectures": [
+      {
+        "lecture_id": 1,
+        "week_id": 1,
+        "order": 1,
+        "title": "Advanced JavaScript Syntax and ES6+ Features",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=JjZAmtxbY-g",
+        "content_transcript": "Welcome back to Modern Application Development II! This lecture dives deep into the modern syntax of JavaScript, specifically focusing on the features introduced in ECMAScript 2015 (ES6) and beyond. We'll start by revisiting variable declarations with `let` and `const`, emphasizing block scope and their advantages over `var`. Then, we'll explore arrow functions, highlighting their concise syntax and lexical `this` binding. Destructuring assignment for both arrays and objects will be covered in detail, showing how to extract values efficiently. We'll also discuss the spread and rest operators and their versatile applications in function arguments and data manipulation. The lecture will then move on to template literals for enhanced string interpolation and the powerful new data structures like Maps and Sets. Finally, we'll introduce the ES6 module system with `import` and `export` statements, laying the foundation for modular and organized JavaScript code. This session aims to solidify your understanding of modern JavaScript, enabling you to write cleaner, more readable, and maintainable code for your frontend applications.",
+        "duration_minutes": 55,
+        "keywords": [
+          "JavaScript",
+          "ES6",
+          "let",
+          "const",
+          "arrow functions",
+          "destructuring",
+          "spread operator",
+          "rest operator",
+          "template literals",
+          "Maps",
+          "Sets",
+          "modules",
+          "import",
+          "export"
+        ]
+      },
+      {
+        "lecture_id": 2,
+        "week_id": 1,
+        "order": 2,
+        "title": "Scope, Closures, and Higher-Order Functions in JavaScript",
+        "resource_type": "pdf",
+        "resource_url": "MAD2_Week1_Lecture2.pdf",
+        "content_extract": "This lecture builds upon the foundational JavaScript concepts by exploring scope in detail, including global, function, and block scope. We'll delve into the concept of closures, understanding how inner functions retain access to variables from their outer (enclosing) function's scope even after the outer function has finished executing. Practical examples of closures and their applications in creating private variables and maintaining state will be provided. The session will then introduce higher-order functions, which are functions that operate on other functions, either by taking them as arguments or by returning them. We'll examine common higher-order array methods like `map`, `filter`, and `reduce`, and demonstrate how they enable powerful and concise data manipulation using functional programming paradigms in JavaScript.",
+        "duration_minutes": 50,
+        "keywords": [
+          "JavaScript",
+          "scope",
+          "global scope",
+          "function scope",
+          "block scope",
+          "closures",
+          "higher-order functions",
+          "map",
+          "filter",
+          "reduce",
+          "functional programming"
+        ]
+      },
+      {
+        "lecture_id": 3,
+        "week_id": 1,
+        "order": 3,
+        "title": "Asynchronous JavaScript: Promises and Async/Await",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=V_Z8PHdY4gA",
+        "content_transcript": "In this lecture, we tackle the crucial topic of asynchronous JavaScript. We'll start by understanding why asynchronicity is essential for modern web applications to avoid blocking the main thread and ensure a responsive user experience. We'll then dive into the Promise API, learning how to create, resolve, and reject promises to handle asynchronous operations. We'll cover promise chaining for executing sequential asynchronous tasks and error handling with `.catch()`. The lecture will then introduce the `async/await` syntax, which provides a more synchronous-looking way to write asynchronous code, making it easier to read and maintain. We'll explore how `async/await` builds on top of Promises and how to handle errors using `try...catch` blocks in `async` functions. Practical examples of using `async/await` for fetching data from APIs will be demonstrated.",
+        "duration_minutes": 60,
+        "keywords": [
+          "JavaScript",
+          "asynchronous",
+          "promises",
+          "async",
+          "await",
+          "callback",
+          "event loop",
+          "error handling",
+          "API fetching"
+        ]
+      },
+      {
+        "lecture_id": 4,
+        "week_id": 2,
+        "order": 1,
+        "title": "Deep Dive into DOM Manipulation and Traversal",
+        "resource_type": "pdf",
+        "resource_url": "MAD2_Week2_Lecture1.pdf",
+        "content_extract": "This lecture provides a comprehensive exploration of the Document Object Model (DOM) and advanced techniques for manipulating and traversing it. We'll start by revisiting the DOM tree structure and the different types of nodes. Then, we'll delve into various methods for selecting DOM elements efficiently, including `getElementById`, `getElementsByClassName`, `getElementsByTagName`, and `querySelector`/`querySelectorAll`. We'll explore techniques for modifying element content, attributes, and styles dynamically. The lecture will also cover DOM traversal, demonstrating how to navigate the DOM tree using properties like `parentNode`, `childNodes`, `firstChild`, `lastChild`, `nextSibling`, and `previousSibling`. We'll discuss best practices for minimizing DOM manipulation to optimize performance and create smoother user interactions.",
+        "duration_minutes": 50,
+        "keywords": [
+          "JavaScript",
+          "DOM",
+          "Document Object Model",
+          "DOM manipulation",
+          "DOM traversal",
+          "getElementById",
+          "getElementsByClassName",
+          "getElementsByTagName",
+          "querySelector",
+          "querySelectorAll",
+          "node properties",
+          "performance"
+        ]
+      },
+      {
+        "lecture_id": 5,
+        "week_id": 2,
+        "order": 2,
+        "title": "JavaScript Events: Bubbling, Capturing, and Delegation",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=ni4s0L-E1YQ",
+        "content_transcript": "This lecture focuses on event handling in JavaScript, a fundamental aspect of creating interactive web applications. We'll begin by understanding the event flow, specifically the bubbling and capturing phases, and how they affect the order in which event listeners are triggered. We'll then explore the concept of event delegation, a powerful technique for efficiently handling events on a large number of elements by attaching a single event listener to a common ancestor. We'll discuss the benefits of event delegation in terms of performance and code maintainability. The lecture will also cover how to prevent default event behavior using `preventDefault()` and stop event propagation using `stopPropagation()`. Practical examples of implementing various event listeners and handling different types of DOM events will be provided.",
+        "duration_minutes": 55,
+        "keywords": [
+          "JavaScript",
+          "events",
+          "event handling",
+          "event listeners",
+          "event bubbling",
+          "event capturing",
+          "event delegation",
+          "preventDefault",
+          "stopPropagation",
+          "DOM events",
+          "performance"
+        ]
+      },
+      {
+        "lecture_id": 6,
+        "week_id": 2,
+        "order": 3,
+        "title": "Making HTTP Requests with the Fetch API",
+        "resource_type": "pdf",
+        "resource_url": "MAD2_Week2_Lecture3.pdf",
+        "content_extract": "This lecture provides a comprehensive guide to making HTTP requests in JavaScript using the modern Fetch API. We'll start by understanding the basics of HTTP requests and responses, including different HTTP methods (GET, POST, PUT, DELETE) and status codes. We'll then dive into the Fetch API, demonstrating how to send various types of requests, including fetching data from APIs and sending data to the server. We'll cover handling different types of request and response bodies, including JSON data. The lecture will also address error handling in Fetch API requests and how to configure request headers. Practical examples of interacting with RESTful APIs using the Fetch API will be provided.",
+        "duration_minutes": 45,
+        "keywords": [
+          "JavaScript",
+          "Fetch API",
+          "HTTP requests",
+          "HTTP methods",
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE",
+          "HTTP status codes",
+          "API",
+          "RESTful API",
+          "JSON",
+          "error handling"
+        ]
+      },
+      {
+        "lecture_id": 7,
+        "week_id": 3,
+        "order": 1,
+        "title": "Semantic HTML5 and Accessibility (A11y)",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=awiF-D549-E",
+        "content_transcript": "This lecture focuses on the importance of semantic HTML5 in creating well-structured and accessible web content. We'll explore the various semantic elements introduced in HTML5, such as `<article>`, `<nav>`, `<aside>`, `<header>`, `<footer>`, `<main>`, and `<section>`, and understand how their proper usage enhances the meaning and structure of web documents for both browsers and assistive technologies. The lecture will then delve into web accessibility (A11y) best practices, covering topics such as providing alternative text for images (`alt` attribute), using ARIA attributes to improve accessibility for dynamic content, ensuring keyboard navigation, using semantic headings, and understanding WCAG (Web Content Accessibility Guidelines). We'll discuss the benefits of building accessible websites for all users, including those with disabilities.",
+        "duration_minutes": 50,
+        "keywords": [
+          "HTML5",
+          "semantic HTML",
+          "accessibility",
+          "A11y",
+          "ARIA attributes",
+          "WCAG",
+          "assistive technologies",
+          "semantic elements",
+          "web standards"
+        ]
+      },
+      {
+        "lecture_id": 8,
+        "week_id": 3,
+        "order": 2,
+        "title": "Advanced CSS3 Selectors and the Box Model",
+        "resource_type": "pdf",
+        "resource_url": "MAD2_Week3_Lecture2.pdf",
+        "content_extract": "This lecture provides an in-depth look at advanced CSS3 selectors and the fundamental CSS box model. We'll explore various attribute selectors, pseudo-classes (e.g., `:hover`, `:focus`, `:nth-child`), and pseudo-elements (e.g., `::before`, `::after`) that allow for precise targeting of HTML elements. We'll then dissect the CSS box model, which defines how elements are rendered in the browser. We'll thoroughly examine the properties that make up the box model: `content`, `padding`, `border`, and `margin`, and understand how they interact to determine the size and spacing of elements on the page. We'll also discuss the `box-sizing` property and its importance in creating predictable layouts.",
+        "duration_minutes": 45,
+        "keywords": [
+          "CSS3",
+          "selectors",
+          "attribute selectors",
+          "pseudo-classes",
+          "pseudo-elements",
+          "box model",
+          "content",
+          "padding",
+          "border",
+          "margin",
+          "box-sizing",
+          "styling"
+        ]
+      },
+      {
+        "lecture_id": 9,
+        "week_id": 3,
+        "order": 3,
+        "title": "Responsive Design with Flexbox and Grid",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=5L-Zz37_HwI",
+        "content_transcript": "This lecture focuses on two powerful CSS layout systems: Flexbox and Grid, which are essential for creating responsive web designs that adapt seamlessly to different screen sizes and devices. We'll start with CSS Flexbox, exploring its concepts of flex containers and flex items, and learn how to use properties like `display: flex`, `flex-direction`, `justify-content`, `align-items`, and `flex-grow`/`flex-shrink`/`flex-basis` to create flexible one-dimensional layouts. We'll then move on to CSS Grid, a two-dimensional layout system that allows for creating complex grid-based layouts using properties like `display: grid`, `grid-template-columns`, `grid-template-rows`, `grid-gap`, and named grid areas. We'll discuss when to use Flexbox versus Grid and how to combine them effectively to build sophisticated and responsive web interfaces. We'll also cover the use of media queries for applying different styles based on screen characteristics.",
+        "duration_minutes": 60,
+        "keywords": [
+          "CSS3",
+          "responsive design",
+          "Flexbox",
+          "CSS Grid",
+          "flex container",
+          "flex items",
+          "grid container",
+          "grid items",
+          "media queries",
+          "layout",
+          "web design"
+        ]
+      },
+      {
+        "lecture_id": 10,
+        "week_id": 4,
+        "order": 1,
+        "title": "Vue.js Fundamentals: Instance and Component Basics",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=qZXt1Aom3Cs",
+        "content_transcript": "Welcome to the Vue.js section of the course! This lecture will introduce you to the fundamental concepts of the Vue.js framework. We'll begin by understanding the Vue instance, the root of every Vue application, and explore its options such as `data`, `methods`, `computed`, and `watch`. We'll then dive into the core concept of component-based architecture in Vue.js, learning how to create reusable UI building blocks. We'll cover component registration (global and local), component templates, and how to pass data to components using props. We'll also introduce basic data binding using directives like `v-bind` and `v-model`, which allow for dynamic updates to the user interface based on changes in the underlying data. This session lays the foundation for building interactive web applications with Vue.js.",
+        "duration_minutes": 55,
+        "keywords": [
+          "Vue.js",
+          "framework",
+          "instance",
+          "component",
+          "props",
+          "data binding",
+          "v-bind",
+          "v-model",
+          "template",
+          "options API"
+        ]
+      },
+      {
+        "lecture_id": 11,
+        "week_id": 4,
+        "order": 2,
+        "title": "Vue.js Reactivity System and Computed Properties/Watchers",
+        "resource_type": "pdf",
+        "resource_url": "MAD2_Week4_Lecture2.pdf",
+        "content_extract": "This lecture provides a detailed explanation of Vue.js's powerful reactivity system, which automatically tracks dependencies and updates the DOM when data changes. We'll explore how Vue.js achieves this reactivity under the hood. We'll then focus on computed properties, which allow you to define data that is derived from other data and is cached for performance. We'll also cover watchers, which provide a more generic way to react to data changes, allowing you to perform asynchronous or expensive operations in response to specific data modifications. Practical examples of using computed properties and watchers for various UI logic scenarios will be provided.",
+        "duration_minutes": 50,
+        "keywords": [
+          "Vue.js",
+          "reactivity",
+          "data tracking",
+          "computed properties",
+          "watchers",
+          "dependency tracking",
+          "performance",
+          "options API"
+        ]
+      },
+      {
+        "lecture_id": 12,
+        "week_id": 4,
+        "order": 3,
+        "title": "Component Communication in Vue.js: Props and Events",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=gq_BqLHlMfo",
+        "content_transcript": "This lecture focuses on the crucial aspect of component communication in Vue.js applications. We'll delve deeper into how to pass data down from parent components to child components using props, including prop validation and default values. We'll then explore how child components can communicate back up to their parent components using custom events emitted with the `$emit` method and handled with `v-on` (or `@`) in the parent. We'll discuss different patterns for component communication in more complex component hierarchies and understand the importance of maintaining a clear and predictable data flow in Vue.js applications.",
+        "duration_minutes": 45,
+        "keywords": [
+          "Vue.js",
+          "component communication",
+          "props",
+          "events",
+          "$emit",
+          "v-on",
+          "@",
+          "data flow",
+          "component hierarchy"
+        ]
+      },
+      {
+        "lecture_id": 13,
+        "week_id": 5,
+        "order": 1,
+        "title": "Vue.js Composition API: Setup and Reactive Primitives",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=y2v1YwnXQ_k",
+        "content_transcript": "Welcome to the advanced Vue.js section focusing on the Composition API! This lecture introduces the Composition API as a modern way to organize component logic in Vue 3. We'll start by understanding the `setup` function, which serves as the entry point for Composition API logic within a component. We'll then dive into the core reactive primitives: `ref` for creating reactive variables holding primitive or object values, and `reactive` for creating reactive objects. We'll explore how to access and modify the values of refs and reactive objects within the `setup` function and how these changes trigger updates in the component's template. We'll also discuss the benefits of using the Composition API for better code organization, reusability, and maintainability, especially in larger Vue.js applications.",
+        "duration_minutes": 50,
+        "keywords": [
+          "Vue.js",
+          "Composition API",
+          "setup",
+          "ref",
+          "reactive",
+          "reactivity",
+          "Vue 3",
+          "code organization",
+          "reusability"
+        ]
+      },
+      {
+        "lecture_id": 14,
+        "week_id": 5,
+        "order": 2,
+        "title": "Composition API: Computed Properties and Watchers",
+        "resource_type": "pdf",
+        "resource_url": "MAD2_Week5_Lecture2.pdf",
+        "content_extract": "Building upon the introduction to the Composition API, this lecture focuses on implementing computed properties and watchers using this modern approach. We'll learn how to define computed properties within the `setup` function using the `computed` function, understanding how they derive reactive data and are cached for performance. We'll also explore how to create watchers using the `watch` function, enabling us to react to changes in reactive data sources, including refs, reactive objects, and even multiple sources. We'll discuss the different options available for watchers, such as deep watching and immediate execution. Practical examples of using computed properties and watchers within the Composition API for managing complex component logic will be provided.",
+        "duration_minutes": 45,
+        "keywords": [
+          "Vue.js",
+          "Composition API",
+          "computed",
+          "watch",
+          "reactivity",
+          "Vue 3",
+          "performance",
+          "reactive primitives"
+        ]
+      },
+      {
+        "lecture_id": 15,
+        "week_id": 5,
+        "order": 3,
+        "title": "Vuex State Management: Core Concepts and Store Setup",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=3j4cq3D6f5s",
+        "content_transcript": "This lecture introduces Vuex, a state management pattern + library for Vue.js applications. We'll discuss the need for centralized state management in larger applications and how Vuex helps manage complex data flows predictably. We'll delve into the core concepts of Vuex: State (the single source of truth), Mutations (synchronous functions for modifying state), Actions (asynchronous functions for committing mutations), and Getters (derived state based on the store's state). We'll learn how to set up a Vuex store in a Vue.js application, define state, mutations, actions, and getters, and understand the fundamental principles of how data flows through a Vuex application. We'll also cover basic integration of Vuex with Vue components.",
+        "duration_minutes": 55,
+        "keywords": [
+          "Vue.js",
+          "Vuex",
+          "state management",
+          "store",
+          "state",
+          "mutations",
+          "actions",
+          "getters",
+          "centralized state",
+          "data flow"
+        ]
+      },
+      {
+        "lecture_id": 16,
+        "week_id": 6,
+        "order": 1,
+        "title": "Introduction to React Components and JSX",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=RVFAyFWOcGo",
+        "content_transcript": "Welcome to the React section of the course! This lecture introduces the fundamental concept of components in React, which are the building blocks of React user interfaces. We'll explore how to create both functional components (using arrow functions) and class components (using ES6 classes). We'll then dive into JSX (JavaScript XML), a syntax extension that allows you to write HTML-like structures directly within your JavaScript code, making it more intuitive to define UI. We'll understand how JSX gets transformed into regular JavaScript function calls. We'll also cover how to render React components to the DOM and the basic structure of a React application. This session sets the stage for building interactive UIs with React.",
+        "duration_minutes": 50,
+        "keywords": [
+          "React",
+          "component",
+          "functional component",
+          "class component",
+          "JSX",
+          "JavaScript XML",
+          "rendering",
+          "DOM",
+          "UI",
+          "syntax"
+        ]
+      },
+      {
+        "lecture_id": 17,
+        "week_id": 6,
+        "order": 2,
+        "title": "Props and Basic Event Handling in React",
+        "resource_type": "pdf",
+        "resource_url": "MAD2_Week6_Lecture2.pdf",
+        "content_extract": "This lecture focuses on how data flows between React components using props (properties) and how to handle user interactions through basic event handling. We'll learn how to pass data down from parent components to child components as props, making child components reusable and configurable. We'll also cover prop validation using PropTypes to ensure that components receive the expected data types. The session will then introduce React's event handling system, which is based on synthetic events. We'll learn how to attach event listeners to React elements using `on` event handlers (e.g., `onClick`, `onChange`) and how to access event objects. Basic techniques for handling common user interactions will be demonstrated.",
+        "duration_minutes": 45,
+        "keywords": [
+          "React",
+          "props",
+          "properties",
+          "component communication",
+          "data flow",
+          "PropTypes",
+          "event handling",
+          "synthetic events",
+          "onClick",
+          "onChange"
+        ]
+      },
+      {
+        "lecture_id": 18,
+        "week_id": 6,
+        "order": 3,
+        "title": "State in React: useState Hook and Class Component State",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=hQAHYDOZ_1g",
+        "content_transcript": "This lecture introduces the concept of state in React, which allows components to manage and update their own data over time, leading to dynamic and interactive UIs. We'll start by exploring the `useState` Hook, a fundamental Hook in functional components that enables them to have state variables and update their values. We'll learn how to declare state variables and the updater functions returned by `useState`. We'll also cover how to manage state in class components using the `this.state` property and the `this.setState()` method. We'll discuss the differences between state and props and when to use each. Understanding state management is crucial for building interactive React applications.",
+        "duration_minutes": 55,
+        "keywords": [
+          "React",
+          "state",
+          "useState",
+          "Hook",
+          "functional component",
+          "class component",
+          "this.state",
+          "this.setState",
+          "props",
+          "data management",
+          "interactivity"
+        ]
+      },
+      {
+        "lecture_id": 19,
+        "week_id": 7,
+        "order": 1,
+        "title": "React Hooks: useEffect for Side Effects",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=MX3aCnf9lEQ",
+        "content_transcript": "This lecture focuses on the `useEffect` Hook in React, which is used to handle side effects in functional components. Side effects include data fetching, subscriptions, timers, manual DOM manipulations, and more. We'll explore how `useEffect` works, how to define effect functions, and how to specify dependency arrays to control when the effect runs. We'll also cover cleanup functions within `useEffect` to prevent memory leaks and manage resources properly. Understanding `useEffect` is essential for performing asynchronous operations and interacting with the outside world within React functional components.",
+        "duration_minutes": 50,
+        "keywords": [
+          "React",
+          "Hooks",
+          "useEffect",
+          "side effects",
+          "data fetching",
+          "subscriptions",
+          "timers",
+          "cleanup function",
+          "functional component",
+          "lifecycle"
+        ]
+      },
+      {
+        "lecture_id": 20,
+        "week_id": 7,
+        "order": 2,
+        "title": "Context API in React: Global State Management",
+        "resource_type": "pdf",
+        "resource_url": "MAD2_Week7_Lecture2.pdf",
+        "content_extract": "This lecture introduces the Context API in React as a way to manage global state that needs to be accessible by many components at different nesting levels. We'll learn how to create a context using `React.createContext()`, how to provide context values to a component tree using a `Context.Provider`, and how to consume context values in child components using `Context.Consumer` or the `useContext` Hook. We'll discuss the benefits and limitations of using the Context API for state management and when it's an appropriate solution compared to other state management libraries like Redux. Practical examples of using the Context API to share data across a React application will be provided.",
+        "duration_minutes": 45,
+        "keywords": [
+          "React",
+          "Context API",
+          "global state management",
+          "React.createContext",
+          "Context.Provider",
+          "Context.Consumer",
+          "useContext",
+          "state management patterns"
+        ]
+      },
+      {
+        "lecture_id": 21,
+        "week_id": 7,
+        "order": 3,
+        "title": "Introduction to Redux: Actions, Reducers, and Store",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=93_E-YmR52s",
+        "content_transcript": "This lecture provides an introduction to Redux, a popular library for managing global state in JavaScript applications, especially with React. We'll discuss the core principles of Redux: the single source of truth (Store), actions (plain JavaScript objects describing events), and reducers (pure functions that specify how the state changes in response to actions). We'll learn how to create a Redux store, define actions and action creators, and write reducers that update the state immutably. We'll also cover how to dispatch actions to the store and how React components can connect to the Redux store to access state and dispatch actions using the `react-redux` library (brief overview). This session lays the foundation for understanding more advanced Redux concepts in subsequent learning.",
+        "duration_minutes": 55,
+        "keywords": [
+          "React",
+          "Redux",
+          "state management",
+          "store",
+          "actions",
+          "reducers",
+          "dispatch",
+          "single source of truth",
+          "immutability",
+          "react-redux"
+        ]
+      },
+      {
+        "lecture_id": 22,
+        "week_id": 8,
+        "order": 1,
+        "title": "Frontend Architectural Patterns: MVC, MVVM, Flux/Redux",
+        "resource_type": "pdf",
+        "resource_url": "MAD2_Week8_Lecture1.pdf",
+        "content_extract": "This lecture explores common architectural patterns used in frontend development to structure and organize code in scalable and maintainable ways. We'll examine the Model-View-Controller (MVC) pattern, the Model-View-ViewModel (MVVM) pattern, and the Flux/Redux pattern. For each pattern, we'll discuss its key components, principles, advantages, and disadvantages. We'll also discuss how these patterns relate to modern frontend frameworks like Vue.js and React and when it might be appropriate to choose one pattern over another based on the complexity and requirements of a web application.",
+        "duration_minutes": 50,
+        "keywords": [
+          "frontend architecture",
+          "MVC",
+          "MVVM",
+          "Flux",
+          "Redux",
+          "design patterns",
+          "scalability",
+          "maintainability",
+          "Vue.js",
+          "React"
+        ]
+      },
+      {
+        "lecture_id": 23,
+        "week_id": 8,
+        "order": 2,
+        "title": "Frontend Performance Optimization Techniques",
+        "resource_type": "youtube",
+        "video_url": "https://www.youtube.com/watch?v=rIG_hjH9_fQ",
+        "content_transcript": "This lecture focuses on various techniques for optimizing the performance of frontend web applications. We'll cover strategies such as code splitting to reduce initial load time, lazy loading of components and images, optimizing images and other assets, leveraging browser caching, and using Content Delivery Networks (CDNs) to serve static assets efficiently. We'll also discuss performance monitoring and profiling tools that can help identify bottlenecks in frontend code. Best practices for writing efficient JavaScript and CSS will be highlighted, along with considerations for minimizing DOM manipulations and optimizing rendering performance in frameworks like Vue.js and React.",
+        "duration_minutes": 55,
+        "keywords": [
+          "frontend performance",
+          "optimization",
+          "code splitting",
+          "lazy loading",
+          "image optimization",
+          "browser caching",
+          "CDN",
+          "performance monitoring",
+          "JavaScript optimization",
+          "CSS optimization",
+          "DOM manipulation",
+          "rendering"
+        ]
+      },
+      {
+        "lecture_id": 24,
+        "week_id": 8,
+        "order": 3,
+        "title": "Introduction to Frontend Testing: Unit, Integration, and E2E",
+        "resource_type": "pdf",
+        "resource_url": "MAD2_Week8_Lecture3.pdf",
+        "content_extract": "This lecture provides an introduction to the essential practice of frontend testing to ensure the quality and reliability of web applications. We'll discuss the different types of frontend tests, including unit tests (testing individual components or functions in isolation), integration tests (testing the interaction between different parts of the application), and end-to-end (E2E) tests (simulating user flows through the entire application). We'll briefly introduce popular testing frameworks for Vue.js (e.g., Jest, Vue Test Utils) and React (e.g., Jest, React Testing Library, Cypress for E2E). We'll discuss the benefits of writing tests, such as catching bugs early, improving code maintainability, and providing confidence in code changes. Basic principles of writing effective test cases and aiming for good test coverage will be covered.",
+        "duration_minutes": 45,
+        "keywords": [
+          "frontend testing",
+          "unit testing",
+          "integration testing",
+          "end-to-end testing",
+          "Jest",
+          "Vue Test Utils",
+          "React Testing Library",
+          "Cypress",
+          "test coverage",
+          "quality assurance"
+        ]
+      }
+    ],
+    "assignments": [
+      {
+        "assignment_id": 1,
+        "week_id": 1,
+        "title": "ES6+ JavaScript Practice",
+        "description": "Practice using modern JavaScript features introduced in ES6 and later. Focus on `let` and `const`, arrow functions, destructuring, spread/rest operators, and template literals.",
+        "type": "practice",
+        "due_date": "2025-04-12",
+        "start_date": "2025-04-05",
+        "is_published": true,
+        "question_ids": [
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "assignment_id": 2,
+        "week_id": 1,
+        "title": "Closures and Higher-Order Functions Assignment",
+        "description": "Implement functions that utilize closures to maintain state and practice using higher-order array methods (`map`, `filter`, `reduce`) to solve data manipulation problems.",
+        "type": "graded",
+        "due_date": "2025-04-19",
+        "start_date": "2025-04-12",
+        "is_published": true,
+        "question_ids": [
+          8,
+          9,
+          10
+        ]
+      },
+      {
+        "assignment_id": 3,
+        "week_id": 2,
+        "title": "DOM Manipulation Challenges",
+        "description": "Solve a series of challenges that require you to dynamically manipulate the DOM based on user interactions and data changes.",
+        "type": "graded",
+        "due_date": "2025-04-26",
+        "start_date": "2025-04-19",
+        "is_published": true,
+        "question_ids": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "assignment_id": 4,
+        "week_id": 2,
+        "title": "Asynchronous Operations with Promises and Fetch API",
+        "description": "Implement asynchronous JavaScript code using Promises and the Fetch API to retrieve and display data from a public API.",
+        "type": "project",
+        "due_date": "2025-05-03",
+        "start_date": "2025-04-26",
+        "is_published": true,
+        "question_ids": [
+          14,
+          15
+        ]
+      },
+      {
+        "assignment_id": 5,
+        "week_id": 3,
+        "title": "Semantic HTML5 Structure and CSS Styling",
+        "description": "Build a web page using semantic HTML5 elements and style it using advanced CSS3 selectors, Flexbox, and Grid to create a responsive layout.",
+        "type": "project",
+        "due_date": "2025-05-10",
+        "start_date": "2025-05-03",
+        "is_published": true,
+        "question_ids": [
+          16,
+          17
+        ]
+      },
+      {
+        "assignment_id": 6,
+        "week_id": 4,
+        "title": "Introduction to Vue.js Components",
+        "description": "Create a simple interactive web application using Vue.js components, props, events, and data binding.",
+        "type": "project",
+        "due_date": "2025-05-17",
+        "start_date": "2025-05-10",
+        "is_published": true,
+        "question_ids": [
+          18,
+          19
+        ]
+      },
+      {
+        "assignment_id": 7,
+        "week_id": 5,
+        "title": "Advanced Vue.js with Composition API and Vuex",
+        "description": "Refactor the Vue.js application from the previous week to use the Composition API and integrate Vuex for state management.",
+        "type": "project",
+        "due_date": "2025-05-24",
+        "start_date": "2025-05-17",
+        "is_published": true,
+        "question_ids": [
+          20,
+          21
+        ]
+      },
+      {
+        "assignment_id": 8,
+        "week_id": 6,
+        "title": "Introduction to React Components and Props",
+        "description": "Build a user interface using React functional components and class components, passing data down through props.",
+        "type": "practice",
+        "due_date": "2025-05-31",
+        "start_date": "2025-05-24",
+        "is_published": true,
+        "question_ids": [
+          22,
+          23
+        ]
+      },
+      {
+        "assignment_id": 9,
+        "week_id": 7,
+        "title": "React Hooks and State Management",
+        "description": "Implement state management in React functional components using the `useState` and `useEffect` Hooks, and explore the Context API for sharing global state.",
+        "type": "graded",
+        "due_date": "2025-06-07",
+        "start_date": "2025-05-31",
+        "is_published": true,
+        "question_ids": [
+          24,
+          25
+        ]
+      },
+      {
+        "assignment_id": 10,
+        "week_id": 8,
+        "title": "Frontend Architecture and Testing Basics",
+        "description": "Design the architecture for a small web application following a specific pattern (e.g., MVVM) and write basic unit tests for key components using a testing framework of your choice (Jest with Vue Test Utils or React Testing Library).",
+        "type": "project",
+        "due_date": "2025-06-14",
+        "start_date": "2025-06-07",
+        "is_published": true,
+        "question_ids": [
+          26,
+          27
+        ]
+      }
+    ],
+    "questions": [
+      {
+        "question_id": 5,
+        "content": "Which of the following is the correct way to declare a variable whose value should not be reassigned in ES6+ JavaScript?",
+        "type": "MCQ",
+        "question_options": [
+          "var myVariable = 10;",
+          "let myVariable = 10;",
+          "const myVariable = 10;",
+          "def myVariable = 10;"
+        ],
+        "correct_answer": 2,
+        "points": 5,
+        "explanation": "`const` is used to declare variables with constant values that cannot be reassigned.",
+        "course_id": 2,
+        "week_id": 1,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "es6",
+          "variables",
+          "const"
+        ]
+      },
+      {
+        "question_id": 6,
+        "content": "What is the output of the following JavaScript code?\n\n```javascript\nconst numbers = [1-3];\nconst [first, ...rest] = numbers;\nconsole.log(rest);\n```",
+        "type": "MCQ",
+        "question_options": [
+          "[1]",
+          "[2, 3]",
+          "[1, 2]",
+          "[]"
+        ],
+        "correct_answer": 1,
+        "points": 5,
+        "explanation": "The rest parameter (`...rest`) collects the remaining elements of the array into a new array.",
+        "course_id": 2,
+        "week_id": 1,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "es6",
+          "destructuring",
+          "rest operator",
+          "arrays"
+        ]
+      },
+      {
+        "question_id": 7,
+        "content": "Which of the following is the correct syntax for an arrow function in JavaScript?",
+        "type": "MCQ",
+        "question_options": [
+          "function myFunction() {}",
+          "myFunction => {}",
+          "const myFunction = () => {};",
+          "let myFunction = function() {};"
+        ],
+        "correct_answer": 2,
+        "points": 5,
+        "explanation": "Arrow functions have a concise syntax: `(parameters) => { expression }`.",
+        "course_id": 2,
+        "week_id": 1,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "es6",
+          "arrow functions",
+          "syntax"
+        ]
+      },
+      {
+        "question_id": 8,
+        "content": "Explain the concept of a closure in JavaScript with a simple example.",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "A closure is a function that has access to the outer (enclosing) function's scope—even after the outer function has finished executing. This happens because the inner function 'remembers' the environment in which it was created.",
+        "course_id": 2,
+        "week_id": 1,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "scope",
+          "closures"
+        ]
+      },
+      {
+        "question_id": 9,
+        "content": "Write a JavaScript function that takes an array of numbers and returns a new array containing only the even numbers using the `filter` higher-order function.",
+        "type": "CODE",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "```javascript\nfunction getEvenNumbers(numbers) {\n  return numbers.filter(number => number % 2 === 0);\n}\n```",
+        "course_id": 2,
+        "week_id": 1,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "higher-order functions",
+          "filter",
+          "arrays"
+        ]
+      },
+      {
+        "question_id": 10,
+        "content": "What is the purpose of the `reduce` higher-order function in JavaScript?",
+        "type": "MCQ",
+        "question_options": [
+          "To transform each element in an array.",
+          "To filter elements in an array based on a condition.",
+          "To iterate over each element in an array.",
+          "To reduce an array to a single value."
+        ],
+        "correct_answer": 3,
+        "points": 5,
+        "explanation": "The `reduce` method executes a user-supplied \"reducer\" callback function on each element of the array, passing in the return value from the previous calculation. The final result of running the reducer across all elements of the array is a single value.",
+        "course_id": 2,
+        "week_id": 1,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "higher-order functions",
+          "reduce",
+          "arrays"
+        ]
+      },
+      {
+        "question_id": 11,
+        "content": "Which JavaScript method is used to find the first element within the DOM that matches a specified CSS selector?",
+        "type": "MCQ",
+        "question_options": [
+          "getElementById()",
+          "getElementsByClassName()",
+          "getElementsByTagName()",
+          "querySelector()"
+        ],
+        "correct_answer": 3,
+        "points": 5,
+        "explanation": "The `querySelector()` method returns the first element within the document that matches the specified selector, or group of selectors.",
+        "course_id": 2,
+        "week_id": 2,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "DOM",
+          "querySelector"
+        ]
+      },
+      {
+        "question_id": 12,
+        "content": "Explain the difference between event bubbling and event capturing in the DOM.",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "Event Bubbling: When an event occurs on an element, it first runs the handlers on it, then propagates up the DOM tree to its parent, then to its grandparent, and so on, until it reaches the `window`. Event Capturing: In the capturing phase, when an event occurs on an element, it first travels down the DOM tree, triggering any handlers attached to the ancestor elements in the capturing phase, and finally reaches the target element.",
+        "course_id": 2,
+        "week_id": 2,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "DOM",
+          "events",
+          "event bubbling",
+          "event capturing"
+        ]
+      },
+      {
+        "question_id": 13,
+        "content": "What is event delegation and why is it a useful technique?",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "Event Delegation: A technique where you attach a single event listener to a parent element instead of attaching individual event listeners to each of its children. When an event occurs on a child element, it bubbles up to the parent, and the listener on the parent can determine which child triggered the event and handle it accordingly. Usefulness: Improves performance by reducing the number of event listeners, simplifies code for dynamically added elements, and can reduce memory consumption.",
+        "course_id": 2,
+        "week_id": 2,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "DOM",
+          "events",
+          "event delegation",
+          "performance"
+        ]
+      },
+      {
+        "question_id": 14,
+        "content": "Write JavaScript code using the Fetch API to make a GET request to the URL 'https://jsonplaceholder.typicode.com/todos/1' and log the response body as JSON to the console.",
+        "type": "CODE",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 15,
+        "explanation": "```javascript\nfetch('https://jsonplaceholder.typicode.com/todos/1')\n  .then(response => response.json())\n  .then(data => console.log(data))\n  .catch(error => console.error('Error fetching data:', error));\n```",
+        "course_id": 2,
+        "week_id": 2,
+        "lecture_id": 3,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "Fetch API",
+          "HTTP",
+          "GET",
+          "JSON",
+          "asynchronous"
+        ]
+      },
+      {
+        "question_id": 15,
+        "content": "What is the purpose of the `.then()` and `.catch()` methods when working with Promises in JavaScript?",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "The `.then()` method is used to schedule a callback function that will be executed when the Promise is resolved successfully. It can receive the resolved value as an argument. The `.catch()` method is used to schedule a callback function that will be executed if the Promise is rejected. It can receive the rejection reason (error) as an argument. These methods are crucial for handling the outcome of asynchronous operations.",
+        "course_id": 2,
+        "week_id": 2,
+        "lecture_id": 3,
+        "status": "active",
+        "tags": [
+          "javascript",
+          "promises",
+          "then",
+          "catch",
+          "asynchronous",
+          "error handling"
+        ]
+      },
+      {
+        "question_id": 16,
+        "content": "Which HTML5 semantic element is used to represent a self-contained composition in a document, page, application, or site, that is intended to be independently distributable or reusable?",
+        "type": "MCQ",
+        "question_options": [
+          "<nav>",
+          "<aside>",
+          "<article>",
+          "<section>"
+        ],
+        "correct_answer": 2,
+        "points": 5,
+        "explanation": "The `<article>` element represents a self-contained composition in a document, page, application, or site.",
+        "course_id": 2,
+        "week_id": 3,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "html5",
+          "semantic elements",
+          "article"
+        ]
+      },
+      {
+        "question_id": 17,
+        "content": "Explain the importance of providing alternative text (`alt` attribute) for images in HTML and how it relates to web accessibility.",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "The `alt` attribute provides a textual alternative for an image. This text is displayed if the image fails to load, but more importantly, it is read aloud by screen readers used by visually impaired users. Providing descriptive and meaningful alt text is crucial for web accessibility, ensuring that the content conveyed by the image is also accessible to users who cannot see it.",
+        "course_id": 2,
+        "week_id": 3,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "html5",
+          "accessibility",
+          "alt attribute",
+          "images",
+          "screen readers"
+        ]
+      },
+      {
+        "question_id": 18,
+        "content": "In Vue.js, which directive is used to conditionally render an element based on the truthiness of an expression?",
+        "type": "MCQ",
+        "question_options": [
+          "v-show",
+          "v-if",
+          "v-for",
+          "v-bind"
+        ],
+        "correct_answer": 1,
+        "points": 5,
+        "explanation": "The `v-if` directive is used to conditionally render an element. The element and its child components/directives are entirely removed and destroyed if the expression is falsy.",
+        "course_id": 2,
+        "week_id": 4,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "vue.js",
+          "directives",
+          "v-if",
+          "conditional rendering"
+        ]
+      },
+      {
+        "question_id": 19,
+        "content": "Explain the concept of two-way data binding in Vue.js and which directive is commonly used to achieve it with form elements.",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "Two-way data binding in Vue.js means that when the user interacts with a form element (e.g., typing in an input), the corresponding data in the Vue instance is automatically updated, and conversely, when the data in the Vue instance changes, the form element in the UI is updated. The `v-model` directive is commonly used to achieve this two-way data binding with form elements like `<input>`, `<textarea>`, and `<select>`.",
+        "course_id": 2,
+        "week_id": 4,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "vue.js",
+          "data binding",
+          "two-way binding",
+          "v-model",
+          "forms"
+        ]
+      },
+      {
+        "question_id": 20,
+        "content": "In Vue.js Composition API, which function is used to create a reactive reference?",
+        "type": "MCQ",
+        "question_options": [
+          "reactive()",
+          "ref()",
+          "computed()",
+          "watch()"
+        ],
+        "correct_answer": 1,
+        "points": 5,
+        "explanation": "The `ref()` function in Vue.js Composition API is used to create a reactive reference that holds a primitive or object value.",
+        "course_id": 2,
+        "week_id": 5,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "vue.js",
+          "composition api",
+          "ref",
+          "reactivity"
+        ]
+      },
+      {
+        "question_id": 21,
+        "content": "Describe the roles of Actions and Mutations in Vuex and explain the key difference between them.",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "Mutations in Vuex are synchronous functions that are responsible for directly modifying the state in the store. They are the only way to change the Vuex store's state. Actions in Vuex are similar to mutations, but they can contain arbitrary asynchronous operations. Actions commit mutations to change the state. The key difference is that actions can be asynchronous, while mutations must be synchronous.",
+        "course_id": 2,
+        "week_id": 5,
+        "lecture_id": 3,
+        "status": "active",
+        "tags": [
+          "vue.js",
+          "vuex",
+          "actions",
+          "mutations",
+          "state management"
+        ]
+      },
+      {
+        "question_id": 22,
+        "content": "In React, what is the primary purpose of props?",
+        "type": "MCQ",
+        "question_options": [
+          "To manage the internal state of a component.",
+          "To pass data from a parent component to a child component.",
+          "To handle user interactions within a component.",
+          "To define the visual structure of a component."
+        ],
+        "correct_answer": 1,
+        "points": 5,
+        "explanation": "Props (short for properties) are used to pass data from a parent component down to its child components.",
+        "course_id": 2,
+        "week_id": 6,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": [
+          "react",
+          "props",
+          "component communication",
+          "data flow"
+        ]
+      },
+      {
+        "question_id": 23,
+        "content": "Explain the difference between functional components and class components in React.",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "Functional Components: These are simpler components, essentially JavaScript functions that may or may not receive props as arguments and return JSX. Before Hooks, they were stateless. Class Components: These are ES6 classes that extend `React.Component`. They can have their own state, lifecycle methods, and handle more complex logic. With the introduction of Hooks, functional components can now also manage state and side effects, making them more versatile.",
+        "course_id": 2,
+        "week_id": 6,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "react",
+          "functional components",
+          "class components",
+          "state",
+          "lifecycle"
+        ]
+      },
+      {
+        "question_id": 24,
+        "content": "In React, what is the purpose of the `useState` Hook?",
+        "type": "MCQ",
+        "question_options": [
+          "To handle side effects in functional components.",
+          "To manage local state within a functional component.",
+          "To access context values.",
+          "To define custom Hooks."
+        ],
+        "correct_answer": 1,
+        "points": 5,
+        "explanation": "The `useState` Hook is used in functional components to declare state variables and the corresponding functions to update them.",
+        "course_id": 2,
+        "week_id": 7,
+        "lecture_id": 2,
+        "status": "active",
+        "tags": [
+          "react",
+          "hooks",
+          "useState",
+          "state management",
+          "functional components"
+        ]
+      },
+      {
+        "question_id": 25,
+        "content": "Describe a common use case for the `useEffect` Hook in React.",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "A common use case for the `useEffect` Hook is to perform data fetching from an API. You can use `useEffect` to make an asynchronous request when the component mounts (or when certain dependencies change) and then update the component's state with the fetched data. You can also include a cleanup function to handle scenarios like component unmounting or dependency changes to prevent memory leaks.",
+        "course_id": 2,
+        "week_id": 7,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "react",
+          "hooks",
+          "useEffect",
+          "side effects",
+          "data fetching",
+          "asynchronous"
+        ]
+      },
+      {
+        "question_id": 26,
+        "content": "What is the primary benefit of using a frontend architectural pattern like MVC or MVVM?",
+        "type": "MCQ",
+        "question_options": [
+          "To improve the visual appearance of the application.",
+          "To simplify the process of writing individual component styles.",
+          "To separate concerns and improve code organization and maintainability.",
+          "To directly enhance the runtime performance of the application."
+        ],
+        "correct_answer": 2,
+        "points": 5,
+        "explanation": "Frontend architectural patterns like MVC and MVVM primarily aim to separate the different parts of an application (e.g., data, UI logic, presentation) to improve code organization, maintainability, and testability.",
+        "course_id": 2,
+        "week_id": 8,
+        "lecture_id": 1,
+        "status": "active",
+        "tags": [
+          "frontend architecture",
+          "MVC",
+          "MVVM",
+          "separation of concerns",
+          "maintainability"
+        ]
+      },
+      {
+        "question_id": 27,
+        "content": "Explain the difference between unit testing and integration testing in the context of frontend development.",
+        "type": "TEXT",
+        "question_options": [],
+        "correct_answer": null,
+        "points": 10,
+        "explanation": "Unit Testing: Involves testing individual components or functions in isolation, without regard to any other parts of the system. The goal is to verify that each unit of code works correctly on its own. Integration Testing: Focuses on testing the interactions between different units or components to ensure that they work together correctly. It verifies the communication and data flow between integrated parts of the application.",
+        "course_id": 2,
+        "week_id": 8,
+        "lecture_id": 3,
+        "status": "active",
+        "tags": [
+          "frontend testing",
+          "unit testing",
+          "integration testing"
+        ]
+      }
+    ],
+    "personal_resources": [],
+    "personal_resource_files": []
+  }

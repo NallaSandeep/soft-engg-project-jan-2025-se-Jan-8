@@ -192,7 +192,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
     // Create a new chat session
     try {
       // Wait for the chat session to be created
-      const response = await chatAPI.createChat(user?.id, personalResources.current);
+      const response = await chatAPI.createChat(user?.id, courses);
       console.log('Chat session created:', response.session_id);
       chatSessionID.current = response.session_id;
   
