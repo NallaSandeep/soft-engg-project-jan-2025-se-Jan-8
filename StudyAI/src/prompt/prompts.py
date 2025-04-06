@@ -41,6 +41,30 @@ Query: {query}
 Response:"""
 
 
+def get_relevent_course_prompt(
+    original_query: str, covered_course=COVERED_COURSE_TOPICS
+) -> str:
+    return f"""Analyze this query and determine which course it relates to based on the topics covered in each course.
+Return the most relevant course in the following format: "COURSE_CODE|COURSE_NAME|BRIEF_SUMMARY"
+For example: "DBMS101|Database Management Systems|This course covers database concepts and SQL fundamentals..."
+If the query doesn't match any course topics, respond with 'None'.
+
+Course Topics:
+{covered_course}
+
+When analyzing:
+- Look for specific course names, codes, or topics mentioned in the query
+- Check for subject matter that aligns with course content (e.g., database concepts for DBMS101)
+- Consider technical terms that appear in specific course descriptions
+- If query matches multiple courses, select the most relevant one based on topic specificity
+- For the selected course, provide a brief 3-4 sentence summary about the course content
+- Respond with 'None' if the query doesn't clearly relate to any of these courses
+
+Original query: {original_query}
+
+Response (format: "COURSE_CODE|COURSE_NAME|BRIEF_SUMMARY" or "None"):"""
+
+
 BREAKDOWN_QUERY_PROMPT = """Given the different agents capability:
 - faq_agent: answers general FAQs about exam dates, course information of all courses offered by BS Degree (Data science and Programming), grading policy and Student Handbook.
 - course_guide: answers course/curriculum content related questions from field of Data Science and Programming
@@ -69,7 +93,9 @@ Now break down this query:
 Return only the numbered subquestions along with relevent agent to ask."""
 
 
-def get_response_synthesis_prompt(original_query: str, context: str, covered_course=COVERED_COURSE_TOPICS) -> str:
+def get_response_synthesis_prompt(
+    original_query: str, context: str, covered_course=COVERED_COURSE_TOPICS
+) -> str:
     return f"""You are a helpful AI assistant that synthesizes information from multiple sources to provide comprehensive answers.
 
 Original query: {original_query}

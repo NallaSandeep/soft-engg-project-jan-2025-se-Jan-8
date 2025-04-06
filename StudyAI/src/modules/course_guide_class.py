@@ -1,7 +1,7 @@
-from typing import AsyncGenerator, Dict, Any, List
-from src.core.base import BaseAgent
+from src.prompt.prompts import get_relevent_course_prompt
 from src.modules.integerity_tool import IntegrityChecker
-from langgraph.graph import END
+from typing import Dict, Any, List
+from src.core.base import BaseAgent
 from config import Config
 import json
 import pprint
@@ -11,325 +11,53 @@ import logging
 class CourseGuideAgent(BaseAgent):
     """Agent responsible for handling course-related queries and determining relevant courses."""
 
-    def __init__(self, use_mock_data=False):
+    def __init__(self):
         super().__init__()
         self.integrity_checker = IntegrityChecker()
-        self.use_mock_data = use_mock_data
-
-        # Mock data for testing
-        self.mock_courses = {
-            "business": [
-                {
-                    "code": "BA201",
-                    "title": "Business Analytics",
-                    "description": "A comprehensive course providing in-depth coverage of data visualization techniques, statistical distribution fitting, association analysis, Bayesian inference, and advanced demand modeling for informed business decision-making.",
-                }
-            ],
-            "database": [
-                {
-                    "code": "DBMS101",
-                    "title": "Database Management Systems",
-                    "description": "This course provides a comprehensive introduction to Database Management Systems (DBMS), covering foundational and advanced database concepts. Students will explore database design, entity-relationship (ER) modeling, relational algebra, and relational calculus. The course includes hands-on experience with Structured Query Language (SQL) for data retrieval, modification, and optimization. Topics such as indexing, query processing, normalization techniques, and transaction management are explored in depth. Advanced topics include data constraints, integrity rules, and security considerations. The course also introduces mathematical underpinnings such as predicate logic and quantifiers in relational calculus. Through practical exercises, case studies, and real-world applications, students will develop strong database management skills applicable to various industries. The course spans 12 weeks and is structured to provide a systematic and practice-oriented understanding of modern database",
-                }
-            ],
-            "programming": [
-                {
-                    "code": "SE101",
-                    "title": "Software Engineering",
-                    "description": "A comprehensive course covering software engineering principles, processes, and best practices across the entire software development lifecycle, from requirements gathering to post-deployment maintenance. Emphasis is placed on practical applications, risk management, and modern software methodologies.",
-                },
-                {
-                    "code": "MAD201",
-                    "title": "Modern Application Development - II",
-                    "description": "An advanced course that dives deep into modern frontend development using JavaScript and Vue.js, focusing on building dynamic, interactive web applications. The course emphasizes the principles of reactive programming, component-based architecture, and advanced client-side state management. It covers essential techniques for working with the Document Object Model (DOM), handling asynchronous operations, and applying best practices in frontend architecture and design. Students will gain hands-on experience through practical implementations and real-world projects.",
-                },
-            ],
-            "default": [
-                {
-                    "code": "SE101",
-                    "title": "Software Engineering ",
-                    "description": "A comprehensive course covering software engineering principles, processes, and best practices across the entire software development lifecycle, from requirements gathering to post-deployment maintenance. Emphasis is placed on practical applications, risk management, and modern software methodologies.",
-                },
-            ],
-        }
-
-        self.mock_course_content = {
-            "MAD201": {
-                "source_course": {
-                    "title": "Modern Application Development - II",
-                    "code": "MAD201",
-                    "match_score": 0.92,
-                },
-                "content_chunks": [
-                    {
-                        "type": "lecture",
-                        "title": "Vue.js Fundamentals",
-                        "description": "An introduction to variables, primitive data types, and type conversion in Python.",
-                        "week_number": 1,
-                    },
-                    {
-                        "type": "lab",
-                        "title": "First Python Program",
-                        "description": "Write your first Python program using variables and basic operations.",
-                        "week_number": 1,
-                    },
-                    {
-                        "type": "lecture",
-                        "title": "Control Flow",
-                        "description": "Learn about if statements, loops, and conditional execution.",
-                        "week_number": 2,
-                    },
-                    {
-                        "type": "assignment",
-                        "title": "Simple Calculator",
-                        "description": "Create a command-line calculator that performs basic operations.",
-                        "week_number": 2,
-                    },
-                ],
-            },
-            "SE101": {
-                "source_course": {
-                    "title": "Software Engineering Basics",
-                    "code": "SE101",
-                    "match_score": 0.82,
-                },
-                "content_chunks": [
-                    {
-                        "type": "lecture",
-                        "title": "Deconstructing the Software Development Process",
-                        "description": "Understanding the stages of software development.",
-                        "week_number": 1,
-                    },
-                    {
-                        "type": "lecture",
-                        "title": "Software Requirements",
-                        "description": "Gathering and analyzing software requirements.",
-                        "week_number": 2,
-                    },
-                    {
-                        "type": "lecture",
-                        "title": "Software User Interfaces",
-                        "description": "Designing user-friendly interfaces.",
-                        "week_number": 3,
-                    },
-                    {
-                        "type": "lecture",
-                        "title": "Software Project Management",
-                        "description": "Managing software projects effectively.",
-                        "week_number": 4,
-                    },
-                ],
-            },
-            "DBMS101": {
-                "source_course": {
-                    "title": "Database Management Systems",
-                    "code": "DBMS101",
-                    "match_score": 0.94,
-                },
-                "content_chunks": [
-                    {
-                        "type": "lecture",
-                        "title": "Foundations of Database Systems",
-                        "description": "Introduction to database abstraction, schemas, and data models.",
-                        "week_number": 1,
-                    },
-                    {
-                        "type": "lab",
-                        "title": "Introduction to SQL",
-                        "description": "Hands-on practice with SQL syntax and basic queries.",
-                        "week_number": 1,
-                    },
-                    {
-                        "type": "lecture",
-                        "title": "Advanced SQL Techniques",
-                        "description": "Working with subqueries and data modification operations.",
-                        "week_number": 3,
-                    },
-                    {
-                        "type": "assignment",
-                        "title": "Relational Calculus Implementation",
-                        "description": "Practice with tuple and domain relational calculus expressions.",
-                        "week_number": 4,
-                    },
-                ],
-            },
-            "BA201": {
-                "source_course": {
-                    "title": "Business Analytics",
-                    "code": "BA201",
-                    "match_score": 0.92,
-                },
-                "content_chunks": [
-                    {
-                        "type": "lecture",
-                        "title": "Principles of Effective Data Visualization",
-                        "description": "Understanding how to represent data visually for business insights.",
-                        "week_number": 1,
-                    },
-                    {
-                        "type": "lecture",
-                        "title": "Distribution Fitting Techniques",
-                        "description": "Statistical methods for fitting probability distributions to business data.",
-                        "week_number": 2,
-                    },
-                    {
-                        "type": "lecture",
-                        "title": "Statistical Association Analysis",
-                        "description": "Methods to identify relationships between business variables.",
-                        "week_number": 3,
-                    },
-                    {
-                        "type": "lecture",
-                        "title": "Demand Response Curve Fundamentals",
-                        "description": "Analyzing customer demand patterns for business forecasting.",
-                        "week_number": 4,
-                    },
-                ],
-            },
-        }
-
-        # Mock integrity data
-        self.mock_integrity = {
-            "assignment help": {
-                "is_potential_violation": False,
-                "data": {
-                    "highest_match": {
-                        "assignment_info": "Week 3 Programming Assignment",
-                        "course_id": "CS101",
-                        "score": 0.92,
-                    }
-                },
-            }
-        }
 
     async def get_relevant_courses(
         self,
         query: str,
-        limit: int = 4,
-        min_score: float = 0.3,
         subscribed_courses: List[str] = None,
     ) -> Dict[str, Any]:
         """Retrieve relevant courses based on the query using StudyIndexer API."""
 
         if subscribed_courses is None:
-            subscribed_courses = ["CS101"]
-
-        # Use mock data if flag is set
-        if self.use_mock_data:
-            try:
-                # Determine which course set to return based on query keywords
-                mock_key = "default"
-                query_lower = query.lower()
-
-                if any(
-                    term in query_lower
-                    for term in [
-                        "program",
-                        "code",
-                        "python",
-                        "java",
-                        "software engineering",
-                        "vue.js",
-                        "javascript",
-                    ]
-                ):
-                    mock_key = "programming"
-                elif any(
-                    term in query_lower
-                    for term in ["database", "sql", "dbms", "relational"]
-                ):
-                    mock_key = "database"
-                elif any(
-                    term in query_lower
-                    for term in ["business", "analytics", "visualization", "statistics"]
-                ):
-                    mock_key = "business"
-
-                # Get courses from the selected mock dataset
-                courses = self.mock_courses.get(mock_key, self.mock_courses["default"])[
-                    :limit
-                ]
-
-                # Format the courses for the response
-                formatted_courses = [
-                    {
-                        "id": course.get("code", ""),
-                        "name": course.get("title", ""),
-                        "description": course.get("description", ""),
-                    }
-                    for course in courses
-                ]
-
-                # Create a summary of what was found
-                summary = (
-                    f"Found {len(formatted_courses)} relevant courses for your query."
-                )
-                if formatted_courses:
-                    summary += " Here are the most relevant ones:"
-
-                response = {"courses": formatted_courses, "summary": summary}
-
-                return response
-
-            except Exception as e:
-                logging.error(f"Error using mock course data: {str(e)}")
-                return {
-                    "courses": [],
-                    "summary": f"Error retrieving mock courses: {str(e)}",
-                }
+            subscribed_courses = ["SE101", "MAD201", "DBMS101", "BA201"]
 
         try:
-            payload = {
-                "query": query,
-                "limit": limit,
-                "min_score": min_score,
-                "subscribed_courses": ["SE101"],
-            }
+            prompt = get_relevent_course_prompt(query)
+            chain = self.create_chain(prompt)
+            course_result = await chain.ainvoke({})
 
-            result = await self.make_http_request(
-                method="POST",
-                url=f"http://{Config.HOST}:{Config.STUDY_INDEXER_PORT}/api/v1/course-selector/search",
-                json=payload,
-                headers={"accept": "application/json"},
-            )
-
-            logging.info(
-                f"Response from course selector: {result.get('success', False)}"
-            )
-
-            if isinstance(result, str):
-                result = json.loads(result)
-
-            if isinstance(result, dict) and not result.get("success", False):
-                return {
-                    "courses": [],
-                    "summary": f"Error finding courses: {result.get('error', 'Unknown error')}",
-                }
-
-            data = result.get("data", {})
-            courses = data.get("results", [])
-            if not courses:
+            if course_result in ["None", "none", ""]:
                 return {
                     "courses": [],
                     "summary": "No relevant courses found for your query.",
                 }
 
-            # Format the courses for the response
-            formatted_courses = [
-                {
-                    "id": course.get("code", ""),
-                    "name": course.get("title", ""),
-                    "description": course.get("description", ""),
-                }
-                for course in courses
-            ]
+            # Parse the result which should be in format: "COURSE_CODE|COURSE_NAME|BRIEF_SUMMARY"
+            parts = course_result.split("|", 2)
 
-            # Create a summary of what was found
-            summary = f"Found {len(formatted_courses)} relevant courses for your query."
-            if formatted_courses:
-                summary += " Here are the most relevant ones:"
+            if len(parts) < 3:
+                # Handle malformed response
+                course_code = parts[0] if len(parts) > 0 else "Unknown"
+                course_name = parts[1] if len(parts) > 1 else "Unknown Course"
+                course_summary = "No summary provided"
+            else:
+                course_code, course_name, course_summary = parts
 
-            response = {"courses": formatted_courses, "summary": summary}
+            formatted_course = {
+                "id": course_code,
+                "name": course_name,
+                "summary": course_summary,
+            }
+
+            summary = (
+                f"Found relevant course for your query: {course_code} - {course_name}"
+            )
+
+            response = {"courses": [formatted_course], "summary": summary}
 
             return response
 
@@ -339,42 +67,6 @@ class CourseGuideAgent(BaseAgent):
 
     async def get_course_content(self, course_id: str, query: str = "") -> str:
         """Retrieve course content based on the course ID and query using StudyIndexer API."""
-
-        # Use mock data if flag is set
-        if self.use_mock_data:
-            try:
-                if course_id not in self.mock_course_content:
-                    return f"No relevant content found for course {course_id}{' and query ' + query if query else ''}."
-
-                course_data = self.mock_course_content[course_id]
-                source_course = course_data.get("source_course", {})
-                course_title = source_course.get("title", "Unknown Course")
-                course_code = source_course.get("code", "Unknown Code")
-                match_score = source_course.get("match_score", 0)
-
-                summary_parts = []
-                summary_parts.append(
-                    f"Course: {course_title} ({course_code}) - Relevance: {match_score:.2f}"
-                )
-
-                inner_chunks = course_data.get("content_chunks", [])
-                for content in inner_chunks:
-                    content_type = content.get("type", "Unknown Type")
-                    title = content.get("title", content.get("name", "Untitled"))
-                    description = content.get("description", "")
-                    week_number = content.get("week_number", "N/A")
-
-                    summary_parts.append(f"- {content_type.capitalize()}: {title}")
-                    if week_number != "N/A":
-                        summary_parts.append(f"  Week: {week_number}")
-                    if description:
-                        summary_parts.append(f"  Description: {description}")
-
-                return "\n".join(summary_parts)
-
-            except Exception as e:
-                logging.error(f"Error using mock content data: {str(e)}")
-                return f"Error retrieving mock content for course {course_id}: {str(e)}"
 
         try:
             result = await self.make_http_request(
@@ -440,227 +132,51 @@ class CourseGuideAgent(BaseAgent):
 
     async def get_courses_with_content(self, query: str) -> Dict[str, Any]:
         """Retrieve relevant courses and their content sequentially."""
-        # First get relevant courses
+
         course_info = await self.get_relevant_courses(query)
 
-        print("Course Info:", course_info)
+        # Replace print with proper logging
+        logging.debug(f"Course Info: {course_info}")
 
         if not course_info["courses"]:
             return {"courses": [], "content": {}, "summary": course_info["summary"]}
 
-        # Check integrity before providing content
-        if self.use_mock_data:
-            # Check if the query contains keywords that might indicate integrity issues
-            query_lower = query.lower()
-            if any(
-                term in query_lower
-                for term in ["assignment", "homework", "solve", "answer", "solution"]
-            ):
-                # Use mock data for integrity violation
-                mock_integrity_data = self.mock_integrity.get("assignment help", {})
-                is_violation = mock_integrity_data.get("is_potential_violation", False)
-
-                # if is_violation:
-                #     highest_match = mock_integrity_data.get("data", {}).get(
-                #         "highest_match", {}
-                #     )
-                #     assignment_info = highest_match.get(
-                #         "assignment_info", "Unknown assignment"
-                #     )
-                #     course_id = highest_match.get("course_id", "Unknown course")
-                #     score = highest_match.get("score", 0)
-
-                #     # Find relevant topic information to help the student understand the concepts
-                #     course_data = next(
-                #         (c for c in course_info["courses"] if c["id"] == course_id),
-                #         course_info["courses"][0] if course_info["courses"] else None,
-                #     )
-
-                #     # Let's get theoretical content that might help
-                #     educational_content = {}
-                #     related_topics = []
-
-                #     if course_data:
-                #         # Mock educational content for the topic
-                #         try:
-                #             theory_content = await self.get_course_content(
-                #                 course_id, "theory concepts"
-                #             )
-                #             educational_content[course_id] = theory_content
-
-                #             # Extract potential topics from the course description
-                #             if (
-                #                 "description" in course_data
-                #                 and course_data["description"]
-                #             ):
-                #                 description_parts = course_data["description"].split()
-                #                 potential_topics = [
-                #                     word
-                #                     for word in description_parts
-                #                     if len(word) > 4
-                #                     and word.lower()
-                #                     not in [
-                #                         "about",
-                #                         "course",
-                #                         "will",
-                #                         "learn",
-                #                         "this",
-                #                         "that",
-                #                     ]
-                #                 ]
-                #                 related_topics = potential_topics[
-                #                     :5
-                #                 ]  # Take up to 5 topic keywords
-                #         except Exception as e:
-                #             logging.error(
-                #                 f"Error creating mock educational content: {str(e)}"
-                #             )
-                #             educational_content[course_id] = (
-                #                 "Could not retrieve educational content."
-                #             )
-
-                #     warning_message = (
-                #         f"⚠️ ACADEMIC INTEGRITY NOTICE: This appears to be related to a graded "
-                #         f"assignment ({assignment_info}) from course {course_id}.\n\n"
-                #         f"Instead of providing a direct answer, here are some learning resources "
-                #         f"and concepts that might help you understand how to approach this problem:\n\n"
-                #     )
-
-                #     # Add educational resources to the warning message
-                #     if educational_content:
-                #         warning_message += "## Relevant Theory and Concepts\n\n"
-                #         for course_id, content in educational_content.items():
-                #             warning_message += f"{content}\n\n"
-
-                #     # Add general study tips
-                #     warning_message += (
-                #         "## Study Tips\n\n"
-                #         "* Break down the problem into smaller parts\n"
-                #         "* Review lecture notes on these topics\n"
-                #         "* Check textbook chapters covering related concepts\n"
-                #         "* Consider discussing conceptual approaches with your professor during office hours\n\n"
-                #         "I'm here to help you learn the material, not to complete assignments for you. "
-                #         "Feel free to ask about general concepts related to this topic!"
-                #     )
-
-                #     return {
-                #         "courses": course_info["courses"],
-                #         "content": educational_content,
-                #         "summary": course_info["summary"],
-                #         "integrity_warning": warning_message,
-                #         "is_integrity_violation": False,
-                #         "related_topics": related_topics,
-                #     }
-
-        # Regular integrity check with real API
-        # integrity_result = await self.integrity_checker.check_integrity(
-        #     query, [course["id"] for course in course_info["courses"]]
-        # )
-
-        # # If potential integrity violation is detected
-        # if integrity_result.get("is_potential_violation", False):
-        #     highest_match = integrity_result.get("data", {}).get("highest_match", {})
-        #     assignment_info = highest_match.get("assignment_info", "Unknown assignment")
-        #     course_id = highest_match.get("course_id", "Unknown course")
-        #     score = highest_match.get("score", 0)
-
-        #     # Find relevant topic information to help the student understand the concepts
-        #     course_data = next(
-        #         (c for c in course_info["courses"] if c["id"] == course_id),
-        #         course_info["courses"][0] if course_info["courses"] else None,
-        #     )
-
-        #     # Let's get theoretical content that might help
-        #     educational_content = {}
-        #     related_topics = []
-
-        #     if course_data:
-        #         # Extract topics from the query and course description
-        #         topic_query = f"theory concepts for understanding {query}"
-        #         try:
-        #             # Get educational content for the topic
-        #             theory_content = await self.get_course_content(
-        #                 course_id, topic_query
-        #             )
-        #             educational_content[course_id] = theory_content
-
-        #             # Try to identify specific topics that might be helpful
-        #             for course in course_info["courses"]:
-        #                 if "description" in course and course["description"]:
-        #                     # Extract potential topics from the course description
-        #                     description_parts = course["description"].split()
-        #                     potential_topics = [
-        #                         word
-        #                         for word in description_parts
-        #                         if len(word) > 4
-        #                         and word.lower()
-        #                         not in [
-        #                             "about",
-        #                             "course",
-        #                             "will",
-        #                             "learn",
-        #                             "this",
-        #                             "that",
-        #                         ]
-        #                     ]
-        #                     related_topics.extend(
-        #                         potential_topics[:5]
-        #                     )  # Take up to 5 topic keywords
-        #         except Exception as e:
-        #             logging.error(f"Error fetching educational content: {str(e)}")
-        #             educational_content[course_id] = (
-        #                 "Could not retrieve educational content."
-        #             )
-
-        #     warning_message = (
-        #         f"⚠️ ACADEMIC INTEGRITY NOTICE: This appears to be related to a graded "
-        #         f"assignment ({assignment_info}) from course {course_id}.\n\n"
-        #         f"Instead of providing a direct answer, here are some learning resources "
-        #         f"and concepts that might help you understand how to approach this problem:\n\n"
-        #     )
-
-        #     # Add educational resources to the warning message
-        #     if educational_content:
-        #         warning_message += "## Relevant Theory and Concepts\n\n"
-        #         for course_id, content in educational_content.items():
-        #             warning_message += f"{content}\n\n"
-
-        #     # Add general study tips
-        #     warning_message += (
-        #         "## Study Tips\n\n"
-        #         "* Break down the problem into smaller parts\n"
-        #         "* Review lecture notes on these topics\n"
-        #         "* Check textbook chapters covering related concepts\n"
-        #         "* Consider discussing conceptual approaches with your professor during office hours\n\n"
-        #         "I'm here to help you learn the material, not to complete assignments for you. "
-        #         "Feel free to ask about general concepts related to this topic!"
-        #     )
-
-        #     return {
-        #         "courses": course_info["courses"],
-        #         "content": educational_content,  # Providing educational content instead
-        #         "summary": course_info["summary"],
-        #         "integrity_warning": warning_message,
-        #         "is_integrity_violation": True,
-        #         "related_topics": related_topics,
-        #     }
-
-        # Fetch content for each course sequentially
+        # Since get_relevant_courses only returns one course, we can simplify this
         content_results = {}
-        for course in course_info["courses"]:
-            try:
-                # Get content for each course one by one
-                content = await self.get_course_content(course["id"], query)
-                content_results[course["id"]] = content
-            except Exception as e:
-                logging.error(
-                    f"Error fetching content for course {course['id']}: {str(e)}"
-                )
-                content_results[course["id"]] = f"Error retrieving content: {str(e)}"
+
+        try:
+            # Get the single course directly
+            course = course_info["courses"][0]
+            course_id = course["id"]
+            content = await self.get_course_content(course_id, query)
+
+            # Combine course details with content
+            content_results[course_id] = {
+                "name": course.get("name", "Unknown Course"),
+                "summary": course.get("summary", "No summary provided"),
+                "content": content,
+            }
+        except Exception as e:
+            logging.error(f"Error fetching content for course: {str(e)}")
+            course_id = (
+                course_info["courses"][0]["id"] if course_info["courses"] else "unknown"
+            )
+            content_results[course_id] = {
+                "name": (
+                    course_info["courses"][0].get("name", "Unknown Course")
+                    if course_info["courses"]
+                    else "Unknown Course"
+                ),
+                "summary": (
+                    course_info["courses"][0].get("summary", "No summary provided")
+                    if course_info["courses"]
+                    else "No summary provided"
+                ),
+                "content": f"Error retrieving content: {str(e)}",
+            }
 
         return {
             "courses": course_info["courses"],
             "content": content_results,
             "summary": course_info["summary"],
-            "is_integrity_violation": False,
         }
