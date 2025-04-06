@@ -218,6 +218,11 @@ export const adminApi = {
     getAuditLogs: () => api.get('/admin/audit-logs')
 };
 
+// TA API
+export const taApi = {
+    getDashboardStats: () => api.get('/ta/dashboard/stats')
+};
+
 // Question Bank API
 export const questionBankApi = {
     // List questions with filters

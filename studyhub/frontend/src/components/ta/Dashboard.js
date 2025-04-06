@@ -1,172 +1,232 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { courseApi } from '../../services/apiService';
+import { courseApi, userApi, assignmentApi, taApi } from '../../services/apiService';
+import { formatDate } from '../../utils/dateUtils';
 import { 
+    PlusCircleIcon,
     AcademicCapIcon,
-    BookOpenIcon,
+    UserGroupIcon,
     ClipboardDocumentListIcon,
-    ChartBarIcon,
-    UsersIcon,
-    ClipboardDocumentIcon
+    QuestionMarkCircleIcon
 } from '@heroicons/react/24/outline';
 
+const DashboardCard = ({ title, value, description, icon: Icon, onClick }) => (
+    <div 
+        className={`glass-card p-6 hover:shadow-lg transition-shadow ${onClick ? 'cursor-pointer' : ''}`}
+        onClick={onClick}
+    >
+        <div className="flex justify-between items-start">
+            <div>
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{title}</h3>
+                <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 my-2">{value}</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
+            </div>
+            {Icon && <Icon className="w-8 h-8 text-zinc-400 dark:text-zinc-500" />}
+        </div>
+    </div>
+);
+
+const ActionButton = ({ label, icon: Icon, onClick, color = 'blue' }) => {
+    const colorClasses = {
+        blue: 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white',
+        green: 'bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white',
+        purple: 'bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-600 text-white',
+        orange: 'bg-orange-600 hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-600 text-white'
+    };
+
+    return (
+        <button
+            onClick={onClick}
+            className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-lg ${colorClasses[color]} w-full shadow-sm hover:shadow-md`}
+        >
+            <Icon className="w-5 h-5" />
+            <span>{label}</span>
+        </button>
+    );
+};
+
 const TADashboard = () => {
-    const [courses, setCourses] = useState([]);
+    const navigate = useNavigate();
+    const [stats, setStats] = useState({
+        totalCourses: 0,
+        totalStudents: 0,
+        totalAssignments: 0,
+        totalQuestions: 0,
+        recentCourses: [],
+        recentAssignments: []
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
-        fetchCourses();
+        fetchDashboardData();
     }, []);
 
-    const fetchCourses = async () => {
+    const fetchDashboardData = async () => {
         try {
-            const response = await courseApi.getCourses();
+            setLoading(true);
+            const response = await taApi.getDashboardStats();
+            
             if (response.success) {
-                setCourses(response.data || []);
+                const { stats, recentCourses, recentAssignments } = response.data;
+                setStats({
+                    totalCourses: stats.totalCourses,
+                    totalStudents: stats.totalStudents,
+                    totalAssignments: stats.totalAssignments,
+                    totalQuestions: stats.totalQuestions,
+                    recentCourses,
+                    recentAssignments
+                });
             } else {
-                setError(response.message || 'Failed to load courses');
+                setError('Failed to load dashboard data');
             }
         } catch (err) {
-            console.error('Error loading courses:', err);
-            setError(err.message || 'Failed to load courses');
+            setError('An error occurred while fetching dashboard data');
+            console.error(err);
         } finally {
             setLoading(false);
         }
     };
 
-    // Calculate total pending assignments
-    const pendingAssignments = courses.reduce((total, course) => {
-        return total + (course.assignments?.filter(a => a.submissions > a.graded)?.length || 0);
-    }, 0);
-
-    // Calculate assignments graded this week (dummy calculation)
-    const gradedThisWeek = courses.reduce((total, course) => {
-        return total + (course.assignments?.reduce((sum, assignment) => sum + (assignment.graded || 0), 0) || 0);
-    }, 0);
+    const navigateTo = (path) => {
+        navigate(path);
+    };
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen bg-zinc-100 dark:bg-zinc-900">
-                <div className="text-zinc-600 dark:text-zinc-400">Loading dashboard...</div>
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
+                <span className="ml-3 text-zinc-600 dark:text-zinc-400">Loading dashboard...</span>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="text-red-500 dark:text-red-400 text-center p-4">{error}</div>
+            <div className="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded relative" role="alert">
+                <strong className="font-bold">Error!</strong>
+                <span className="block sm:inline"> {error}</span>
+            </div>
         );
     }
 
-    const stats = [
-        { 
-            title: 'Assigned Courses', 
-            value: courses.length,
-            icon: BookOpenIcon
-        },
-        // { 
-        //     title: 'Pending Assignments', 
-        //     value: pendingAssignments,
-        //     icon: ClipboardDocumentListIcon
-        // },
-        // { 
-        //     title: 'Graded This Week', 
-        //     value: gradedThisWeek,
-        //     icon: ChartBarIcon
-        // }
-    ];
-
     return (
-        <div className="min-h-screen bg-zinc-100 dark:bg-zinc-900">
-            <div className="max-w-7xl mx-auto space-y-8 p-6">
-                {/* Logo */}
-                <div className="flex justify-center mb-8">
-                    <AcademicCapIcon className="h-12 w-12 text-zinc-900 dark:text-white" />
-                </div>
+        <div className="space-y-8">
+            <h1 className="text-2xl font-bold mb-6 text-zinc-900 dark:text-white">Dashboard</h1>
+            
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <DashboardCard 
+                    title="Total Courses" 
+                    value={stats.totalCourses} 
+                    description="Assiged courses"
+                    icon={AcademicCapIcon}
+                    onClick={() => navigateTo('/ta/courses')}
+                />
+                <DashboardCard 
+                    title="Total Students" 
+                    value={stats.totalStudents} 
+                    description="Enrolled students"
+                    icon={UserGroupIcon}
+                    onClick={() => navigateTo('/ta/users')}
+                />
+                <DashboardCard 
+                    title="Total Assignments" 
+                    value={stats.totalAssignments} 
+                    description="Created assignments"
+                    icon={ClipboardDocumentListIcon}
+                    onClick={() => navigateTo('/ta/assignments')}
+                />
+                <DashboardCard 
+                    title="Question Bank" 
+                    value={stats.totalQuestions} 
+                    description="Available questions"
+                    icon={QuestionMarkCircleIcon}
+                    onClick={() => navigateTo('/ta/question-bank')}
+                />
+            </div>
 
-                {/* Header Section */}
-                <div className="text-center">
-                    <h1 className="text-4xl font-bold text-zinc-900 dark:text-white tracking-tight">
-                        Teaching Assistant Dashboard
-                    </h1>
-                    <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-                        Manage your assigned courses and assignments
-                    </p>
+            {/* Quick Actions */}
+            <div>
+                <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-white">Quick Actions</h2>
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+                    {/* <ActionButton 
+                        label="Create Course" 
+                        icon={PlusCircleIcon} 
+                        onClick={() => navigateTo('/ta/courses/new')}
+                        color="blue"
+                    /> */}
+                    <ActionButton 
+                        label="Create Assignment" 
+                        icon={PlusCircleIcon} 
+                        onClick={() => navigateTo('/ta/assignments/new')}
+                        color="green"
+                    />
+                    <ActionButton 
+                        label="Add Question" 
+                        icon={PlusCircleIcon} 
+                        onClick={() => navigateTo('/ta/question-bank/new')}
+                        color="purple"
+                    />
                 </div>
+            </div>
 
-                {/* Quick Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {stats.map((stat, index) => (
-                        <div key={index} 
-                            className="bg-white/60 dark:bg-zinc-800/40 backdrop-blur-sm rounded-xl p-6 
-                                     shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] 
-                                     dark:shadow-[0_2px_8px_-3px_rgba(0,0,0,0.2)]"
-                        >
-                            <div className="flex items-center space-x-3">
-                                <stat.icon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
-                                <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                                    {stat.title}
-                                </h3>
-                            </div>
-                            <p className="mt-4 text-3xl font-bold text-zinc-900 dark:text-white">
-                                {stat.value}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Courses Section */}
-                <div className="bg-white/60 dark:bg-zinc-800/40 backdrop-blur-sm rounded-xl 
-                              shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] 
-                              dark:shadow-[0_2px_8px_-3px_rgba(0,0,0,0.2)]">
-                    <div className="p-6 border-b border-zinc-200 dark:border-zinc-700">
-                        <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">
-                            My Courses
-                        </h2>
-                    </div>
-                    
-                    <div className="p-6">
-                        {courses.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {courses.map(course => (
-                                    <div 
-                                        key={course.id}
-                                        onClick={() => navigate(`/courses/${course.id}`)}
-                                        className="group bg-white dark:bg-zinc-800 rounded-xl p-6
-                                                 border border-zinc-200 dark:border-zinc-700
-                                                 hover:border-zinc-300 dark:hover:border-zinc-600
-                                                 transition-all duration-200 cursor-pointer"
-                                    >
-                                        <div className="flex justify-between items-start mb-4">
-                                            <h3 className="font-semibold text-zinc-900 dark:text-white">
-                                                {course.name}
-                                            </h3>
-                                            <BookOpenIcon className="h-5 w-5 text-zinc-400 dark:text-zinc-500 
-                                                                   group-hover:text-zinc-600 dark:group-hover:text-zinc-300
-                                                                   transition-colors" />
+            {/* Recent Items */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Recent Courses */}
+                <div className="glass-card p-6">
+                    <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-white">Recent Courses</h2>
+                    <div className="space-y-4">
+                        {stats.recentCourses.length > 0 ? (
+                            stats.recentCourses.map((course) => (
+                                <div 
+                                    key={course.id} 
+                                    className="p-4 border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer rounded-md"
+                                    onClick={() => navigateTo(`/ta/courses/${course.id}/content`)}
+                                >
+                                    <div className="flex justify-between">
+                                        <div>
+                                            <h3 className="font-medium text-zinc-900 dark:text-white">{course.code}</h3>
+                                            <p className="text-sm text-zinc-600 dark:text-zinc-400">{course.name}</p>
                                         </div>
-                                        <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-                                            {course.code}
-                                        </p>
-                                        <div className="flex justify-between text-sm">
-                                            <div className="flex items-center space-x-2 text-zinc-500 dark:text-zinc-400">
-                                                <UsersIcon className="h-4 w-4" />
-                                                <span>{course.enrolled_students}</span>
-                                            </div>
-                                            <div className="flex items-center space-x-2 text-zinc-500 dark:text-zinc-400">
-                                                <ClipboardDocumentIcon className="h-4 w-4" />
-                                                <span>{course.assignments?.length || 0}</span>
-                                            </div>
-                                        </div>
+                                        <span className="text-sm text-zinc-500 dark:text-zinc-400">{formatDate(course.createdAt)}</span>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            ))
                         ) : (
-                            <div className="text-center py-8 text-zinc-600 dark:text-zinc-400">
-                                No courses assigned yet.
-                            </div>
+                            <p className="text-zinc-500 dark:text-zinc-400">No recent courses</p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Recent Assignments */}
+                <div className="glass-card p-6">
+                    <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-white">Recent Assignments</h2>
+                    <div className="space-y-4">
+                        {stats.recentAssignments.length > 0 ? (
+                            stats.recentAssignments.map((assignment) => (
+                                <div 
+                                    key={assignment.id} 
+                                    className="p-4 border-b border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer rounded-md"
+                                    onClick={() => navigateTo(`/ta/assignments/${assignment.id}`)}
+                                >
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <h3 className="font-medium text-zinc-900 dark:text-white">{assignment.title}</h3>
+                                            <p className="text-sm text-zinc-600 dark:text-zinc-400">Due: {formatDate(assignment.due_date)}</p>
+                                        </div>
+                                        <span className={`px-2 py-1 text-xs rounded-full ${
+                                            assignment.status === 'published' 
+                                                ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400' 
+                                                : 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400'
+                                        }`}>
+                                            {assignment.status}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-zinc-500 dark:text-zinc-400">No recent assignments</p>
                         )}
                     </div>
                 </div>
@@ -175,4 +235,4 @@ const TADashboard = () => {
     );
 };
 
-export default TADashboard; 
+export default TADashboard;

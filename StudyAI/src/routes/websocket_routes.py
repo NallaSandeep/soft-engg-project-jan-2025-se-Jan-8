@@ -61,6 +61,9 @@ async def websocket_stream_endpoint(
                 message_data = json.loads(data)
                 user_message = message_data.get("message", "").strip()
 
+                # Can remove later if too verbose
+                logger.info(f"Received message for session {session_id}: '{user_message}'")
+
                 # Validate message content
                 if not user_message:
                     await safe_send_json(

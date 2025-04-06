@@ -34,10 +34,9 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const [showMentions, setShowMentions] = useState(false);
   const [savedChatId, setSavedChatId] = useState(null);
   const [mentionOptions] = useState([
-    { id: 1, name: 'code', prefix: '@code' },
-    { id: 2, name: 'course', prefix: '@course' },
-    { id: 3, name: 'summary', prefix: '@summary' },
-    { id: 4, name: 'faq', prefix: '@faq' },
+    { id: 1, name: 'Course', prefix: '@Course' },
+    { id: 2, name: 'FAQ', prefix: '@FAQ' },
+    { id: 3, name: 'Notes', prefix: '@Notes' },
   ]);
   const [mentionSearch, setMentionSearch] = useState('');
   const [isFirstMessage, setIsFirstMessage] = useState(true);
@@ -45,6 +44,12 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
   const [isFetchingChats, setIsFetchingChats] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [courses, setCourses] = useState([]);
+  // Add new state for personal notes
+  const [personalNotes, setPersonalNotes] = useState([]);
+  const [loadingNotes, setLoadingNotes] = useState(false);
+  // Add new state variables for context pills
+  const [selectedContexts, setSelectedContexts] = useState([]);
+  const [showContextMenu, setShowContextMenu] = useState(false);
 
   const messagesEndRef = useRef(null);
   const abortControllerRef = useRef(null);
@@ -98,6 +103,16 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
     }
   };
   
+  // Add context management functions
+  const addContext = (context) => {
+    // Always set just one context, replacing any existing ones
+    setSelectedContexts([context]);
+    setShowContextMenu(false);
+  };
+
+  const removeContext = (contextId) => {
+    setSelectedContexts(selectedContexts.filter(c => c.id !== contextId));
+  };
 
   const handleToggleSave = async (chatId, save) => {
     try {
@@ -186,6 +201,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
       console.log('WebSocket connection established for session:', response.session_id);
       setMessages([]);
       setIsFirstMessage(true); 
+      setSelectedContexts([]); // Clear any selected contexts
     } catch (error) {
       console.error('Error creating chat session or WebSocket connection:', error);
     }
@@ -277,6 +293,7 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
       handleSubmit();
     } else if (e.key === 'Escape') {
       setShowMentions(false);
+      setShowContextMenu(false);
     } else if (e.key === 'Backspace' && message === '@') {
       // Close mentions window when backspacing the @ symbol
       setShowMentions(false);
@@ -292,39 +309,97 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
       setMentionSearch(e.target.value.slice(1));
       const validCommands = mentionOptions.map(opt => opt.name);
         for (const cmd of validCommands) {
-          if (e.target.value.slice(1).startsWith(cmd)) {
-            setMentionSearch(cmd);
+          if (e.target.value.slice(1).toLowerCase().startsWith(cmd.toLowerCase())) {
+            setMentionSearch(cmd.toLowerCase());
             break;
           }
       }
       }
   };
 
+  // Add a function to load personal notes
+  const loadPersonalNotes = async () => {
+    try {
+      setLoadingNotes(true);
+      const response = await personalApi.getResources();
+      if (response?.data) {
+        setPersonalNotes(response.data);
+      }
+    } catch (err) {
+      console.error('Error loading personal notes:', err);
+    } finally {
+      setLoadingNotes(false);
+    }
+  };
+
+  // Add this to useEffect
+  useEffect(() => {
+    // Load courses for the Course command
+    fetchCourses();
+    // Load personal notes for the Notes command
+    loadPersonalNotes();
+  }, []);
+
+  // Add the addNotesContext function
+  const addNotesContext = (note) => {
+    addContext({
+      id: uuidv4(),
+      type: 'notes',
+      resourceId: note.id,
+      name: note.name,
+      courseName: note.course?.name,
+      courseCode: note.course?.code
+    });
+    setShowMentions(false);
+  };
+
   async function handleSubmit() {
     if (!message.trim()) return;
-    setShowMentions(false);    
+    setShowMentions(false);
+    setShowContextMenu(false);
+    
+    // Create context string for the API with corrected format
+    let contextString = '';
+    if (selectedContexts.length > 0) {
+      contextString = selectedContexts.map(context => {
+        if (context.type === 'course') {
+          return `Course ${context.code}:`; // Add space after "Course"
+        } else if (context.type === 'notes') {
+          return `Note ${context.resourceId}:`; // Format as Note [ID]: for backend
+        } else {
+          return 'FAQ:'; // Keep FAQ format the same
+        }
+      }).join(' ') + ' ';
+    }
+    
     const userMessageId = uuidv4();
     const userMessage = {
       id: userMessageId,
       text: message,
       isBot: false,
+      contexts: selectedContexts.map(c => ({...c})), // Store contexts for reference
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
+    
     if (isFirstMessage) {
       // update the chatsession name with the user's first message
       chatAPI.updateChat(chatSessionID.current, {op: "replace", path: "/name", value: message.slice(0, 15)});
       setIsFirstMessage(false);
     }
+    
     setMessages([...messages, userMessage]);
     setMessage('');
     setIsLoading(true);
 
     abortControllerRef.current = new AbortController();
 
+    // Create the message with context directives prepended
+    const messageWithContext = contextString + message;
+
     // Send message to the server
     let res = ''
     let message_id = ''
-    messageAPI.sendMessage(socket.current, chatSessionID.current, message)
+    messageAPI.sendMessage(socket.current, chatSessionID.current, messageWithContext)
     setIsLoading(true);
     if (!socket.current) {
       return
@@ -555,21 +630,26 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                 or use @commands for specific tasks.
                 </p>
                 <div className="flex flex-wrap justify-center gap-2 max-w-md">
-                {mentionOptions.map(option => (
-                      <button
-                        key={option.id}
-                        onClick={() => {
-                          setMessage(option.prefix + ' ');
-                          if (option.name === 'course') {
-                            setShowMentions(true);
-                            setMentionSearch('course');
-                          }
-                        }}
-                        className="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-200/50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
-                      >
-                        {option.prefix}
-                      </button>
-                    ))}
+                  {mentionOptions.map(option => (
+                    <button
+                      key={option.id}
+                      onClick={() => {
+                        if (option.name === 'Course') {
+                          setShowMentions(true);
+                          setMentionSearch('course');  // lowercase to match the comparison
+                        } else if (option.name === 'Notes') {
+                          setShowMentions(true);
+                          setMentionSearch('notes');  // lowercase to match the comparison
+                        } else if (option.name === 'FAQ') {
+                          // Add FAQ context directly
+                          addContext({ id: uuidv4(), type: 'faq' });
+                        }
+                      }}
+                      className="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-200/50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+                    >
+                      {option.prefix}
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
@@ -585,6 +665,24 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                     : 'bg-zinc-100 px-4 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200'
                 }`}
               >
+                {/* Show context pills for user messages if they exist */}
+                {!msg.isBot && msg.contexts && msg.contexts.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {msg.contexts.map(context => (
+                      <div 
+                        key={context.id}
+                        className="flex items-center bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 rounded-full text-blue-800 dark:text-blue-300 text-xs"
+                      >
+                        <span className="font-medium">
+                          {context.type === 'course' ? `@Course: ${context.code}` : 
+                           context.type === 'notes' ? `@Note: ${context.name}` : 
+                           '@FAQ:'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
                 <div className="flex justify-between items-start">
                 <div className="flex-1 break-words">
                   {msg.isMarkdown ? (
@@ -651,6 +749,76 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
 
           {/* Input Area */}
           <div className="p-4 border-zinc-200 dark:border-zinc-700">
+            {/* Context Pills */}
+            <div className="flex flex-wrap items-center gap-2 mb-2 px-1">
+              {/* Selected context pills */}
+              {selectedContexts.map(context => (
+                <div 
+                  key={context.id} 
+                  className="flex items-center bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded-full text-blue-800 dark:text-blue-300 text-xs"
+                >
+                  <span className="font-medium">
+                    {context.type === 'course' ? `@Course: ${context.code}` : 
+                     context.type === 'notes' ? `@Note: ${context.name}` : 
+                     '@FAQ:'}
+                  </span>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeContext(context.id);
+                    }}
+                    className="ml-1 text-blue-500 hover:text-blue-700 z-10"
+                  >
+                    <XMarkIcon className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+              
+              {/* Add context button */}
+              <button 
+                onClick={() => setShowContextMenu(!showContextMenu)}
+                className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 p-1 rounded-full"
+                title="Add context"
+              >
+                <span className="text-sm font-medium">@</span>
+              </button>
+              
+              {/* Context menu */}
+              {showContextMenu && (
+                <div className="absolute left-4 bottom-20 bg-white dark:bg-zinc-800 shadow-lg rounded-md border border-zinc-200 dark:border-zinc-700 py-1 w-48 z-50">
+                  <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400 px-3 py-1">
+                    Select Context
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setShowMentions(true);
+                      setShowContextMenu(false);
+                      setMentionSearch('course');  // lowercase to match the comparison
+                    }}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                  >
+                    Course
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setShowMentions(true);
+                      setShowContextMenu(false);
+                      setMentionSearch('notes');  // show notes selection
+                    }}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                  >
+                    Notes
+                  </button>
+                  <button 
+                    onClick={() => addContext({ id: uuidv4(), type: 'faq' })}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                  >
+                    FAQ
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Input and Send Button */}
             <div className="flex-1 items-center space-x-2 relative">
               <div className="flex rounded-lg relative items-center">
@@ -681,74 +849,112 @@ const Chatbot = ({ user, isOpen, setIsOpen, pageContext }) => {
                 </button>
               </div>
 
-{/* Mentions Menu */}
-{/* {showMentions && ( */}
-  <div className={`absolute bottom-full left-0 mb-1 ${showMentions ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0 pointer-events-none'} transform transition-all duration-200 z-50`}>
-    {mentionSearch === 'course' ? (
-      // Course Selection Menu
-      <div className="w-64 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700">
-        {courses.length === 0 ? (
-          <div className="p-4 text-sm text-zinc-500 dark:text-zinc-400 text-center">
-            No courses available
-          </div>
-        ) : (
-          courses.map(course => (
-            <button
-              key={course.id}
-              onClick={() => {
-                const lastAtIndex = message.lastIndexOf('@');
-                const newMessage = 
-                  message.slice(0, lastAtIndex) + 
-                  `@course ${course.code} `;
-                setMessage(newMessage);
-                setShowMentions(false);
-              }}
-              className="w-full px-4 py-2 text-left hover:bg-zinc-100 dark:hover:bg-zinc-700"
-            >
-              <div className="flex flex-col">
-                <span className="text-sm font-medium text-zinc-900 dark:text-white">
-                  {course.code}
-                </span>
-                <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                  {course.name}
-                </span>
+              {/* Mentions Menu */}
+              <div className={`absolute bottom-full left-0 mb-1 ${showMentions ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0 pointer-events-none'} transform transition-all duration-200 z-50`}>
+                {mentionSearch.toLowerCase() === 'course' ? (
+                  // Course Selection Menu - Modified for pill UI
+                  <div className="w-64 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700">
+                    {courses.length === 0 ? (
+                      <div className="p-4 text-sm text-zinc-500 dark:text-zinc-400 text-center">
+                        No courses available
+                      </div>
+                    ) : (
+                      courses.map(course => (
+                        <button
+                          key={course.id}
+                          onClick={() => {
+                            // Instead of modifying message text, add as context pill
+                            addContext({
+                              id: uuidv4(),
+                              type: 'course',
+                              code: course.code,
+                              name: course.name
+                            });
+                            setShowMentions(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                        >
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-zinc-900 dark:text-white">
+                              {course.code}
+                            </span>
+                            <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                              {course.name}
+                            </span>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                ) : mentionSearch.toLowerCase() === 'notes' ? (
+                  // Personal Notes Selection Menu
+                  <div className="w-80 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700 max-h-96 overflow-y-auto">
+                    {loadingNotes ? (
+                      <div className="p-4 text-sm text-zinc-500 dark:text-zinc-400 text-center">
+                        Loading your notes...
+                      </div>
+                    ) : personalNotes.length === 0 ? (
+                      <div className="p-4 text-sm text-zinc-500 dark:text-zinc-400 text-center">
+                        No personal notes available
+                      </div>
+                    ) : (
+                      personalNotes.map(note => (
+                        <button
+                          key={note.id}
+                          onClick={() => addNotesContext(note)}
+                          className="w-full px-4 py-3 text-left hover:bg-zinc-100 dark:hover:bg-zinc-700 border-b border-zinc-200 dark:border-zinc-700"
+                        >
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-zinc-900 dark:text-white">
+                              {note.name}
+                            </span>
+                            <div className="flex items-center justify-between mt-1">
+                              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                {note.course?.code}: {note.course?.name}
+                              </span>
+                              <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded">
+                                {note.files?.length || 0} files
+                              </span>
+                            </div>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                ) : (
+                  // Primary Commands Menu
+                  <div className="w-48 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700">
+                    {mentionOptions
+                      .filter(option => 
+                        option.name.toLowerCase().includes(mentionSearch.toLowerCase())
+                      )
+                      .map(option => (
+                        <button
+                          key={option.id}
+                          onClick={() => {
+                            if (option.name === 'Course') {
+                              setMentionSearch('course');
+                              return;
+                            } else if (option.name === 'Notes') {
+                              setMentionSearch('notes');
+                              return;
+                            }
+                            // Add as context pill instead of text, replacing any existing contexts
+                            setSelectedContexts([]);
+                            addContext({
+                              id: uuidv4(),
+                              type: 'faq'
+                            });
+                            setShowMentions(false);
+                          }}
+                          className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white"
+                        >
+                          {option.name}
+                        </button>
+                      ))}
+                  </div>
+                )}
               </div>
-            </button>
-          ))
-        )}
-      </div>
-    ) : (
-      // Primary Commands Menu
-      <div className="w-48 bg-white dark:bg-zinc-800 rounded-sm shadow-lg border border-zinc-200 dark:border-zinc-700">
-        {mentionOptions
-          .filter(option => 
-            option.name.toLowerCase().includes(mentionSearch.toLowerCase())
-          )
-          .map(option => (
-            <button
-              key={option.id}
-              onClick={() => {
-                if (option.name === 'course') {
-                  setMentionSearch('course');
-                  return;
-                }
-                const lastAtIndex = message.lastIndexOf('@');
-                const newMessage = 
-                  message.slice(0, lastAtIndex) + 
-                  option.prefix + ' ' + 
-                  message.slice(lastAtIndex + mentionSearch.length + 1);
-                setMessage(newMessage);
-                setShowMentions(false);
-              }}
-              className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white"
-            >
-              {option.name}
-            </button>
-          ))}
-      </div>
-    )}
-  </div>
-{/* )} */}
               </div>
             </div>
           </div>

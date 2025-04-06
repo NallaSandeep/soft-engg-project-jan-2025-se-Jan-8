@@ -39,8 +39,7 @@ const Navbar = () => {
             case 'ta':
                 return [
                     { to: '/ta/dashboard', text: 'Dashboard', icon: ChartBarIcon },
-                    { to: '/ta/courses', text: 'My Courses', icon: BookOpenIcon },
-                    { to: '/ta/assignments', text: 'Grade Assignments', icon: ClipboardDocumentListIcon }
+                    { to: '/ta/courses', text: 'Courses', icon: BookOpenIcon },
                 ];
             case 'student':
                 return [

@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
                         navigate('/admin/dashboard');
                         break;
                     case 'ta':
-                        navigate('/ta/courses');
+                        navigate('/ta/dashboard');
                         break;
                     case 'student':
                         navigate('/student/dashboard');
